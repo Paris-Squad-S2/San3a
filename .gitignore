@@ -1,0 +1,73 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+/.idea/
+/.kotlin
+/.idea
+
+
+# Built application files
+*.apk
+*.aab
+*.jar
+*.war
+*.ear
+
+# Files for the Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+build/
+*/build/
+
+# Local configuration file (sdk path, etc)
+
+# Gradle generated folders
+.gradle/
+gradle-wrapper.jar
+
+# IDEs
+.idea/
+*.ipr
+*.iws
+.settings/
+.classpath
+.project
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+# Android Studio
+captures/
+*.keystore
+*.jks
+
+# Gradle properties
+gradle.properties.user
+
+# Maven
+.m2/repository/
+
+# VS Code
+.vscode/
+
+schemas/
