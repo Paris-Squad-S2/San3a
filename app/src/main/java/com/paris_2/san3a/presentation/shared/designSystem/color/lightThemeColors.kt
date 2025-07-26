@@ -34,7 +34,7 @@ val lightThemeColors = San3aColors(
         primary = Color(0xFFEDEDED)
     ),
     overlay = Overlay(
-        primary = Color(0xFF121212).copy(alpha = 0.6f)
+        primary = Color(0x99121212)
     ),
     additional = Additional(
         primary = AdditionalColors(

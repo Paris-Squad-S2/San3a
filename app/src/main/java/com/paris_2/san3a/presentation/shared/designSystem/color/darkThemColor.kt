@@ -34,7 +34,7 @@ val darkThemeColors = San3aColors(
         primary = Color(0xFF24263B)
     ),
     overlay = Overlay(
-        primary = Color(0xFF121321).copy(alpha = 0.6f)
+        primary = Color(0x99121321)
     ),
     additional = Additional(
         primary = AdditionalColors(
