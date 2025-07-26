@@ -9,19 +9,19 @@ import androidx.navigation.navigation
 import org.koin.compose.koinInject
 
 @Composable
-fun San3aNavGraph(
-    navigator: San3aNavigator = koinInject(),
-    startDestination: San3aDestination? = null
+fun NavGraph(
+    navigator: Navigator = koinInject(),
+    startDestination: Destination? = null
 ) {
     val navController = rememberNavController()
 
     ObserveAsEvents(navigator.navigationEvent) { event ->
         when (event) {
-            is San3aNavigationEvent.Navigate -> navController.navigate(
+            is NavigationEvent.Navigate -> navController.navigate(
                 route = event.destination, navOptions = event.navOptions
             )
 
-            San3aNavigationEvent.NavigateUp -> navController.navigateUp()
+            NavigationEvent.NavigateUp -> navController.navigateUp()
         }
     }
 
@@ -33,8 +33,8 @@ fun San3aNavGraph(
     }
 }
 
-fun NavGraphBuilder.buildSan3aNavGraph(startDestination: San3aDestination? = null) {
-    navigation<San3aDestinations.San3aGraph1>(startDestination = startDestination ?: San3aDestinations.San3aScreen) {
+fun NavGraphBuilder.buildSan3aNavGraph(startDestination: Destination? = null) {
+    navigation<Destinations.Graph1>(startDestination = startDestination ?: Destinations.Screen) {
     //TODO -- Add the Screens Here
     }
 }

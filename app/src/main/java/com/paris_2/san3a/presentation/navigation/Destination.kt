@@ -4,4 +4,4 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-sealed interface San3aDestination
+sealed interface Destination
