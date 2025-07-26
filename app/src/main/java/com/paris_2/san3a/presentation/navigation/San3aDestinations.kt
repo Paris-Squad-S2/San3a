@@ -9,10 +9,4 @@ sealed interface San3aDestinations : San3aGraph {
 
     @Serializable
     data object San3aScreen : San3aDestination
-
-    @Serializable
-    data class WorldTourScreen(val name: String? = null) : San3aDestination
-
-    @Serializable
-    data class FindByActorScreen(val name: String? = null) : San3aDestination
 }
