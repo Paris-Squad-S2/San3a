@@ -4,15 +4,15 @@ import androidx.compose.ui.unit.dp
 
 val defaultSan3aRadius = San3aRadius(
     none = 0.dp,
-    `2xs` = 2.dp,
-    xs = 4.dp,
-    s = 8.dp,
-    md = 12.dp,
-    lg = 16.dp,
-    xl = 20.dp,
-    `2xl` = 24.dp,
-    `3xl` = 28.dp,
-    `4xl` = 32.dp,
-    `5xl` = 36.dp,
-    full = 1000.dp
+    extraExtraSmall = 2.dp,
+    extraSmall = 4.dp,
+    small = 8.dp,
+    medium = 10.dp,
+    large = 12.dp,
+    extraLarge = 16.dp,
+    extraExtraLarge = 20.dp,
+    tripleXLarge = 24.dp,
+    quadXLarge = 28.dp,
+    quintXLarge = 32.dp,
+    full = 1000.dp,
 )

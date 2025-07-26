@@ -5,17 +5,17 @@ import androidx.compose.ui.unit.Dp
 
 data class San3aRadius(
     val none: Dp,
-    val `2xs`: Dp,
-    val xs: Dp,
-    val s: Dp,
-    val md: Dp,
-    val lg: Dp,
-    val xl: Dp,
-    val `2xl`: Dp,
-    val `3xl`: Dp,
-    val `4xl`: Dp,
-    val `5xl`: Dp,
-    val full: Dp
+    val extraExtraSmall: Dp,
+    val extraSmall: Dp,
+    val small: Dp,
+    val medium: Dp,
+    val large: Dp,
+    val extraLarge: Dp,
+    val extraExtraLarge: Dp,
+    val tripleXLarge: Dp,
+    val quadXLarge: Dp,
+    val quintXLarge: Dp,
+    val full: Dp,
 )
 
 val LocalSan3aRadius = staticCompositionLocalOf { defaultSan3aRadius }
