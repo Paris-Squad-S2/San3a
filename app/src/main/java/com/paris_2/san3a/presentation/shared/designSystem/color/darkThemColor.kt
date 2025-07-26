@@ -2,63 +2,62 @@ package com.paris_2.san3a.presentation.shared.designSystem.color
 
 import androidx.compose.ui.graphics.Color
 
-// TODO: Update the colors to match the design system of San3a app
 val darkThemeColors = San3aColors(
     background = Background(
-        screen = Color(0xFFFFFFFF),
-        card = Color(0xFFF5F5F5),
-        bottomSheet = Color(0xFFE0E0E0),
-        bottomSheetCard = Color(0xFFF5F5F5)
+        screen = Color(0xFF121321),
+        card = Color(0xFF1B1C2A),
+        bottomSheet = Color(0xFF1B1C2A),
+        bottomSheetCard = Color(0xFF242533)
     ),
     shade = Shade(
-        primary = Color(0xFF212121),
-        secondary = Color(0xFF757575),
-        tertiary = Color(0xFFBDBDBD),
-        quaternary = Color(0xFFE0E0E0),
-        quinary = Color(0xFFF5F5F5)
+        primary = Color(0xFFE1E1E3),
+        secondary = Color(0xFFA4A4AA),
+        tertiary = Color(0xFF72727B),
+        quaternary = Color(0xFF2D2E3B),
+        quinary = Color(0xFF242533)
     ),
     brand = Brand(
-        primary = Color(0xFF1976D2),
-        secondary = Color(0xFF64B5F6),
-        tertiary = Color(0xFFBBDEFB)
+        primary = Color(0xFF5C9EFF),
+        secondary = Color(0xFF344D7B),
+        tertiary = Color(0xFF20263B)
     ),
     button = Button(
-        primary = Color(0xFF1976D2),
-        secondary = Color(0xFF64B5F6),
-        disabled = Color(0xFFBDBDBD),
+        primary = Color(0xFF5C9EFF),
+        secondary = Color(0xFF20263B),
+        disabled = Color(0xFF2D2E3B),
         onPrimary = Color(0xFFFFFFFF),
-        onSecondary = Color(0xFF212121),
-        onDisabled = Color(0xFF757575),
-        onTertiary = Color(0xFF212121)
+        onSecondary = Color(0xFFE1E1E3),
+        onDisabled = Color(0xFF72727B),
+        onTertiary = Color(0xFF5C9EFF)
     ),
     stroke = Stroke(
-        primary = Color(0xFFBDBDBD)
+        primary = Color(0xFF24263B)
     ),
     overlay = Overlay(
-        primary = Color(0x1A000000)
+        primary = Color(0xFF121321).copy(alpha = 0.6f)
     ),
     additional = Additional(
         primary = AdditionalColors(
-            error = Color(0xFFD32F2F),
-            success = Color(0xFF388E3C),
-            warning = Color(0xFFFBC02D),
-            purple = Color(0xFF8E24AA),
-            red = Color(0xFFD32F2F),
-            blue = Color(0xFF1976D2),
-            turquoise = Color(0xFF1DE9B6),
-            yellow = Color(0xFFFFEB3B),
-            green = Color(0xFF388E3C)
+            error = Color(0xFFFF6B6B),
+            success = Color(0xFF00E676),
+            warning = Color(0xFFFFD600),
+            purple = Color(0xFF9A83CE),
+            red = Color(0xFFF56C6C),
+            blue = Color(0xFF4C8FD3),
+            turquoise = Color(0xFF4BA8A7),
+            yellow = Color(0xFFE3B339),
+            green = Color(0xFF6DBF7E)
         ),
         secondary = AdditionalColors(
-            error = Color(0xFFFFCDD2),
-            success = Color(0xFFC8E6C9),
-            warning = Color(0xFFFFF9C4),
-            purple = Color(0xFFE1BEE7),
-            red = Color(0xFFFFCDD2),
-            blue = Color(0xFFBBDEFB),
-            turquoise = Color(0xFFB2DFDB),
-            yellow = Color(0xFFFFF9C4),
-            green = Color(0xFFC8E6C9)
+            error = Color(0xFF2C202D),
+            success = Color(0xFF232A31),
+            warning = Color(0xFF2D2927),
+            purple = Color(0xFF252437),
+            red = Color(0xFF2C222F),
+            blue = Color(0xFF1F2538),
+            turquoise = Color(0xFF1F2734),
+            yellow = Color(0xFF2B282B),
+            green = Color(0xFF222931)
         )
     )
 )
