@@ -11,20 +11,20 @@ data class San3aTextStyle(
 )
 
 data class SizedDisplayTextStyle(
-    val xl: TextStyle,
+    val xLarge: TextStyle,
 )
 
 data class SizedTitleTextStyle(
-    val xl: TextStyle,
-    val lg: TextStyle,
-    val md: TextStyle,
-    val sm: TextStyle,
+    val xLarge: TextStyle,
+    val large: TextStyle,
+    val medium: TextStyle,
+    val small: TextStyle,
 )
 
 data class SizedBodyTextStyle(
-    val lg: WeightedBodyTextStyle,
-    val md: WeightedBodyTextStyle,
-    val sm: WeightedBodyTextStyle,
+    val large: WeightedBodyTextStyle,
+    val medium: WeightedBodyTextStyle,
+    val small: WeightedBodyTextStyle,
 )
 
 data class WeightedBodyTextStyle(
@@ -34,7 +34,7 @@ data class WeightedBodyTextStyle(
 )
 
 data class SizedLabelTextStyle(
-    val md: WeightedLabelTextStyle
+    val medium: WeightedLabelTextStyle
 )
 
 data class WeightedLabelTextStyle(

@@ -6,36 +6,36 @@ import androidx.compose.ui.unit.sp
 
 val defaultTextStyle = San3aTextStyle(
     display = SizedDisplayTextStyle(
-        xl = TextStyle(
+        xLarge = TextStyle(
             fontFamily = manrope,
             fontWeight = FontWeight.Bold,
             fontSize = 40.sp,
         )
     ),
     title = SizedTitleTextStyle(
-        xl = TextStyle(
+        xLarge = TextStyle(
             fontFamily = manrope,
             fontWeight = FontWeight.Medium,
             fontSize = 24.sp,
         ),
-        lg = TextStyle(
+        large = TextStyle(
             fontFamily = manrope,
             fontWeight = FontWeight.Medium,
             fontSize = 20.sp,
         ),
-        md = TextStyle(
+        medium = TextStyle(
             fontFamily = manrope,
             fontWeight = FontWeight.Medium,
             fontSize = 18.sp,
         ),
-        sm = TextStyle(
+        small = TextStyle(
             fontFamily = manrope,
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp,
         )
     ),
     body = SizedBodyTextStyle(
-        lg = WeightedBodyTextStyle(
+        large = WeightedBodyTextStyle(
             regular = TextStyle(
                 fontFamily = manrope,
                 fontWeight = FontWeight.Normal,
@@ -52,7 +52,7 @@ val defaultTextStyle = San3aTextStyle(
                 fontSize = 16.sp
             )
         ),
-        md = WeightedBodyTextStyle(
+        medium = WeightedBodyTextStyle(
             regular = TextStyle(
                 fontFamily = manrope,
                 fontWeight = FontWeight.Normal,
@@ -69,7 +69,7 @@ val defaultTextStyle = San3aTextStyle(
                 fontSize = 14.sp
             )
         ),
-        sm = WeightedBodyTextStyle(
+        small = WeightedBodyTextStyle(
             regular = TextStyle(
                 fontFamily = manrope,
                 fontWeight = FontWeight.Normal,
@@ -88,7 +88,7 @@ val defaultTextStyle = San3aTextStyle(
         )
     ),
     label = SizedLabelTextStyle(
-        md = WeightedLabelTextStyle(
+        medium = WeightedLabelTextStyle(
             regular = TextStyle(
                 fontFamily = manrope,
                 fontWeight = FontWeight.Normal,
