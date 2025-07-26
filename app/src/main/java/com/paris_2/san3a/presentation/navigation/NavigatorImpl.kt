@@ -6,22 +6,22 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-class SearchNavigatorImpl(override val startGraph: SearchGraph) : SearchNavigator {
-    private val _navigateEvent = Channel<SearchNavigationEvent>()
-    override val searchNavigationEvent = _navigateEvent.receiveAsFlow()
+class San3aNavigatorImpl(override val startGraph: San3aGraph) : San3aNavigator {
+    private val _navigateEvent = Channel<San3aNavigationEvent>()
+    override val navigationEvent = _navigateEvent.receiveAsFlow()
     private val mutex = Mutex()
     private var lastNavigateTime = 0L
 
-    override suspend fun navigate(destination: SearchDestination, navOptions: NavOptions?) {
+    override suspend fun navigate(destination: San3aDestination, navOptions: NavOptions?) {
         mutex.withLock {
             val now = System.currentTimeMillis()
             if (now - lastNavigateTime >= 1000) {
                 lastNavigateTime = now
                 _navigateEvent.send(
-                    SearchNavigationEvent.Navigate(destination = destination, navOptions = navOptions)
+                    San3aNavigationEvent.Navigate(destination = destination, navOptions = navOptions)
                 )
             }
         }
     }
-    override suspend fun navigateUp() { _navigateEvent.send(SearchNavigationEvent.NavigateUp) }
+    override suspend fun navigateUp() { _navigateEvent.send(San3aNavigationEvent.NavigateUp) }
 }

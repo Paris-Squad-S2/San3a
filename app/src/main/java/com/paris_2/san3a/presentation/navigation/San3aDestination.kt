@@ -7,11 +7,11 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 
 @Serializable
-sealed interface SearchDestination
+sealed interface San3aDestination
 
 @OptIn(InternalSerializationApi::class)
-fun SearchDestination.toJson(): String =
-    Json.encodeToString(SearchDestination::class.serializer(), this)
+fun San3aDestination.toJson(): String =
+    Json.encodeToString(San3aDestination::class.serializer(), this)
 
-fun String.fromJsonToSearchDestination(): SearchDestination =
+fun String.fromJsonToSearchDestination(): San3aDestination =
     Json.decodeFromString(this)

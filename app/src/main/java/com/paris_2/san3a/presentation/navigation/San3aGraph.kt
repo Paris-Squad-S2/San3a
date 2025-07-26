@@ -1,4 +1,4 @@
 package com.paris_2.san3a.presentation.navigation
 
 
-interface SearchGraph
+interface San3aGraph
