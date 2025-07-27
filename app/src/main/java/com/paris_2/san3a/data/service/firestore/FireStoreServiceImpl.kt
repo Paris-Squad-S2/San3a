@@ -150,8 +150,8 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
 
         return query.snapshots()
             .map { snapshot ->
-                snapshot.documents.map { doc ->
-                    fromJson(doc.data as Map<String, Any>, doc.id)
+                snapshot.documents.mapNotNull { doc ->
+                    doc.data?.let { data -> fromJson(data, doc.id) }
                 }
             }
             .catch { e ->
