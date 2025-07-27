@@ -71,4 +71,7 @@ dependencies {
     //kotlinx serialization
     implementation(libs.kotlinx.serialization.json)
     implementation(platform(libs.firebase.bom))
+
+    // splash api
+    implementation(libs.androidx.core.splashscreen)
 }
