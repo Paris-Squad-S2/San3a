@@ -31,6 +31,7 @@ fun AppChip(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     painter: Painter? = null,
+    iconContentDescription: String? = null
 ) {
     val borderColor =
         animateColorAsState(if (isSelected) Theme.colors.brand.secondary else Color.Unspecified)
@@ -47,14 +48,14 @@ fun AppChip(
         painter?.let {
             Icon(
                 painter = it,
-                contentDescription = null,
+                contentDescription = iconContentDescription,
                 tint = Theme.colors.shade.primary,
                 modifier = Modifier.padding(start = 16.dp)
             )
         }
 
         val paddingStart =
-            animateDpAsState(if (painter == null && isSelected == true) 16.dp else 0.dp)
+            animateDpAsState(if (painter == null && isSelected) 16.dp else 0.dp)
         TextChips(label, isSelected, modifier = Modifier.padding(start = paddingStart.value))
     }
 }
