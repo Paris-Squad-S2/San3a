@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -44,18 +45,17 @@ fun CardsSection() {
             .fillMaxWidth()
             .background(Theme.colors.background.screen)
     ) {
-        cards.chunked(2).forEachIndexed { rowIndex, pair ->
+        cards.chunked(2).forEachIndexed { index, pair ->
             val card1 = pair[0]
             val card2 = pair[1]
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        start = if (rowIndex % 2 != 0) 0.dp else 16.dp,
-                        end = if (rowIndex % 2 != 0) 16.dp else 0.dp,
-                        top = if (rowIndex == 0) 0.dp else 16.dp
-                    ),
-                horizontalArrangement = if (rowIndex % 2 != 0) Arrangement.End else Arrangement.Start
+                        top = if (index == 0) 0.dp else 16.dp
+                    )
+                    .offset(x = if (index % 2 == 0) 16.dp else (-16).dp),
+                horizontalArrangement = if (index % 2 != 0) Arrangement.End else Arrangement.Start
             ) {
                 OnBoardingCard(
                     title = card1.title,
