@@ -30,7 +30,6 @@ fun OnBoardingCard(
     Box(
         modifier = modifier.clip(RoundedCornerShape(Theme.radius.extraExtraLarge))
             .background(color = backgroundColor),
-        contentAlignment = Alignment.Center
     ) {
         Row(
             modifier = Modifier
@@ -39,7 +38,6 @@ fun OnBoardingCard(
                 vertical = 16.dp
             ),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier
