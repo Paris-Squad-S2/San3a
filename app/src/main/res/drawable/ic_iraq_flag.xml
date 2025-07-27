@@ -1,0 +1,35 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <group>
+        <group>
+            <clip-path
+                android:pathData="M2 4.5H22V19.5H2z"/>
+            <group>
+                <path
+                    android:fillColor="#FFF7FCFF"
+                    android:fillType="evenOdd"
+                    android:pathData="M2 4.5v15h20v-15H2Z"/>
+                <group>
+                    <clip-path
+                        android:pathData="M2 4.5v15h20v-15H2Z"/>
+                    <group>
+                        <path
+                            android:fillColor="#FFBF2714"
+                            android:fillType="evenOdd"
+                            android:pathData="M2 4.5v5h20v-5H2Z"/>
+                        <path
+                            android:fillColor="#FF272727"
+                            android:fillType="evenOdd"
+                            android:pathData="M2 14.5v5h20v-5H2Z"/>
+                        <path
+                            android:fillColor="#FF009C4E"
+                            android:pathData="M10.36 10.45l-1.9 1.68h1.96s0.11-0.58 0.6-0.58c0.5 0 0.62 0.57 0.62 0.57v1.2H6.07c-0.26 0.55-0.95 0.55-0.95 0.55s0.78-0.55 0.21-1.36l0.48-0.36s0.01 0.36 0.33 0.36c0.31 0 0.81 0.13 0.82 0.13v-0.5l0.4-0.18v0.68h3.77v-0.56c0-0.03-0.03-0.07-0.1-0.07-0.14 0-0.16 0.13-0.16 0.14v0.23H7.88v-0.4l2.1-1.86 0.38 0.33Zm-3.68 3.1c0.1 0 0.18 0.06 0.18 0.15 0 0.08-0.08 0.15-0.18 0.15-0.1 0-0.18-0.07-0.18-0.15 0-0.09 0.08-0.16 0.18-0.16Zm5.83-3.13v2.13h0.4l0.3 0.76h-1.22v-3.05l0.52 0.16Zm5.66 0v2.13h0.4l0.3 0.76h-1.21v-3.05l0.51 0.16Zm-1.11 2.87h-2.7c0-1.1 0.76-1.15 0.77-1.15v-0.26l0.4-0.26v0.93h0.36v-1.33l0.53-0.31v1.64h0.33V10.5l0.31-0.2v2.99Zm-0.73-2.9c-0.13 0.24-0.63 0.14-0.63 0.14-0.1 0.13-0.37 0.06-0.5 0.02l1.13-0.16Z"/>
+                    </group>
+                </group>
+            </group>
+        </group>
+    </group>
+</vector>
