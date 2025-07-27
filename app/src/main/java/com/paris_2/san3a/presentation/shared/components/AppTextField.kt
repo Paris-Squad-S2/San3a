@@ -44,7 +44,7 @@ fun AppTextField(
     errorMessage: String? = null,
     isPassword: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null,
-    leadingIcon: Int,
+    leadingIcon: Int? = null,
     singleLine: Boolean = true,
     maxLines: Int = 1,
     enabled: Boolean = true,
@@ -92,12 +92,14 @@ fun AppTextField(
             maxLines = maxLines,
             isError = isError,
             enabled = enabled,
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(leadingIcon),
-                    contentDescription = "leading icon",
-                    tint = Theme.colors.shade.tertiary
-                )
+            leadingIcon = leadingIcon?.let {
+                {
+                    Icon(
+                        painter = painterResource(it),
+                        contentDescription = "leading icon",
+                        tint = Theme.colors.shade.tertiary
+                    )
+                }
             },
             trailingIcon = {
                 when {
@@ -110,7 +112,6 @@ fun AppTextField(
                             Icon(painter = image, contentDescription = "Toggle password visibility")
                         }
                     }
-
                     isError -> {
                         Icon(
                             painter = painterResource(R.drawable.outline_danger_triangle),
@@ -118,8 +119,7 @@ fun AppTextField(
                             tint = Theme.colors.additional.primary.red
                         )
                     }
-
-                    trailingIcon != null -> trailingIcon()
+                    else -> trailingIcon?.invoke()
                 }
             },
             visualTransformation = if (isPassword && !passwordVisible)
