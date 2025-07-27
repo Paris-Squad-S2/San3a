@@ -2,11 +2,15 @@ package com.paris_2.san3a.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
+@Serializable
 sealed interface Destinations : Graph {
 
     @Serializable
-    data object Graph1 : Graph
+    data object MainGraph : Graph
 
     @Serializable
-    data object Screen : Destination
+    data object Splash : Destination
+
+    @Serializable
+    data object OnBoarding : Destination
 }

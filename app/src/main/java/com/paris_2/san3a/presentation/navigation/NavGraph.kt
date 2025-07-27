@@ -1,10 +1,13 @@
 package com.paris_2.san3a.presentation.navigation
 
+import OnBoardingScreen
+import SplashScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import androidx.navigation.compose.composable
 
 import org.koin.compose.koinInject
 
@@ -33,7 +36,8 @@ fun San3aNavGraph(
 }
 
 fun NavGraphBuilder.buildSan3aNavGraph() {
-    navigation<Destinations.Graph1>(startDestination = Destinations.Screen) {
-    //TODO -- Add the Screens Here
+    navigation<Destinations.MainGraph>(startDestination = Destinations.Splash) {
+        composable<Destinations.Splash>{ SplashScreen() }
+        composable<Destinations.OnBoarding>{ OnBoardingScreen() }
     }
 }
