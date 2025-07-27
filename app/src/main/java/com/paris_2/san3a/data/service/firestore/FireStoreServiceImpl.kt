@@ -127,8 +127,8 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
             if (limit != null) query = query.limit(limit.toLong())
 
             val snapshot = query.get().await()
-            snapshot.documents.map { doc ->
-                fromJson(doc.data as Map<String, Any>, doc.id)
+            snapshot.documents.mapNotNull { doc ->
+                doc.data?.let { fromJson(it, doc.id) }
             }
         } catch (e: Exception) {
             when (e) {
