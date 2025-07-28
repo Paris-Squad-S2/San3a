@@ -78,4 +78,7 @@ dependencies {
 
     //firestore
     implementation(libs.firebase.firestore.ktx)
+
+    //Kotlinx DateTime
+    implementation(libs.kotlinx.datetime)
 }
