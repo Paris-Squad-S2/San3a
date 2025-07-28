@@ -1,0 +1,148 @@
+package com.paris_2.san3a.data.source.remote.messages
+
+import android.util.Log
+import com.paris_2.san3a.data.service.firestore.DocumentNotFoundException
+import com.paris_2.san3a.data.service.firestore.FireStoreService
+import com.paris_2.san3a.data.service.firestore.FireStoreServiceException
+import com.paris_2.san3a.data.service.firestore.UpdateOperation
+import com.paris_2.san3a.data.source.remote.messages.dto.ChatDto
+import com.paris_2.san3a.data.source.remote.messages.dto.MessageDto
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+
+class MessagesRemoteDataSourceImp(
+    private val fireStoreService: FireStoreService,
+) : MessagesRemoteDataSource {
+    override suspend fun getChatMessages(chatId: String): Flow<List<MessageDto>> {
+        return fireStoreService.streamCollection(
+            path = "$CHATS_COLLECTION/$chatId/$MESSAGES_COLLECTION",
+            fromJson = { data, id -> MessageDto.fromJson(data, id) },
+            queryBuilder = { query -> query }
+        ).map { messages ->
+            messages.sortedBy { it.dateTime }
+        }
+    }
+
+    override suspend fun sendMessage(message: MessageDto): MessageDto {
+        val chatId: String = try {
+            getChatById(message.chatId).id
+        } catch (_: FireStoreServiceException) {
+            addChat(
+                participants = listOf(message.senderId, message.receiverId)
+            )
+        }
+
+        val messageData = message.copy(chatId = chatId).toJson()
+        val messageId = fireStoreService.addToCollection(
+            path = "$CHATS_COLLECTION/${chatId}/$MESSAGES_COLLECTION",
+            data = messageData
+        )
+        return message.copy(id = messageId)
+    }
+
+    override suspend fun getUnreadMessageCountForUserByChatId(chatId: String, userId: String): Int {
+        return fireStoreService.getCountOfCollection(
+            path = "$CHATS_COLLECTION/$chatId/$MESSAGES_COLLECTION",
+            queryBuilder = { query ->
+                query
+                    .whereEqualTo("chatId", chatId)
+                    .whereEqualTo("receiverId", userId)
+                    .whereEqualTo("seen", false)
+            }
+        )
+    }
+
+    override fun getUserChats(userId: String): Flow<List<ChatDto>> {
+        val chats = fireStoreService.streamCollection(
+            path = "chats",
+            fromJson = ChatDto::fromJson,
+            queryBuilder = { query ->
+                query.whereArrayContains("participants", userId)
+            }
+        ).map { chats ->
+            chats.sortedByDescending { it.updatedAt }
+        }
+
+        val countsFlow = chats.map { chatList ->
+            coroutineScope {
+                chatList.map { chat ->
+                    async {
+                        val count = getUnreadMessageCountForUserByChatId(
+                            chatId = chat.id,
+                            userId = userId
+                        )
+                        chat.id to count
+                    }
+                }.awaitAll().toMap()
+            }
+        }
+
+        return combine(chats, countsFlow) { chatList, countsMap ->
+            chatList.map { chat ->
+                chat.copy(unreadMessageCount = countsMap[chat.id] ?: 0)
+            }
+        }
+    }
+
+    override suspend fun getChatById(chatId: String): ChatDto {
+        return fireStoreService.getDoc(
+            path = "$CHATS_COLLECTION/$chatId",
+            fromJson = ChatDto::fromJson
+        ) ?: throw DocumentNotFoundException("$CHATS_COLLECTION/$chatId")
+    }
+
+    override suspend fun getChatByParticipants(participants: List<String>): ChatDto? {
+        return fireStoreService.getCollection(
+            path = CHATS_COLLECTION,
+            fromJson = ChatDto::fromJson,
+            queryBuilder = { query ->
+                query.whereArrayContains("participants", participants.first())
+                    .whereEqualTo("participants", participants)
+            }
+        ).firstOrNull()
+    }
+
+    override suspend fun addChat(participants: List<String>): String {
+        val existingChat = getChatByParticipants(participants)
+        if (existingChat != null) return existingChat.id
+
+        val chatData = ChatDto(id = "", participants = participants).toJson()
+        val chatId = fireStoreService.addToCollection(CHATS_COLLECTION, chatData)
+        return chatId
+    }
+
+    override suspend fun updateChat(chatId: String, chatData: ChatDto) {
+        return fireStoreService.updateDoc("$CHATS_COLLECTION/$chatId", chatData.toJson())
+    }
+
+    override suspend fun markMessagesAsSeen(chatId: String, userId: String) {
+        val messages = fireStoreService.getCollection(
+            path = "$CHATS_COLLECTION/$chatId/$MESSAGES_COLLECTION",
+            fromJson = MessageDto::fromJson,
+            queryBuilder = { query ->
+                query.whereEqualTo("receiverId", userId)
+                    .whereEqualTo("seen", false)
+            }
+        )
+
+        if (messages.isEmpty()) return
+
+        val operations = messages.map { message ->
+            UpdateOperation(
+                path = "$CHATS_COLLECTION/$chatId/$MESSAGES_COLLECTION/${message.id}",
+                data = mapOf("seen" to true)
+            )
+        }
+
+        fireStoreService.batchWrite(operations)
+    }
+
+    companion object {
+        const val CHATS_COLLECTION = "chats"
+        const val MESSAGES_COLLECTION = "messages"
+    }
+}
