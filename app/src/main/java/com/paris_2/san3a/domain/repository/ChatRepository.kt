@@ -1,7 +1,7 @@
 package com.paris_2.san3a.domain.repository
 
 import com.paris_2.san3a.domain.entity.Chat
-import com.paris_2.san3a.domain.entity.LastMessage
+import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -22,9 +22,14 @@ class ChatRepository {
             usersParticipantIds = listOf(
                 12,22
             ),
-            lastMessage = LastMessage(
+            lastMessage = Message(
+                id = 1,
+                time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                senderId = 1,
+                receiverId = 2,
+                chatId = chatId,
                 messageContent = MessageContent.Text("Hello world!"),
-                time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                false
             ),
             unreadMessagesCount = 0,
             senderImageUrl = "https://example.com/image$chatId.jpg"
@@ -39,9 +44,14 @@ class ChatRepository {
                 usersParticipantIds = listOf(
                     12,22
                 ),
-                lastMessage = LastMessage(
+                lastMessage = Message(
+                    id = 1,
+                    time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                    senderId = 1,
+                    receiverId = 2,
+                    chatId = 9,
                     messageContent = MessageContent.Text("Hello world!"),
-                    time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                    false
                 ),
                 unreadMessagesCount = 0,
                 senderImageUrl = "https://example.com/image$1.jpg"
@@ -52,9 +62,14 @@ class ChatRepository {
                 usersParticipantIds = listOf(
                     12,22
                 ),
-                lastMessage = LastMessage(
+                lastMessage = Message(
+                    id = 1,
+                    time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                    senderId = 1,
+                    receiverId = 2,
+                    chatId = 9,
                     messageContent = MessageContent.Text("Hello world!"),
-                    time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                    false
                 ),
                 unreadMessagesCount = 0,
                 senderImageUrl = "https://example.com/image$1.jpg"
@@ -65,9 +80,14 @@ class ChatRepository {
                 usersParticipantIds = listOf(
                     12,22
                 ),
-                lastMessage = LastMessage(
+                lastMessage = Message(
+                    id = 1,
+                    time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                    senderId = 1,
+                    receiverId = 2,
+                    chatId = 9,
                     messageContent = MessageContent.Text("Hello world!"),
-                    time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                    false
                 ),
                 unreadMessagesCount = 0,
                 senderImageUrl = "https://example.com/image$1.jpg"
