@@ -1,30 +1,27 @@
 package com.paris_2.san3a.presentation.screen.onboarding
 
 import androidx.navigation.NavOptions
-import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
 import com.paris_2.san3a.domain.usecase.SetOnboardingCompletedUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.base.BaseViewModel
 
 class OnBoardingViewModel(
-    private val isOnboardingCompletedUseCase: IsOnboardingCompletedUseCase,
-    private val setOnboardingCompletedUseCase : SetOnboardingCompletedUseCase
+    private val setOnboardingCompletedUseCase: SetOnboardingCompletedUseCase
 ) : OnBoardingInteractionListener, BaseViewModel<OnBoardingUIState>(
     OnBoardingUIState(
-        isCompleted = isOnboardingCompletedUseCase.invoke()
+        isCompleted = false
     )
 ) {
-
     fun setOnboardingCompleted() {
         tryToExecute(
             execute = {
-                setOnboardingCompletedUseCase.invoke()
+                setOnboardingCompletedUseCase()
             },
             onSuccess = {
                 updateState(screenState.value.copy(isCompleted = true))
                 navigateToHome()
             },
-            onError = {message ->
+            onError = { message ->
                 updateState(screenState.value.copy(error = message))
             },
         )
@@ -58,6 +55,4 @@ class OnBoardingViewModel(
                 .build()
         )
     }
-
-
 }
