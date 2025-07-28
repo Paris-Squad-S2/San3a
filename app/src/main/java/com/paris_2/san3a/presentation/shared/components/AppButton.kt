@@ -4,6 +4,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -140,16 +141,17 @@ private fun getAppContentPadding(
     isLoading: Boolean,
     isLarge: Boolean
 ): PaddingValues {
+    val horizontalPadding = animateDpAsState(if(isLarge) 24.dp else 16.dp)
     if (isLoading) {
         return when (type) {
             AppButtonType.Primary, AppButtonType.Secondary -> PaddingValues(
-                horizontal = if (isLarge) 24.dp else 16.dp,
-                vertical = if (isLarge) 12.dp else 8.dp
+                horizontal = horizontalPadding.value,
+                vertical = animateDpAsState(if(isLarge) 12.dp else 8.dp).value
             )
 
             AppButtonType.Tertiary -> PaddingValues(
-                horizontal = if (isLarge) 24.dp else 16.dp,
-                vertical = if (isLarge) 24.dp else 4.dp
+                horizontal = horizontalPadding.value,
+                vertical = 4.dp
             )
 
 
@@ -157,13 +159,13 @@ private fun getAppContentPadding(
     } else {
         return when (type) {
             AppButtonType.Primary, AppButtonType.Secondary -> PaddingValues(
-                horizontal = if (isLarge) 24.dp else 16.dp,
-                vertical = if (isLarge) 15.dp else 12.5.dp
+                horizontal = horizontalPadding.value,
+                vertical = animateDpAsState(if(isLarge) 15.dp else 13.dp).value
             )
 
             AppButtonType.Tertiary -> PaddingValues(
-                horizontal = if (isLarge) 24.dp else 16.dp,
-                vertical = if (isLarge) 7.dp else 8.5.dp
+                horizontal = horizontalPadding.value,
+                vertical = animateDpAsState(if(isLarge) 7.dp else 9.dp).value
             )
 
         }
