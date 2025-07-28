@@ -6,13 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface MessagesRemoteDataSource {
     fun getUserChats(userId: String): Flow<List<ChatDto>>
-    suspend fun getChatById(chatId: String): ChatDto
-    suspend fun getChatByParticipants(participants: List<String>): ChatDto?
     suspend fun addChat(participants: List<String>): String
-    suspend fun updateChat(chatId: String, chatData: ChatDto)
+    suspend fun deleteChat(chatId: String)
 
-    suspend fun getChatMessages(chatId: String): Flow<List<MessageDto>>
+    fun getChatMessages(chatId: String): Flow<List<MessageDto>>
     suspend fun sendMessage(message: MessageDto): MessageDto
-    suspend fun getUnreadMessageCountForUserByChatId(chatId: String, userId: String): Int
     suspend fun markMessagesAsSeen(chatId: String, userId: String)
 }

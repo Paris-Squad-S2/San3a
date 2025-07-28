@@ -1,6 +1,5 @@
 package com.paris_2.san3a.data.source.remote.messages
 
-import android.util.Log
 import com.paris_2.san3a.data.service.firestore.DocumentNotFoundException
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceException
@@ -17,7 +16,7 @@ import kotlinx.coroutines.flow.map
 class MessagesRemoteDataSourceImp(
     private val fireStoreService: FireStoreService,
 ) : MessagesRemoteDataSource {
-    override suspend fun getChatMessages(chatId: String): Flow<List<MessageDto>> {
+    override fun getChatMessages(chatId: String): Flow<List<MessageDto>> {
         return fireStoreService.streamCollection(
             path = "$CHATS_COLLECTION/$chatId/$MESSAGES_COLLECTION",
             fromJson = { data, id -> MessageDto.fromJson(data, id) },
@@ -44,7 +43,7 @@ class MessagesRemoteDataSourceImp(
         return message.copy(id = messageId)
     }
 
-    override suspend fun getUnreadMessageCountForUserByChatId(chatId: String, userId: String): Int {
+    suspend fun getUnreadMessageCountForUserByChatId(chatId: String, userId: String): Int {
         return fireStoreService.getCountOfCollection(
             path = "$CHATS_COLLECTION/$chatId/$MESSAGES_COLLECTION",
             queryBuilder = { query ->
@@ -88,14 +87,14 @@ class MessagesRemoteDataSourceImp(
         }
     }
 
-    override suspend fun getChatById(chatId: String): ChatDto {
+    suspend fun getChatById(chatId: String): ChatDto {
         return fireStoreService.getDoc(
             path = "$CHATS_COLLECTION/$chatId",
             fromJson = ChatDto::fromJson
         ) ?: throw DocumentNotFoundException("$CHATS_COLLECTION/$chatId")
     }
 
-    override suspend fun getChatByParticipants(participants: List<String>): ChatDto? {
+    suspend fun getChatByParticipants(participants: List<String>): ChatDto? {
         return fireStoreService.getCollection(
             path = CHATS_COLLECTION,
             fromJson = ChatDto::fromJson,
@@ -115,8 +114,8 @@ class MessagesRemoteDataSourceImp(
         return chatId
     }
 
-    override suspend fun updateChat(chatId: String, chatData: ChatDto) {
-        return fireStoreService.updateDoc("$CHATS_COLLECTION/$chatId", chatData.toJson())
+    override suspend fun deleteChat(chatId: String) {
+        fireStoreService.deleteDoc("$CHATS_COLLECTION/$chatId")
     }
 
     override suspend fun markMessagesAsSeen(chatId: String, userId: String) {
