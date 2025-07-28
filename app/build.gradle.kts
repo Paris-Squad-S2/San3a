@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.kotlin.serialization)
 
 }
 
@@ -74,4 +75,7 @@ dependencies {
 
     // Local Date ( kotlin x )
     implementation(libs.kotlinx.datetime)
+
+    //firestore
+    implementation(libs.firebase.firestore.ktx)
 }
