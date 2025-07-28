@@ -17,7 +17,7 @@ import com.paris_2.san3a.R
 
 
 @Composable
-fun OffersSection(
+fun Offers(
     modifier: Modifier = Modifier,
     images: List<Painter>
 ){
@@ -77,11 +77,11 @@ fun OffersSection(
 
 @Composable
 @Preview(showBackground = true)
-fun OffersSectionPreview() {
+fun OffersPreview() {
     val images = listOf(
         painterResource(id = R.drawable.img_craftsman_offer3),
         painterResource(id = R.drawable.img_craftsman_offer1),
         painterResource(id = R.drawable.img_craftsman_offer2)
     )
-    OffersSection(images = images)
+    Offers(images = images)
 }

@@ -29,7 +29,7 @@ data class CardItem(
 )
 
 @Composable
-fun CardsSection() {
+fun Cards() {
     val cards = listOf(
         CardItem("Cleaning", R.drawable.ic_washing_machine_bold, backgroundColor = Theme.colors.additional.primary.purple, textColor = Theme.colors.background.card, iconColor = Theme.colors.additional.primary.purple, iconBackgroundColor = Theme.colors.background.card),
         CardItem("AC Repair", R.drawable.ic_conditioner_bold, Theme.colors.background.card, Theme.colors.additional.secondary.red, Theme.colors.shade.primary, Theme.colors.additional.primary.red),
@@ -83,7 +83,7 @@ fun CardsSection() {
 
 @Preview(showBackground = true)
 @Composable
-fun OnBoardingLayoutPreview() {
-    CardsSection()
+fun CardsPreview() {
+    Cards()
 }
 

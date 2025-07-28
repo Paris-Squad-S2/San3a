@@ -9,8 +9,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.screen.onboarding.components.CardsSection
-import com.paris_2.san3a.presentation.screen.onboarding.components.OffersSection
+import com.paris_2.san3a.presentation.screen.onboarding.components.Cards
+import com.paris_2.san3a.presentation.screen.onboarding.components.Offers
 
 
 data class Page(
@@ -35,12 +35,12 @@ fun onboardingPages(): List<Page> {
             description = stringResource(id = R.string.onboarding1description)
         ),
         Page(
-            item = { CardsSection() },
+            item = { Cards() },
             title = stringResource(id = R.string.onboarding2title),
             description = stringResource(id = R.string.onboarding2description)
         ),
         Page(
-            item = {OffersSection(
+            item = {Offers(
                 images = listOf(
                     painterResource(id = R.drawable.img_craftsman_offer3),
                     painterResource(id = R.drawable.img_craftsman_offer1),
