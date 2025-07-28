@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">San3a - صنعة</string>
+    <string name="onboarding1title">Relax, We’ve Got It Covered</string>
+    <string name="onboarding1description">From the comfort of your couch, post your request and let trusted professionals come to you, no calls, no stress.</string>
+    <string name="onboarding2title">Find What You Need in Seconds</string>
+    <string name="onboarding2description">Browse dozens of home services — from quick fixes to big projects. Just tap a category and get started instantly.</string>
+    <string name="onboarding3title">"Post, Compare Offers and Choose!"</string>
+    <string name="onboarding3description">Receive multiple offers from nearby professionals, check their prices and ratings, then pick the one that suits you best.</string>
 </resources>
