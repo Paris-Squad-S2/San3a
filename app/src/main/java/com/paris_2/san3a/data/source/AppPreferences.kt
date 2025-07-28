@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.onboarding
+package com.paris_2.san3a.data.source
 
 import android.content.Context
 import androidx.core.content.edit

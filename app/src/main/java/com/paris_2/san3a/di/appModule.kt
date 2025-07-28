@@ -6,4 +6,5 @@ val appModule = module {
     includes(navigationModule)
     includes(dataModule)
     includes(viewModelModule)
+    includes(useCaseModule)
 }
