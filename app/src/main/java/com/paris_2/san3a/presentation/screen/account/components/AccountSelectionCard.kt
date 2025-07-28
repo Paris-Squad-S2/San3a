@@ -26,6 +26,7 @@ fun AccountSelectionCard(
     title: String,
     caption: String,
     userImage: Painter,
+    modifier: Modifier = Modifier,
     isSelect: Boolean = false,
 ) {
     val backgroundColor = if (isSelect) Theme.colors.brand.tertiary else Theme.colors.background.card
@@ -40,7 +41,7 @@ fun AccountSelectionCard(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .then(borderModifier)
             .background(
                 color = backgroundColor,
