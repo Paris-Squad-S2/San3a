@@ -12,6 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavOptions
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.navigation.Navigator
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -21,14 +22,26 @@ import org.koin.compose.koinInject
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier,
-    navigator: Navigator = koinInject()
+    navigator: Navigator = koinInject(),
+    isOnboardingCompletedUseCase: IsOnboardingCompletedUseCase = koinInject(),
 ) {
     LaunchedEffect(Unit) {
         delay(2000)
-        val options = NavOptions.Builder()
-            .setPopUpTo(Destinations.Splash, true)
-            .build()
-        navigator.navigate(Destinations.OnBoarding, options)
+        if (isOnboardingCompletedUseCase()) {
+            navigator.navigate(
+                destination = Destinations.Home,
+                navOptions = NavOptions.Builder()
+                    .setPopUpTo(Destinations.OnBoarding, inclusive = true)
+                    .build()
+            )
+        } else {
+            navigator.navigate(
+                Destinations.OnBoarding, NavOptions.Builder()
+                    .setPopUpTo(Destinations.Splash, true)
+                    .build()
+            )
+        }
+
     }
     Box(
         modifier = modifier
