@@ -16,6 +16,3 @@ sealed class MessageContent{
     data class Audio(val url:String,val duration:Int,val waves:List<Float>): MessageContent()
     data class Image(val title:String,val urls:List<String>): MessageContent()
 }
-
-
-
