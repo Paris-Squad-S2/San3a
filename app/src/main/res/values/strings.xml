@@ -4,4 +4,5 @@
     <string name="leading_icon">leading icon</string>
     <string name="toggle_password_visibility">Toggle password visibility</string>
     <string name="error">Error</string>
+    <string name="welcome_to_san3a">Welcome to San3a 👋</string>
 </resources>
