@@ -45,7 +45,7 @@ fun AppTextField(
     errorMessage: String? = null,
     isPassword: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null,
-    leadingIcon: Int,
+    leadingIcon: @Composable (() -> Unit)? = null,
     singleLine: Boolean = true,
     maxLines: Int = 1,
     enabled: Boolean = true,
@@ -93,13 +93,7 @@ fun AppTextField(
             maxLines = maxLines,
             isError = isError,
             enabled = enabled,
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(leadingIcon),
-                    contentDescription = stringResource(R.string.leading_icon),
-                    tint = Theme.colors.shade.tertiary
-                )
-            },
+            leadingIcon = leadingIcon,
             trailingIcon = {
                 when {
                     isPassword -> {
@@ -111,7 +105,6 @@ fun AppTextField(
                             Icon(painter = image, contentDescription = stringResource(R.string.toggle_password_visibility))
                         }
                     }
-
                     isError -> {
                         Icon(
                             painter = painterResource(R.drawable.outline_danger_triangle),
@@ -119,8 +112,7 @@ fun AppTextField(
                             tint = Theme.colors.additional.primary.red
                         )
                     }
-
-                    trailingIcon != null -> trailingIcon()
+                    else -> trailingIcon?.invoke()
                 }
             },
             visualTransformation = if (isPassword && !passwordVisible)
@@ -180,7 +172,13 @@ private fun PreviewBasicAppTextField() {
             value = text,
             onValueChange = { text = it },
             placeholder = "Enter your name",
-            leadingIcon = R.drawable.due_tone_profile
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.due_tone_profile),
+                    contentDescription = null,
+                    tint = Theme.colors.shade.tertiary
+                )
+            }
         )
     }
 }
@@ -197,7 +195,13 @@ private fun PreviewPasswordAppTextField() {
             onValueChange = { password = it },
             placeholder = "Password",
             isPassword = true,
-            leadingIcon = R.drawable.due_tone_profile
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.due_tone_profile),
+                    contentDescription = null,
+                    tint = Theme.colors.shade.tertiary
+                )
+            }
         )
     }
 }
@@ -215,7 +219,13 @@ private fun PreviewErrorAppTextField() {
             placeholder = "Email",
             isError = true,
             errorMessage = "Error Message",
-            leadingIcon = R.drawable.due_tone_profile
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.due_tone_profile),
+                    contentDescription = null,
+                    tint = Theme.colors.shade.tertiary
+                )
+            }
         )
     }
 }
