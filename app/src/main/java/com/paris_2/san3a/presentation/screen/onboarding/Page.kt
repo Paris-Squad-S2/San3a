@@ -17,7 +17,7 @@ import com.paris_2.san3a.presentation.screen.onboarding.components.Offers
 data class Page(
     val item: @Composable () -> Unit,
     val title: String,
-    val description: String
+    val description: String,
 )
 
 
@@ -28,8 +28,10 @@ fun onboardingPages(): List<Page> {
             item = {
                 Image(
                     painter = painterResource(id = R.drawable.img_onboarding1),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    contentScale = ContentScale.Fit,
                     contentDescription = "Onboarding 1"
                 )
             },
@@ -42,14 +44,16 @@ fun onboardingPages(): List<Page> {
             description = stringResource(id = R.string.onboarding2description)
         ),
         Page(
-            item = {Offers(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                images = listOf(
-                    painterResource(id = R.drawable.img_craftsman_offer3),
-                    painterResource(id = R.drawable.img_craftsman_offer1),
-                    painterResource(id = R.drawable.img_craftsman_offer2)
+            item = {
+                Offers(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    images = listOf(
+                        painterResource(id = R.drawable.img_craftsman_offer3),
+                        painterResource(id = R.drawable.img_craftsman_offer1),
+                        painterResource(id = R.drawable.img_craftsman_offer2)
+                    )
                 )
-            )},
+            },
             title = stringResource(id = R.string.onboarding3title),
             description = stringResource(id = R.string.onboarding3description)
         )
