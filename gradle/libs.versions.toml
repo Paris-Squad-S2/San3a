@@ -19,7 +19,6 @@ navigationCompose = "2.9.2"
 serializationJson ="1.9.0"
 kotlinxDatetime = "0.7.1"
 
-
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
