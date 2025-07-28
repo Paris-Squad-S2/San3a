@@ -35,6 +35,7 @@ fun OffersSection(
                 .graphicsLayer {
                     rotationZ = 8f
                 }
+                .padding(top = 20.dp)
         ){
             Image(
                 painter = images[0],
@@ -47,7 +48,10 @@ fun OffersSection(
                 .graphicsLayer {
                     rotationZ = -8f
                 }
-                .padding(top = 70.dp)
+                .padding(
+                    top = 90.dp,
+                    bottom = 10.dp
+                )
         ){
             Image(
                 painter = images[1],
@@ -60,7 +64,7 @@ fun OffersSection(
                 .graphicsLayer {
                     rotationZ = 4f
                 }
-                .padding(top = 155.dp)
+                .padding(top = 175.dp)
         ){
             Image(
                 painter = images[2],
