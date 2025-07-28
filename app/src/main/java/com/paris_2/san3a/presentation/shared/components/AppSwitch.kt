@@ -2,9 +2,9 @@ package com.paris_2.san3a.presentation.shared.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,7 +32,6 @@ fun AppSwitch(
     isEnabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val isDarkTheme = isSystemInDarkTheme()
     Switch(
         checked = checked,
         onCheckedChange = onCheckedChange,
@@ -46,8 +45,7 @@ fun AppSwitch(
                         color = when {
                             !isEnabled -> Theme.colors.shade.tertiary
                             checked -> Color.White
-                            isDarkTheme -> Theme.colors.shade.secondary
-                            else -> Theme.colors.shade.tertiary
+                            else -> Theme.colors.shade.secondary
                         }
                     )
             )
@@ -56,11 +54,7 @@ fun AppSwitch(
             checkedThumbColor = Color.White,
             checkedTrackColor = Theme.colors.brand.primary,
             checkedBorderColor = Theme.colors.brand.primary,
-            uncheckedThumbColor = if (isDarkTheme) {
-                Theme.colors.shade.secondary
-            } else {
-                Theme.colors.shade.tertiary
-            },
+            uncheckedThumbColor = Theme.colors.shade.secondary,
             uncheckedTrackColor = Theme.colors.shade.quaternary,
             uncheckedBorderColor = Theme.colors.shade.secondary,
             disabledCheckedThumbColor = Theme.colors.shade.tertiary,
@@ -74,8 +68,8 @@ fun AppSwitch(
     )
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun AppSwitchPreview() {
     San3aTheme {
@@ -83,6 +77,7 @@ private fun AppSwitchPreview() {
         var enabledUnchecked by remember { mutableStateOf(false) }
         var disabledChecked by remember { mutableStateOf(true) }
         var disabledUnchecked by remember { mutableStateOf(false) }
+        Column {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.padding(16.dp)
@@ -95,19 +90,26 @@ private fun AppSwitchPreview() {
                 )
                 AppSwitch(
                     checked = enabledUnchecked,
-                    onCheckedChange = {enabledUnchecked = it},
+                    onCheckedChange = { enabledUnchecked = it },
                     isEnabled = true
                 )
+            }
+            Row (
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.padding(16.dp)
+                    .background(MaterialTheme.colorScheme.background)
+            ){
                 AppSwitch(
                     checked = disabledChecked,
-                    onCheckedChange = { disabledChecked = it},
+                    onCheckedChange = { disabledChecked = it },
                     isEnabled = false
                 )
                 AppSwitch(
                     checked = disabledUnchecked,
-                    onCheckedChange = {disabledUnchecked = it },
+                    onCheckedChange = { disabledUnchecked = it },
                     isEnabled = false
                 )
             }
+        }
     }
 }
