@@ -40,7 +40,7 @@ fun AppBar(
         if (showBackIcon) {
             IconButton(onClick = onBackClick) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_arrow_left),
+                    painter = painterResource(R.drawable.ic_arrow_left_outline),
                     contentDescription = null,
                     tint = Theme.colors.button.onSecondary
                 )
@@ -49,8 +49,6 @@ fun AppBar(
         Text(
             text = title,
             modifier = Modifier.weight(1F),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
             style = Theme.textStyle.title.medium,
             color = Theme.colors.shade.primary,
         )
@@ -67,7 +65,7 @@ private fun AppBarPrev() {
         onBackClick = {},
         actionIcon = {
             Icon(
-                painter = painterResource(R.drawable.ic_notifications),
+                painter = painterResource(R.drawable.ic_notification_outline),
                 contentDescription = null,
                 tint = Color.Unspecified
             )
