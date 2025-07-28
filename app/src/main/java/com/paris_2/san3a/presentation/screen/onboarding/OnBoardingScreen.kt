@@ -3,7 +3,9 @@ package com.paris_2.san3a.presentation.screen.onboarding
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -91,6 +93,7 @@ fun OnBoardingScreenContent(
                     page = pages[index]
                 )
             }
+            Spacer(Modifier.height(32.dp))
             TextSection(page = pages[pagerState.currentPage])
             BottomSection(
                 onNextClick = {
