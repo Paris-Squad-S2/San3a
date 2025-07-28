@@ -8,4 +8,7 @@
     <string name="ok">حسنا</string>
     <string name="button">زر</string>
     <string name="user_image">صوره المستخدم</string>
+    <string name="first">الاول</string>
+    <string name="second">الثاني</string>
+    <string name="third">الثالث</string>
 </resources>
