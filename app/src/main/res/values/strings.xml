@@ -3,5 +3,6 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="toggle_password_visibility">Toggle password visibility</string>
     <string name="error">Error</string>
+    <string name="show_more">Show More</string>
     <string name="user_image">user image</string>
 </resources>

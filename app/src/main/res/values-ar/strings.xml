@@ -4,5 +4,6 @@
     <string name="forgot_password">نسيت كلمة المرور؟</string>
     <string name="toggle_password_visibility">تبديل رؤية كلمة المرور</string>
     <string name="error">خطأ</string>
+    <string name="show_more">رأية المزيد</string>
     <string name="user_image">صوره المستخدم</string>
 </resources>
