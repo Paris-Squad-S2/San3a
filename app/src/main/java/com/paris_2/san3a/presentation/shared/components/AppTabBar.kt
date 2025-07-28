@@ -9,7 +9,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PrimaryTabRow
@@ -20,10 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
@@ -40,8 +42,7 @@ fun AppTabBar(
         selectedTabIndex = selectedIndex,
         containerColor = Theme.colors.background.card,
         modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp),
+            .fillMaxWidth(),
         divider = {
             Box(
                 Modifier
@@ -60,12 +61,13 @@ fun AppTabBar(
             )
         }) {
         tabItems.forEachIndexed { index, title ->
+            val interactionSource = remember { MutableInteractionSource() }
             Tab(
                 selected = selectedIndex == index,
                 onClick = { onTabSelected(index) },
-                interactionSource = remember { MutableInteractionSource() },
+                interactionSource = interactionSource,
                 modifier = Modifier.indication(
-                    interactionSource = remember { MutableInteractionSource() }, indication = null
+                    interactionSource = interactionSource, indication = null
                 ),
                 text = { TextTabBar(selectedIndex, index, title) })
         }
@@ -88,16 +90,21 @@ private fun TextTabBar(
         textAlign = TextAlign.Center,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        modifier = modifier.padding(horizontal = 24.dp, vertical = 8.dp)
+        modifier = modifier
     )
 }
 
 @Preview(showBackground = true, showSystemUi = false)
+@Preview(showBackground = true, showSystemUi = false, locale = "ar")
 @Composable
 private fun AppTabBarWithFirstSelectedPreview() {
     San3aTheme {
         AppTabBar(
-            tabItems = listOf("first", "second", "third"),
+            tabItems = listOf(
+                stringResource(R.string.first),
+                stringResource(R.string.second),
+                stringResource(R.string.third)
+            ),
             selectedIndex = 0,
             onTabSelected = {},
         )
@@ -106,27 +113,36 @@ private fun AppTabBarWithFirstSelectedPreview() {
 }
 
 @Preview(showBackground = true, showSystemUi = false)
-@Composable
-private fun AppTabBarWithSecondSelectedPreview() {
-    San3aTheme {
-        AppTabBar(
-            tabItems = listOf("first", "second", "third"),
-            selectedIndex = 1,
-            onTabSelected = {},
-        )
-    }
-
-}
-
-@Preview(showBackground = true, showSystemUi = false)
+@PreviewLightDark
+@Preview(showBackground = true, showSystemUi = false, locale = "ar")
 @Composable
 private fun AppTabBarWithThirdSelectedPreview() {
     San3aTheme {
         AppTabBar(
-            tabItems = listOf("first", "second", "third"),
+            tabItems = listOf(
+                stringResource(R.string.first),
+                stringResource(R.string.second),
+                stringResource(R.string.third)
+            ),
             selectedIndex = 2,
             onTabSelected = {},
         )
     }
+}
 
+@Preview(showBackground = true, showSystemUi = false)
+@Preview(showBackground = true, showSystemUi = false, locale = "ar")
+@Composable
+private fun AppTabBarWithSecondSelectedPreview() {
+    San3aTheme {
+        AppTabBar(
+            tabItems = listOf(
+                stringResource(R.string.first),
+                stringResource(R.string.second),
+                stringResource(R.string.third)
+            ),
+            selectedIndex = 1,
+            onTabSelected = {},
+        )
+    }
 }
