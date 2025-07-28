@@ -1,12 +1,12 @@
 package com.paris_2.san3a.data.source.remote.messages.dto
 
 import com.paris_2.san3a.data.utils.getCurrentDate
+import com.paris_2.san3a.data.utils.toFloatList
+import com.paris_2.san3a.data.utils.toLocalDateTime
+import com.paris_2.san3a.data.utils.toLong
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
+
 
 data class MessageDto(
     val id: String,
@@ -41,13 +41,9 @@ data class MessageDto(
 
                 voiceUrl = data["voiceUrl"]?.toString(),
                 voiceDuration = data["voiceDuration"] as? Int,
-                voiceWaveform = (data["voiceWaveform"] as? List<*>)?.filterIsInstance<Number>()
-                    ?.map { it.toFloat() },
+                voiceWaveform = (data["voiceWaveform"] as? List<*>).toFloatList(),
 
-                dateTime = Instant.fromEpochMilliseconds(
-                    data["timestamp"] as? Long ?: System.currentTimeMillis()
-                )
-                    .toLocalDateTime(TimeZone.UTC),
+                dateTime = (data["timestamp"] as? Long).toLocalDateTime(),
                 seen = data["seen"] as? Boolean ?: false
             )
         }
@@ -59,7 +55,7 @@ data class MessageDto(
             "chatId" to this.chatId,
             "senderId" to this.senderId,
             "receiverId" to this.receiverId,
-            "timestamp" to this.dateTime.toInstant(TimeZone.UTC).toEpochMilliseconds(),
+            "timestamp" to this.dateTime.toLong(),
             "seen" to this.seen
         )
         this.text?.let { map["text"] = it }

@@ -1,31 +1,37 @@
 package com.paris_2.san3a.data.source.remote.messages
 
+import com.google.firebase.firestore.Query
 import com.paris_2.san3a.data.service.firestore.DocumentNotFoundException
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceException
 import com.paris_2.san3a.data.service.firestore.UpdateOperation
 import com.paris_2.san3a.data.source.remote.messages.dto.ChatDto
 import com.paris_2.san3a.data.source.remote.messages.dto.MessageDto
+import com.paris_2.san3a.data.utils.toLong
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlin.time.ExperimentalTime
 
 class MessagesRemoteDataSourceImp(
     private val fireStoreService: FireStoreService,
 ) : MessagesRemoteDataSource {
+
     override fun getChatMessages(chatId: String): Flow<List<MessageDto>> {
         return fireStoreService.streamCollection(
             path = "$CHATS_COLLECTION/$chatId/$MESSAGES_COLLECTION",
-            fromJson = { data, id -> MessageDto.fromJson(data, id) },
-            queryBuilder = { query -> query }
-        ).map { messages ->
-            messages.sortedBy { it.dateTime }
-        }
+            fromJson = MessageDto::fromJson,
+            queryBuilder = { query ->
+                query
+                    .orderBy("timestamp", Query.Direction.ASCENDING)
+            }
+        )
     }
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun sendMessage(message: MessageDto): MessageDto {
         val chatId: String = try {
             getChatById(message.chatId).id
@@ -40,7 +46,18 @@ class MessagesRemoteDataSourceImp(
             path = "$CHATS_COLLECTION/${chatId}/$MESSAGES_COLLECTION",
             data = messageData
         )
-        return message.copy(id = messageId)
+
+        val savedMessage = message.copy(id = messageId)
+
+        fireStoreService.updateDoc(
+            "$CHATS_COLLECTION/$chatId",
+            mapOf(
+                "lastMessage" to savedMessage.toJson(),
+                "updatedAt" to savedMessage.dateTime.toLong()
+            )
+        )
+
+        return savedMessage
     }
 
     suspend fun getUnreadMessageCountForUserByChatId(chatId: String, userId: String): Int {
@@ -61,10 +78,9 @@ class MessagesRemoteDataSourceImp(
             fromJson = ChatDto::fromJson,
             queryBuilder = { query ->
                 query.whereArrayContains("participants", userId)
-            }
-        ).map { chats ->
-            chats.sortedByDescending { it.updatedAt }
-        }
+                    .orderBy("updatedAt", Query.Direction.DESCENDING)
+            },
+        )
 
         val countsFlow = chats.map { chatList ->
             coroutineScope {

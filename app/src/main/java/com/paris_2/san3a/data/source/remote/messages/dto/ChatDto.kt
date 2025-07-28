@@ -1,12 +1,11 @@
 package com.paris_2.san3a.data.source.remote.messages.dto
 
 import com.paris_2.san3a.data.utils.getCurrentDate
+import com.paris_2.san3a.data.utils.toLocalDateTime
+import com.paris_2.san3a.data.utils.toLong
+import com.paris_2.san3a.data.utils.toMessageDto
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 
 data class ChatDto(
     val id: String,
@@ -25,17 +24,9 @@ data class ChatDto(
                 id = id,
                 participants = (data["participants"] as? List<*>)?.filterIsInstance<String>()
                     ?: emptyList(),
-                createdAt = (data["createdAt"] as? Long)?.let {
-                    Instant.fromEpochMilliseconds(it)
-                        .toLocalDateTime(TimeZone.UTC)
-                } ?: LocalDateTime(1970, 1, 1, 0, 0),
-                updatedAt = (data["updatedAt"] as? Long)?.let {
-                    Instant.fromEpochMilliseconds(it)
-                        .toLocalDateTime(TimeZone.UTC)
-                } ?: LocalDateTime(1970, 1, 1, 0, 0),
-                lastMessage = (data["lastMessage"] as? Map<String, Any>)?.let { messageData ->
-                    MessageDto.fromJson(messageData, messageData["id"]?.toString() ?: "")
-                }
+                createdAt = (data["createdAt"] as? Long).toLocalDateTime(),
+                updatedAt = (data["updatedAt"] as? Long).toLocalDateTime(),
+                lastMessage = (data["lastMessage"] as? Map<String, Any>)?.toMessageDto(),
             )
         }
     }
@@ -44,8 +35,8 @@ data class ChatDto(
     fun toJson(): Map<String, Any> {
         val map = mutableMapOf<String, Any>(
             "participants" to this.participants,
-            "createdAt" to this.createdAt.toInstant(TimeZone.UTC).toEpochMilliseconds(),
-            "updatedAt" to this.updatedAt.toInstant(TimeZone.UTC).toEpochMilliseconds()
+            "createdAt" to this.createdAt.toLong(),
+            "updatedAt" to this.updatedAt.toLong()
         )
         this.lastMessage?.let {
             map["lastMessage"] = it.toJson()
@@ -53,4 +44,3 @@ data class ChatDto(
         return map
     }
 }
-
