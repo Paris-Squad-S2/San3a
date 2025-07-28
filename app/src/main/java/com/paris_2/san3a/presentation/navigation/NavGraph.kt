@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.navigation.compose.composable
+import com.paris_2.san3a.presentation.screen.HomeScreen
+import com.paris_2.san3a.presentation.screen.onboarding.onboardingPages
 
 import org.koin.compose.koinInject
 
@@ -38,6 +40,7 @@ fun San3aNavGraph(
 fun NavGraphBuilder.buildSan3aNavGraph() {
     navigation<Destinations.MainGraph>(startDestination = Destinations.Splash) {
         composable<Destinations.Splash>{ SplashScreen() }
-        composable<Destinations.OnBoarding>{ OnBoardingScreen() }
+        composable<Destinations.OnBoarding>{ OnBoardingScreen(pages = onboardingPages()) }
+        composable<Destinations.Home>{ HomeScreen() }
     }
 }
