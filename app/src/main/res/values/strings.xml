@@ -1,5 +1,9 @@
 <resources>
-    <string name="app_name">San3a - صنعة</string>
+    <string name="app_name">San3a</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="leading_icon">leading icon</string>
+    <string name="toggle_password_visibility">Toggle password visibility</string>
+    <string name="error">Error</string>
     <string name="ok">ok</string>
     <string name="button">Button</string>
 </resources>
