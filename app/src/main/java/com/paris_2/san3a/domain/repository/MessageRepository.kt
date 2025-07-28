@@ -1,7 +1,7 @@
-package com.paris_2.san3a.domain.fakerepo
+package com.paris_2.san3a.domain.repository
 
 import com.paris_2.san3a.domain.entity.Message
-import com.paris_2.san3a.domain.entity.MessageType
+import com.paris_2.san3a.domain.entity.MessageContent
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
@@ -16,9 +16,11 @@ class MessageRepository(
             Message(
                 id = 1,
                 time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-                userId = 1,
+                senderId = 1,
+                receiverId = 2,
                 chatId = chatId,
-                messageType = MessageType.Text("Hello world!")
+                messageContent = MessageContent.Text("Hello world!"),
+                false
             )
         )
     }
