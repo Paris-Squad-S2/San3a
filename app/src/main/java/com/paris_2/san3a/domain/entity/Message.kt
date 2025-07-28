@@ -5,14 +5,16 @@ import kotlinx.datetime.LocalDateTime
 data class Message(
     val id:Int,
     val time: LocalDateTime,
-    val userId:Int,
+    val senderId:Int,
+    val receiverId:Int,
     val chatId: Int,
-    val messageType:MessageType,
+    val messageContent:MessageContent,
+    val seen: Boolean,
 )
-sealed class MessageType{
-    data class Text(val content:String): MessageType()
-    data class Audio(val url:String,val duration:Int): MessageType()
-    data class Image(val title:String,val url:String): MessageType()
+sealed class MessageContent{
+    data class Text(val content:String): MessageContent()
+    data class Audio(val url:String,val duration:Int,val waves:List<Float>): MessageContent()
+    data class Image(val title:String,val urls:List<String>): MessageContent()
 }
 
 
