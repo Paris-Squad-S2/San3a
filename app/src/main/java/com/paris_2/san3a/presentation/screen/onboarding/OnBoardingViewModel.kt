@@ -4,17 +4,44 @@ import com.paris_2.san3a.presentation.screen.base.BaseViewModel
 
 class OnBoardingViewModel(
     private val appPreferences: AppPreferences
-) :  BaseViewModel<OnBoardingUIState>(
+) : OnBoardingInteractionListener, BaseViewModel<OnBoardingUIState>(
     OnBoardingUIState(
         isCompleted = appPreferences.isOnboardingCompleted()
     )
 ) {
+
     fun setOnboardingCompleted() {
-        appPreferences.setOnboardingCompleted()
-        _uiState.value = _uiState.value.copy(isCompleted = true)
+        tryToExecute(
+            execute = {
+                appPreferences.setOnboardingCompleted()
+            },
+            onSuccess = {
+                updateState(screenState.value.copy(isCompleted = true))
+            },
+            onError = {message ->
+                updateState(screenState.value.copy(error = message))
+            },
+        )
     }
 
     fun updateCurrentPage(index: Int) {
-        _uiState.value = _uiState.value.copy(currentPage = index)
+        updateState(screenState.value.copy(currentPage = index))
     }
+
+    override fun onNextClicked() {
+        if (screenState.value.currentPage == 2) {
+            setOnboardingCompleted()
+        } else {
+            updateCurrentPage(screenState.value.currentPage + 1)
+        }
+    }
+
+    override fun onSkipClicked() {
+        setOnboardingCompleted()
+    }
+
+    override fun onPageChanged(index: Int) {
+        updateCurrentPage(index)
+    }
+
 }

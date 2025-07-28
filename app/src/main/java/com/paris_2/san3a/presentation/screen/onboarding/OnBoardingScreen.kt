@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavOptions
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.navigation.Navigator
+import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingInteractionListener
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingUIState
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingViewModel
 import com.paris_2.san3a.presentation.screen.onboarding.Page
@@ -42,7 +43,7 @@ fun OnBoardingScreen(
     pages: List<Page>,
     navigator: Navigator = koinInject()
 ) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
     LaunchedEffect(state.isCompleted) {
         if (state.isCompleted) {
             val options = NavOptions.Builder()
@@ -55,10 +56,7 @@ fun OnBoardingScreen(
         OnBoardingScreenContent(
             pages = pages,
             state = state,
-            onFinished = {
-                viewModel.setOnboardingCompleted()
-            },
-            onPageChanged = { viewModel.updateCurrentPage(it) }
+            interactionListener = viewModel
         )
     }
 }
@@ -68,14 +66,13 @@ fun OnBoardingScreenContent(
     modifier: Modifier = Modifier,
     pages: List<Page>,
     state: OnBoardingUIState,
-    onFinished: () -> Unit,
-    onPageChanged: (Int) -> Unit
+    interactionListener: OnBoardingInteractionListener
 ) {
     val pagerState = rememberPagerState(initialPage = 0) { pages.size }
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(pagerState.currentPage) {
-        onPageChanged(pagerState.currentPage)
+        interactionListener.onPageChanged(pagerState.currentPage)
     }
 
     Box(
@@ -92,7 +89,7 @@ fun OnBoardingScreenContent(
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(top = 24.dp, end = 16.dp, bottom = 32.dp),
-                onClick = onFinished,
+                onClick = interactionListener::onSkipClicked,
                 colors = ButtonDefaults.textButtonColors(
                     containerColor = Theme.colors.button.secondary,
                 ),
@@ -115,15 +112,12 @@ fun OnBoardingScreenContent(
             TextSection(page = pages[pagerState.currentPage])
             BottomSection(
                 onNextClick = {
-                    if (pagerState.currentPage == pages.lastIndex) {
-                        onFinished()
-                    } else {
                         coroutineScope.launch {
-                            pagerState.animateScrollToPage(
-                                pagerState.currentPage + 1
-                            )
+                            interactionListener.onNextClicked()
+                            if (pagerState.currentPage < pages.lastIndex) {
+                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                            }
                         }
-                    }
                 },
                 pages = pages,
                 state = state
