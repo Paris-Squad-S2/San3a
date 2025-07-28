@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,7 @@ fun onboardingPages(): List<Page> {
                 Image(
                     painter = painterResource(id = R.drawable.img_onboarding1),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    contentScale = ContentScale.FillWidth,
                     contentDescription = "Onboarding 1"
                 )
             },
@@ -41,6 +43,7 @@ fun onboardingPages(): List<Page> {
         ),
         Page(
             item = {Offers(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 images = listOf(
                     painterResource(id = R.drawable.img_craftsman_offer3),
                     painterResource(id = R.drawable.img_craftsman_offer1),
