@@ -5,4 +5,6 @@
     <string name="leading_icon">أيقونة البداية</string>
     <string name="toggle_password_visibility">تبديل رؤية كلمة المرور</string>
     <string name="error">خطأ</string>
+    <string name="ok">حسنا</string>
+    <string name="button">زر</string>
 </resources>

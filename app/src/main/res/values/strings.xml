@@ -4,6 +4,6 @@
     <string name="leading_icon">leading icon</string>
     <string name="toggle_password_visibility">Toggle password visibility</string>
     <string name="error">Error</string>
-    <string name="ok">ok</string>
+    <string name="ok">Ok</string>
     <string name="button">Button</string>
 </resources>
