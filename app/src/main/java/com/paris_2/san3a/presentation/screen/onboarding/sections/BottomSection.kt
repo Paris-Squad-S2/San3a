@@ -41,16 +41,6 @@ fun BottomSection(
         Spacer(modifier = Modifier.weight(1f))
         TextButton(
             onClick = onNextClick,
-                /*if (pagerState.currentPage == pages.lastIndex) {
-                    onFinished()
-                } else {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(
-                            pagerState.currentPage + 1
-                        )
-                    }
-                }*/
-
             colors = ButtonDefaults.textButtonColors(
                 containerColor = Theme.colors.button.primary,
             ),
