@@ -1,5 +1,7 @@
 package com.paris_2.san3a.presentation.screen.onboarding
 
+import androidx.navigation.NavOptions
+import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.base.BaseViewModel
 
 class OnBoardingViewModel(
@@ -17,6 +19,7 @@ class OnBoardingViewModel(
             },
             onSuccess = {
                 updateState(screenState.value.copy(isCompleted = true))
+                navigateToHome()
             },
             onError = {message ->
                 updateState(screenState.value.copy(error = message))
@@ -43,5 +46,15 @@ class OnBoardingViewModel(
     override fun onPageChanged(index: Int) {
         updateCurrentPage(index)
     }
+
+    private fun navigateToHome() {
+        navigate(
+            destination = Destinations.Home,
+            navOptions = NavOptions.Builder()
+                .setPopUpTo(Destinations.OnBoarding, inclusive = true)
+                .build()
+        )
+    }
+
 
 }

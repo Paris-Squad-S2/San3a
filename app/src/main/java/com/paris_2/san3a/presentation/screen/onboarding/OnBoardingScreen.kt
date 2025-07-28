@@ -22,9 +22,6 @@ import com.paris_2.san3a.R
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavOptions
-import com.paris_2.san3a.presentation.navigation.Destinations
-import com.paris_2.san3a.presentation.navigation.Navigator
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingInteractionListener
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingUIState
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingViewModel
@@ -34,24 +31,14 @@ import com.paris_2.san3a.presentation.screen.onboarding.sections.BottomSection
 import com.paris_2.san3a.presentation.screen.onboarding.sections.TextSection
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun OnBoardingScreen(
     viewModel: OnBoardingViewModel = koinViewModel(),
     pages: List<Page>,
-    navigator: Navigator = koinInject()
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
-    LaunchedEffect(state.isCompleted) {
-        if (state.isCompleted) {
-            val options = NavOptions.Builder()
-                .setPopUpTo(Destinations.OnBoarding, true)
-                .build()
-            navigator.navigate(Destinations.Home, options)
-        }
-    }
     if (!state.isCompleted) {
         OnBoardingScreenContent(
             pages = pages,
