@@ -78,4 +78,7 @@ dependencies {
 
     //firestore
     implementation(libs.firebase.firestore.ktx)
+
+    //Map
+    implementation(libs.play.services.maps)
 }

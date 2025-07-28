@@ -17,6 +17,7 @@ koinComposeViewmodel = "4.1.0"
 koinCore = "4.0.2"
 googleGmsGoogleServices = "4.4.3"
 navigationCompose = "2.9.2"
+playServicesMaps = "18.2.0"
 serializationJson ="1.9.0"
 
 [libraries]
@@ -43,6 +44,7 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serializationJson" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
