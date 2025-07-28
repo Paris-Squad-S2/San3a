@@ -5,4 +5,9 @@
     <string name="leading_icon">أيقونة البداية</string>
     <string name="toggle_password_visibility">تبديل رؤية كلمة المرور</string>
     <string name="error">خطأ</string>
+    <string name="enter_verification_code">ادخل رمز التأكيد</string>
+    <string name="we_sent_a_5_digit_code_to_your_phone_number">لقد أرسلنا رمز مكون من 5 أرقام إلى رقم هاتفك</string>
+    <string name="didn_t_receive_the_code">لم تستلم الرمز؟</string>
+    <string name="otp_image">صورة رمز التأكيد</string>
+
 </resources>
