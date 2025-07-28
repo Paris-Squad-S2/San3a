@@ -5,4 +5,5 @@
     <string name="leading_icon">أيقونة البداية</string>
     <string name="toggle_password_visibility">تبديل رؤية كلمة المرور</string>
     <string name="error">خطأ</string>
+    <string name="show_more">رأية المزيد</string>
 </resources>
