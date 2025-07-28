@@ -94,7 +94,7 @@ private fun AppChipWithIconPreview() {
             onClick = {},
             label = "Label",
             isSelected = true,
-            painter = painterResource(R.drawable.icon_arrow_right)
+            painter = painterResource(R.drawable.ic_arrow_right_outline)
         )
     }
 }
