@@ -4,4 +4,6 @@
     <string name="toggle_password_visibility">Toggle password visibility</string>
     <string name="error">Error</string>
     <string name="show_more">Show More</string>
+    <string name="ok">Ok</string>
+    <string name="button">Button</string>
 </resources>
