@@ -1,9 +1,13 @@
 package com.paris_2.san3a.presentation.screen.onboarding
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.onboarding.components.CardsSection
 import com.paris_2.san3a.presentation.screen.onboarding.components.OffersSection
@@ -23,6 +27,7 @@ fun onboardingPages(): List<Page> {
             item = {
                 Image(
                     painter = painterResource(id = R.drawable.img_onboarding1),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     contentDescription = "Onboarding 1"
                 )
             },
