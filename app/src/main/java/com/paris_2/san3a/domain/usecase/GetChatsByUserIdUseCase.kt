@@ -1,7 +1,7 @@
 package com.paris_2.san3a.domain.usecase
 
 import com.paris_2.san3a.domain.entity.Chat
-import com.paris_2.san3a.domain.fakerepo.ChatRepository
+import com.paris_2.san3a.domain.repository.ChatRepository
 
 class GetChatsByUserIdUseCase(
     private val chatRepository: ChatRepository
