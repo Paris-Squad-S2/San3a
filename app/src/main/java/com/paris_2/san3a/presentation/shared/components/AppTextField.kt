@@ -5,6 +5,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,6 +55,7 @@ fun AppTextField(
     forgotPasswordClick: (() -> Unit)? = null
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
@@ -108,13 +110,13 @@ fun AppTextField(
                                 R.drawable.eye_closed
                             )
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(painter = image, contentDescription = "Toggle password visibility")
+                            Icon(painter = image, contentDescription = stringResource(R.string.toggle_password_visibility))
                         }
                     }
                     isError -> {
                         Icon(
                             painter = painterResource(R.drawable.outline_danger_triangle),
-                            contentDescription = "Error",
+                            contentDescription = stringResource(R.string.error),
                             tint = Theme.colors.additional.primary.red
                         )
                     }
@@ -137,9 +139,11 @@ fun AppTextField(
                 errorCursorColor = Color.Transparent,
             )
         )
-        if (isError && !errorMessage.isNullOrEmpty()) {
+        AnimatedVisibility(
+            visible = isError && !errorMessage.isNullOrEmpty()
+        ) {
             Text(
-                text = errorMessage,
+                text = errorMessage ?: "",
                 color = Theme.colors.additional.primary.red,
                 style = Theme.textStyle.body.small.regular,
             )
