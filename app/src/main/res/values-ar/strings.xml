@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">صنعة</string>
     <string name="forgot_password">نسيت كلمة المرور؟</string>
+    <string name="leading_icon">أيقونة البداية</string>
+    <string name="toggle_password_visibility">تبديل رؤية كلمة المرور</string>
+    <string name="error">خطأ</string>
 </resources>
