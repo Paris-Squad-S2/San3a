@@ -1,6 +1,8 @@
 package com.paris_2.san3a.presentation.screen.onboarding.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -59,10 +61,11 @@ fun Offers(
             onChatClick = {},
             onAcceptOfferClick = {},
             modifier = Modifier
+                .padding(top = 22.dp)
                 .graphicsLayer {
                     rotationZ = -8f
                 }
-                .offset(y = 75.dp)
+                .offset(y = 70.dp, x = (-8).dp)
         )
         CraftsManOffer(
             painter = painterResource(id = R.drawable.img_avatar3),
@@ -80,7 +83,7 @@ fun Offers(
                 .graphicsLayer {
                     rotationZ = 5f
                 }
-                .offset(y = 140.dp)
+                .offset(y = 165.dp, x = 6.dp)
         )
     }
 }
@@ -88,5 +91,8 @@ fun Offers(
 @Composable
 @Preview(showBackground = true)
 fun OffersPreview() {
-    Offers()
+    Column(modifier = Modifier.fillMaxSize()) {
+        Offers()
+
+    }
 }

@@ -38,7 +38,6 @@ fun CraftsManOffer(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
             .let {
                 if (addShadow) {
                     it
