@@ -12,11 +12,6 @@ data class OTPRegisterUiState(
     val errorMessage: String? = null
 )
 
-interface OTPRegisterListenerInteraction {
-    fun onOtpTextChange(otp: String)
-    fun onClickVerify()
-
-}
 class OTPRegisterViewModel: ViewModel(), OTPRegisterListenerInteraction {
 
     private val _uiState = MutableStateFlow(OTPRegisterUiState())
@@ -30,6 +25,10 @@ class OTPRegisterViewModel: ViewModel(), OTPRegisterListenerInteraction {
     }
 
     override fun onClickVerify() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onClickResendCode() {
         TODO("Not yet implemented")
     }
 

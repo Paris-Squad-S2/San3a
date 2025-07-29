@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.register
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,12 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -49,14 +48,7 @@ private fun OTPRegisterScreenContent(
             .statusBarsPadding()
     ) {
 
-        Row(modifier = Modifier.fillMaxWidth()) {
-            AppButton(
-                modifier = Modifier.clip(CircleShape),
-                type = AppButtonType.Secondary,
-                size = AppButtonSize.Large,
-                state = AppButtonState.Enable,
-                onClick = {}
-            )
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Image(
                 modifier = Modifier.size(200.dp),
                 painter = painterResource(R.drawable.image_otp),
@@ -64,23 +56,29 @@ private fun OTPRegisterScreenContent(
             )
         }
 
-        BottomSheetContent(
+        VerificationCodeContent(
             otpRegisterUiState.phoneNumber,
             otpRegisterUiState.otp,
-            otpRegisterListenerInteraction::onOtpTextChange
-        )
+            otpRegisterListenerInteraction::onOtpTextChange,
+            otpRegisterListenerInteraction::onClickVerify,
+            otpRegisterListenerInteraction::onClickResendCode,
+
+            )
     }
 }
 
 @Composable
-private fun BottomSheetContent(
+private fun VerificationCodeContent(
     phoneNumber: String,
     otp: String,
-    onOtpTextChange: (String) -> Unit
+    onOtpTextChange: (String) -> Unit,
+    onClickVerify: () -> Unit,
+    onClickResendCode: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .background(
@@ -89,7 +87,7 @@ private fun BottomSheetContent(
                     topStart = Theme.radius.quintXLarge,
                     topEnd = Theme.radius.quintXLarge,
 
-                )
+                    )
             )
             .padding(top = 40.dp)
             .padding(horizontal = 24.dp)
@@ -121,11 +119,13 @@ private fun BottomSheetContent(
         )
 
         AppButton(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp),
             type = AppButtonType.Primary,
             size = AppButtonSize.Large,
             state = AppButtonState.Enable,
-            onClick = {},
+            onClick = { onClickVerify() },
             text = R.string.verify
         )
 
@@ -139,11 +139,13 @@ private fun BottomSheetContent(
         )
 
         AppButton(
-            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
             type = AppButtonType.Secondary,
             size = AppButtonSize.Large,
             state = AppButtonState.Disabled,
-            onClick = {},
+            onClick = { onClickResendCode() },
             text = R.string.verify
         )
 
@@ -162,6 +164,10 @@ private fun OTPRegisterScreenContentPreview() {
             }
 
             override fun onClickVerify() {
+
+            }
+
+            override fun onClickResendCode() {
 
             }
         }
