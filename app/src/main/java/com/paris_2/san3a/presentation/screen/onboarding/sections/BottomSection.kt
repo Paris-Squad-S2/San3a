@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingUIState
@@ -38,7 +39,7 @@ fun BottomSection(
         AppButton(
             type = AppButtonType.Primary,
             onClick = onNextClick,
-            text = R.string.next,
+            text = stringResource(R.string.next),
             size = AppButtonSize.Large
         )
     }

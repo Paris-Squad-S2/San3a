@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
@@ -69,7 +70,7 @@ fun OnBoardingScreenContent(
             AppButton(
                 type = AppButtonType.Secondary,
                 onClick = interactionListener::onSkipClicked,
-                text = R.string.skip,
+                text = stringResource(R.string.skip),
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(top = 24.dp, end = 16.dp, bottom = 32.dp),

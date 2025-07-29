@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun CraftsManOffer(
@@ -40,8 +41,7 @@ fun CraftsManOffer(
             .fillMaxWidth()
             .let {
                 if (addShadow) {
-                    it
-                        .graphicsLayer {
+                    it.graphicsLayer {
                             shadowElevation = 0.dp.toPx()
                             translationY = (-3.48).dp.toPx()
                         }
@@ -179,7 +179,7 @@ fun CraftsManOffer(
                 AppButton(
                     type = AppButtonType.Primary,
                     onClick = onChatClick,
-                    text = R.string.chat,
+                    text = stringResource(R.string.chat),
                     modifier = Modifier.weight(1f),
                     size = AppButtonSize.Large,
                     state = AppButtonState.Disabled
@@ -187,7 +187,7 @@ fun CraftsManOffer(
                 AppButton(
                     type = AppButtonType.Primary,
                     onClick = onAcceptOfferClick,
-                    text = R.string.accept_offer,
+                    text = stringResource(R.string.accept_offer),
                     modifier = Modifier.weight(1f),
                     size = AppButtonSize.Large
                 )
