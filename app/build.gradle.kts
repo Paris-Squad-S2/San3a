@@ -72,9 +72,13 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(platform(libs.firebase.bom))
 
+
     //firestore
     implementation(libs.firebase.firestore.ktx)
 
     // splash api
     implementation(libs.androidx.core.splashscreen)
+
+    //Kotlinx DateTime
+    implementation(libs.kotlinx.datetime)
 }
