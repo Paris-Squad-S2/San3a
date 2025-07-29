@@ -18,4 +18,6 @@
     <string name="onboarding3description">Receive multiple offers from nearby professionals, check their prices and ratings, then pick the one that suits you best.</string>
     <string name="skip">Skip</string>
     <string name="next">Next</string>
+    <string name="chat">Chat</string>
+    <string name="accept_offer">Accept Offer</string>
 </resources>
