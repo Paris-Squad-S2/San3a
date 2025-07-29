@@ -91,11 +91,22 @@ fun CraftsManOffer(
                 }
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = name,
-                        color = Theme.colors.shade.primary,
-                        style = Theme.textStyle.body.medium.medium
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = name,
+                            color = Theme.colors.shade.primary,
+                            style = Theme.textStyle.body.medium.medium
+                        )
+                        Text(
+                            text = postedTime,
+                            style = Theme.textStyle.body.small.regular,
+                            color = Theme.colors.shade.tertiary
+                        )
+                    }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_star_bold),
@@ -111,11 +122,6 @@ fun CraftsManOffer(
                         )
                     }
                 }
-                Text(
-                    text = postedTime,
-                    style = Theme.textStyle.body.small.regular,
-                    color = Theme.colors.shade.tertiary
-                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))

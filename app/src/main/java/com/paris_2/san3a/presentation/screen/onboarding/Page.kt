@@ -45,14 +45,7 @@ fun onboardingPages(): List<Page> {
         ),
         Page(
             item = {
-                Offers(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    images = listOf(
-                        painterResource(id = R.drawable.img_craftsman_offer3),
-                        painterResource(id = R.drawable.img_craftsman_offer1),
-                        painterResource(id = R.drawable.img_craftsman_offer2)
-                    )
-                )
+                Offers(modifier = Modifier.padding(horizontal = 16.dp))
             },
             title = stringResource(id = R.string.onboarding3title),
             description = stringResource(id = R.string.onboarding3description)
