@@ -1,7 +1,9 @@
 package com.paris_2.san3a.presentation.shared.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,19 +32,37 @@ fun AppChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
+    hasBorder: Boolean = false,
+    unSelectedColor: Color = Color.Unspecified,
+    selectedColor: Color = Color.Unspecified,
+    hasBackgroundColor: Boolean = false,
     painter: Painter? = null,
     iconContentDescription: String? = null
 ) {
     val borderColor =
         animateColorAsState(if (isSelected) Theme.colors.brand.secondary else Color.Unspecified)
     val borderWidth = animateDpAsState(if (isSelected) 1.dp else 0.dp)
+
+    val backgroundColor =
+        animateColorAsState(if (isSelected) selectedColor else unSelectedColor).value
+
+    val border = if (hasBorder) Modifier.border(
+        width = borderWidth.value,
+        color = borderColor.value,
+        shape = CircleShape
+    ) else Modifier
+
+    val hasBackgroundColorBox =
+        if (hasBackgroundColor) Modifier.background(backgroundColor, CircleShape)
+        else Modifier
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .height(36.dp)
+            .then(hasBackgroundColorBox)
             .clip(CircleShape)
-            .border(width = borderWidth.value, color = borderColor.value, shape = CircleShape)
+            .then(border)
             .clickable(indication = null, interactionSource = null) { onClick() }
     ) {
         painter?.let {
@@ -56,22 +76,49 @@ fun AppChip(
 
         val paddingStart =
             animateDpAsState(if (painter == null && isSelected) 16.dp else 0.dp)
-        TextChips(label, isSelected, modifier = Modifier.padding(start = paddingStart.value))
+        TextChips(
+            label,
+            isSelected,
+            hasBackgroundColor,
+            modifier = Modifier.padding(start = paddingStart.value)
+        )
     }
 }
 
 @Composable
-private fun TextChips(label: String, isSelected: Boolean, modifier: Modifier = Modifier) {
+private fun TextChips(
+    label: String,
+    isSelected: Boolean,
+    hasBackgroundColor: Boolean,
+    modifier: Modifier = Modifier
+) {
     val paddingHorizontal = animateDpAsState(if (isSelected) 8.dp else 16.dp)
     val paddingEnd = animateDpAsState(if (isSelected) 16.dp else 0.dp)
-    Text(
-        modifier = modifier
-            .padding(horizontal = paddingHorizontal.value)
-            .padding(end = paddingEnd.value),
-        text = label,
-        style = Theme.textStyle.label.medium.medium,
-        color = if (isSelected) Theme.colors.brand.primary else Theme.colors.shade.secondary
-    )
+    val textColor =
+        animateColorAsState(if (hasBackgroundColor) Theme.colors.background.card else Theme.colors.brand.primary)
+
+    AnimatedContent(isSelected) {
+        if (it) {
+            Text(
+                modifier = modifier
+                    .padding(horizontal = paddingHorizontal.value)
+                    .padding(end = paddingEnd.value),
+                text = label,
+                style = Theme.textStyle.label.medium.medium,
+                color = textColor.value
+            )
+        } else {
+            Text(
+                modifier = modifier
+                    .padding(horizontal = paddingHorizontal.value)
+                    .padding(end = paddingEnd.value),
+                text = label,
+                style = Theme.textStyle.label.medium.medium,
+                color = Theme.colors.shade.secondary
+            )
+        }
+    }
+
 }
 
 @Preview(showBackground = true)
@@ -82,6 +129,8 @@ private fun AppChipPreview() {
             onClick = {},
             label = "Label",
             isSelected = true,
+            hasBorder = true,
+            hasBackgroundColor = false
         )
     }
 }
@@ -94,7 +143,9 @@ private fun AppChipWithIconPreview() {
             onClick = {},
             label = "Label",
             isSelected = true,
-            painter = painterResource(R.drawable.ic_arrow_right_outline)
+            painter = painterResource(R.drawable.ic_arrow_right_outline),
+            hasBorder = true,
+            hasBackgroundColor = false
         )
     }
 }
@@ -107,6 +158,24 @@ private fun AppChipUnSelectedPreview() {
             onClick = {},
             label = "Label",
             isSelected = false,
+            hasBorder = true,
+            hasBackgroundColor = false
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AppChipSelectedWithoutBorderPreview() {
+    San3aTheme {
+        AppChip(
+            onClick = {},
+            label = "Label",
+            isSelected = true,
+            hasBorder = false,
+            unSelectedColor = Theme.colors.background.card,
+            selectedColor = Theme.colors.additional.primary.turquoise,
+            hasBackgroundColor = true
         )
     }
 }
