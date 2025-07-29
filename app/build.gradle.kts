@@ -81,4 +81,7 @@ dependencies {
 
     //Kotlinx DateTime
     implementation(libs.kotlinx.datetime)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
 }
