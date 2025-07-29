@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="logo_fill">#F7F7F7</color>
+    <color name="Transparent">#00000000</color>
 </resources>

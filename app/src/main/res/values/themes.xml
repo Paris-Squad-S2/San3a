@@ -4,4 +4,11 @@
         // hide splash screen
         <item name="android:windowDisablePreview">true</item>
     </style>
+    <style name="Theme.San3a.Splash" parent="Theme.SplashScreen">
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="windowSplashScreenBackground">@color/Transparent</item>
+        <item name="postSplashScreenTheme">@style/Theme.San3a</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/Transparent</item>
+    </style>
 </resources>
