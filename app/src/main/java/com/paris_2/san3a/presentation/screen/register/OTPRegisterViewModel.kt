@@ -45,7 +45,11 @@ class OTPRegisterViewModel: ViewModel(), OTPRegisterListenerInteraction {
     }
 
     override fun onClickResendCode() {
-        TODO("Not yet implemented")
+       viewModelScope.launch {
+            _uiState.update {
+                it.copy(secondLeft = 59, otp = "", isLoading = true)
+            }
+       }
     }
 
     override fun onClickBackButton() {

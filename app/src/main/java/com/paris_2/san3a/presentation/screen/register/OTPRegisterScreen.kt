@@ -40,7 +40,7 @@ fun OTPRegisterScreen(viewModel: OTPRegisterViewModel = koinViewModel()) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     OTPRegisterScreenContent(uiState.value, viewModel)
 
-    LaunchedEffect(uiState.value.secondLeft < 0) {
+    LaunchedEffect(uiState.value.secondLeft > 0) {
         viewModel.updateSecondLeft()
     }
 }
@@ -55,9 +55,9 @@ private fun OTPRegisterScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.colors.background.screen)
+            .verticalScroll(scroll)
             .statusBarsPadding()
             .navigationBarsPadding()
-            .verticalScroll(scroll)
 
     ) {
 
@@ -81,6 +81,7 @@ private fun OTPRegisterScreenContent(
             otpRegisterListenerInteraction::onOtpTextChange,
             otpRegisterListenerInteraction::onClickVerify,
             otpRegisterListenerInteraction::onClickResendCode,
+            Modifier.weight(1f)
         )
     }
 }
@@ -178,7 +179,7 @@ private fun VerificationCodeContent(
                     size = AppButtonSize.Large,
                     state = AppButtonState.Disabled,
                     onClick = {},
-                    text = stringResource(R.string.resend_code_after) + stringResource(R.string._0) + "$secondLeft",
+                    text = stringResource(R.string.resend_code_after) + stringResource(R.string._0) + "$secondLeft s.",
                 )
             }
 
