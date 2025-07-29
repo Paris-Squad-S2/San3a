@@ -16,4 +16,7 @@
     <string name="second">second</string>
     <string name="third">third</string>
     <string name="verify">Verify</string>
+    <string name="resend_code_after">Resend Code after</string>
+    <string name="_0">" 0:"</string>
+    <string name="resend_code">Resend Code</string>
 </resources>
