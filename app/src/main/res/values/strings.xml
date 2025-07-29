@@ -8,4 +8,5 @@
     <string name="we_sent_a_5_digit_code_to_your_phone_number">We sent a 5-digit code to your phone number</string>
     <string name="didn_t_receive_the_code">Didn’t receive the code?</string>
     <string name="otp_image">otp image</string>
+    <string name="welcome_to_san3a">Welcome to San3a 👋</string>
 </resources>

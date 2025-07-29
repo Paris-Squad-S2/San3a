@@ -9,5 +9,5 @@
     <string name="we_sent_a_5_digit_code_to_your_phone_number">لقد أرسلنا رمز مكون من 5 أرقام إلى رقم هاتفك</string>
     <string name="didn_t_receive_the_code">لم تستلم الرمز؟</string>
     <string name="otp_image">صورة رمز التأكيد</string>
-
+    <string name="welcome_to_san3a">اهلا بك في صنعة  👋</string>
 </resources>
