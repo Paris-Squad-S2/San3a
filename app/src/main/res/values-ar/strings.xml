@@ -11,14 +11,14 @@
     <string name="first">الاول</string>
     <string name="second">الثاني</string>
     <string name="third">الثالث</string>
-    <string name="onboarding1title">Relax, We’ve Got It Covered</string>
-    <string name="onboarding1description">From the comfort of your couch, post your request and let trusted professionals come to you, no calls, no stress.</string>
-    <string name="onboarding2title">Find What You Need in Seconds</string>
-    <string name="onboarding2description">Browse dozens of home services — from quick fixes to big projects. Just tap a category and get started instantly.</string>
-    <string name="onboarding3title">"Post, Compare Offers and Choose!"</string>
-    <string name="onboarding3description">Receive multiple offers from nearby professionals, check their prices and ratings, then pick the one that suits you best.</string>
-    <string name="skip">Skip</string>
-    <string name="next">Next</string>
-    <string name="chat">Chat</string>
-    <string name="accept_offer">Accept Offer</string>
+    <string name="onboarding1title">استرخِ، لقد قمنا بتغطيتها</string>
+    <string name="onboarding1description">من راحة أريكتك، انشر طلبك ودع متخصصين موثوق بهم يأتون إليك، بدون مكالمات أو ضغوط.</string>
+    <string name="onboarding2title">ابحث عن ما تحتاجه في ثوانٍ</string>
+    <string name="onboarding2description">تصفح عشرات الخدمات المنزلية - من الحلول السريعة إلى المشاريع الكبيرة. ما عليك سوى النقر على الفئة المطلوبة والبدء فورًا.</string>
+    <string name="onboarding3title">"انشر، قارن العروض واختر!"</string>
+    <string name="onboarding3description">احصل على عروض متعددة من المحترفين القريبين منك، وتحقق من أسعارهم وتقييماتهم، ثم اختر العرض الذي يناسبك بشكل أفضل.</string>
+    <string name="skip">تخطى</string>
+    <string name="next">التالي</string>
+    <string name="chat">محادثة</string>
+    <string name="accept_offer">قبول العرض</string>
 </resources>
