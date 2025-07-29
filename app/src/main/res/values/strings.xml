@@ -15,4 +15,5 @@
     <string name="first">first</string>
     <string name="second">second</string>
     <string name="third">third</string>
+    <string name="verify">Verify</string>
 </resources>
