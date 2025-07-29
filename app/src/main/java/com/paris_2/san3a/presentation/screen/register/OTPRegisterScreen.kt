@@ -1,8 +1,8 @@
 package com.paris_2.san3a.presentation.screen.register
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -25,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -37,6 +39,10 @@ import org.koin.compose.viewmodel.koinViewModel
 fun OTPRegisterScreen(viewModel: OTPRegisterViewModel = koinViewModel()) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     OTPRegisterScreenContent(uiState.value, viewModel)
+
+    LaunchedEffect(uiState.value.secondLeft < 0) {
+        viewModel.updateSecondLeft()
+    }
 }
 
 @Composable
@@ -55,7 +61,12 @@ private fun OTPRegisterScreenContent(
 
     ) {
 
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            AppBackButton(
+                onClickBackButton = otpRegisterListenerInteraction::onClickBackButton,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
             Image(
                 modifier = Modifier.size(200.dp),
                 painter = painterResource(R.drawable.image_otp),
@@ -66,6 +77,7 @@ private fun OTPRegisterScreenContent(
         VerificationCodeContent(
             otpRegisterUiState.phoneNumber,
             otpRegisterUiState.otp,
+            otpRegisterUiState.secondLeft,
             otpRegisterListenerInteraction::onOtpTextChange,
             otpRegisterListenerInteraction::onClickVerify,
             otpRegisterListenerInteraction::onClickResendCode,
@@ -77,6 +89,7 @@ private fun OTPRegisterScreenContent(
 private fun VerificationCodeContent(
     phoneNumber: String,
     otp: String,
+    secondLeft: Int,
     onOtpTextChange: (String) -> Unit,
     onClickVerify: () -> Unit,
     onClickResendCode: () -> Unit,
@@ -132,7 +145,7 @@ private fun VerificationCodeContent(
             size = AppButtonSize.Large,
             state = AppButtonState.Enable,
             onClick = { onClickVerify() },
-            text = R.string.verify
+            text = stringResource(R.string.verify)
         )
 
         Text(
@@ -144,16 +157,33 @@ private fun VerificationCodeContent(
             textAlign = TextAlign.Center
         )
 
-        AppButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            type = AppButtonType.Secondary,
-            size = AppButtonSize.Large,
-            state = AppButtonState.Disabled,
-            onClick = { onClickResendCode() },
-            text = R.string.verify
-        )
+        AnimatedContent(targetState = secondLeft == 0) {
+            if(it){
+                AppButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                    type = AppButtonType.Secondary,
+                    size = AppButtonSize.Large,
+                    state = AppButtonState.Enable,
+                    onClick = { onClickResendCode()},
+                    text = stringResource(R.string.resend_code),
+                )
+            }else {
+                AppButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                    type = AppButtonType.Secondary,
+                    size = AppButtonSize.Large,
+                    state = AppButtonState.Disabled,
+                    onClick = {},
+                    text = stringResource(R.string.resend_code_after) + stringResource(R.string._0) + "$secondLeft",
+                )
+            }
+
+        }
+
 
     }
 }
@@ -175,6 +205,10 @@ private fun OTPRegisterScreenContentPreview() {
 
             override fun onClickResendCode() {
 
+            }
+
+            override fun onClickBackButton() {
+                TODO("Not yet implemented")
             }
         }
     )
