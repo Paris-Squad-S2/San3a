@@ -9,4 +9,7 @@ sealed interface Destinations : Graph {
 
     @Serializable
     data object Screen : Destination
+
+    @Serializable
+    data object OTPRegisterScreen: Destination
 }
