@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -41,11 +44,15 @@ private fun OTPRegisterScreenContent(
     otpRegisterUiState: OTPRegisterUiState,
     otpRegisterListenerInteraction: OTPRegisterListenerInteraction
 ) {
+    val scroll = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.colors.background.screen)
             .statusBarsPadding()
+            .navigationBarsPadding()
+            .verticalScroll(scroll)
+
     ) {
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -62,8 +69,7 @@ private fun OTPRegisterScreenContent(
             otpRegisterListenerInteraction::onOtpTextChange,
             otpRegisterListenerInteraction::onClickVerify,
             otpRegisterListenerInteraction::onClickResendCode,
-
-            )
+        )
     }
 }
 
