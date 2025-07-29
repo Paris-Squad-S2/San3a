@@ -11,23 +11,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.onboarding.sections.BottomSection
 import com.paris_2.san3a.presentation.screen.onboarding.sections.TextSection
 import com.paris_2.san3a.presentation.screen.onboarding.sections.TopSection
+import com.paris_2.san3a.presentation.shared.components.AppButton
+import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -69,22 +66,14 @@ fun OnBoardingScreenContent(
                 .statusBarsPadding()
                 .navigationBarsPadding()
         ) {
-            TextButton(
+            AppButton(
+                type = AppButtonType.Secondary,
+                onClick = interactionListener::onSkipClicked,
+                text = R.string.skip,
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(top = 24.dp, end = 16.dp, bottom = 32.dp),
-                onClick = interactionListener::onSkipClicked,
-                colors = ButtonDefaults.textButtonColors(
-                    containerColor = Theme.colors.button.secondary,
-                ),
-                shape = RoundedCornerShape(100.dp)
-            ) {
-                Text(
-                    text = stringResource(id = R.string.skip),
-                    color = Theme.colors.button.onSecondary,
-                    style = Theme.textStyle.body.small.medium
-                )
-            }
+            )
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.weight(1f)
