@@ -4,4 +4,5 @@ interface OTPRegisterListenerInteraction {
     fun onOtpTextChange(otp: String)
     fun onClickVerify()
     fun onClickResendCode()
+    fun onClickBackButton()
 }
