@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">صنعة</string>
     <string name="forgot_password">نسيت كلمة المرور؟</string>
-    <string name="leading_icon">أيقونة البداية</string>
     <string name="toggle_password_visibility">تبديل رؤية كلمة المرور</string>
     <string name="error">خطأ</string>
     <string name="enter_verification_code">ادخل رمز التأكيد</string>
@@ -10,4 +9,11 @@
     <string name="didn_t_receive_the_code">لم تستلم الرمز؟</string>
     <string name="otp_image">صورة رمز التأكيد</string>
     <string name="welcome_to_san3a">اهلا بك في صنعة  👋</string>
+    <string name="show_more">رأية المزيد</string>
+    <string name="ok">حسنا</string>
+    <string name="button">زر</string>
+    <string name="user_image">صوره المستخدم</string>
+    <string name="first">الاول</string>
+    <string name="second">الثاني</string>
+    <string name="third">الثالث</string>
 </resources>
