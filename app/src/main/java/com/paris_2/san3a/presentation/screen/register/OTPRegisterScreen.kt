@@ -4,14 +4,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -19,6 +23,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.shared.components.AppButton
+import com.paris_2.san3a.presentation.shared.components.AppButtonSize
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
+import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.OTPInputTextField
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
@@ -42,6 +50,13 @@ private fun OTPRegisterScreenContent(
     ) {
 
         Row(modifier = Modifier.fillMaxWidth()) {
+            AppButton(
+                modifier = Modifier.clip(CircleShape),
+                type = AppButtonType.Secondary,
+                size = AppButtonSize.Large,
+                state = AppButtonState.Enable,
+                onClick = {}
+            )
             Image(
                 modifier = Modifier.size(200.dp),
                 painter = painterResource(R.drawable.image_otp),
@@ -63,7 +78,22 @@ private fun BottomSheetContent(
     otp: String,
     onOtpTextChange: (String) -> Unit
 ) {
-    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(
+                color = Theme.colors.background.card,
+                shape = RoundedCornerShape(
+                    topStart = Theme.radius.quintXLarge,
+                    topEnd = Theme.radius.quintXLarge,
+
+                )
+            )
+            .padding(top = 40.dp)
+            .padding(horizontal = 24.dp)
+    ) {
         Text(
             text = stringResource(R.string.enter_verification_code),
             style = Theme.textStyle.title.medium,
@@ -90,19 +120,32 @@ private fun BottomSheetContent(
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
-        // button to verify the OTP
+        AppButton(
+            modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+            type = AppButtonType.Primary,
+            size = AppButtonSize.Large,
+            state = AppButtonState.Enable,
+            onClick = {},
+            text = R.string.verify
+        )
 
         Text(
             text = stringResource(R.string.didn_t_receive_the_code),
             style = Theme.textStyle.body.medium.regular,
             color = Theme.colors.shade.secondary,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp),
+                .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
 
-        // button to resend the code
+        AppButton(
+            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+            type = AppButtonType.Secondary,
+            size = AppButtonSize.Large,
+            state = AppButtonState.Disabled,
+            onClick = {},
+            text = R.string.verify
+        )
 
     }
 }
