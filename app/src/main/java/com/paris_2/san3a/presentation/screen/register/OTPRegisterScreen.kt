@@ -48,14 +48,13 @@ fun OTPRegisterScreen(viewModel: OTPRegisterViewModel = koinViewModel()) {
 @Composable
 private fun OTPRegisterScreenContent(
     otpRegisterUiState: OTPRegisterUiState,
-    otpRegisterListenerInteraction: OTPRegisterListenerInteraction
+    otpRegisterListenerInteraction: OTPRegisterListenerInteraction,
+    modifier: Modifier = Modifier
 ) {
-    val scroll = rememberScrollState()
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Theme.colors.background.screen)
-            .verticalScroll(scroll)
             .statusBarsPadding()
             .navigationBarsPadding()
 
@@ -106,8 +105,7 @@ private fun VerificationCodeContent(
                 shape = RoundedCornerShape(
                     topStart = Theme.radius.quintXLarge,
                     topEnd = Theme.radius.quintXLarge,
-
-                    )
+                )
             )
             .padding(top = 40.dp)
             .padding(horizontal = 24.dp)
@@ -135,7 +133,9 @@ private fun VerificationCodeContent(
         OTPInputTextField(
             otpText = otp,
             onOtpTextChange = { onOtpTextChange(it) },
-            modifier = Modifier.padding(bottom = 24.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp)
         )
 
         AppButton(
@@ -159,18 +159,18 @@ private fun VerificationCodeContent(
         )
 
         AnimatedContent(targetState = secondLeft == 0) {
-            if(it){
+            if (it) {
                 AppButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 12.dp),
                     type = AppButtonType.Secondary,
                     size = AppButtonSize.Large,
-                    state = AppButtonState.Enable,
-                    onClick = { onClickResendCode()},
+                    onClick = { onClickResendCode() },
                     text = stringResource(R.string.resend_code),
+                    enableSecondaryBackgroundColor = Theme.colors.shade.quinary,
                 )
-            }else {
+            } else {
                 AppButton(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -209,7 +209,7 @@ private fun OTPRegisterScreenContentPreview() {
             }
 
             override fun onClickBackButton() {
-                TODO("Not yet implemented")
+
             }
         }
     )

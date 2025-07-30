@@ -35,7 +35,6 @@ fun OTPInputTextField(
     modifier: Modifier = Modifier,
     otpCount: Int = 5
 ) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         BasicTextField(
             value = otpText,
             onValueChange = {
@@ -79,8 +78,6 @@ fun OTPInputTextField(
                 imeAction = ImeAction.Next
             )
         )
-    }
-
 }
 
 @Composable

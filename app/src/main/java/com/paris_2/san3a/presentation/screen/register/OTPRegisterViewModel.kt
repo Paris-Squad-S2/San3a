@@ -1,7 +1,10 @@
 package com.paris_2.san3a.presentation.screen.register
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paris_2.san3a.domain.usecase.SendOtpUseCase
+import com.paris_2.san3a.domain.usecase.VerifyOtpUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,15 +16,28 @@ data class OTPRegisterUiState(
     val phoneNumber: String = "",
     val secondLeft: Int = 59,
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val verficationId: String = ""
 )
 
-class OTPRegisterViewModel: ViewModel(), OTPRegisterListenerInteraction {
+class OTPRegisterViewModel(
+    private val sendOtpUseCase: SendOtpUseCase,
+    private val verifyOtpUseCase: VerifyOtpUseCase
+): ViewModel(), OTPRegisterListenerInteraction {
 
     private val _uiState = MutableStateFlow(OTPRegisterUiState())
     val uiState = _uiState.asStateFlow()
 
 
+    init {
+        viewModelScope.launch {
+           val foo =  sendOtpUseCase("")
+            _uiState.update {
+                it.copy(verficationId = foo)
+            }
+
+        }
+    }
     fun updateSecondLeft(){
         viewModelScope.launch {
             while (_uiState.value.secondLeft > 0) {
@@ -41,7 +57,16 @@ class OTPRegisterViewModel: ViewModel(), OTPRegisterListenerInteraction {
     }
 
     override fun onClickVerify() {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            try {
+                verifyOtpUseCase(_uiState.value.verficationId, _uiState.value.otp)
+
+            }catch (e: Exception){
+                Log.e("OTPRegisterViewModel", "onClickVerify: ${e.message}")
+                _uiState.update { it.copy(errorMessage = e.message)  }
+            }
+
+        }
     }
 
     override fun onClickResendCode() {
@@ -53,7 +78,7 @@ class OTPRegisterViewModel: ViewModel(), OTPRegisterListenerInteraction {
     }
 
     override fun onClickBackButton() {
-        TODO("Not yet implemented")
+
     }
 
 
