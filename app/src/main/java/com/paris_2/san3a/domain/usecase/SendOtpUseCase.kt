@@ -1,6 +1,5 @@
 package com.paris_2.san3a.domain.usecase
 
-import android.app.Activity
 import com.paris_2.san3a.domain.repository.AuthRepository
 
 class SendOtpUseCase(
