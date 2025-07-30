@@ -2,6 +2,7 @@ package com.paris_2.san3a.data.source.remote.auth
 
 import android.app.Activity
 import com.google.firebase.FirebaseException
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
@@ -41,8 +42,8 @@ class AuthRemoteDataSourceImpl(
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-    override suspend fun verifyOtp(verificationId: String, code: String) {
+    override suspend fun verifyOtp(verificationId: String, code: String): AuthResult {
         val credential = PhoneAuthProvider.getCredential(verificationId, code)
-        firebaseAuth.signInWithCredential(credential).await()
+       return firebaseAuth.signInWithCredential(credential).await()
     }
 }

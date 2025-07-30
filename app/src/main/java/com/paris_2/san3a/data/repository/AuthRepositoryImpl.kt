@@ -1,5 +1,6 @@
 package com.paris_2.san3a.data.repository
 
+import com.google.firebase.auth.AuthResult
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
@@ -18,7 +19,7 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun verifyOtp(verificationId: String, code: String) {
+    override suspend fun verifyOtp(verificationId: String, code: String): AuthResult {
         return safeCall(RegisterException()){
             remoteDataSource.verifyOtp(verificationId, code)
         }
