@@ -1,8 +1,5 @@
 package com.paris_2.san3a.presentation.shared.components
 
-import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
-import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibility
@@ -34,13 +31,16 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
+import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
 fun AppTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String? = null,
+    placeholder: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     errorMessage: String? = null,
     isPassword: Boolean = false,
@@ -52,7 +52,7 @@ fun AppTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     label: String? = null,
-    forgotPasswordClick: (() -> Unit)? = null
+    forgotPasswordClick: (() -> Unit)? = null,
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -80,15 +80,7 @@ fun AppTextField(
                 .fillMaxWidth()
                 .background(Theme.colors.background.card, RoundedCornerShape(Theme.radius.large)),
             textStyle = Theme.textStyle.body.medium.medium,
-            placeholder = placeholder?.let {
-                {
-                    Text(
-                        text = it,
-                        style = Theme.textStyle.body.medium.regular,
-                        color = Theme.colors.shade.tertiary
-                    )
-                }
-            },
+            placeholder = placeholder,
             singleLine = singleLine,
             maxLines = maxLines,
             isError = isError,
@@ -102,9 +94,13 @@ fun AppTextField(
                                 R.drawable.eye_closed
                             )
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(painter = image, contentDescription = stringResource(R.string.toggle_password_visibility))
+                            Icon(
+                                painter = image,
+                                contentDescription = stringResource(R.string.toggle_password_visibility)
+                            )
                         }
                     }
+
                     isError -> {
                         Icon(
                             painter = painterResource(R.drawable.outline_danger_triangle),
@@ -112,6 +108,7 @@ fun AppTextField(
                             tint = Theme.colors.additional.primary.red
                         )
                     }
+
                     else -> trailingIcon?.invoke()
                 }
             },
@@ -171,7 +168,7 @@ private fun PreviewBasicAppTextField() {
             label = "label",
             value = text,
             onValueChange = { text = it },
-            placeholder = "Enter your name",
+            placeholder = { "Enter your name" },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.due_tone_profile),
@@ -193,7 +190,7 @@ private fun PreviewPasswordAppTextField() {
             label = "label",
             value = password,
             onValueChange = { password = it },
-            placeholder = "Password",
+            placeholder = { "Password" },
             isPassword = true,
             leadingIcon = {
                 Icon(
@@ -216,7 +213,7 @@ private fun PreviewErrorAppTextField() {
             label = "label",
             value = email,
             onValueChange = { email = it },
-            placeholder = "Email",
+            placeholder = { "Email" },
             isError = true,
             errorMessage = "Error Message",
             leadingIcon = {
