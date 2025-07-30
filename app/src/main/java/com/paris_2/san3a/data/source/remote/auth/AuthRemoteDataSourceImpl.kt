@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.paris_2.san3a.presentation.util.ActivityProvider
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
@@ -15,14 +16,15 @@ import kotlin.coroutines.resumeWithException
 
 class AuthRemoteDataSourceImpl(
     private val firebaseAuth: FirebaseAuth,
-    private val activity: Activity
+    private val activityProvider: ActivityProvider
 ) : AuthRemoteDataSource {
 
     override suspend fun sendOtp(phone: String): String = suspendCancellableCoroutine { cont ->
+
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
             .setPhoneNumber(phone)
             .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(activity)
+            .setActivity(activityProvider.getCurrentActivity())
             .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
                 override fun onVerificationCompleted(credential: PhoneAuthCredential) {
