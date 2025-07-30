@@ -17,7 +17,7 @@ data class OTPRegisterUiState(
     val secondLeft: Int = 59,
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val verficationId: String = ""
+    val verificationId: String = ""
 )
 
 class OTPRegisterViewModel(
@@ -30,12 +30,16 @@ class OTPRegisterViewModel(
 
 
     init {
+        sendOtpToPhoneNumber()
+    }
+    private fun sendOtpToPhoneNumber() {
         viewModelScope.launch {
-           val foo =  sendOtpUseCase("")
-            _uiState.update {
-                it.copy(verficationId = foo)
+            try {
+                val verificationId = sendOtpUseCase("+201118295474")
+                _uiState.update { it.copy(verificationId = verificationId) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(errorMessage = e.message) }
             }
-
         }
     }
     fun updateSecondLeft(){
@@ -59,7 +63,7 @@ class OTPRegisterViewModel(
     override fun onClickVerify() {
         viewModelScope.launch {
             try {
-                verifyOtpUseCase(_uiState.value.verficationId, _uiState.value.otp)
+                verifyOtpUseCase(_uiState.value.verificationId, _uiState.value.otp)
 
             }catch (e: Exception){
                 Log.e("OTPRegisterViewModel", "onClickVerify: ${e.message}")
