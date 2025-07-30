@@ -35,7 +35,7 @@ class OTPRegisterViewModel(
     private fun sendOtpToPhoneNumber() {
         viewModelScope.launch {
             try {
-                val verificationId = sendOtpUseCase("+201118295474")
+                val verificationId = sendOtpUseCase("")
                 _uiState.update { it.copy(verificationId = verificationId) }
             } catch (e: Exception) {
                 _uiState.update { it.copy(errorMessage = e.message) }
