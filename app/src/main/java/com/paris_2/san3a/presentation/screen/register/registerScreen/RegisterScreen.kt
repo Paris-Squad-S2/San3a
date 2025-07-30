@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.screen.register.registerScreen.components.RegisterViewModel
+import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterViewModel
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState

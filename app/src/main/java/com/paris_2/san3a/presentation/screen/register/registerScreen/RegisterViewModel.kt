@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.register.registerScreen.components
+package com.paris_2.san3a.presentation.screen.register.registerScreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -7,8 +7,6 @@ import androidx.navigation.NavOptions
 import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.navigation.Navigator
-import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterInteractionListener
-import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterUiState
 import com.paris_2.san3a.presentation.shared.components.Country
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
