@@ -1,9 +1,9 @@
 package com.paris_2.san3a.data.repository
 
-import com.google.firebase.auth.AuthResult
+import android.util.Log
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
-import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
+import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.RegisterException
 import com.paris_2.san3a.domain.San3aException
 import com.paris_2.san3a.domain.repository.AuthRepository
@@ -19,9 +19,9 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun verifyOtp(verificationId: String, code: String): AuthResult {
+    override suspend fun verifyOtp(verificationId: String, code: String): String {
         return safeCall(RegisterException()){
-            remoteDataSource.verifyOtp(verificationId, code)
+            remoteDataSource.verifyOtp(verificationId, code).user?.uid ?: throw RegisterException()
         }
     }
 
@@ -32,8 +32,11 @@ class AuthRepositoryImpl(
         return try {
             call()
         } catch (e: San3aException) {
+            Log.d("AuthRepositoryImpl", "safeCall: ${e.message}")
             throw e
-        } catch (_: Exception) {
+        } catch (a: Exception) {
+            Log.d("AuthRepositoryImpl2", "safeCall: ${a.message}")
+
             throw exception
         }
     }
