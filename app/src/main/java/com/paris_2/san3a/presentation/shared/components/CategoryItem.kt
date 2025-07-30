@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,71 +28,116 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun CategoryItem(
     title: String,
     description: String,
+    tint: Color,
+    iconColor: Color,
     modifier: Modifier = Modifier,
-    isLarge: Boolean = false,
+    isLarge: Boolean = true,
     painter: Painter = painterResource(id = R.drawable.ic_arrow_left_outline),
 ){
     if (isLarge){
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(72.dp)
-                .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
-                .background(Theme.colors.background.card)
-        ){
-            Row(
-                modifier = Modifier.align(Alignment.CenterStart).padding(start = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ){
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
-                        .background(Theme.colors.additional.secondary.blue)
-                ){
-                    Icon(
-                        painter = painter,
-                        contentDescription = "Category Icon",
-                        modifier = Modifier.align(Alignment.Center),
-                    )
-                }
-                Column(
-                    modifier = Modifier.padding(start = 12.dp)
-                ) {
-                    Text(
-                        text = title,
-                        style = Theme.textStyle.body.medium.medium,
-                        color = Theme.colors.shade.primary
-                    )
-                    Text(
-                        text = description,
-                        style = Theme.textStyle.body.medium.regular,
-                        color = Theme.colors.shade.secondary
-                    )
-                }
-            }
-        }
+        CategoryItemLarge(
+            title = title,
+            description = description,
+            tint = tint,
+            iconColor = iconColor,
+            modifier = modifier,
+            painter = painter
+        )
     }else{
-        Box(
-            modifier = modifier
-                .width(200.dp)
-                .height(121.dp)
-                .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
-        ){
-            Column(
-                modifier = Modifier.padding(start = 16.dp)
+        CategoryItemSmall(
+            title = title,
+            description = description,
+            tint = tint,
+            iconColor = iconColor,
+            modifier = modifier,
+            painter = painter
+        )
+    }
+}
+
+@Composable
+fun CategoryItemLarge(
+    title: String,
+    description: String,
+    tint: Color,
+    iconColor: Color,
+    modifier: Modifier = Modifier,
+    painter: Painter = painterResource(id = R.drawable.ic_arrow_left_outline),
+){
+    Box(
+        modifier = modifier
+            .width(200.dp)
+            .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
+            .background(Theme.colors.background.card)
+    ){
+        Column(
+            modifier = Modifier.padding(start = 16.dp , top = 16.dp , bottom = 16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(bottom = 12.dp)
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
+                    .background(iconColor)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
-                ) {
-                    Icon(
-                        painter = painter,
-                        contentDescription = "Category Icon",
-                        modifier = Modifier.align(Alignment.Center),
-                    )
-                }
+                Icon(
+                    painter = painter,
+                    contentDescription = "Category Icon",
+                    tint = tint,
+                    modifier = Modifier.align(Alignment.Center),
+                )
+            }
+            Text(
+                text = title,
+                style = Theme.textStyle.body.medium.medium,
+                color = Theme.colors.shade.primary,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Text(
+                text = description,
+                style = Theme.textStyle.body.medium.regular,
+                color = Theme.colors.shade.secondary,
+            )
+        }
+    }
+}
+
+@Composable
+fun CategoryItemSmall(
+    title: String,
+    description: String,
+    tint: Color,
+    iconColor: Color,
+    modifier: Modifier = Modifier,
+    painter: Painter = painterResource(id = R.drawable.ic_arrow_left_outline),
+){
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(72.dp)
+            .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
+            .background(Theme.colors.background.card)
+    ){
+        Row(
+            modifier = Modifier.align(Alignment.CenterStart).padding(start = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ){
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
+                    .background(iconColor)
+            ){
+                Icon(
+                    painter = painter,
+                    contentDescription = "Category Icon",
+                    tint = tint,
+                    modifier = Modifier.align(Alignment.Center),
+                )
+            }
+            Column(
+                modifier = Modifier.padding(start = 12.dp)
+            ) {
                 Text(
                     text = title,
                     style = Theme.textStyle.body.medium.medium,
@@ -114,6 +160,8 @@ private fun Preview(){
     CategoryItem(
         title = "Title",
         description = "Description",
+        tint = Theme.colors.additional.primary.blue,
+        iconColor = Theme.colors.additional.secondary.blue,
         painter = painterResource(id = R.drawable.ic_arrow_left_outline)
     )
 }
