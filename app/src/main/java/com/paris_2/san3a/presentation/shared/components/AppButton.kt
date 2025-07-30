@@ -52,6 +52,12 @@ fun AppButton(
     size: AppButtonSize = AppButtonSize.Small,
     state: AppButtonState = AppButtonState.Enable,
     text: String? = null,
+    disableTertiaryBackgroundColor: Color = Color.Transparent,
+    disablePrimaryBackgroundColor: Color = Theme.colors.button.disabled,
+    disableSecondaryBackgroundColor: Color = Theme.colors.button.disabled,
+    enableTertiaryBackgroundColor: Color = Color.Transparent,
+    enablePrimaryBackgroundColor: Color = Theme.colors.button.primary,
+    enableSecondaryBackgroundColor: Color = Theme.colors.button.secondary,
     loadingIcon: @Composable (() -> Unit)? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -62,6 +68,12 @@ fun AppButton(
     val backgroundColor = getBackgroundColor(
         type = type,
         isDisabled = (state == AppButtonState.Disabled),
+        disableTertiaryBackgroundColor = disableTertiaryBackgroundColor,
+        disablePrimaryBackgroundColor = disablePrimaryBackgroundColor,
+        disableSecondaryBackgroundColor = disableSecondaryBackgroundColor,
+        enableTertiaryBackgroundColor = enableTertiaryBackgroundColor,
+        enablePrimaryBackgroundColor = enablePrimaryBackgroundColor,
+        enableSecondaryBackgroundColor = enableSecondaryBackgroundColor
     )
     val buttonContentColor = getContentColor(state, type)
 
@@ -103,17 +115,24 @@ fun AppButton(
 private fun getBackgroundColor(
     type: AppButtonType,
     isDisabled: Boolean,
+    disableTertiaryBackgroundColor: Color = Color.Transparent,
+    disablePrimaryBackgroundColor: Color = Theme.colors.button.disabled,
+    disableSecondaryBackgroundColor: Color = Theme.colors.button.disabled,
+    enableTertiaryBackgroundColor: Color = Color.Transparent,
+    enablePrimaryBackgroundColor: Color = Theme.colors.button.primary,
+    enableSecondaryBackgroundColor: Color = Theme.colors.button.secondary,
 ): Color {
     return if (isDisabled) {
         when (type) {
-            AppButtonType.Tertiary -> Color.Transparent
-            AppButtonType.Primary, AppButtonType.Secondary -> Theme.colors.button.disabled
+            AppButtonType.Tertiary -> disableTertiaryBackgroundColor
+            AppButtonType.Primary -> disablePrimaryBackgroundColor
+            AppButtonType.Secondary -> disableSecondaryBackgroundColor
         }
     } else {
         when (type) {
-            AppButtonType.Primary -> Theme.colors.button.primary
-            AppButtonType.Secondary -> Theme.colors.button.secondary
-            AppButtonType.Tertiary -> Color.Transparent
+            AppButtonType.Primary -> enablePrimaryBackgroundColor
+            AppButtonType.Secondary -> enableSecondaryBackgroundColor
+            AppButtonType.Tertiary -> enableTertiaryBackgroundColor
         }
     }
 }
