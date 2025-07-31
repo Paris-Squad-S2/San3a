@@ -11,10 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MessageDetails(
-    viewModel: MessagesDetailsViewModel
+    viewModel: MessagesDetailsViewModel = koinViewModel()
 ) {
     val imagePickerLauncher  = rememberLauncherForActivityResult(
         ActivityResultContracts.GetMultipleContents()

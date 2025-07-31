@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
+import com.paris_2.san3a.domain.usecase.GetChatsByUserIdUseCase
+import com.paris_2.san3a.domain.usecase.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.SendMessageUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +15,9 @@ import kotlinx.coroutines.launch
 
 class MessagesDetailsViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
-) : ViewModel(), MessageDetailsInteractionListener {
+    private val getMessagesByChatIdUseCase: GetMessagesByChatIdUseCase,
+    private val getChatsByUserIdUseCase: GetChatsByUserIdUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow(MediaDetails())
     val state = _state.asStateFlow()
@@ -27,9 +31,9 @@ class MessagesDetailsViewModel(
                 )
                sendMessageUseCase(
                  Message(
-                        senderId = 1,
-                        receiverId = 2,
-                        chatId = 4,
+                        senderId = "1",
+                        receiverId = "2",
+                        chatId = "8",
                         messageContent = MessageContent.Image(
                             uris = uris.map { it.toString() }
                         ),
