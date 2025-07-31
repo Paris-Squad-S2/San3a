@@ -9,11 +9,11 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 data class Message(
-    val id:Int = Random.nextInt(1,Int.MAX_VALUE),
+    val id: String = "",
     val time: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-    val senderId:Int,
-    val receiverId:Int,
-    val chatId: Int,
+    val senderId:String ,
+    val receiverId:String ,
+    val chatId: String ,
     val messageContent:MessageContent,
     val seen: Boolean,
 )
