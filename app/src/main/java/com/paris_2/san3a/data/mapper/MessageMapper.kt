@@ -1,7 +1,6 @@
 package com.paris_2.san3a.data.mapper
 
 import com.paris_2.san3a.data.source.remote.messages.dto.MessageDto
-import com.paris_2.san3a.data.source.remote.storage.EmptyMessageException
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
 
