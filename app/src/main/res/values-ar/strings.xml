@@ -11,4 +11,5 @@
     <string name="first">الاول</string>
     <string name="second">الثاني</string>
     <string name="third">الثالث</string>
+    <string name="profile_image">صورة الملف الشخصي</string>
 </resources>
