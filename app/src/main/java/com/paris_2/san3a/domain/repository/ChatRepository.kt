@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
     fun getChatsByUserId(userId: String): Flow<List<Chat>>
+    suspend fun deleteChatById(chatId: String)
 }

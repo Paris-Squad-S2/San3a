@@ -2,6 +2,7 @@ package com.paris_2.san3a.data.repository
 
 import com.paris_2.san3a.data.mapper.toChatList
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
+import com.paris_2.san3a.domain.DeleteChatException
 import com.paris_2.san3a.domain.ReadChatException
 import com.paris_2.san3a.domain.entity.Chat
 import com.paris_2.san3a.domain.repository.ChatRepository
@@ -19,5 +20,13 @@ class ChatRepositoryImpl(
        } catch (e: Exception){
            throw ReadChatException(userId)
        }
+    }
+
+    override suspend fun deleteChatById(chatId: String) {
+        try {
+            messagesRemoteDataSource.deleteChat(chatId)
+        }catch (e: Exception){
+            throw DeleteChatException(chatId)
+        }
     }
 }
