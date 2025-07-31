@@ -3,6 +3,11 @@ package com.paris_2.san3a.presentation.shared.components
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -100,7 +105,8 @@ private fun RowScope.AppNavBarItem(
                 style = Theme.textStyle.label.medium.semibold,
                 color = animateColorAsState(
                     targetValue = if (isSelected) Theme.colors.brand.primary else Theme.colors.shade.tertiary,
-                    label = "NavBarItemTextColor"
+                    label = "NavBarItemTextColor",
+                    animationSpec = tween(durationMillis = 400, easing = LinearEasing)
                 ).value,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
@@ -120,25 +126,23 @@ private fun AppNavBarIcon(
     selected: Boolean = false
 ) {
     Box(contentAlignment = Alignment.Center) {
+        val iconRes = if (selected) currentItem.selectedIcon else currentItem.unSelectedIcon
+        val tint = if (selected) Theme.colors.brand.primary else Theme.colors.shade.tertiary
 
-        AnimatedContent(selected) {
-            if (it) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(currentItem.selectedIcon),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = Theme.colors.brand.primary
-                )
-            } else {
-                Icon(
-                    imageVector = ImageVector.vectorResource(currentItem.unSelectedIcon),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = Theme.colors.shade.tertiary
-                )
+        AnimatedContent(
+            targetState = iconRes,
+            label = "NavBarIcon",
+            transitionSpec = {
+                fadeIn(animationSpec = tween(durationMillis = 400)).togetherWith(fadeOut(animationSpec = tween(durationMillis = 400)))
             }
+        ) { icon ->
+            Icon(
+                imageVector = ImageVector.vectorResource(icon),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = tint
+            )
         }
-
     }
 }
 
