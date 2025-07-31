@@ -54,7 +54,7 @@ fun San3aScaffold(
     San3aTheme {
         AppScaffold(
             modifier = Modifier.fillMaxSize(),
-            content = { San3aNavGraph() },
+            content = { San3aNavGraph(navController = navController) },
             bottomBar = {
                 AnimatedVisibility(
                     visible = isVisible,
