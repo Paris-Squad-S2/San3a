@@ -7,7 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -35,49 +35,49 @@ fun OTPInputTextField(
     modifier: Modifier = Modifier,
     otpCount: Int = 5
 ) {
-        BasicTextField(
-            value = otpText,
-            onValueChange = {
-                if (it.length <= otpCount) {
-                    onOtpTextChange(it)
-                }
-            },
-            modifier = modifier,
-            decorationBox = { innerTextField ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    repeat(otpCount) { index ->
-                        val char = otpText.getOrNull(index)?.toString() ?: ""
-                        val isCurrentPosition = index + 1 == otpText.length
-                        val isFilled = char.isNotEmpty()
+    BasicTextField(
+        value = otpText,
+        onValueChange = {
+            if (it.length <= otpCount) {
+                onOtpTextChange(it)
+            }
+        },
+        modifier = modifier,
+        decorationBox = { innerTextField ->
+            Row(
+                horizontalArrangement = Arrangement.Center
+            ) {
+                repeat(otpCount) { index ->
+                    val char = otpText.getOrNull(index)?.toString() ?: ""
+                    val isCurrentPosition = index + 1 == otpText.length
+                    val isFilled = char.isNotEmpty()
 
-                        val borderColor = when {
-                            isCurrentPosition -> Theme.colors.brand.primary
-                            isFilled -> Theme.colors.stroke.primary
-                            else -> Theme.colors.stroke.primary
-                        }
-
-                        val textColor = when {
-                            isCurrentPosition && char.isEmpty() -> Theme.colors.brand.primary
-                            isFilled -> Theme.colors.shade.primary
-                            else -> Theme.colors.shade.tertiary
-                        }
-
-                        val animatedBorderColor = animateColorAsState(borderColor).value
-                        val animatedTextColor = animateColorAsState(textColor).value
-
-                        OtpItem(char, animatedBorderColor, animatedTextColor)
-
+                    val borderColor = when {
+                        isCurrentPosition -> Theme.colors.brand.primary
+                        isFilled -> Theme.colors.stroke.primary
+                        else -> Theme.colors.stroke.primary
                     }
+
+                    val textColor = when {
+                        isCurrentPosition && char.isEmpty() -> Theme.colors.brand.primary
+                        isFilled -> Theme.colors.shade.primary
+                        else -> Theme.colors.shade.tertiary
+                    }
+
+                    val animatedBorderColor = animateColorAsState(borderColor).value
+                    val animatedTextColor = animateColorAsState(textColor).value
+
+                    OtpItem(char, animatedBorderColor, animatedTextColor)
+                    Spacer(modifier = Modifier.width(12.dp))
+
                 }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            )
+            }
+        },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next
         )
+    )
 }
 
 @Composable
