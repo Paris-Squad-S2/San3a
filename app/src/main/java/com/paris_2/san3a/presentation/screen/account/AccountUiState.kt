@@ -4,14 +4,14 @@ import com.paris_2.san3a.R
 
 data class AccountScreenUiState(
     val accountUiState: AccountUiState,
-    val isLoading: Boolean,
-    val errorMassage: String?,
+    val isLoading: Boolean = false,
+    val errorMassage: String? = "",
 )
 
 data class AccountUiState(
-    val progressIndicator: Float,
+    val progressIndicator: Float = 0.25F,
     val userType: UserType = UserType.CUSTOMER,
-    val serviceUiState: List<ServiceUiState>,
+    val serviceUiState: List<ServiceUiState> = emptyList(),
     //TODO add location
 )
 
