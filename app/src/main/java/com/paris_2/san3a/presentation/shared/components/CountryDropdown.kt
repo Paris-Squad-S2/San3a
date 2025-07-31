@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.shared.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -46,7 +45,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 data class Country(
     val name: String,
     val code: String,
-    @DrawableRes val flagRes: Int,
+    val flagRes: Int,
 )
 
 @Composable
@@ -61,7 +60,7 @@ fun CountrySelector(
 ) {
     Box(modifier = modifier.wrapContentSize()) {
         Column {
-            CountrySelector_Header(
+            CountrySelectorHeader(
                 selectedCountry = selectedCountry,
                 expanded = expanded,
                 onClick = onToggleDropdown
@@ -81,7 +80,7 @@ fun CountrySelector(
 }
 
 @Composable
-private fun CountrySelector_Header(
+private fun CountrySelectorHeader(
     selectedCountry: Country,
     expanded: Boolean,
     onClick: () -> Unit,
