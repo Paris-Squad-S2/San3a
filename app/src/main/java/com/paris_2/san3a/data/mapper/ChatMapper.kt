@@ -3,7 +3,6 @@ package com.paris_2.san3a.data.mapper
 import com.paris_2.san3a.data.source.remote.messages.dto.ChatDto
 import com.paris_2.san3a.data.source.remote.storage.EmptyMessageException
 import com.paris_2.san3a.domain.entity.Chat
-import com.paris_2.san3a.domain.entity.Message
 
 
 fun List<ChatDto>.toChatList(): List<Chat>  = this.map { it.toChat() }

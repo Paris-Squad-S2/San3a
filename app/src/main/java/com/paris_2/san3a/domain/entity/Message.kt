@@ -3,7 +3,6 @@ package com.paris_2.san3a.domain.entity
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 

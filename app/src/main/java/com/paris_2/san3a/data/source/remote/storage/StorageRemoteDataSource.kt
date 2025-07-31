@@ -4,5 +4,5 @@ import android.net.Uri
 
 interface StorageRemoteDataSource {
     suspend fun saveImages(paths: List<String>, uris: List<Uri>)
-    suspend fun getImagesByPaths(path: List<String>):List<String>
+    suspend fun getImagesByPaths(paths: List<String>):List<String>
 }
