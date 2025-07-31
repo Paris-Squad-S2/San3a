@@ -8,7 +8,7 @@ class UserRemoteDataSourceImp(
     private val fireStoreService: FireStoreService,
 ) : UserRemoteDataSource {
     override suspend fun setUpAccount(user: User) {
-        fireStoreService.SetDoc(documentPath = "$USERS_COLLECTION/${user.phone}", data = user)
+        fireStoreService.setDoc(documentPath = "$USERS_COLLECTION/${user.phone}", data = user)
     }
 
     companion object {
