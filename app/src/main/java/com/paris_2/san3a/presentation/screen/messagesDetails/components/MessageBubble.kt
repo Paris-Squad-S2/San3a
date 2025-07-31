@@ -28,8 +28,8 @@ fun MessageBubble(
                 RoundedCornerShape(
                     topStart = Theme.radius.extraLarge,
                     topEnd = Theme.radius.extraLarge,
-                    bottomEnd = if (isReceived) Theme.radius.extraSmall else Theme.radius.extraLarge,
-                    bottomStart = if (isReceived) Theme.radius.extraLarge else Theme.radius.extraSmall,
+                    bottomEnd = if (!isReceived) Theme.radius.extraSmall else Theme.radius.extraLarge,
+                    bottomStart = if (!isReceived) Theme.radius.extraLarge else Theme.radius.extraSmall,
                 )
             )
             .background(if (isReceived) Theme.colors.background.card else Theme.colors.brand.tertiary),

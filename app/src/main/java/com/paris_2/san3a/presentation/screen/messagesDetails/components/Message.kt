@@ -32,7 +32,7 @@ fun Message(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.Bottom,
     ) {
-        if (!isReceived) {
+        if (isReceived) {
             ProfileImage(imagePainter)
         }
         MessageContent(
@@ -47,7 +47,7 @@ fun Message(
             modifier = Modifier
                 .weight(1f)
         )
-        if (isReceived) {
+        if (!isReceived) {
             ProfileImage(imagePainter)
         }
     }
