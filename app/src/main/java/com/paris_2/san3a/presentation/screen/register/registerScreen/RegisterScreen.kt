@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,15 +18,19 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -113,12 +118,12 @@ fun RegisterScreenContent(
                 ) {
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    PhoneInputSection(
+                    PhoneNumberInput(
                         phoneNumber = registerUiState.phoneNumber,
                         selectedCountry = registerUiState.selectedCountry,
+                        onPhoneNumberChanged = { registerInteractionListener.onPhoneNumberChanged(it) },
                         countries = registerUiState.countries,
-                        isDropdownExpanded = registerUiState.isCountryDropdownExpanded,
-                        interactionListener = registerInteractionListener
+                        onCountrySelected = { registerInteractionListener.onCountrySelected(it) }
                     )
 
                     TermsAndConditionsText()
@@ -185,12 +190,12 @@ fun TopSection(
 }
 
 @Composable
-fun PhoneInputSection(
+fun PhoneNumberInput(
     phoneNumber: String,
     selectedCountry: Country,
     countries: List<Country>,
-    isDropdownExpanded: Boolean,
-    interactionListener: RegisterInteractionListener,
+    onPhoneNumberChanged: (String) -> Unit,
+    onCountrySelected: (Country) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -201,49 +206,57 @@ fun PhoneInputSection(
             color = Theme.colors.shade.primary
         )
         Spacer(modifier = Modifier.height(16.dp))
+        var expanded by remember { mutableStateOf(false) }
 
-        val displayPhone = remember(phoneNumber, selectedCountry) {
-            if (phoneNumber.isEmpty()) {
-                selectedCountry.code + " "
-            } else {
-                selectedCountry.code + " " + formatPhoneNumber(phoneNumber)
-            }
-        }
+        val dialCode = selectedCountry.code
+        val numberOnly = phoneNumber.removePrefix(dialCode)
 
         AppTextField(
-            value = displayPhone,
-            onValueChange = { newValue ->
-                val countryCodeAndSpace = selectedCountry.code + " "
-                val digitsOnly = if (newValue.startsWith(countryCodeAndSpace)) {
-                    newValue.removePrefix(countryCodeAndSpace).filter { it.isDigit() }
-                } else {
-                    newValue.filter { it.isDigit() }
-                }.take(11)
-                interactionListener.onPhoneNumberChanged(digitsOnly)
+            value = numberOnly,
+            onValueChange = { newInput ->
+                val digitsOnly = newInput.filter { it.isDigit() }.take(11)
+                onPhoneNumberChanged(dialCode + digitsOnly)
             },
-            placeholder = {
-                if (phoneNumber.isEmpty()) {
-                    Text(
-                        text = "000 - 0000 - 000",
-                        color = Theme.colors.shade.secondary
-                    )
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
             modifier = Modifier.fillMaxWidth(),
+            placeholder = "000-0000-000",
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            visualTransformation = PhoneNumberVisualTransformation(),
             leadingIcon = {
-                CountrySelector(
-                    selectedCountry = selectedCountry,
-                    countries = countries,
-                    expanded = isDropdownExpanded,
-                    onToggleDropdown = { interactionListener.onToggleCountryDropdown() },
-                    onCountrySelected = { interactionListener.onCountrySelected(it) },
-                    onDismissDropdown = { interactionListener.onDismissCountryDropdown() },
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    CountrySelector(
+                        selectedCountry = selectedCountry,
+                        countries = countries,
+                        expanded = expanded,
+                        onToggleDropdown = { expanded = !expanded },
+                        onCountrySelected = {
+                            onCountrySelected(it)
+                            onPhoneNumberChanged(it.code)
+                        },
+                        onDismissDropdown = { expanded = false }
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Divider(
+                        color = Theme.colors.stroke.primary,
+                        modifier = Modifier
+                            .height(24.dp)
+                            .width(1.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = dialCode,
+                        color = Theme.colors.shade.primary
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                }
             }
         )
+
     }
 }
+
 
 @Composable
 fun TermsAndConditionsText() {
@@ -306,8 +319,6 @@ fun RegisterScreenPreview() {
         registerUiState = RegisterUiState(),
         registerInteractionListener = object : RegisterInteractionListener {
             override fun onCountrySelected(country: Country) {}
-            override fun onToggleCountryDropdown() {}
-            override fun onDismissCountryDropdown() {}
             override fun onPhoneNumberChanged(phone: String) {}
             override fun onClickContinue() {}
             override fun onClickContinueAsGuest() {}

@@ -32,22 +32,11 @@ class RegisterViewModel : ViewModel(), RegisterInteractionListener, KoinComponen
             phoneNumber = country.code
         )
     }
-
-    override fun onToggleCountryDropdown() {
-        _uiState.value =
-            _uiState.value.copy(isCountryDropdownExpanded = !_uiState.value.isCountryDropdownExpanded)
-    }
-
-    override fun onDismissCountryDropdown() {
-        _uiState.value = _uiState.value.copy(isCountryDropdownExpanded = false)
-    }
-
     override fun onPhoneNumberChanged(phone: String) {
         _uiState.value =_uiState.value.copy(phoneNumber = phone)
     }
 
     override fun onClickContinue() {
-        Log.e("RegisterScreenToOtpScreen","Called")
         navigate(Destinations.OTPRegisterScreen)
     }
 
