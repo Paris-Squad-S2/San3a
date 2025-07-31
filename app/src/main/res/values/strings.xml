@@ -11,4 +11,7 @@
     <string name="second">second</string>
     <string name="third">third</string>
     <string name="profile_image">profile image</string>
+    <string name="seen_icon">Seen Icon</string>
+    <string name="play_icon">Play Icon</string>
+    <string name="no_audio_wave_available">No audio wave available</string>
 </resources>

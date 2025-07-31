@@ -12,4 +12,7 @@
     <string name="second">الثاني</string>
     <string name="third">الثالث</string>
     <string name="profile_image">صورة الملف الشخصي</string>
+    <string name="seen_icon">أيقونة تم رؤيتها</string>
+    <string name="play_icon">أيقونة تشغيل</string>
+    <string name="no_audio_wave_available">لا توجد موجة صوتية متاحة</string>
 </resources>
