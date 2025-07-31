@@ -79,6 +79,13 @@ dependencies {
     //firestore
     implementation(libs.firebase.firestore.ktx)
 
+    //firebase storge
+    implementation(libs.firebase.storage)
+
     //Kotlinx DateTime
     implementation(libs.kotlinx.datetime)
+
+    //coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }
