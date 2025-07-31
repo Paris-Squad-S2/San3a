@@ -18,11 +18,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
@@ -58,6 +56,7 @@ fun Message(
         }
         Column(
             modifier = Modifier
+                .weight(1f) //
                 .clip(
                     RoundedCornerShape(
                         topStart = Theme.radius.extraLarge,
@@ -89,7 +88,7 @@ fun Message(
                     modifier = Modifier.padding(
                         start = 12.dp,
                         end = 12.dp,
-                        bottom = 8.dp
+                        bottom = 12.dp
                     ),
                     color = Theme.colors.shade.tertiary,
                     textAlign = TextAlign.Start
