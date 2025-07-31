@@ -1,13 +1,12 @@
 package com.paris_2.san3a.presentation.screen.account.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.flowlayout.FlowRow
 import com.paris_2.san3a.presentation.shared.components.AppChip
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -15,11 +14,11 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 @Composable
 fun StepTwoContent(modifier: Modifier = Modifier) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = modifier.background(Theme.colors.background.screen)
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        FlowRow(
+            mainAxisSpacing = 12.dp,
+            crossAxisSpacing = 12.dp
         ) {
             AppChip(
                 onClick = {},
@@ -30,9 +29,8 @@ fun StepTwoContent(modifier: Modifier = Modifier) {
             )
             AppChip(
                 onClick = {},
-                //isSelected = true,
-                hasBackgroundColor = true,
                 label = "Electrical",
+                hasBackgroundColor = true,
                 unSelectedColor = Theme.colors.background.card,
                 selectedColor = Theme.colors.additional.primary.turquoise,
             )
@@ -42,12 +40,7 @@ fun StepTwoContent(modifier: Modifier = Modifier) {
                 hasBackgroundColor = true,
                 unSelectedColor = Theme.colors.background.card,
                 hasBorder = true,
-
             )
-        }
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        )  {
             AppChip(
                 onClick = {},
                 label = "AC Repair",
@@ -69,10 +62,6 @@ fun StepTwoContent(modifier: Modifier = Modifier) {
                 unSelectedColor = Theme.colors.background.card,
                 hasBorder = true
             )
-        }
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        )  {
             AppChip(
                 onClick = {},
                 label = "Roofing",
@@ -92,12 +81,8 @@ fun StepTwoContent(modifier: Modifier = Modifier) {
                 label = "Carpentry",
                 hasBackgroundColor = true,
                 unSelectedColor = Theme.colors.background.card,
-               hasBorder = true
+                hasBorder = true
             )
-        }
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        )  {
             AppChip(
                 onClick = {},
                 label = "Appliance Repair",
@@ -119,11 +104,6 @@ fun StepTwoContent(modifier: Modifier = Modifier) {
                 unSelectedColor = Theme.colors.background.card,
                 selectedColor = Theme.colors.additional.primary.red,
             )
-
-        }
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        )  {
             AppChip(
                 onClick = {},
                 label = "HVAC Maintenance",
@@ -135,14 +115,12 @@ fun StepTwoContent(modifier: Modifier = Modifier) {
                 onClick = {},
                 label = "Pool Maintenance",
                 hasBackgroundColor = true,
-                selectedColor = Theme.colors.background.card ,
+                selectedColor = Theme.colors.background.card,
                 unSelectedColor = Theme.colors.background.card,
                 hasBorder = true
             )
         }
-
     }
-
 }
 
 @Preview
@@ -151,5 +129,4 @@ private fun AccountChipsPreview() {
     San3aTheme {
         StepTwoContent()
     }
-
 }
