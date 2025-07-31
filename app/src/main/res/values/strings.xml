@@ -22,4 +22,6 @@
     <string name="i_need_help_with_a_service">I need help with a service</string>
     <string name="craftsman">Craftsman</string>
     <string name="i_offer_services">I offer services</string>
+    <string name="tap_to_add_photos">Tap to add photos</string>
+    <string name="tap_here">Tap here</string>
 </resources>

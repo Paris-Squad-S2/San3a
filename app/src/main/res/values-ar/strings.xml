@@ -23,4 +23,6 @@
     <string name="i_need_help_with_a_service">أحتاج إلى مساعدة في خدمة</string>
     <string name="craftsman">حرفي</string>
     <string name="i_offer_services">أُقدّم خدمات</string>
+    <string name="tap_to_add_photos">اضغط لإضافة الصور</string>
+    <string name="tap_here">اضغط هنا</string>
 </resources>
