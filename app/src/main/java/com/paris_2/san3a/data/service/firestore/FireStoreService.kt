@@ -38,4 +38,9 @@ interface FireStoreService {
         queryBuilder: (Query) -> Query = { it },
         limit: Int? = null
     ): Flow<List<T>>
+
+    suspend fun getCountOfCollection(
+        path: String,
+        queryBuilder: (Query) -> Query = { it }
+    ): Int
 }

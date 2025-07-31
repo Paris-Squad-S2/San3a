@@ -177,4 +177,22 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
                 FireStoreOperationException(path, e.message)
         }
     }
+
+    override suspend fun getCountOfCollection(
+        path: String,
+        queryBuilder: (Query) -> Query
+    ): Int {
+        return try {
+            var query: Query = firestore.collection(path)
+            query = queryBuilder(query)
+
+            val snapshot = query.get().await()
+            snapshot.size()
+        } catch (e: Exception) {
+            when (e) {
+                is FirebaseFirestoreException -> throw handleFirebaseException(e, path)
+                else -> throw GetDataException(path)
+            }
+        }
+    }
 }

@@ -82,4 +82,7 @@ dependencies {
     implementation(libs.accompanist.permissions)
     implementation(libs.play.services.location)
 
+
+    //Kotlinx DateTime
+    implementation(libs.kotlinx.datetime)
 }
