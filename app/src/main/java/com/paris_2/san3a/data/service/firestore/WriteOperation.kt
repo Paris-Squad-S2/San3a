@@ -1,6 +1,6 @@
 package com.paris_2.san3a.data.service.firestore
 
-sealed class WriteOperation(val type: WriteOperationType, open val path: String, open val data: Map<String, Any>? = null, open val merge: Boolean = false)
+sealed class WriteOperation(val type: WriteOperationType, open val path: String, open val data: Map<String, Any> = emptyMap(), open val merge: Boolean = false)
 
 data class SetOperation(
     override val path: String,

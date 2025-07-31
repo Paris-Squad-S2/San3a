@@ -60,11 +60,11 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
                 when (op.type) {
                     WriteOperationType.SET -> {
                         val docRef = firestore.document(op.path)
-                        batch.set(docRef, op.data!!, SetOptions.merge())
+                        batch.set(docRef, op.data, SetOptions.merge())
                     }
 
                     WriteOperationType.UPDATE -> {
-                        batch.update(firestore.document(op.path), op.data!!)
+                        batch.update(firestore.document(op.path), op.data)
                     }
 
                     WriteOperationType.DELETE -> {
