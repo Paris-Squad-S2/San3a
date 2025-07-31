@@ -1,5 +1,6 @@
 package com.paris_2.san3a.data.mapper
 
+import androidx.core.net.toUri
 import com.paris_2.san3a.data.source.remote.messages.dto.MessageDto
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
@@ -26,7 +27,8 @@ fun handleMessageContent(
     return if (text != null) {
         MessageContent.Text(text)
     } else if (imageUrls != null) {
-        MessageContent.Image(imageUrls)
+        val imageUris = imageUrls.map { it.toUri().toString() }
+        MessageContent.Image(imageUris)
     }else(
         MessageContent.Text("")
     )
