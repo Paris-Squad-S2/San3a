@@ -77,3 +77,61 @@ fun MessagePreview() {
     }
 
 }
+
+@Composable
+@PreviewMultiDevices
+fun MessagePreview2() {
+    San3aTheme {
+        Surface(color = Color.Red) {
+            Message(
+                imagePainter = painterResource(R.drawable.person_chat),
+                text = "مرحبًا، هذه رسالة نموذجية لعرض مكون الرسائل في التطبيق. يمكن أن تكون طويلة لاختبار التفاف النص والمحاذاة بشكل صحيح. لنرى كيف تبدو! هذه رسالة اختبار.",
+                time = "١٠:٣٠ ص",
+                isReceived = false,
+                images = listOf(
+                    painterResource(R.drawable.person_chat),
+                    painterResource(R.drawable.person_chat),
+                    painterResource(R.drawable.person_chat),
+                ),
+                onPlayClick = { /* Handle play click */ },
+                recordWave = listOf(0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f,0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f),
+                listenRatio = 0.5f,
+                isSeen = true,
+            )
+        }
+    }
+}
+
+@Composable
+@PreviewMultiDevices
+fun MessagePreview3() {
+    San3aTheme {
+        Surface(color = Color.Red) {
+            Message(
+                imagePainter = painterResource(R.drawable.person_chat),
+                text = "مرحبًا، هذه رسالة نموذجية لعرض مكون الرسائل في التطبيق. يمكن أن تكون طويلة لاختبار التفاف النص والمحاذاة بشكل صحيح. لنرى كيف تبدو! هذه رسالة اختبار.",
+                time = "١٠:٣٠ ص",
+            )
+        }
+    }
+}
+
+@Composable
+@PreviewMultiDevices
+fun MessagePreview4() {
+    San3aTheme {
+        Surface(color = Color.Red) {
+            Message(
+                imagePainter = painterResource(R.drawable.person_chat),
+                time = "10:30 AM",
+                isReceived = false,
+                images = listOf(
+                    painterResource(R.drawable.person_chat),
+                    painterResource(R.drawable.person_chat),
+                    painterResource(R.drawable.person_chat),
+                ),
+                isSeen = true,
+            )
+        }
+    }
+}
