@@ -11,6 +11,10 @@
     <string name="first">الاول</string>
     <string name="second">الثاني</string>
     <string name="third">الثالث</string>
+    <string name="home">الرئيسية</string>
+    <string name="my_request">طلباتي</string>
+    <string name="messages">رسائل</string>
+    <string name="more">المزيد</string>
     <string name="what_s_your_name">ما اسمك؟</string>
     <string name="enter_your_full_name">أدخل اسمك الكامل</string>
     <string name="set_your_profile_photo">قم بتعيين صورة ملفك الشخصي</string>

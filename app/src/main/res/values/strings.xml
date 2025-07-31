@@ -10,6 +10,10 @@
     <string name="first">first</string>
     <string name="second">second</string>
     <string name="third">third</string>
+    <string name="home">Home</string>
+    <string name="my_request">My Request</string>
+    <string name="messages">Messages</string>
+    <string name="more">More</string>
     <string name="what_s_your_name">What’s Your Name?</string>
     <string name="enter_your_full_name">Enter your full name</string>
     <string name="set_your_profile_photo">Set Your Profile Photo</string>
