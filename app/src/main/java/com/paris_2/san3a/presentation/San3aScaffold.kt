@@ -4,9 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -19,8 +16,10 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.paris_2.san3a.presentation.navigation.Navigator
+import com.paris_2.san3a.presentation.navigation.San3aNavGraph
 import com.paris_2.san3a.presentation.shared.components.AppNavBarItem
 import com.paris_2.san3a.presentation.shared.components.AppNavigationBar
+import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -53,7 +52,9 @@ fun San3aScaffold(
 
 
     San3aTheme {
-        Scaffold(modifier = Modifier.fillMaxSize(),
+        AppScaffold(
+            modifier = Modifier.fillMaxSize(),
+            content = { San3aNavGraph() },
             bottomBar = {
                 AnimatedVisibility(
                     visible = isVisible,
@@ -62,11 +63,11 @@ fun San3aScaffold(
                 ) {
                     AppNavigationBar(
                         selectedItem = AppNavBarItem.destinations[selectedDestinationIndex],
-                        onItemClick = {destination ->
+                        onItemClick = { destination ->
                             scope.launch {
                                 navigator.navigate(
                                     destination,
-                                    navOptions  = NavOptions.Builder()
+                                    navOptions = NavOptions.Builder()
                                         .setPopUpTo(
                                             navigator.startGraph,
                                             inclusive = false
@@ -78,12 +79,7 @@ fun San3aScaffold(
                     )
 
                 }
-            }) { innerPadding ->
-            Text(
-                text = "Hello Android!",
-                modifier = Modifier.padding(innerPadding)
-            )
-        }
+            })
     }
 }
 

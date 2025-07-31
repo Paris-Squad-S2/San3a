@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun AppScafold(
+fun AppScaffold(
     content: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     bottomBar: @Composable () -> Unit = { },
