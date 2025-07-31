@@ -14,4 +14,8 @@
     <string name="tap_to_add_photos">اضغط لأضافة صورة</string>
     <string name="e_g_kitchen_sink_is_leaking">على سبيل المثال، حوض المطبخ يسرب</string>
     <string name="category_item">عنصر الفئة</string>
+    <string name="home">الرئيسية</string>
+    <string name="my_request">طلباتي</string>
+    <string name="messages">رسائل</string>
+    <string name="more">المزيد</string>
 </resources>

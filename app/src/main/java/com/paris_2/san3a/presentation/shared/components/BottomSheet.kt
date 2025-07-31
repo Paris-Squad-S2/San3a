@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.shared.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,20 +20,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheet(
-    title: String,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
     isVisible: Boolean = true,
+    header: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit = {},
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -48,6 +48,7 @@ fun BottomSheet(
         modifier = modifier
             .fillMaxWidth(),
         sheetState = sheetState,
+        containerColor = Theme.colors.background.bottomSheet,
         dragHandle = {
             BottomSheetDragHandle()
         }
@@ -55,30 +56,10 @@ fun BottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = title,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.W500,
-                    color = Theme.colors.shade.primary,
-                    style = Theme.textStyle.title.small,
-                    modifier = Modifier.weight(1F)
-                )
-                IconButton(onClick = { onDismissRequest() }) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_close),
-                        contentDescription = null
-                    )
-                }
-            }
-            content
+            header?.invoke()
+            content()
         }
     }
 }
@@ -97,8 +78,66 @@ private fun BottomSheetDragHandle() {
     )
 }
 
-@Preview
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun BottomSheetPrev() {
-    BottomSheet("Title")
+    San3aTheme {
+        BottomSheet(
+            header = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp, bottom = 20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Text(
+                        text = "Edit Profile",
+                        color = Theme.colors.shade.primary,
+                        style = Theme.textStyle.title.small,
+                        modifier = Modifier.weight(1F)
+                    )
+
+                    IconButton(onClick = { }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_close),
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    text = "Your name",
+                    style = Theme.textStyle.body.medium.regular,
+                    color = Theme.colors.shade.primary
+                )
+                AppTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    value = "John Doe",
+                    onValueChange = {},
+                )
+                Text(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    text = "Your profile photo",
+                    style = Theme.textStyle.body.medium.regular,
+                    color = Theme.colors.shade.primary
+                )
+
+                Image(
+                    modifier = Modifier.size(96.dp),
+                    painter = painterResource(R.drawable.image_person),
+                    contentDescription = "image person"
+                )
+            }
+        }
+
+    }
 }
