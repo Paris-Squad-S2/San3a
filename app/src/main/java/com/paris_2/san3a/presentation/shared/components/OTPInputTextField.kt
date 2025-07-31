@@ -45,7 +45,6 @@ fun OTPInputTextField(
         modifier = modifier,
         decorationBox = { innerTextField ->
             Row(
-//                    modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 repeat(otpCount) { index ->
