@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,8 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun AudioPlayer(
     onPlayClick: () -> Unit,
     recordWave: List<Float>,
-    listenRatio: Float
+    listenRatio: Float,
+    isReceived: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -45,21 +47,34 @@ fun AudioPlayer(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_play_bold),
-            contentDescription = stringResource(R.string.play_icon),
-            tint = Theme.colors.shade.secondary,
-            modifier = Modifier
-                .size(20.dp)
-                .clickable(onClick = onPlayClick)
-        )
+        if (isReceived) {
+            Icon(
+                painter = painterResource(R.drawable.ic_play_bold),
+                contentDescription = stringResource(R.string.play_icon),
+                tint = Theme.colors.shade.secondary,
+                modifier = Modifier
+                    .size(20.dp)
+                    .clickable(onClick = onPlayClick)
+            )
+        }
         if (recordWave.isNotEmpty()) {
-            AudioWave(recordWave, listenRatio, Modifier.weight(1f))
+            AudioWave(recordWave, listenRatio, Modifier.weight(1f), isReceived)
         } else {
             Text(
                 text = stringResource(R.string.no_audio_wave_available),
                 style = Theme.textStyle.body.medium.regular,
                 color = Theme.colors.shade.secondary,
+            )
+        }
+        if (!isReceived) {
+            Icon(
+                painter = painterResource(R.drawable.ic_play_bold),
+                contentDescription = stringResource(R.string.play_icon),
+                tint = Theme.colors.shade.secondary,
+                modifier = Modifier
+                    .size(20.dp)
+                    .graphicsLayer(rotationZ = 180f)
+                    .clickable(onClick = onPlayClick)
             )
         }
     }

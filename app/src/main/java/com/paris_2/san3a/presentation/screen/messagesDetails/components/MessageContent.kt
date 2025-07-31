@@ -34,7 +34,8 @@ fun MessageContent(
             AudioPlayer(
                 onPlayClick = onPlayClick,
                 recordWave = recordWave,
-                listenRatio = listenRatio
+                listenRatio = listenRatio,
+                isReceived = isReceived
             )
         }
     }
