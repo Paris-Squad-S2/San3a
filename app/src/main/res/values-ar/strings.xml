@@ -15,4 +15,8 @@
     <string name="seen_icon">أيقونة تم رؤيتها</string>
     <string name="play_icon">أيقونة تشغيل</string>
     <string name="no_audio_wave_available">لا توجد موجة صوتية متاحة</string>
+    <string name="home">الرئيسية</string>
+    <string name="my_request">طلباتي</string>
+    <string name="messages">رسائل</string>
+    <string name="more">المزيد</string>
 </resources>
