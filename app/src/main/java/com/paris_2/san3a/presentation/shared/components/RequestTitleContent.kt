@@ -50,6 +50,7 @@ fun RequestTitleContent(
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
+            singleLine = true,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
@@ -66,7 +67,7 @@ fun RequestTitleContent(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(start = 16.dp),
+                        .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.CenterStart
                 ){
                     if (value.isEmpty()) {
