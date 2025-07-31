@@ -22,6 +22,8 @@ fun MessageMeta(
     isReceived: Boolean,
     modifier: Modifier = Modifier
 ) {
+    if (time == null && (isSeen == null || !isSeen)) return
+
     Row(
         modifier = modifier
             .padding(

@@ -135,3 +135,18 @@ fun MessagePreview4() {
         }
     }
 }
+
+@Composable
+@PreviewMultiDevices
+fun MessagePreview5() {
+    San3aTheme {
+        Surface(color = Color.Red) {
+            Message(
+                imagePainter = painterResource(R.drawable.person_chat),
+                onPlayClick = { /* Handle play click */ },
+                recordWave = listOf(0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f,0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f),
+                listenRatio = 0.5f,
+            )
+        }
+    }
+}
