@@ -15,13 +15,12 @@ fun MessageDto.toMessage(): Message {
         senderId = this.senderId,
         receiverId = this.receiverId,
         chatId = this.chatId,
-        messageContent = handleMessageContent(this.id, this.text, this.imageUrls),
+        messageContent = handleMessageContent(this.text, this.imageUrls),
         seen = this.seen
     )
 }
 
 fun handleMessageContent(
-    id: String?,
     text: String?,
     imageUrls: List<String>?,
 ): MessageContent {
@@ -29,9 +28,9 @@ fun handleMessageContent(
         MessageContent.Text(text)
     } else if (imageUrls != null) {
         MessageContent.Image(imageUrls)
-    } else {
-        throw EmptyMessageException(id.orEmpty())
-    }
+    }else(
+        MessageContent.Text("")
+    )
 }
 
 fun Message.toImageMessageDto(urls: List<String>): MessageDto {
