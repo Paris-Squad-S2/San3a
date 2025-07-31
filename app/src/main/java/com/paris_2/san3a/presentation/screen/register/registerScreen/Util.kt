@@ -1,13 +1,15 @@
 package com.paris_2.san3a.presentation.screen.register.registerScreen
 
-fun formatPhoneNumber(input: String): String {
-    val digits = input.filter { it.isDigit() }.take(11)
-    return buildString {
-        for (i in digits.indices) {
-            append(digits[i])
-            when (i) {
-                2, 6 -> append(" - ")
-            }
-        }
+
+fun formatPhoneNumber(phoneNumber: String): String {
+    return when {
+        phoneNumber.length <= 3 -> phoneNumber
+        phoneNumber.length <= 7 -> "${phoneNumber.substring(0, 3)} - ${phoneNumber.substring(3)}"
+        else -> "${phoneNumber.substring(0, 3)} - ${
+            phoneNumber.substring(
+                3,
+                7
+            )
+        } - ${phoneNumber.substring(7)}"
     }
 }
