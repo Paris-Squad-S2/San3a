@@ -15,7 +15,7 @@ val defaultTextStyle = San3aTextStyle(
     title = SizedTitleTextStyle(
         xLarge = TextStyle(
             fontFamily = manrope,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 24.sp,
         ),
         large = TextStyle(

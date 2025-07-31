@@ -2,7 +2,6 @@ package com.paris_2.san3a.presentation.shared.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.fadeIn
@@ -52,7 +51,13 @@ fun AppButton(
     modifier: Modifier = Modifier,
     size: AppButtonSize = AppButtonSize.Small,
     state: AppButtonState = AppButtonState.Enable,
-    @StringRes text: Int? = null,
+    text: String? = null,
+    disableTertiaryBackgroundColor: Color = Color.Transparent,
+    disablePrimaryBackgroundColor: Color = Theme.colors.button.disabled,
+    disableSecondaryBackgroundColor: Color = Theme.colors.button.disabled,
+    enableTertiaryBackgroundColor: Color = Color.Transparent,
+    enablePrimaryBackgroundColor: Color = Theme.colors.button.primary,
+    enableSecondaryBackgroundColor: Color = Theme.colors.button.secondary,
     loadingIcon: @Composable (() -> Unit)? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -63,6 +68,12 @@ fun AppButton(
     val backgroundColor = getBackgroundColor(
         type = type,
         isDisabled = (state == AppButtonState.Disabled),
+        disableTertiaryBackgroundColor = disableTertiaryBackgroundColor,
+        disablePrimaryBackgroundColor = disablePrimaryBackgroundColor,
+        disableSecondaryBackgroundColor = disableSecondaryBackgroundColor,
+        enableTertiaryBackgroundColor = enableTertiaryBackgroundColor,
+        enablePrimaryBackgroundColor = enablePrimaryBackgroundColor,
+        enableSecondaryBackgroundColor = enableSecondaryBackgroundColor
     )
     val buttonContentColor = getContentColor(state, type)
 
@@ -84,7 +95,7 @@ fun AppButton(
         ) {
             text?.let {
                 Text(
-                    text = stringResource(it),
+                    text = it,
                     style = if (size == AppButtonSize.Large) Theme.textStyle.body.medium.medium else Theme.textStyle.body.small.regular,
                     color = buttonContentColor
                 )
@@ -104,17 +115,24 @@ fun AppButton(
 private fun getBackgroundColor(
     type: AppButtonType,
     isDisabled: Boolean,
+    disableTertiaryBackgroundColor: Color = Color.Transparent,
+    disablePrimaryBackgroundColor: Color = Theme.colors.button.disabled,
+    disableSecondaryBackgroundColor: Color = Theme.colors.button.disabled,
+    enableTertiaryBackgroundColor: Color = Color.Transparent,
+    enablePrimaryBackgroundColor: Color = Theme.colors.button.primary,
+    enableSecondaryBackgroundColor: Color = Theme.colors.button.secondary,
 ): Color {
     return if (isDisabled) {
         when (type) {
-            AppButtonType.Tertiary -> Color.Transparent
-            AppButtonType.Primary, AppButtonType.Secondary -> Theme.colors.button.disabled
+            AppButtonType.Tertiary -> disableTertiaryBackgroundColor
+            AppButtonType.Primary -> disablePrimaryBackgroundColor
+            AppButtonType.Secondary -> disableSecondaryBackgroundColor
         }
     } else {
         when (type) {
-            AppButtonType.Primary -> Theme.colors.button.primary
-            AppButtonType.Secondary -> Theme.colors.button.secondary
-            AppButtonType.Tertiary -> Color.Transparent
+            AppButtonType.Primary -> enablePrimaryBackgroundColor
+            AppButtonType.Secondary -> enableSecondaryBackgroundColor
+            AppButtonType.Tertiary -> enableTertiaryBackgroundColor
         }
     }
 }
@@ -180,7 +198,7 @@ fun AppPrimaryLargeButtonPreview() {
         AppButton(
             type = AppButtonType.Primary,
             onClick = {},
-            text = R.string.button,
+            text = stringResource(R.string.button),
             size = AppButtonSize.Large
         )
     }
@@ -194,7 +212,7 @@ fun AppSecondaryLargeButtonPreview() {
         AppButton(
             type = AppButtonType.Secondary,
             onClick = {},
-            text = R.string.button,
+            text = stringResource(R.string.button),
             size = AppButtonSize.Large
         )
     }
@@ -208,7 +226,7 @@ fun AppTertiaryLargeButtonPreview() {
         AppButton(
             type = AppButtonType.Tertiary,
             onClick = {},
-            text = R.string.button,
+            text = stringResource(R.string.button),
             size = AppButtonSize.Large
         )
     }
@@ -222,7 +240,7 @@ fun AppDisablePrimaryLargeButtonPreview() {
         AppButton(
             type = AppButtonType.Primary,
             onClick = {},
-            text = R.string.button,
+            text = stringResource(R.string.button),
             size = AppButtonSize.Large,
             state = AppButtonState.Disabled
         )
@@ -237,7 +255,7 @@ fun AppDisableSecondaryLargeButtonPreview() {
         AppButton(
             type = AppButtonType.Secondary,
             onClick = {},
-            text = R.string.button,
+            text = stringResource(R.string.button),
             size = AppButtonSize.Large,
             state = AppButtonState.Disabled
         )
@@ -252,7 +270,7 @@ fun AppDisableTertiaryLargeButtonPreview() {
         AppButton(
             type = AppButtonType.Tertiary,
             onClick = {},
-            text = R.string.button,
+            text = stringResource(R.string.button),
             size = AppButtonSize.Large,
             state = AppButtonState.Disabled
         )
@@ -267,7 +285,7 @@ fun AppPrimarySmallButtonPreview() {
         AppButton(
             type = AppButtonType.Primary,
             onClick = {},
-            text = R.string.button,
+            text = stringResource(R.string.button),
             size = AppButtonSize.Small,
         )
     }
@@ -281,7 +299,7 @@ fun AppSecondarySmallButtonPreview() {
         AppButton(
             type = AppButtonType.Secondary,
             onClick = {},
-            text = R.string.button,
+            text = stringResource(R.string.button),
             size = AppButtonSize.Small,
         )
     }
@@ -295,7 +313,7 @@ fun AppTertiarySmallButtonPreview() {
         AppButton(
             type = AppButtonType.Tertiary,
             onClick = {},
-            text = R.string.button,
+            text = stringResource(R.string.button),
             size = AppButtonSize.Small,
         )
     }
