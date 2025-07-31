@@ -13,4 +13,8 @@
     <string name="third">الثالث</string>
     <string name="craftman">CraftMan</string>
     <string name="customer">Customer</string>
+    <string name="home">الرئيسية</string>
+    <string name="my_request">طلباتي</string>
+    <string name="messages">رسائل</string>
+    <string name="more">المزيد</string>
 </resources>
