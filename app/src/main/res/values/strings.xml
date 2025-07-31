@@ -14,6 +14,8 @@
     <string name="seen_icon">Seen Icon</string>
     <string name="play_icon">Play Icon</string>
     <string name="no_audio_wave_available">No audio wave available</string>
+    <string name="craftman">CraftMan</string>
+    <string name="customer">Customer</string>
     <string name="home">Home</string>
     <string name="my_request">My Request</string>
     <string name="messages">Messages</string>
