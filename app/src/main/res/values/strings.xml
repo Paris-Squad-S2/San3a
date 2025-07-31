@@ -10,4 +10,8 @@
     <string name="first">first</string>
     <string name="second">second</string>
     <string name="third">third</string>
+    <string name="home">Home</string>
+    <string name="my_request">My Request</string>
+    <string name="messages">Messages</string>
+    <string name="more">More</string>
 </resources>
