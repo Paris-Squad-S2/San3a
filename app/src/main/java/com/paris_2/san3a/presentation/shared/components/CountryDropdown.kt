@@ -66,7 +66,7 @@ fun CountrySelector(
                 onClick = onToggleDropdown
             )
 
-            CountrySelector_DropdownList(
+            CountrySelectorDropdownList(
                 visible = expanded,
                 countries = countries,
                 selectedCountry = selectedCountry,
@@ -117,7 +117,7 @@ private fun CountrySelectorHeader(
 }
 
 @Composable
-private fun CountrySelector_DropdownList(
+private fun CountrySelectorDropdownList(
     visible: Boolean,
     countries: List<Country>,
     selectedCountry: Country,
@@ -146,7 +146,7 @@ private fun CountrySelector_DropdownList(
                     items = countries.filter { it != selectedCountry },
                     key = { it.code }
                 ) { country ->
-                    CountrySelector_DropdownItem(
+                    CountrySelectorDropdownItem(
                         country = country,
                         onClick = { onCountrySelected(country) }
                     )
@@ -157,7 +157,7 @@ private fun CountrySelector_DropdownList(
 }
 
 @Composable
-private fun CountrySelector_DropdownItem(
+private fun CountrySelectorDropdownItem(
     country: Country,
     onClick: () -> Unit,
 ) {
