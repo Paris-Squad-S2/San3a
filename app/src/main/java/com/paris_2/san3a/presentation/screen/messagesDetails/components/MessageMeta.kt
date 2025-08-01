@@ -41,9 +41,9 @@ fun MessageMeta(
                 color = Theme.colors.shade.tertiary,
             )
         }
-        if (isSeen ?: false && !isReceived) {
+        if (!isReceived) {
             Icon(
-                painter = painterResource(R.drawable.ic_verified_check_outline),
+                painter = painterResource(if (isSeen == true) R.drawable.ic_check_read else R.drawable.ic_check_unread),
                 contentDescription = stringResource(R.string.seen_icon),
                 tint = Theme.colors.additional.primary.blue,
                 modifier = Modifier.size(16.dp)
