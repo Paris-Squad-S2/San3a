@@ -21,11 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 
 @Composable
 fun MessageTextField(
@@ -35,9 +37,9 @@ fun MessageTextField(
     voiceIcon: Painter,
     sendIcon: Painter,
     onImageClick: () -> Unit,
-    onVoiceClick: () -> Unit = {},
     onSendClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onVoiceClick: () -> Unit = {},
 ) {
 
     val paddingText = animateDpAsState(
@@ -120,9 +122,27 @@ fun MessageTextField(
     )
 }
 
-@PreviewScreenSizes
+@PreviewMultiDevices
 @Composable
 private fun MessageTextFieldPreview() {
+    San3aTheme {
+        MessageTextField(
+            value = "defreferkhkerhfhher jvjhrevjerejvbhjbl ufjljfjhebfjebjbekqbjkeqbkhbkbeewkrb ekr bkjerqbkhbk vjre jhverjhv evhjer vj ber jer vhj er vje verjv jer vj er vjer v erjv er jv er vre vj erj vjer v erv er v erv re ver jhv rejhv e vjer jv erj vjer v jer ver jv jer vjer jv ej ver jv erj er vjer jv erj vj ver jv er ve rver",
+            onValueChange = {},
+            imageIcon = painterResource(R.drawable.ic_image),
+            voiceIcon = painterResource(R.drawable.ic_voice),
+            sendIcon = painterResource(R.drawable.ic_send),
+            onImageClick = {},
+            onSendClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+    }
+}
+
+@PreviewMultiDevices
+@Composable
+private fun MessageTextFieldPreview1() {
     San3aTheme {
         MessageTextField(
             value = "",
@@ -134,7 +154,6 @@ private fun MessageTextFieldPreview() {
             onSendClick = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp)
         )
     }
 }
