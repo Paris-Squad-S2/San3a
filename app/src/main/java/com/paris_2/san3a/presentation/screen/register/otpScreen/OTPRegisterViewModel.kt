@@ -4,6 +4,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
@@ -51,7 +52,7 @@ class OTPRegisterViewModel(
     }
 
     private fun onSendOtpToPhoneNumberError(message: String) {
-        updateState(screenState.value.copy(errorMessage = message))
+        updateState(screenState.value.copy(errorMessage = R.string.occurred_an_error_for_sending_otp))
     }
 
     private fun updateSecondLeft() {
@@ -77,18 +78,17 @@ class OTPRegisterViewModel(
 
     override fun onClickVerify() {
 
-        viewModelScope.launch {
-            try {
-                // if code is right should navigate to next screen
+        tryToExecute(
+            execute = {
                 if (screenState.value.otp == screenState.value.verificationId) {
                     savePhoneNumberUseCase(screenState.value.phoneNumber)
                     navigate(Destinations.Home)
-                }
-            } catch (e: Exception) {
-                updateState(screenState.value.copy(errorMessage = e.message))
+                } 
+            },
+            onError = { errorMessage ->
+                updateState(screenState.value.copy(errorMessage = R.string.otp_code_is_incorrect))
             }
-
-        }
+        )
     }
 
     override fun onClickResendCode() {

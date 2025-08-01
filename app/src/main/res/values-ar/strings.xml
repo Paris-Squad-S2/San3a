@@ -36,6 +36,8 @@
     <string name="resend_code_after">اعادة ارسال رمز بعد</string>
     <string name="_0">" 0:"</string>
     <string name="resend_code">طلب رمز جديد</string>
+    <string name="otp_code_is_incorrect">رمز تأكيد غير متطابق</string>
+    <string name="occurred_an_error_for_sending_otp">حدث خطأ اثناء ارسال الرمز</string>
     <string name="enter_your_phone_number_to_continue">أدخل رقم هاتفك\nللمتابعة </string>
     <string name="or">أو</string>
     <string name="by_continuing_you_agree_on_our">بمتابعتك، فإنك توافق على </string>

@@ -35,6 +35,8 @@
     <string name="resend_code_after">Resend Code after</string>
     <string name="_0">" 0:"</string>
     <string name="resend_code">Resend Code</string>
+    <string name="otp_code_is_incorrect">OTP code is incorrect</string>
+    <string name="occurred_an_error_for_sending_otp">occurred an error for sending otp</string>
     <string name="enter_your_phone_number_to_continue">Enter your phone number to \ncontinue</string>
     <string name="or">Or</string>
     <string name="by_continuing_you_agree_on_our">"By continuing, you agree on our "</string>
