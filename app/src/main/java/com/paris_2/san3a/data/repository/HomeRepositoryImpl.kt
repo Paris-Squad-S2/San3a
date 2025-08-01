@@ -2,6 +2,7 @@ package com.paris_2.san3a.data.repository
 
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
+import com.paris_2.san3a.domain.GetAllServicesException
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.repository.HomeRepository
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,12 @@ class HomeRepositoryImpl(
 ): HomeRepository {
 
     override suspend fun getAllServices(): Flow<List<Service>> {
-        return serviceRemoteDataSource.getAllServices().map { dtoList -> dtoList.map { it.toEntity() } }
+        return try {
+            serviceRemoteDataSource.getAllServices()
+                .map { dtoList -> dtoList.map { it.toEntity() } }
+        } catch (e: Exception){
+            throw GetAllServicesException()
+        }
     }
 
     override suspend fun getMostRequestedServices() {
