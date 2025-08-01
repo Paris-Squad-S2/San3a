@@ -6,6 +6,9 @@ import android.location.Geocoder
 import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.paris_2.san3a.domain.LocationErrorException
+import com.paris_2.san3a.domain.UnKnownCityException
+import com.paris_2.san3a.domain.UnKnownCountryException
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.repository.LocationRepository
 import kotlinx.coroutines.tasks.await
@@ -38,7 +41,7 @@ class LocationRepositoryImp(private val context: Context) : LocationRepository {
         return fusedLocationProviderClient.getCurrentLocation(
             currentLocationRequest,
             null
-        ).await() ?: throw IllegalStateException("No location available")
+        ).await() ?: throw LocationErrorException()
     }
 
 
@@ -46,18 +49,18 @@ class LocationRepositoryImp(private val context: Context) : LocationRepository {
         val geocoder = Geocoder(context, Locale.ENGLISH)
         val addresses = geocoder.getFromLocation(latitude, longitude, 1)
         return if (!addresses.isNullOrEmpty()) {
-            addresses[0].locality ?: addresses[0].subAdminArea ?: "Unknown city"
+            addresses[0].locality ?: addresses[0].subAdminArea ?: throw UnKnownCityException()
 
-        } else "Unknown city"
+        } else throw UnKnownCityException()
     }
 
     private fun getCountryNameFromCoordinates(latitude: Double, longitude: Double): String {
         val geocoder = Geocoder(context, Locale.ENGLISH)
         val addresses = geocoder.getFromLocation(latitude, longitude, 1)
         return if (!addresses.isNullOrEmpty()) {
-            addresses[0].locality ?: addresses[0].countryName ?: "Unknown city"
+            addresses[0].locality ?: addresses[0].countryName ?: throw UnKnownCountryException()
 
-        } else "Unknown country"
+        } else throw UnKnownCountryException()
     }
 
 }
