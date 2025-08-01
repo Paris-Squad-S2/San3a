@@ -133,7 +133,7 @@ fun RegisterScreenContent(
                         state = AppButtonState.Enable,
                         modifier = Modifier.fillMaxWidth(),
                         size = AppButtonSize.Large,
-                        text = "Continue",
+                        text = stringResource(R.string.Continue),
                     )
 
                     if (!isKeyboardVisible) {
@@ -203,7 +203,7 @@ fun PhoneNumberInput(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Enter your phone number to \ncontinue",
+            text = stringResource(R.string.enter_your_phone_number_to_continue),
             style = Theme.textStyle.title.medium,
             color = Theme.colors.shade.primary
         )
@@ -268,23 +268,23 @@ fun TermsAndConditionsText() {
 
     Text(
         text = buildAnnotatedString {
-            append("By continuing, you agree on our ")
+            append(stringResource(R.string.by_continuing_you_agree_on_our))
             withStyle(
                 style = SpanStyle(
                     color = Theme.colors.brand.primary,
                     fontWeight = FontWeight.SemiBold
                 )
             ) {
-                append("Terms and Conditions")
+                append(stringResource(R.string.terms_and_conditions))
             }
-            append(" and ")
+            append(stringResource(R.string.and))
             withStyle(
                 style = SpanStyle(
                     color = Theme.colors.brand.primary,
                     fontWeight = FontWeight.SemiBold
                 )
             ) {
-                append("Privacy Policy")
+                append(stringResource(R.string.privacy_policy))
             }
         },
         style = Theme.textStyle.body.small.regular,
@@ -300,7 +300,7 @@ fun TermsAndConditionsText() {
 @Composable
 fun GuestButtonSection(interactionListener: RegisterInteractionListener) {
     Text(
-        "Or",
+        stringResource(R.string.or),
         style = Theme.textStyle.body.medium.regular,
         color = Theme.colors.shade.secondary
     )
@@ -313,7 +313,7 @@ fun GuestButtonSection(interactionListener: RegisterInteractionListener) {
         onClick = { interactionListener.onClickContinueAsGuest() },
         modifier = Modifier.fillMaxWidth(),
         size = AppButtonSize.Large,
-        text = "Continue as a Guest",
+        text = stringResource(R.string.continue_as_a_guest),
     )
 }
 

@@ -70,7 +70,7 @@ class OTPRegisterViewModel(
     }
 
     override fun onOtpTextChange(otp: String) {
-        if(otp.isDigitsOnly()){
+        if (otp.isDigitsOnly()) {
             updateState(screenState.value.copy(otp = otp))
         }
     }
@@ -93,7 +93,7 @@ class OTPRegisterViewModel(
 
     override fun onClickResendCode() {
         updateSecondLeft()
-        if(screenState.value.secondLeft == 0){
+        if (screenState.value.secondLeft == 0) {
             sendOtpToPhoneNumber()
         }
     }

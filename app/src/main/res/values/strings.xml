@@ -35,4 +35,12 @@
     <string name="resend_code_after">Resend Code after</string>
     <string name="_0">" 0:"</string>
     <string name="resend_code">Resend Code</string>
+    <string name="enter_your_phone_number_to_continue">Enter your phone number to \ncontinue</string>
+    <string name="or">Or</string>
+    <string name="by_continuing_you_agree_on_our">"By continuing, you agree on our "</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="Continue">Continue</string>
+    <string name="continue_as_a_guest">Continue as a Guest</string>
+    <string name="and">" and "</string>
 </resources>
