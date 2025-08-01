@@ -5,7 +5,7 @@ import com.paris_2.san3a.domain.repository.OnboardingRepository
 class SetOnboardingCompletedUseCase(
     private val onboardingRepository: OnboardingRepository
 ) {
-    operator fun invoke() {
+    suspend operator fun invoke() {
         onboardingRepository.setOnboardingCompleted()
     }
 }

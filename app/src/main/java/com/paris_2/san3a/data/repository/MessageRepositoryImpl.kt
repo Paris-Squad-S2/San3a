@@ -11,6 +11,7 @@ import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
 import com.paris_2.san3a.domain.repository.MessageRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlin.time.ExperimentalTime
 
@@ -18,17 +19,15 @@ import kotlin.time.ExperimentalTime
 class MessageRepositoryImpl(
     private val messagesRemoteDataSource: MessagesRemoteDataSource,
     private val storageRemoteDataSource: StorageRemoteDataSource,
-): MessageRepository {
+) : MessageRepository, BaseRepository() {
     override fun getMessagesByChatId(chatId: String): Flow<List<Message>> {
-     return try {
-            messagesRemoteDataSource.getChatMessages(chatId).map { it.toMessageList() }
-        }catch (e: Exception){
+        return messagesRemoteDataSource.getChatMessages(chatId).map { it.toMessageList() }.catch {
             throw ReadMessagesException(chatId)
         }
     }
 
     override suspend fun saveMessage(message: Message) {
-        try {
+        safeCall(SendMessageException(message.id)) {
             when (message.messageContent) {
                 is MessageContent.Audio -> null
                 is MessageContent.Image -> {
@@ -52,8 +51,6 @@ class MessageRepositoryImpl(
 
                 is MessageContent.Text -> null
             }
-        }catch (e: Exception){
-            throw SendMessageException(message.id)
         }
     }
 }
