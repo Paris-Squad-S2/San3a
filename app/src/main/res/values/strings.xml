@@ -16,6 +16,16 @@
     <string name="my_request">My Request</string>
     <string name="messages">Messages</string>
     <string name="more">More</string>
+    <string name="onboarding1title">Relax, We’ve Got It Covered</string>
+    <string name="onboarding1description">From the comfort of your couch, post your request and let trusted professionals come to you, no calls, no stress.</string>
+    <string name="onboarding2title">Find What You Need in Seconds</string>
+    <string name="onboarding2description">Browse dozens of home services — from quick fixes to big projects. Just tap a category and get started instantly.</string>
+    <string name="onboarding3title">"Post, Compare Offers and Choose!"</string>
+    <string name="onboarding3description">Receive multiple offers from nearby professionals, check their prices and ratings, then pick the one that suits you best.</string>
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+    <string name="chat">Chat</string>
+    <string name="accept_offer">Accept Offer</string>
     <string name="what_s_your_name">What’s Your Name?</string>
     <string name="enter_your_full_name">Enter your full name</string>
     <string name="set_your_profile_photo">Set Your Profile Photo</string>
