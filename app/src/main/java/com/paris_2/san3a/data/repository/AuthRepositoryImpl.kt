@@ -6,8 +6,10 @@ import com.paris_2.san3a.data.source.AppPreferences
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
 import com.paris_2.san3a.domain.NoInternetConnectionException
+import com.paris_2.san3a.domain.PhoneNumberCheckException
 import com.paris_2.san3a.domain.RegisterException
 import com.paris_2.san3a.domain.San3aException
+import com.paris_2.san3a.domain.SavePhoneNumberException
 import com.paris_2.san3a.domain.repository.AuthRepository
 
 class AuthRepositoryImpl(
@@ -49,10 +51,14 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun savePhoneNumber(phoneNumber: String) {
-        appPreferences.savePhoneNumber(phoneNumber)
+        safeCall(SavePhoneNumberException()) {
+            appPreferences.savePhoneNumber(phoneNumber)
+        }
     }
 
     override suspend fun isPhoneNumberSaved(): Boolean {
-        return appPreferences.isPhoneNumberSaved()
+        return safeCall(PhoneNumberCheckException()) {
+            appPreferences.isPhoneNumberSaved()
+        }
     }
 }
