@@ -6,10 +6,12 @@ import com.paris_2.san3a.data.repository.UserRepositoryImp
 import com.paris_2.san3a.domain.repository.ChatRepository
 import com.paris_2.san3a.domain.repository.MessageRepository
 import com.paris_2.san3a.domain.repository.UserRepository
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single<MessageRepository> { MessageRepositoryImpl(get(), get()) }
-    single<ChatRepository> { ChatRepositoryImpl(get()) }
-    single<UserRepository> { UserRepositoryImp(get(), get()) }
+    singleOf(::MessageRepositoryImpl) { bind<MessageRepository>() }
+    singleOf(::ChatRepositoryImpl) { bind<ChatRepository>() }
+    singleOf(::UserRepositoryImp) { bind<UserRepository>() }
 }

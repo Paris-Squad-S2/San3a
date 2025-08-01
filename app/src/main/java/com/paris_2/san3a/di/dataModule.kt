@@ -17,17 +17,20 @@ import com.paris_2.san3a.data.source.remote.storage.FirebaseStorageDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.domain.repository.UserRemoteDataSource
 import com.paris_2.san3a.domain.source.local.UserLocalDataSource
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val dataModule = module {
-    single<FireStoreService> { FireStoreServiceImpl(get()) }
+    singleOf(::FireStoreServiceImpl) { bind<FireStoreService>() }
+    singleOf(::MessagesRemoteDataSourceImp) { bind<MessagesRemoteDataSource>() }
+    singleOf(::FirebaseStorageDataSource) { bind<StorageRemoteDataSource>() }
+    singleOf(::UserRemoteDataSourceImp) { bind<UserRemoteDataSource>() }
+    singleOf(::UserLocalDataSourceImp) { bind<UserLocalDataSource>() }
+
     single { FirebaseFirestore.getInstance() }
-    single { FirebaseStorage.getInstance()}
+    single { FirebaseStorage.getInstance() }
     single<DataStore<Preferences>> {
         PreferenceDataStoreFactory.create { get<Context>().preferencesDataStoreFile("app_datastore") }
     }
-    single<MessagesRemoteDataSource> { MessagesRemoteDataSourceImp(get()) }
-    single<StorageRemoteDataSource> { FirebaseStorageDataSource(get()) }
-    single<UserRemoteDataSource> { UserRemoteDataSourceImp(get()) }
-    single<UserLocalDataSource> { UserLocalDataSourceImp(get()) }
 }
