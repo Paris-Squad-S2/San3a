@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.message.details
+package com.paris_2.san3a.presentation.screen.messagesDetails
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
@@ -22,6 +22,22 @@ class MessagesDetailsViewModel(
     private val _state = MutableStateFlow(MediaDetails())
     val state = _state.asStateFlow()
 
+    fun onMessageChange(message: String) {
+        _state.update {
+            it.copy(
+                message = message
+            )
+        }
+    }
+
+    fun sendMessage() {
+        // use cas
+        _state.update {
+            it.copy(
+                message = ""
+            )
+        }
+    }
 
     fun saveImagesUris(uris: List<Uri>) {
         viewModelScope.launch {
@@ -49,11 +65,15 @@ class MessagesDetailsViewModel(
             }
         }
     }
+    companion object {
+        const val IMAGE_TYPE = "image/*"
+    }
 
 }
 
 data class MediaDetails(
     val showMediaPicker: Boolean = false,
+    val message: String="",
     val errorMessage: String?=null,
     val messageImageList: List<Uri> = emptyList(),
 )
