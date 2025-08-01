@@ -3,12 +3,14 @@ package com.paris_2.san3a.data.repository
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
-import com.paris_2.san3a.domain.repository.UserRemoteDataSource
+import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
 import com.paris_2.san3a.domain.repository.UserRepository
 import android.net.Uri
+import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.domain.CompleteUserSetupException
 import com.paris_2.san3a.domain.GetAccountTypeException
+import com.paris_2.san3a.domain.GetStatsException
 import com.paris_2.san3a.domain.GetUserProgressException
 import com.paris_2.san3a.domain.SaveAccountTypeException
 import com.paris_2.san3a.domain.SaveLocationException
@@ -16,8 +18,9 @@ import com.paris_2.san3a.domain.SavePersonalInfoException
 import com.paris_2.san3a.domain.SaveServicesException
 import com.paris_2.san3a.domain.SaveWorkShowcaseException
 import com.paris_2.san3a.domain.UploadNationalIdImagesException
+import com.paris_2.san3a.domain.entity.Stats
 
-class UserRepositoryImp(
+class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
     private val storageRemoteDataSource: StorageRemoteDataSource
 ) : UserRepository, BaseRepository() {
@@ -66,6 +69,12 @@ class UserRepositoryImp(
         safeCall(CompleteUserSetupException()) {
             userRemoteDataSource.completeUserSetup(phone)
         }
+
+    override suspend fun getStats(userId: String): Stats? {
+        return safeCall(GetStatsException()) {
+            userRemoteDataSource.getStats(userId)?.toEntity()
+        }
+    }
 
     override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) =
         safeCall(UploadNationalIdImagesException()) {
