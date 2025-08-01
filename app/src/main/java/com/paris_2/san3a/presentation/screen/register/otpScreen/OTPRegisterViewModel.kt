@@ -1,57 +1,56 @@
 package com.paris_2.san3a.presentation.screen.register.otpScreen
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
+import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
-import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Destinations
-import com.paris_2.san3a.presentation.navigation.Navigator
+import com.paris_2.san3a.presentation.screen.base.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class OTPRegisterViewModel(
     private val sendOtpUseCase: SendOtpUseCase,
+    private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
     saveStateHandle: SavedStateHandle,
-) : ViewModel(), OTPRegisterListenerInteraction, KoinComponent {
+) : BaseViewModel<OTPRegisterUiState>(OTPRegisterUiState()), OTPRegisterListenerInteraction,
+    KoinComponent {
 
-    private val _uiState = MutableStateFlow(OTPRegisterUiState())
-    val uiState = _uiState.asStateFlow()
-
-    private val navigator: Navigator by inject()
-
-    protected fun navigate(destination: Destination, navOptions: NavOptions? = null) =
-        viewModelScope.launch {
-            navigator.navigate(destination = destination, navOptions = navOptions)
-        }
-
-    protected fun navigateUp() = viewModelScope.launch { navigator.navigateUp() }
+    private val otp = generateOtp()
 
     init {
         val phoneNumber = saveStateHandle.toRoute<Destinations.OTPRegisterScreen>().phoneNumber
-        _uiState.update { it.copy(phoneNumber = phoneNumber) }
+        updateState(screenState.value.copy(phoneNumber = phoneNumber))
         sendOtpToPhoneNumber()
 
     }
 
     private fun sendOtpToPhoneNumber() {
-        viewModelScope.launch {
-            try {
-                val otp = generateOtp()
-                sendOtpUseCase("", "Your verification code is $otp")
-                _uiState.update { it.copy(verificationId = otp) }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(errorMessage = e.message) }
-            }
+        tryToExecute(
+            execute = {
+                sendOtpUseCase(
+                    screenState.value.phoneNumber,
+                    "Your verification code is ${generateOtp()}"
+                )
+            },
+            onSuccess = ::onSendOtpToPhoneNumberSuccess,
+            onError = ::onSendOtpToPhoneNumberError
+        )
+
+    }
+
+    private fun onSendOtpToPhoneNumberSuccess(isSend: Boolean) {
+        if (isSend) {
+            screenState.value.copy(verificationId = otp)
         }
+
+    }
+
+    private fun onSendOtpToPhoneNumberError(message: String) {
+        screenState.value.copy(errorMessage = message)
     }
 
     private fun updateSecondLeft() {
@@ -59,29 +58,32 @@ class OTPRegisterViewModel(
 
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            _uiState.update { it.copy(secondLeft = 59) }
-            while (_uiState.value.secondLeft > 0) {
+            screenState.value.copy(secondLeft = 59)
+            while (screenState.value.secondLeft > 0) {
                 delay(1000)
-                _uiState.update {
-                    it.copy(secondLeft = it.secondLeft - 1)
-                }
+                screenState.value.copy(secondLeft = screenState.value.secondLeft - 1)
+
             }
         }
 
     }
 
     override fun onOtpTextChange(otp: String) {
-        _uiState.update {
-            it.copy(otp = otp)
-        }
+        screenState.value.copy(otp = otp)
+
     }
 
     override fun onClickVerify() {
+
         viewModelScope.launch {
             try {
                 // if code is right should navigate to next screen
+                if (screenState.value.otp == screenState.value.verificationId) {
+                    savePhoneNumberUseCase(screenState.value.phoneNumber)
+                    navigate(Destinations.Home)
+                }
             } catch (e: Exception) {
-                _uiState.update { it.copy(errorMessage = e.message) }
+                screenState.value.copy(errorMessage = e.message)
             }
 
         }
@@ -90,7 +92,7 @@ class OTPRegisterViewModel(
     override fun onClickResendCode() {
         updateSecondLeft()
     }
-    
+
     override fun onClickBackButton() {
         navigateUp()
     }
