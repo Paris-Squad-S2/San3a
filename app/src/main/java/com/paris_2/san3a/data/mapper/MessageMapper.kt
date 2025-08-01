@@ -34,7 +34,7 @@ fun handleMessageContent(
     )
 }
 
-fun Message.toImageMessageDto(urls: List<String>): MessageDto {
+fun Message.toImageMessageDto(urls: List<String>?=null): MessageDto {
     return MessageDto(
         id = id,
         chatId = chatId,
