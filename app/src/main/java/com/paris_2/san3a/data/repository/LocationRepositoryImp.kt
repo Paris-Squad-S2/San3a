@@ -3,64 +3,52 @@ package com.paris_2.san3a.data.repository
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Geocoder
-import com.google.android.gms.location.CurrentLocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
+import com.paris_2.san3a.data.mapper.toLocation
+import com.paris_2.san3a.data.repository.service.LocationService
 import com.paris_2.san3a.domain.LocationErrorException
 import com.paris_2.san3a.domain.UnKnownCityException
 import com.paris_2.san3a.domain.UnKnownCountryException
-import com.paris_2.san3a.domain.entity.Location
+import com.paris_2.san3a.domain.entity.AppLocation
 import com.paris_2.san3a.domain.repository.LocationRepository
-import kotlinx.coroutines.tasks.await
 import java.util.Locale
 
 @SuppressLint("MissingPermission")
-class LocationRepositoryImp(private val context: Context) : LocationRepository {
-    private val fusedLocationProviderClient =
-        LocationServices.getFusedLocationProviderClient(context)
+class LocationRepositoryImp(
+    private val context: Context,
+    private val locationService: LocationService,
+) : LocationRepository {
 
-    override suspend fun getCurrentLocation(): Location {
-        val location = getCurrentLocationFromProvider()
-        val cityName = getCityNameFromCoordinates(location.latitude, location.longitude)
-        val countryName = getCountryNameFromCoordinates(location.latitude, location.longitude)
-        return Location(
-            latitude = location.latitude,
-            longitude = location.longitude,
-            cityName = cityName,
-            countryName = countryName
-        )
+    override suspend fun getCurrentLocation(): AppLocation {
+        val locationDto = locationService.getCurrentLocation() ?: throw LocationErrorException()
+
+        val cityName = getCityName(locationDto.latitude, locationDto.longitude)
+            ?: throw UnKnownCityException()
+        val countryName = getCountryName(locationDto.latitude, locationDto.longitude)
+            ?: throw UnKnownCountryException()
+
+        return locationDto.toLocation().copy(cityName = cityName, countryName = countryName)
     }
 
-    private suspend fun getCurrentLocationFromProvider(): android.location.Location {
-        val currentLocationRequest = CurrentLocationRequest.Builder()
-            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-            .setDurationMillis(30000)
-            .setMaxUpdateAgeMillis(5000)
-            .build()
+    private fun getCityName(latitude: Double, longitude: Double): String? {
+        val cityName: String?
+        val geoCoder = Geocoder(context, Locale.getDefault())
+        val address = geoCoder.getFromLocation(latitude, longitude, 3)?.toList()
 
-        return fusedLocationProviderClient.getCurrentLocation(
-            currentLocationRequest,
-            null
-        ).await() ?: throw LocationErrorException()
+        if (address.isNullOrEmpty()) return null
+
+        cityName = address[0].adminArea
+        return cityName
     }
 
+    private fun getCountryName(latitude: Double, longitude: Double): String? {
+        val cityName: String?
+        val geoCoder = Geocoder(context, Locale.getDefault())
+        val address = geoCoder.getFromLocation(latitude, longitude, 3)?.toList()
 
-    private fun getCityNameFromCoordinates(latitude: Double, longitude: Double): String {
-        val geocoder = Geocoder(context, Locale.ENGLISH)
-        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-        return if (!addresses.isNullOrEmpty()) {
-            addresses[0].locality ?: addresses[0].subAdminArea ?: throw UnKnownCityException()
+        if (address.isNullOrEmpty()) return null
 
-        } else throw UnKnownCityException()
-    }
-
-    private fun getCountryNameFromCoordinates(latitude: Double, longitude: Double): String {
-        val geocoder = Geocoder(context, Locale.ENGLISH)
-        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-        return if (!addresses.isNullOrEmpty()) {
-            addresses[0].locality ?: addresses[0].countryName ?: throw UnKnownCountryException()
-
-        } else throw UnKnownCountryException()
+        cityName = address[0].countryName
+        return cityName
     }
 
 }

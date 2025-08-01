@@ -1,8 +1,8 @@
 package com.paris_2.san3a.domain.entity
 
-data class Location(
+data class AppLocation(
     val latitude: Double,
     val longitude: Double,
-    val cityName: String,
-    val countryName: String
+    val cityName: String = "",
+    val countryName: String = "",
 )
