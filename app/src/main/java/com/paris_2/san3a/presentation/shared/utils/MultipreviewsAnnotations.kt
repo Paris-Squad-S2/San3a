@@ -3,7 +3,6 @@ package com.paris_2.san3a.presentation.shared.utils
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.content.res.Configuration.UI_MODE_TYPE_NORMAL
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 
 @Preview(
     name = "Phone light",

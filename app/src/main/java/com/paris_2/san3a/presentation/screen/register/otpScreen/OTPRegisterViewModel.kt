@@ -8,7 +8,7 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
-import com.paris_2.san3a.presentation.screen.base.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

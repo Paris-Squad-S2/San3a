@@ -2,14 +2,20 @@ package com.paris_2.san3a.presentation.screen.account.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -28,8 +34,11 @@ fun AccountSelectionCard(
     userImage: Painter,
     modifier: Modifier = Modifier,
     isSelect: Boolean = false,
+    onClick: () -> Unit = {},
 ) {
-    val backgroundColor = if (isSelect) Theme.colors.brand.tertiary else Theme.colors.background.card
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isSelect) Theme.colors.brand.tertiary else Theme.colors.background.card
+    )
     val titleColor = if (isSelect) Theme.colors.brand.primary else Theme.colors.shade.primary
     val borderModifier = if (isSelect) {
         Modifier.border(
@@ -42,6 +51,10 @@ fun AccountSelectionCard(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
+            .clickable {
+                !isSelect
+                onClick()
+            }
             .then(borderModifier)
             .background(
                 color = backgroundColor,
@@ -74,23 +87,12 @@ fun AccountSelectionCard(
 @Composable
 private fun AccountSelectionCardSelectedPreview() {
     San3aTheme {
+        var isSelected by remember { mutableStateOf(false) }
         AccountSelectionCard(
             title = "title",
             caption = "caption",
             userImage = painterResource(id = R.drawable.customer),
-            isSelect = true
-        )
-    }
-}
-@Preview(uiMode = UI_MODE_NIGHT_NO)
-@Preview(uiMode = UI_MODE_NIGHT_YES)
-@Composable
-private fun AccountSelectionCardPreview() {
-    San3aTheme {
-        AccountSelectionCard(
-            title = "title",
-            caption = "caption",
-            userImage = painterResource(id = R.drawable.customer),
+            onClick = { isSelected = !isSelected}
         )
     }
 }

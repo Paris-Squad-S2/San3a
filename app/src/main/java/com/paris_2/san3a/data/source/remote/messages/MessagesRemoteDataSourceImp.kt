@@ -74,7 +74,7 @@ class MessagesRemoteDataSourceImp(
 
     override fun getUserChats(userId: String): Flow<List<ChatDto>> {
         val chats = fireStoreService.streamCollection(
-            path = "chats",
+            path = CHATS_COLLECTION,
             fromJson = ChatDto::fromJson,
             queryBuilder = { query ->
                 query.whereArrayContains("participants", userId)
