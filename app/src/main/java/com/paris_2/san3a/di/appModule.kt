@@ -3,5 +3,5 @@ package com.paris_2.san3a.di
 import org.koin.dsl.module
 
 val appModule = module {
-    includes(navigationModule, dataModule, domainModule,viewModelModule)
+    includes(navigationModule, dataModule,repositoryModule,useCaseModule,viewModelModule)
 }
