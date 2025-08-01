@@ -4,6 +4,7 @@ import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import android.net.Uri
+import com.paris_2.san3a.domain.entity.Stats
 
 interface UserRepository {
     suspend fun saveAccountType(phone: String, accountType: AccountType)
@@ -15,4 +16,5 @@ interface UserRepository {
     suspend fun getUserProgress(phone: String): AccountSetupStep
     suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?)
     suspend fun completeUserSetup(phone: String)
+    suspend fun getStats(userId: String): Stats?
 }
