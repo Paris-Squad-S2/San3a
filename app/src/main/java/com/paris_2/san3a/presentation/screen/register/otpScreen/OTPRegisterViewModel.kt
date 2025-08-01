@@ -34,7 +34,7 @@ class OTPRegisterViewModel(
         viewModelScope.launch {
             try {
                 val otp = generateOtp()
-                 sendOtpUseCase("+201100725368","Your verification code is $otp")
+                 sendOtpUseCase("","Your verification code is $otp")
                 _uiState.update { it.copy(verificationId = otp) }
             } catch (e: Exception) {
                 _uiState.update { it.copy(errorMessage = e.message) }

@@ -2,6 +2,7 @@ package com.paris_2.san3a.data.repository
 
 import android.util.Log
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
+import com.paris_2.san3a.data.source.remote.auth.WhatsAppMessage
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.RegisterException
@@ -35,11 +36,13 @@ class AuthRepositoryImpl(
         message: String,
     ): Boolean {
         return safeCall(RegisterException()) {
-            remoteDataSource.sendMessage(
+            val body = WhatsAppMessage(
                 phoneNumber = phoneNumber,
-                message = message,
-            ).success == true
+                message = message
+            )
+            remoteDataSource.sendMessage(
+                body
+            ).success ?: false
         }
-
     }
 }

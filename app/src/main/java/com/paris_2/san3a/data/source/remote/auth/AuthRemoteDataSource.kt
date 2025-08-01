@@ -7,7 +7,11 @@ import retrofit2.http.POST
 interface AuthRemoteDataSource {
     @POST("api/send-message")
     suspend fun sendMessage(
-        @Body phoneNumber: String,
-        @Body message: String
+        @Body body: WhatsAppMessage,
         ): OtpDto
 }
+
+data class WhatsAppMessage(
+    val phoneNumber: String,
+    val message: String
+)
