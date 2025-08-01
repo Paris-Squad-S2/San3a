@@ -73,14 +73,15 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(platform(libs.firebase.bom))
 
-    // Local Date ( kotlin x )
-    implementation(libs.kotlinx.datetime)
 
     //firestore
     implementation(libs.firebase.firestore.ktx)
 
     //firebase storge
     implementation(libs.firebase.storage)
+
+    // splash api
+    implementation(libs.androidx.core.splashscreen)
 
     //Kotlinx DateTime
     implementation(libs.kotlinx.datetime)
