@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface ServiceRemoteDataSource {
     fun getAllServices(): Flow<List<ServiceDto>>
     suspend fun requestService()
+    fun searchServices(query: String): Flow<List<ServiceDto>>
 }
