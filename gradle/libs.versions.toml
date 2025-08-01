@@ -18,6 +18,8 @@ koinComposeViewmodel = "4.1.0"
 koinCore = "4.0.2"
 googleGmsGoogleServices = "4.4.3"
 navigationCompose = "2.9.2"
+osmAndrodCompose = "0.0.3"
+osmdroidAndroid = "6.1.20"
 playServicesLocation = "21.3.0"
 serializationJson ="1.9.0"
 
@@ -46,6 +48,8 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serializationJson" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+osm-androd-compose = { module = "tech.utsmankece:osm-androd-compose", version.ref = "osmAndrodCompose" }
+osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]

@@ -86,5 +86,6 @@ dependencies {
     //Kotlinx DateTime
     implementation(libs.kotlinx.datetime)
 
-    implementation("org.osmdroid:osmdroid-android:6.1.20")
+    implementation(libs.osmdroid.android)
+    implementation(libs.osm.androd.compose)
 }

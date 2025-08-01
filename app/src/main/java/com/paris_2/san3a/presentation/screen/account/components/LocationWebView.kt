@@ -1,19 +1,27 @@
 package com.paris_2.san3a.presentation.screen.account.components
 
-import android.annotation.SuppressLint
-import android.webkit.WebView
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
+import com.utsman.osmandcompose.Marker
+import com.utsman.osmandcompose.OpenStreetMap
+import com.utsman.osmandcompose.rememberCameraState
+import com.utsman.osmandcompose.rememberMarkerState
+import org.osmdroid.util.GeoPoint
 
-@SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun LocationWebView(modifier: Modifier = Modifier) {
+fun LocationWebView(modifier: Modifier = Modifier, longitude: Double, latitude: Double) {
 
+    val cameraState = rememberCameraState {
+        geoPoint = GeoPoint(latitude, longitude)
+        zoom = 5.0
+    }
+
+    OpenStreetMap(
+        cameraState = cameraState,
+    ) {
+        Marker(
+            state =
+                rememberMarkerState(geoPoint = GeoPoint(latitude, longitude))
+        )
+    }
 }
