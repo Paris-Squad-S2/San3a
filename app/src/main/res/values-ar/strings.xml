@@ -43,6 +43,7 @@
     <string name="by_continuing_you_agree_on_our">بمتابعتك، فإنك توافق على </string>
     <string name="terms_and_conditions"> الشروط والأحكام</string>
     <string name="and"> و </string>
+    <string name="Continue">متابعة</string>
     <string name="privacy_policy"> سياسة الخصوصية</string>
     <string name="continue_as_a_guest">المتابعة كزائر</string>
 </resources>
