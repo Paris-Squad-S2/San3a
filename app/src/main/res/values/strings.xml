@@ -10,6 +10,12 @@
     <string name="first">first</string>
     <string name="second">second</string>
     <string name="third">third</string>
+    <string name="craftman">CraftMan</string>
+    <string name="customer">Customer</string>
+    <string name="home">Home</string>
+    <string name="my_request">My Request</string>
+    <string name="messages">Messages</string>
+    <string name="more">More</string>
     <string name="onboarding1title">Relax, We’ve Got It Covered</string>
     <string name="onboarding1description">From the comfort of your couch, post your request and let trusted professionals come to you, no calls, no stress.</string>
     <string name="onboarding2title">Find What You Need in Seconds</string>

@@ -11,6 +11,12 @@
     <string name="first">الاول</string>
     <string name="second">الثاني</string>
     <string name="third">الثالث</string>
+    <string name="craftman">صنيعي</string>
+    <string name="customer">عميل</string>
+    <string name="home">الرئيسية</string>
+    <string name="my_request">طلباتي</string>
+    <string name="messages">رسائل</string>
+    <string name="more">المزيد</string>
     <string name="onboarding1title">استرخِ، لقد قمنا بتغطيتها</string>
     <string name="onboarding1description">من راحة أريكتك، انشر طلبك ودع متخصصين موثوق بهم يأتون إليك، بدون مكالمات أو ضغوط.</string>
     <string name="onboarding2title">ابحث عن ما تحتاجه في ثوانٍ</string>

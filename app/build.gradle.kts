@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.kotlin.serialization)
+
 }
 
 android {
@@ -76,9 +77,16 @@ dependencies {
     //firestore
     implementation(libs.firebase.firestore.ktx)
 
+    //firebase storge
+    implementation(libs.firebase.storage)
+
     // splash api
     implementation(libs.androidx.core.splashscreen)
 
     //Kotlinx DateTime
     implementation(libs.kotlinx.datetime)
+
+    //coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }
