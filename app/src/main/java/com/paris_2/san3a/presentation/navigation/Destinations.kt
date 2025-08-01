@@ -11,7 +11,7 @@ sealed interface Destinations : Graph {
     data object Screen : Destination
 
     @Serializable
-    data object OTPRegisterScreen: Destination
+    data class OTPRegisterScreen(val phoneNumber: String = ""): Destination
 
     @Serializable
     data object RegisterScreen : Destination
