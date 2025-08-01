@@ -104,8 +104,8 @@ fun RegisterScreenContent(
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                    .background(Theme.colors.background.card)
+                    .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)),
+                color = Theme.colors.background.card
             ) {
                 Column(
                     modifier = Modifier
@@ -194,7 +194,12 @@ fun PhoneNumberInput(
     onPhoneNumberChanged: (String) -> Unit,
     onCountrySelected: (Country) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Theme.colors.background.card)
+
+    ) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
@@ -221,7 +226,9 @@ fun PhoneNumberInput(
             leadingIcon = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .background(Theme.colors.background.card)
                 ) {
                     CountrySelector(
                         selectedCountry = selectedCountry,
@@ -281,6 +288,7 @@ fun TermsAndConditionsText() {
             }
         },
         style = Theme.textStyle.body.small.regular,
+        color = Theme.colors.shade.secondary,
         textAlign = TextAlign.Center,
         lineHeight = 20.sp,
         modifier = Modifier

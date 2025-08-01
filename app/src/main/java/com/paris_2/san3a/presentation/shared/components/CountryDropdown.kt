@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -58,8 +59,15 @@ fun CountrySelector(
     onDismissDropdown: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.wrapContentSize()) {
-        Column {
+    Box(
+        modifier = modifier
+            .wrapContentSize()
+            .background(Theme.colors.background.card)
+    ) {
+        Column(
+            modifier = Modifier
+                .background(Theme.colors.background.card)
+        ) {
             CountrySelectorHeader(
                 selectedCountry = selectedCountry,
                 expanded = expanded,
@@ -88,6 +96,7 @@ private fun CountrySelectorHeader(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
+            .background(Theme.colors.background.card)
             .clip(RoundedCornerShape(4.dp))
             .clickable(
                 indication = null,
@@ -137,10 +146,13 @@ private fun CountrySelectorDropdownList(
     ) {
         Surface(
             modifier = Modifier
-                .wrapContentSize()
+                .wrapContentSize(),
+            color = Theme.colors.background.card
         ) {
             LazyColumn(
-                modifier = Modifier.padding(vertical = 4.dp)
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+                    .background(Theme.colors.background.card)
             ) {
                 items(
                     items = countries.filter { it != selectedCountry },
@@ -166,6 +178,7 @@ private fun CountrySelectorDropdownItem(
         modifier = Modifier
             .wrapContentSize()
             .clip(RoundedCornerShape(4.dp))
+            .background(Theme.colors.background.card)
             .clickable { onClick() }
             .padding(horizontal = 5.dp, vertical = 3.dp)
     ) {
