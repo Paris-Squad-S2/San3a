@@ -1,11 +1,12 @@
 package com.paris_2.san3a.data.source.remote.user
 
 import com.paris_2.san3a.data.service.firestore.FireStoreService
+import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
-import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
+import kotlinx.coroutines.flow.Flow
 
 class UserRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
@@ -117,8 +118,19 @@ class UserRemoteDataSourceImpl(
         )
     }
 
+    override fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestServiceDto>> {
+        return fireStoreService.streamCollection(
+            path = REQUESTED_SERVICES_COLLECTION,
+            fromJson = RequestServiceDto::fromJson,
+            queryBuilder = { query ->
+                query.whereEqualTo("relatedJob", relatedJob)
+            }
+        )
+    }
+
     companion object {
         const val USERS_COLLECTION = "users"
         const val STATS_COLLECTION = "stats"
+        const val REQUESTED_SERVICES_COLLECTION = "requestedServices"
     }
 }

@@ -1,9 +1,11 @@
 package com.paris_2.san3a.data.source.remote.user
 
+import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
+import kotlinx.coroutines.flow.Flow
 
 interface UserRemoteDataSource {
     suspend fun saveWorkShowcase(phone: String, workMedia: List<String>, workDescription: String)
@@ -24,4 +26,5 @@ interface UserRemoteDataSource {
 
     suspend fun completeUserSetup(phone: String)
     suspend fun getStats(userId: String): StatsDto?
+    fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestServiceDto>>
 }
