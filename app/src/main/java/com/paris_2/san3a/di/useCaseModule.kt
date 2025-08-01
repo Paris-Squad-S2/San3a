@@ -2,6 +2,7 @@ package com.paris_2.san3a.di
 
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.domain.usecase.DeleteChatByIdUseCase
+import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetChatsByUserIdUseCase
 import com.paris_2.san3a.domain.usecase.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.SendMessageUseCase
@@ -22,4 +23,5 @@ val useCaseModule = module {
     factoryOf(::SetOnboardingCompletedUseCase)
     factoryOf(::SavePhoneNumberUseCase)
     factoryOf(::IsPhoneNumberSavedUseCase)
+    factoryOf(::GetAllServicesUseCase)
 }

@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.paris_2.san3a.data.service.auth.AuthApiServices
 import com.google.firebase.storage.FirebaseStorage
+import com.paris_2.san3a.data.repository.HomeRepositoryImpl
 import com.paris_2.san3a.BuildConfig
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
@@ -14,9 +15,14 @@ import com.paris_2.san3a.data.source.AppPreferences
 import org.koin.android.ext.koin.androidApplication
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSourceImp
+import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
+import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSourceImpl
 import okhttp3.OkHttpClient
 import com.paris_2.san3a.data.source.remote.storage.FirebaseStorageDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
+import com.paris_2.san3a.domain.repository.HomeRepository
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -53,4 +59,6 @@ val dataModule = module {
             .build()
     }
     single<StorageRemoteDataSource> { FirebaseStorageDataSource(get()) }
+    singleOf(::ServiceRemoteDataSourceImpl) { bind<ServiceRemoteDataSource>() }
+    singleOf(::HomeRepositoryImpl) { bind<HomeRepository>() }
 }
