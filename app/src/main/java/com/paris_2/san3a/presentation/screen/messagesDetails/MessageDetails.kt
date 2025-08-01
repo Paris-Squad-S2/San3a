@@ -6,13 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.messagesDetails.components.MessageTextField
@@ -30,7 +28,7 @@ fun MessageDetails(
     }
 
     Box (
-        modifier = Modifier.background(Yellow).fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(Yellow),
     ) {
 
         MessageTextField(
@@ -46,7 +44,6 @@ fun MessageDetails(
             onSendClick = viewModel::sendMessage,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(72.dp)
                 .align(Alignment.BottomCenter)
         )
     }
