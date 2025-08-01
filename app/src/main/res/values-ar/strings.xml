@@ -55,4 +55,5 @@
     <string name="voice_icon">سجل صوت</string>
     <string name="send_icon">أرسل الرسالة</string>
     <string name="profile_image">صورة البروفايل</string>
+    <string name="you">أنت</string>
 </resources>
