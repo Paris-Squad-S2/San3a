@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.paris_2.san3a.presentation.screen.onboarding.Page
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
@@ -25,12 +26,14 @@ fun TextSection(
             text = page.title,
             style = Theme.textStyle.display.xLarge,
             color = Theme.colors.shade.primary,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
+            fontSize = 28.sp
         )
         Text(
             text = page.description,
             style = Theme.textStyle.body.large.regular,
-            color = Theme.colors.shade.secondary
+            color = Theme.colors.shade.secondary,
+            fontSize = 16.sp
         )
     }
 }
