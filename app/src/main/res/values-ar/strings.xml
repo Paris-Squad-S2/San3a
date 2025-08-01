@@ -21,4 +21,14 @@
     <string name="the_chat_will_be_deleted_from_your_device_this_action_can_t_be_undone">سيتم حذف المحادثة من جهازك. لا يمكن التراجع عن هذا الإجراء.</string>
     <string name="delete_chat">حذف المحادثة</string>
     <string name="cancel">إلغاء</string>
+    <string name="onboarding1title">استرخِ، لقد قمنا بتغطيتها</string>
+    <string name="onboarding1description">من راحة أريكتك، انشر طلبك ودع متخصصين موثوق بهم يأتون إليك، بدون مكالمات أو ضغوط.</string>
+    <string name="onboarding2title">ابحث عن ما تحتاجه في ثوانٍ</string>
+    <string name="onboarding2description">تصفح عشرات الخدمات المنزلية - من الحلول السريعة إلى المشاريع الكبيرة. ما عليك سوى النقر على الفئة المطلوبة والبدء فورًا.</string>
+    <string name="onboarding3title">"انشر، قارن العروض واختر!"</string>
+    <string name="onboarding3description">احصل على عروض متعددة من المحترفين القريبين منك، وتحقق من أسعارهم وتقييماتهم، ثم اختر العرض الذي يناسبك بشكل أفضل.</string>
+    <string name="skip">تخطى</string>
+    <string name="next">التالي</string>
+    <string name="chat">محادثة</string>
+    <string name="accept_offer">قبول العرض</string>
 </resources>
