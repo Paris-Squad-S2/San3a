@@ -1,15 +1,12 @@
 package com.paris_2.san3a.data.repository
 
-import com.paris_2.san3a.domain.entity.AccountSetupStep
-import com.paris_2.san3a.domain.entity.AccountType
-import com.paris_2.san3a.domain.entity.Location
-import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
-import com.paris_2.san3a.domain.repository.UserRepository
 import android.net.Uri
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
+import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
 import com.paris_2.san3a.domain.CompleteUserSetupException
 import com.paris_2.san3a.domain.GetAccountTypeException
+import com.paris_2.san3a.domain.GetRecentRelatedJobsException
 import com.paris_2.san3a.domain.GetStatsException
 import com.paris_2.san3a.domain.GetUserProgressException
 import com.paris_2.san3a.domain.SaveAccountTypeException
@@ -18,7 +15,15 @@ import com.paris_2.san3a.domain.SavePersonalInfoException
 import com.paris_2.san3a.domain.SaveServicesException
 import com.paris_2.san3a.domain.SaveWorkShowcaseException
 import com.paris_2.san3a.domain.UploadNationalIdImagesException
+import com.paris_2.san3a.domain.entity.AccountSetupStep
+import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.domain.entity.Location
+import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Stats
+import com.paris_2.san3a.domain.repository.UserRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
@@ -74,6 +79,12 @@ class UserRepositoryImpl(
         return safeCall(GetStatsException()) {
             userRemoteDataSource.getStats(userId)?.toEntity()
         }
+    }
+
+    override fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestService>> {
+        return userRemoteDataSource.getRecentRelatedJobs(relatedJob)
+            .map { list -> list.map { it.toEntity() } }
+            .catch { throw GetRecentRelatedJobsException() }
     }
 
     override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) =
