@@ -100,10 +100,7 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
             }
         }
 
-    override suspend fun addToCollection(
-        path: String,
-        data: Map<String, Any>
-    ): String {
+    override suspend fun addToCollection(path: String, data: Map<String, Any>): String {
         return try {
             val docRef = firestore.collection(path).add(data).await()
             docRef.id
@@ -111,6 +108,18 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
             when (e) {
                 is FirebaseFirestoreException -> throw handleFirebaseException(e, path)
                 else -> throw SetDataException(path)
+            }
+        }
+    }
+
+    override suspend fun <T : Any> setDoc(documentPath: String, data: T): String {
+        return try {
+            firestore.document(documentPath).set(data).await()
+            documentPath
+        } catch (e: Exception) {
+            when (e) {
+                is FirebaseFirestoreException -> throw handleFirebaseException(e, documentPath)
+                else -> throw SetDataException(documentPath)
             }
         }
     }
