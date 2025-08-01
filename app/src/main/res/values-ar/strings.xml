@@ -50,4 +50,8 @@
     <string name="Continue">متابعة</string>
     <string name="privacy_policy"> سياسة الخصوصية</string>
     <string name="continue_as_a_guest">المتابعة كزائر</string>
+    <string name="write_a_message">أكتب رسالة</string>
+    <string name="add_images">أضف صورة</string>
+    <string name="voice_icon">سجل صوت</string>
+    <string name="send_icon">أرسل الرسالة</string>
 </resources>

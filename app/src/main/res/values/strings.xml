@@ -49,4 +49,8 @@
     <string name="Continue">Continue</string>
     <string name="continue_as_a_guest">Continue as a Guest</string>
     <string name="and">" and "</string>
+    <string name="write_a_message">Write a message...</string>
+    <string name="add_images">Add Images</string>
+    <string name="voice_icon">voice icon</string>
+    <string name="send_icon">send icon</string>
 </resources>
