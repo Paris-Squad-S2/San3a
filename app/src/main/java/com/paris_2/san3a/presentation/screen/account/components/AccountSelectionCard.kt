@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.account.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,8 +36,9 @@ fun AccountSelectionCard(
     isSelect: Boolean = false,
     onClick: () -> Unit = {},
 ) {
-
-    val backgroundColor = if (isSelect) Theme.colors.brand.tertiary else Theme.colors.background.card
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isSelect) Theme.colors.brand.tertiary else Theme.colors.background.card
+    )
     val titleColor = if (isSelect) Theme.colors.brand.primary else Theme.colors.shade.primary
     val borderModifier = if (isSelect) {
         Modifier.border(
@@ -49,7 +51,10 @@ fun AccountSelectionCard(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .clickable { onClick() }
+            .clickable {
+                !isSelect
+                onClick()
+            }
             .then(borderModifier)
             .background(
                 color = backgroundColor,
