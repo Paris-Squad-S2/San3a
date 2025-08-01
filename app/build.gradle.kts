@@ -18,6 +18,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "WHATSAPP_API_KEY", "\"${project.findProperty("WHATSAPP_API_KEY")}\"")
+
     }
 
     buildTypes {
@@ -38,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -92,4 +95,9 @@ dependencies {
     //dataStore
     implementation(libs.androidx.datastore.preferences)
 
+    implementation(platform(libs.firebase.bom))
+
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 }

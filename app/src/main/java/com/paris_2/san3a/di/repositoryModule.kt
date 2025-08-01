@@ -1,5 +1,8 @@
 package com.paris_2.san3a.di
 
+import com.paris_2.san3a.data.repository.AuthRepositoryImpl
+import com.paris_2.san3a.data.utils.NetworkConnectionChecker
+import com.paris_2.san3a.domain.repository.AuthRepository
 import com.paris_2.san3a.data.repository.ChatRepositoryImpl
 import com.paris_2.san3a.data.repository.MessageRepositoryImpl
 import com.paris_2.san3a.data.repository.UserRepositoryImp
@@ -17,4 +20,6 @@ val repositoryModule = module {
     singleOf(::ChatRepositoryImpl) { bind<ChatRepository>() }
     singleOf(::UserRepositoryImp) { bind<UserRepository>() }
     singleOf(::OnboardingRepositoryImpl) { bind<OnboardingRepository>() }
+    single<AuthRepository> { AuthRepositoryImpl(get(),get(),get()) }
+    single { NetworkConnectionChecker(get()) }
 }
