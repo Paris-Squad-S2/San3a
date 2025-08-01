@@ -4,7 +4,7 @@ import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.repository.HomeRepository
 import kotlinx.coroutines.flow.Flow
 
-class GetAllServices(
+class GetAllServicesUseCase(
     private val repository: HomeRepository
 ) {
     suspend fun invoke(): Flow<List<Service>> {
