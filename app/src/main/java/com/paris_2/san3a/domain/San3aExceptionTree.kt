@@ -7,3 +7,4 @@ class ReadMessagesException(id: String) : San3aException("Messages with related 
 
 class ReadChatException(id: String) : San3aException("Chat with id $id is cant be read")
 class DeleteChatException(id: String) : San3aException("Chat with id $id is cant be deleted")
+class GetAllServicesException : San3aException("Services can't be read")
