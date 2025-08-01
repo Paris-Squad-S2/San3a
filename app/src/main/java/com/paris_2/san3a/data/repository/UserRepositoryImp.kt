@@ -50,20 +50,17 @@ class UserRepositoryImp(
     }
 
     override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) {
-        val imagePairs = listOfNotNull(
-            frontUri?.let { "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME" to it },
-            backUri?.let { "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME" to it }
-        )
-
-        val (frontUrl, backUrl) = if (imagePairs.isNotEmpty()) {
-            val (paths, uris) = imagePairs.unzip()
-            storageRemoteDataSource.saveImages(paths, uris)
-            val urls = storageRemoteDataSource.getImagesByPaths(paths)
-            Pair(urls.getOrNull(0), urls.getOrNull(1))
-        } else {
-            Pair(null, null)
+        val frontUrl = frontUri?.let { uri ->
+            val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
+            storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
+            storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
         }
 
+        val backUrl = backUri?.let { uri ->
+            val path = "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME"
+            storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
+            storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
+        }
         userRemoteDataSource.saveNationalIdImages(phone, frontUrl, backUrl)
     }
 
