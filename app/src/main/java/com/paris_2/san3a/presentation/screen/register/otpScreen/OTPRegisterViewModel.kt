@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.register.otpScreen
 
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -69,7 +70,9 @@ class OTPRegisterViewModel(
     }
 
     override fun onOtpTextChange(otp: String) {
-        updateState(screenState.value.copy(otp = otp))
+        if(otp.isDigitsOnly()){
+            updateState(screenState.value.copy(otp = otp))
+        }
     }
 
     override fun onClickVerify() {
@@ -90,6 +93,9 @@ class OTPRegisterViewModel(
 
     override fun onClickResendCode() {
         updateSecondLeft()
+        if(screenState.value.secondLeft == 0){
+            sendOtpToPhoneNumber()
+        }
     }
 
     override fun onClickBackButton() {
