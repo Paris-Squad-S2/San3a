@@ -34,7 +34,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun OTPRegisterScreen(viewModel: OTPRegisterViewModel = koinViewModel()) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState = viewModel.screenState.collectAsStateWithLifecycle()
     OTPRegisterScreenContent(uiState.value, viewModel)
 
 }
