@@ -12,18 +12,7 @@ class AuthRepositoryImpl(
     private val networkConnectionChecker: NetworkConnectionChecker,
     private val remoteDataSource: AuthRemoteDataSource
 ): AuthRepository {
-    override suspend fun sendOtp(phoneNumber: String): String {
-        return safeCall(RegisterException()){
-            val verificationId = remoteDataSource.sendOtp(phoneNumber)
-            verificationId
-        }
-    }
 
-    override suspend fun verifyOtp(verificationId: String, code: String): String {
-        return safeCall(RegisterException()){
-            remoteDataSource.verifyOtp(verificationId, code).user?.uid ?: throw RegisterException()
-        }
-    }
 
     private suspend fun <T> safeCall(exception: San3aException, call: suspend () -> T): T {
         if (networkConnectionChecker.isConnected.value.not()) {
@@ -39,5 +28,18 @@ class AuthRepositoryImpl(
 
             throw exception
         }
+    }
+
+    override suspend fun sendMessage(
+        phoneNumber: String,
+        message: String,
+    ): Boolean {
+        return safeCall(RegisterException()) {
+            remoteDataSource.sendMessage(
+                phoneNumber = phoneNumber,
+                message = message,
+            ).success == true
+        }
+
     }
 }

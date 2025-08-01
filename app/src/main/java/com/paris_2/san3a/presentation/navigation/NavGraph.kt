@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.paris_2.san3a.presentation.screen.register.OTPRegisterScreen
+import com.paris_2.san3a.presentation.screen.register.otpScreen.OTPRegisterScreen
 import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterScreen
 
 import org.koin.compose.koinInject

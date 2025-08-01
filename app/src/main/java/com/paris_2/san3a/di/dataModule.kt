@@ -15,6 +15,6 @@ val dataModule = module {
     single { FirebaseFirestore.getInstance() }
     single { FirebaseAuth.getInstance() }
     single<MessagesRemoteDataSource> { MessagesRemoteDataSourceImp(get()) }
-    single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(get(),get()) }
+    single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl() }
 
 }
