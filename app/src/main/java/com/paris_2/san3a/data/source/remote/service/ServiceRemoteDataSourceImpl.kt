@@ -4,7 +4,7 @@ import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import kotlinx.coroutines.flow.Flow
 
-class ServiceRemoteDateSourceImpl(
+class ServiceRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
 ): ServiceRemoteDataSource {
     
