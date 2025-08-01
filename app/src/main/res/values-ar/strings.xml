@@ -16,6 +16,8 @@
     <string name="first">الاول</string>
     <string name="second">الثاني</string>
     <string name="third">الثالث</string>
+    <string name="craftman">صنيعي</string>
+    <string name="customer">عميل</string>
     <string name="home">الرئيسية</string>
     <string name="my_request">طلباتي</string>
     <string name="messages">رسائل</string>
