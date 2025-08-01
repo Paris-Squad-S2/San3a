@@ -1,13 +1,15 @@
 package com.paris_2.san3a.presentation.screen.messagesDetails.components
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -33,15 +35,26 @@ fun MessageTextField(
     voiceIcon: Painter,
     sendIcon: Painter,
     onImageClick: () -> Unit,
-    onVoiceClick: () -> Unit={},
+    onVoiceClick: () -> Unit = {},
     onSendClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
+    val paddingText = animateDpAsState(
+        targetValue = if (value.isNotEmpty()) 12.dp else 0.dp
+    )
+
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier
-            .background(Theme.colors.background.card, RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+            .fillMaxWidth()
+            .heightIn(min = 72.dp)
+            .animateContentSize()
+            .background(
+                Theme.colors.background.card,
+                RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+            )
             .border(
                 color = Theme.colors.stroke.primary,
                 width = 1.dp,
@@ -49,21 +62,19 @@ fun MessageTextField(
             ),
         decorationBox = { innerTextField ->
             Row(
-                modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = paddingText.value)
             ) {
                 if (value.isEmpty()) {
-                    Box(
+
+                    Text(
+                        text = stringResource(R.string.write_a_message),
+                        style = Theme.textStyle.body.medium.regular,
+                        color = Theme.colors.shade.tertiary,
                         modifier = Modifier
                             .weight(3f)
                             .padding(start = 16.dp)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.write_a_message),
-                            style = Theme.textStyle.body.medium.regular,
-                            color = Theme.colors.shade.tertiary
-                        )
-                    }
+                    )
 
                     Icon(
                         painter = imageIcon,
@@ -91,14 +102,17 @@ fun MessageTextField(
                     ) {
                         innerTextField()
                     }
+
                     Icon(
                         painter = sendIcon,
                         tint = Theme.colors.brand.primary,
                         contentDescription = stringResource(R.string.send_icon),
                         modifier = Modifier
-                            .padding(start = 19.dp, end = 19.dp)
+                            .padding(start = 19.dp, end = 19.dp, bottom = 15.dp)
                             .clickable(onClick = onSendClick)
+                            .align(Alignment.Bottom)
                     )
+
                 }
             }
         },
@@ -114,8 +128,8 @@ private fun MessageTextFieldPreview() {
             value = "",
             onValueChange = {},
             imageIcon = painterResource(R.drawable.ic_image),
-            voiceIcon =  painterResource(R.drawable.ic_voice),
-            sendIcon =  painterResource(R.drawable.ic_send),
+            voiceIcon = painterResource(R.drawable.ic_voice),
+            sendIcon = painterResource(R.drawable.ic_send),
             onImageClick = {},
             onSendClick = {},
             modifier = Modifier
