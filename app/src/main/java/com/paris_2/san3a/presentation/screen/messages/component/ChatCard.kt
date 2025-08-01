@@ -1,10 +1,14 @@
 package com.paris_2.san3a.presentation.screen.messages.component
 
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +42,18 @@ fun ChatCard(
     unreadMessagesCount: Int,
     dateTime: String,
 ) {
+    val boxSize = animateDpAsState(
+        targetValue = if (unreadMessagesCount in 0..9) 20.dp else 24.dp,
+    )
+
+    val textMessage = animateIntAsState(
+        targetValue = when (unreadMessagesCount) {
+            in 0..99 -> unreadMessagesCount
+            in Int.MIN_VALUE .. -1 -> 0
+            else -> 99
+        }
+    )
+
     Row(
         modifier = modifier
             .background(color = backgroundColor)
@@ -54,10 +70,14 @@ fun ChatCard(
                 .clip(CircleShape)
         )
         Box(
-            modifier = Modifier.fillMaxHeight().padding(start = 8.dp, end = 12.dp),
-        ){
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(start = 8.dp, end = 12.dp),
+        ) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 17.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 17.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -72,7 +92,9 @@ fun ChatCard(
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 43.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 43.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -82,16 +104,15 @@ fun ChatCard(
                 )
                 Box(
                     modifier = Modifier
-                        .size(20.dp)
+                        .size(boxSize.value)
                         .background(
                             color = Theme.colors.brand.primary,
                             shape = CircleShape
-                        )
-                    ,
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = if (unreadMessagesCount in 0..99) unreadMessagesCount.toString() else "99",
+                        text = textMessage.value.toString(),
                         color = Theme.colors.background.card,
                         style = Theme.textStyle.label.medium.regular
                     )
@@ -106,7 +127,9 @@ fun ChatCard(
 private fun ChatCardPreview() {
     San3aTheme {
         ChatCard(
-            modifier = Modifier.fillMaxWidth().height(80.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp),
             backgroundColor = White,
             name = "Ahmed Abdelnasser",
             imageUrl = "https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
