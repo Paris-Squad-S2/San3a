@@ -1,6 +1,7 @@
 package com.paris_2.san3a.di
 
 import com.paris_2.san3a.domain.usecase.DeleteChatByIdUseCase
+import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetChatsByUserIdUseCase
 import com.paris_2.san3a.domain.usecase.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.SendMessageUseCase
@@ -16,4 +17,5 @@ val useCaseModule = module {
     single { DeleteChatByIdUseCase(get()) }
     factoryOf(::IsOnboardingCompletedUseCase)
     factoryOf(::SetOnboardingCompletedUseCase)
+    factoryOf(::GetAllServicesUseCase)
 }
