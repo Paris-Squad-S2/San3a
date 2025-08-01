@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.paris_2.san3a.data.service.auth.AuthApiServices
 import com.google.firebase.storage.FirebaseStorage
+import com.paris_2.san3a.BuildConfig
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
@@ -20,7 +21,6 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-val WHATSAPP_API_KEY = "kikoe6wZMu7DwYl5t8uH5FqHIVMoWg4GKcIF"
 private const val BASE_URL = "https://www.whatsapp.api.funtaste.xyz/"
 val dataModule = module {
     single { AppPreferences(androidApplication().applicationContext) }
@@ -45,7 +45,7 @@ val dataModule = module {
         OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
-                    .addHeader("x-api-key", WHATSAPP_API_KEY)
+                    .addHeader("x-api-key", BuildConfig.WHATSAPP_API_KEY)
                     .addHeader("Content-Type", "application/json")
                     .build()
                 chain.proceed(request)
