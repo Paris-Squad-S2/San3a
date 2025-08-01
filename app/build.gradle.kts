@@ -19,6 +19,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "WHATSAPP_API_KEY", "\"${project.findProperty("WHATSAPP_API_KEY")}\"")
+
     }
 
     buildTypes {
@@ -39,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -73,12 +76,27 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(platform(libs.firebase.bom))
 
-    // Local Date ( kotlin x )
-    implementation(libs.kotlinx.datetime)
 
     //firestore
     implementation(libs.firebase.firestore.ktx)
 
+    //firebase storge
+    implementation(libs.firebase.storage)
+
+    // splash api
+    implementation(libs.androidx.core.splashscreen)
+
     //Kotlinx DateTime
     implementation(libs.kotlinx.datetime)
+
+    //coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 }
