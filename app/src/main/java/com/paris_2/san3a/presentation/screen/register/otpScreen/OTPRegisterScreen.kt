@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.register
+package com.paris_2.san3a.presentation.screen.register.otpScreen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image

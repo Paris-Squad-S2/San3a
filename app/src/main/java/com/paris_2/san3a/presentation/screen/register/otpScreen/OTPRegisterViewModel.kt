@@ -1,10 +1,9 @@
-package com.paris_2.san3a.presentation.screen.register
+package com.paris_2.san3a.presentation.screen.register.otpScreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
-import com.paris_2.san3a.domain.usecase.VerifyOtpUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,12 +16,11 @@ data class OTPRegisterUiState(
     val phoneNumber: String = "",
     val secondLeft: Int = 0,
     val errorMessage: String? = null,
-    val verificationId: String = ""
+    val verificationId: String = "",
 )
 
 class OTPRegisterViewModel(
-    private val sendOtpUseCase: SendOtpUseCase,
-    private val verifyOtpUseCase: VerifyOtpUseCase
+    private val sendOtpUseCase: SendOtpUseCase
 ): ViewModel(), OTPRegisterListenerInteraction {
 
     private val _uiState = MutableStateFlow(OTPRegisterUiState())
@@ -35,8 +33,9 @@ class OTPRegisterViewModel(
     private fun sendOtpToPhoneNumber() {
         viewModelScope.launch {
             try {
-                val verificationId = sendOtpUseCase("")
-                _uiState.update { it.copy(verificationId = verificationId) }
+                val otp = generateOtp()
+                 sendOtpUseCase("","Your verification code is $otp")
+                _uiState.update { it.copy(verificationId = otp) }
             } catch (e: Exception) {
                 _uiState.update { it.copy(errorMessage = e.message) }
             }
@@ -68,8 +67,6 @@ class OTPRegisterViewModel(
     override fun onClickVerify() {
         viewModelScope.launch {
             try {
-                verifyOtpUseCase(_uiState.value.verificationId, _uiState.value.otp)
-
             }catch (e: Exception){
                 Log.e("OTPRegisterViewModel", "onClickVerify: ${e.message}")
                 _uiState.update { it.copy(errorMessage = e.message)  }
@@ -85,6 +82,6 @@ class OTPRegisterViewModel(
     override fun onClickBackButton() {
 
     }
-
+    fun generateOtp(): String = (10000..99999).random().toString()
 
 }

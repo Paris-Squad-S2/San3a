@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.register
+package com.paris_2.san3a.presentation.screen.register.otpScreen
 
 interface OTPRegisterListenerInteraction {
     fun onOtpTextChange(otp: String)

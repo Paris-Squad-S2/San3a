@@ -40,7 +40,7 @@ fun AppTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: @Composable (() -> Unit)? = null,
+    placeholder: String? = null,
     isError: Boolean = false,
     errorMessage: String? = null,
     isPassword: Boolean = false,
@@ -53,6 +53,7 @@ fun AppTextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     label: String? = null,
     forgotPasswordClick: (() -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -80,7 +81,15 @@ fun AppTextField(
                 .fillMaxWidth()
                 .background(Theme.colors.background.card, RoundedCornerShape(Theme.radius.large)),
             textStyle = Theme.textStyle.body.medium.medium,
-            placeholder = placeholder,
+            placeholder = placeholder?.let {
+                {
+                    Text(
+                        text = it,
+                        style = Theme.textStyle.body.medium.regular,
+                        color = Theme.colors.shade.tertiary
+                    )
+                }
+            },
             singleLine = singleLine,
             maxLines = maxLines,
             isError = isError,
@@ -114,7 +123,7 @@ fun AppTextField(
             },
             visualTransformation = if (isPassword && !passwordVisible)
                 PasswordVisualTransformation()
-            else VisualTransformation.None,
+            else visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             shape = RoundedCornerShape(Theme.radius.large),
@@ -168,7 +177,7 @@ private fun PreviewBasicAppTextField() {
             label = "label",
             value = text,
             onValueChange = { text = it },
-            placeholder = { "Enter your name" },
+            placeholder = "Enter your name",
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.due_tone_profile),
@@ -190,7 +199,7 @@ private fun PreviewPasswordAppTextField() {
             label = "label",
             value = password,
             onValueChange = { password = it },
-            placeholder = { "Password" },
+            placeholder = "Password",
             isPassword = true,
             leadingIcon = {
                 Icon(
@@ -213,7 +222,7 @@ private fun PreviewErrorAppTextField() {
             label = "label",
             value = email,
             onValueChange = { email = it },
-            placeholder = { "Email" },
+            placeholder = "Email",
             isError = true,
             errorMessage = "Error Message",
             leadingIcon = {

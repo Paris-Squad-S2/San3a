@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.shared.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -46,7 +45,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 data class Country(
     val name: String,
     val code: String,
-    @DrawableRes val flagRes: Int,
+    val flagRes: Int,
 )
 
 @Composable
@@ -61,13 +60,13 @@ fun CountrySelector(
 ) {
     Box(modifier = modifier.wrapContentSize()) {
         Column {
-            CountrySelector_Header(
+            CountrySelectorHeader(
                 selectedCountry = selectedCountry,
                 expanded = expanded,
                 onClick = onToggleDropdown
             )
 
-            CountrySelector_DropdownList(
+            CountrySelectorDropdownList(
                 visible = expanded,
                 countries = countries,
                 selectedCountry = selectedCountry,
@@ -81,7 +80,7 @@ fun CountrySelector(
 }
 
 @Composable
-private fun CountrySelector_Header(
+private fun CountrySelectorHeader(
     selectedCountry: Country,
     expanded: Boolean,
     onClick: () -> Unit,
@@ -118,7 +117,7 @@ private fun CountrySelector_Header(
 }
 
 @Composable
-private fun CountrySelector_DropdownList(
+private fun CountrySelectorDropdownList(
     visible: Boolean,
     countries: List<Country>,
     selectedCountry: Country,
@@ -147,7 +146,7 @@ private fun CountrySelector_DropdownList(
                     items = countries.filter { it != selectedCountry },
                     key = { it.code }
                 ) { country ->
-                    CountrySelector_DropdownItem(
+                    CountrySelectorDropdownItem(
                         country = country,
                         onClick = { onCountrySelected(country) }
                     )
@@ -158,7 +157,7 @@ private fun CountrySelector_DropdownList(
 }
 
 @Composable
-private fun CountrySelector_DropdownItem(
+private fun CountrySelectorDropdownItem(
     country: Country,
     onClick: () -> Unit,
 ) {
