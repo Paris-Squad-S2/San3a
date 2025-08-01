@@ -54,4 +54,17 @@
     <string name="Continue">متابعة</string>
     <string name="privacy_policy"> سياسة الخصوصية</string>
     <string name="continue_as_a_guest">المتابعة كزائر</string>
+    <string name="what_s_your_name">ما اسمك؟</string>
+    <string name="enter_your_full_name">أدخل اسمك الكامل</string>
+    <string name="set_your_profile_photo">قم بتعيين صورة ملفك الشخصي</string>
+    <string name="optional">(اختياري)</string>
+    <string name="i_need_help_with_a_service">أحتاج إلى مساعدة في خدمة</string>
+    <string name="craftsman">حرفي</string>
+    <string name="i_offer_services">أُقدّم خدمات</string>
+    <string name="tap_to_add_photos">اضغط لإضافة الصور</string>
+    <string name="tap_here">اضغط هنا</string>
+    <string name="upload_front_of_national_id">حمّل وجه بطاقة الرقم القومي</string>
+    <string name="upload_back_of_national_id">حمّل ظهر بطاقة الرقم القومي</string>
+    <string name="i_ll_verify_later">سأقوم بالتحقق لاحقًا</string>
+    <string name="describe_your_work">صف عملك</string>
 </resources>
