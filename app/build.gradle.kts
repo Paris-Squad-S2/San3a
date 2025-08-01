@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.kotlin.serialization)
-
 }
 
 android {
@@ -96,8 +95,10 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    //dataStore
+    implementation(libs.androidx.datastore.preferences)
+
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth)
 
     //Retrofit
     implementation(libs.retrofit)
