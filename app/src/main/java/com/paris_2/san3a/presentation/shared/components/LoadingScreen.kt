@@ -12,6 +12,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.paris_2.san3a.R
 
 @Composable
@@ -29,8 +31,8 @@ fun LoadingScreen(
                 )
             )
             Image(
-                painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_progress),
-                contentDescription = "Loading",
+                painter = painterResource(id = R.drawable.ic_progress),
+                contentDescription = stringResource(R.string.loading_icon),
                 modifier = Modifier
                     .graphicsLayer { rotationZ = rotation }
             )
