@@ -1,5 +1,6 @@
-package com.paris_2.san3a.domain.repository
+package com.paris_2.san3a.data.source.remote.user
 
+import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
@@ -11,7 +12,7 @@ interface UserRemoteDataSource {
 
     suspend fun saveAccountType(phone: String, accountType: AccountType)
 
-    suspend fun getAccountType(phone: String) :AccountType
+    suspend fun getAccountType(phone: String) : AccountType
 
     suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean)
 
@@ -22,4 +23,5 @@ interface UserRemoteDataSource {
     suspend fun saveNationalIdImages(phone: String, frontUrl: String?, backUrl: String?)
 
     suspend fun completeUserSetup(phone: String)
+    suspend fun getStats(userId: String): StatsDto?
 }
