@@ -5,7 +5,7 @@ import com.paris_2.san3a.data.utils.NetworkConnectionChecker
 import com.paris_2.san3a.domain.repository.AuthRepository
 import com.paris_2.san3a.data.repository.ChatRepositoryImpl
 import com.paris_2.san3a.data.repository.MessageRepositoryImpl
-import com.paris_2.san3a.data.repository.UserRepositoryImp
+import com.paris_2.san3a.data.repository.UserRepositoryImpl
 import com.paris_2.san3a.data.repository.OnboardingRepositoryImpl
 import com.paris_2.san3a.domain.repository.ChatRepository
 import com.paris_2.san3a.domain.repository.MessageRepository
@@ -18,7 +18,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
     singleOf(::MessageRepositoryImpl) { bind<MessageRepository>() }
     singleOf(::ChatRepositoryImpl) { bind<ChatRepository>() }
-    singleOf(::UserRepositoryImp) { bind<UserRepository>() }
+    singleOf(::UserRepositoryImpl) { bind<UserRepository>() }
     singleOf(::OnboardingRepositoryImpl) { bind<OnboardingRepository>() }
     single<AuthRepository> { AuthRepositoryImpl(get(),get(),get()) }
     single { NetworkConnectionChecker(get()) }
