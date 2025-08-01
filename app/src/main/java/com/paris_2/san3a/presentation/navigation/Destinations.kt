@@ -15,4 +15,16 @@ sealed interface Destinations : Graph {
 
     @Serializable
     data object RegisterScreen : Destination
+
+    @Serializable
+    data object Home : Destination
+
+    @Serializable
+    data object MyRequest : Destination
+
+    @Serializable
+    data object Messages : Destination
+
+    @Serializable
+    data object More : Destination
 }
