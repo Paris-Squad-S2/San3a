@@ -44,13 +44,13 @@ class OTPRegisterViewModel(
 
     private fun onSendOtpToPhoneNumberSuccess(isSend: Boolean) {
         if (isSend) {
-            screenState.value.copy(verificationId = otp)
+            updateState(screenState.value.copy(verificationId = otp))
         }
 
     }
 
     private fun onSendOtpToPhoneNumberError(message: String) {
-        screenState.value.copy(errorMessage = message)
+        updateState(screenState.value.copy(errorMessage = message))
     }
 
     private fun updateSecondLeft() {
@@ -58,10 +58,10 @@ class OTPRegisterViewModel(
 
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            screenState.value.copy(secondLeft = 59)
+            updateState(screenState.value.copy(secondLeft = 59))
             while (screenState.value.secondLeft > 0) {
                 delay(1000)
-                screenState.value.copy(secondLeft = screenState.value.secondLeft - 1)
+                updateState(screenState.value.copy(secondLeft = screenState.value.secondLeft - 1))
 
             }
         }
@@ -69,8 +69,7 @@ class OTPRegisterViewModel(
     }
 
     override fun onOtpTextChange(otp: String) {
-        screenState.value.copy(otp = otp)
-
+        updateState(screenState.value.copy(otp = otp))
     }
 
     override fun onClickVerify() {
@@ -83,7 +82,7 @@ class OTPRegisterViewModel(
                     navigate(Destinations.Home)
                 }
             } catch (e: Exception) {
-                screenState.value.copy(errorMessage = e.message)
+                updateState(screenState.value.copy(errorMessage = e.message))
             }
 
         }
