@@ -1,6 +1,5 @@
 package com.paris_2.san3a.data.source.remote
 
-import com.paris_2.san3a.data.service.firestore.DocumentNotFoundException
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
@@ -81,15 +80,10 @@ class UserRemoteDataSourceImp(
         return try {
             val userData = fireStoreService.getDoc(
                 path = "$USERS_COLLECTION/$phone",
-                fromJson = { data, _ ->
-                    data["currentStep"]?.toString() ?: AccountSetupStep.ACCOUNT_TYPE.name
-                }
+                fromJson = { data, _ -> data["currentStep"]?.toString() }
             )
-            try {
-                AccountSetupStep.valueOf(userData ?: AccountSetupStep.ACCOUNT_TYPE.name)
-            } catch (_: Exception) {
-                AccountSetupStep.ACCOUNT_TYPE
-            }
+            runCatching { AccountSetupStep.valueOf(userData ?: AccountSetupStep.ACCOUNT_TYPE.name) }
+                .getOrDefault(AccountSetupStep.ACCOUNT_TYPE)
         } catch (_: Exception) {
             AccountSetupStep.ACCOUNT_TYPE
         }
@@ -104,15 +98,7 @@ class UserRemoteDataSourceImp(
     }
 
     private suspend fun updateUserData(phone: String, data: Map<String, Any>) {
-        try {
-            fireStoreService.updateDoc(path = "$USERS_COLLECTION/$phone", data = data)
-        } catch (e: Exception) {
-            if (e is DocumentNotFoundException) {
-                fireStoreService.setDoc(documentPath = "$USERS_COLLECTION/$phone", data = data)
-            } else {
-                throw e
-            }
-        }
+        fireStoreService.updateDoc(path = "$USERS_COLLECTION/$phone", data = data)
     }
 
     companion object {
