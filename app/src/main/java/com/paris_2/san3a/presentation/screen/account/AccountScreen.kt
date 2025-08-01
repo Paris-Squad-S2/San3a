@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,11 +35,12 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
 fun AccountScreen(viewModel: AccountViewModel = viewModel()) {
-    val progress by viewModel.progress
+    val progress = viewModel.progress
     val title = viewModel.getTitle()
     val description = viewModel.getDescription()
     val textButton = viewModel.getButtonText()
     val currentScreen by viewModel.currentScreen
+    val uiState by viewModel.screenState.collectAsState()
 
     AccountScreenContent(
         title = title,
@@ -49,7 +51,7 @@ fun AccountScreen(viewModel: AccountViewModel = viewModel()) {
         onPrevious = viewModel::previousStep,
         onNext = viewModel::nextStep,
         onUserTypeSelected = viewModel::updateUserType,
-        uiState = viewModel.userType
+        uiState = uiState
     )
 }
 @Composable
