@@ -28,3 +28,4 @@ class CompleteUserSetupException : San3aException("Couldn't complete user setup"
 class UploadNationalIdImagesException : San3aException("Couldn't upload national ID images")
 class GetStatsException : San3aException("Couldn't get user stats")
 class GetRecentRelatedJobsException : San3aException("Couldn't get recent related jobs")
+class SearchServicesException : San3aException("Couldn't search services")
