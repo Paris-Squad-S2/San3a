@@ -2,6 +2,7 @@
 accompanistPermissions = "0.37.3"
 agp = "8.11.1"
 coilCompose = "3.3.0"
+coreSplashscreen = "1.0.1"
 firebaseBom = "34.0.0"
 kotlin = "2.2.0"
 firebaseFirestoreKtx = "25.1.4"
@@ -29,6 +30,7 @@ accompanist-permissions = { module = "com.google.accompanist:accompanist-permiss
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }
@@ -62,3 +64,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
