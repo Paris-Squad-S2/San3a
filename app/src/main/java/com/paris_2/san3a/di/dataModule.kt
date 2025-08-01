@@ -11,6 +11,9 @@ import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
 import com.paris_2.san3a.data.source.local.UserLocalDataSourceImp
 import com.paris_2.san3a.data.source.remote.UserRemoteDataSourceImp
+
+import com.paris_2.san3a.data.source.AppPreferences
+import org.koin.android.ext.koin.androidApplication
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSourceImp
 import com.paris_2.san3a.data.source.remote.storage.FirebaseStorageDataSource
@@ -30,6 +33,7 @@ val dataModule = module {
 
     single { FirebaseFirestore.getInstance() }
     single { FirebaseStorage.getInstance() }
+    single { AppPreferences(androidApplication().applicationContext) }
     single<DataStore<Preferences>> {
         PreferenceDataStoreFactory.create { get<Context>().preferencesDataStoreFile("app_datastore") }
     }
