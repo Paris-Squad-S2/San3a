@@ -63,4 +63,8 @@
     <string name="i_offer_services">أُقدّم خدمات</string>
     <string name="tap_to_add_photos">اضغط لإضافة الصور</string>
     <string name="tap_here">اضغط هنا</string>
+    <string name="upload_front_of_national_id">حمّل وجه بطاقة الرقم القومي</string>
+    <string name="upload_back_of_national_id">حمّل ظهر بطاقة الرقم القومي</string>
+    <string name="i_ll_verify_later">سأقوم بالتحقق لاحقًا</string>
+    <string name="describe_your_work">صف عملك</string>
 </resources>
