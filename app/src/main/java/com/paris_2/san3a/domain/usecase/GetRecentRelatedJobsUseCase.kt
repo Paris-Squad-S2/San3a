@@ -5,5 +5,5 @@ import com.paris_2.san3a.domain.repository.UserRepository
 class GetRecentRelatedJobsUseCase(
     private val userRepository: UserRepository
 ) {
-    suspend fun invoke(relatedJob: String) = userRepository.getRecentRelatedJobs(relatedJob)
+    fun invoke(relatedJob: String) = userRepository.getRecentRelatedJobs(relatedJob)
 }

@@ -1,7 +1,5 @@
 package com.paris_2.san3a.domain.entity
 
-import okhttp3.Request
-
 data class RequestService(
     val id: String,
     val title: String,
