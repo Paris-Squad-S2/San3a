@@ -6,19 +6,17 @@ import com.paris_2.san3a.domain.GetAllServicesException
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.repository.HomeRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 class HomeRepositoryImpl(
     private val serviceRemoteDataSource: ServiceRemoteDataSource,
 ): HomeRepository {
 
-    override suspend fun getAllServices(): Flow<List<Service>> {
-        return try {
-            serviceRemoteDataSource.getAllServices()
-                .map { dtoList -> dtoList.map { it.toEntity() } }
-        } catch (e: Exception){
-            throw GetAllServicesException()
-        }
+    override fun getAllServices(): Flow<List<Service>> {
+        return serviceRemoteDataSource.getAllServices()
+            .map { dtoList -> dtoList.map { it.toEntity() } }
+            .catch { throw GetAllServicesException() }
     }
 
     override suspend fun getMostRequestedServices() {

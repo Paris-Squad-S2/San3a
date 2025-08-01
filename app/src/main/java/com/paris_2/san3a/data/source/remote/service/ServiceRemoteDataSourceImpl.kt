@@ -8,7 +8,7 @@ class ServiceRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
 ): ServiceRemoteDataSource {
     
-    override suspend fun getAllServices(): Flow<List<ServiceDto>> {
+    override fun getAllServices(): Flow<List<ServiceDto>> {
         return fireStoreService.streamCollection(
             path = SERVICES_COLLECTION,
             fromJson = ServiceDto::fromJson,
