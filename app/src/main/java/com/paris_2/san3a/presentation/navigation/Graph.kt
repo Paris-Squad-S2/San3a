@@ -1,4 +1,6 @@
 package com.paris_2.san3a.presentation.navigation
 
+import kotlinx.serialization.Serializable
 
-interface Graph
+@Serializable
+sealed interface Graph

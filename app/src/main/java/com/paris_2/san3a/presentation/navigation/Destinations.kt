@@ -11,9 +11,6 @@ sealed interface Destinations : Graph {
     data object Screen : Destination
 
     @Serializable
-    data object Home : Destination
-
-    @Serializable
     data object MyRequest : Destination
 
     @Serializable
@@ -21,4 +18,12 @@ sealed interface Destinations : Graph {
 
     @Serializable
     data object More : Destination
+    @Serializable
+    data object Splash : Destination
+
+    @Serializable
+    data object OnBoarding : Destination
+
+    @Serializable
+    data object Home : Destination
 }
