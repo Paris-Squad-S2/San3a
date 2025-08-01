@@ -25,6 +25,10 @@
     <string name="my_request">My Request</string>
     <string name="messages">Messages</string>
     <string name="more">More</string>
+    <string name="delete_this_chat">Delete This Chat?</string>
+    <string name="the_chat_will_be_deleted_from_your_device_this_action_can_t_be_undone">The chat will be deleted from your device. This action can’t be undone.</string>
+    <string name="delete_chat">Delete Chat</string>
+    <string name="cancel">Cancel</string>
     <string name="onboarding1title">Relax, We’ve Got It Covered</string>
     <string name="onboarding1description">From the comfort of your couch, post your request and let trusted professionals come to you, no calls, no stress.</string>
     <string name="onboarding2title">Find What You Need in Seconds</string>
