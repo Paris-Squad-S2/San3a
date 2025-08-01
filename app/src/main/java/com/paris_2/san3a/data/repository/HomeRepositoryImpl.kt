@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 
 class HomeRepositoryImpl(
     private val serviceRemoteDataSource: ServiceRemoteDataSource,
-): HomeRepository {
+): HomeRepository, BaseRepository()  {
 
     override fun getAllServices(): Flow<List<Service>> {
         return serviceRemoteDataSource.getAllServices()

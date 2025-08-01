@@ -1,8 +1,5 @@
 package com.paris_2.san3a.presentation.shared.components
 
-import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
-import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibility
@@ -34,6 +31,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
+import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
 fun AppTextField(
@@ -52,7 +52,8 @@ fun AppTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     label: String? = null,
-    forgotPasswordClick: (() -> Unit)? = null
+    forgotPasswordClick: (() -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -102,9 +103,13 @@ fun AppTextField(
                                 R.drawable.eye_closed
                             )
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(painter = image, contentDescription = stringResource(R.string.toggle_password_visibility))
+                            Icon(
+                                painter = image,
+                                contentDescription = stringResource(R.string.toggle_password_visibility)
+                            )
                         }
                     }
+
                     isError -> {
                         Icon(
                             painter = painterResource(R.drawable.outline_danger_triangle),
@@ -112,12 +117,13 @@ fun AppTextField(
                             tint = Theme.colors.additional.primary.red
                         )
                     }
+
                     else -> trailingIcon?.invoke()
                 }
             },
             visualTransformation = if (isPassword && !passwordVisible)
                 PasswordVisualTransformation()
-            else VisualTransformation.None,
+            else visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             shape = RoundedCornerShape(Theme.radius.large),
