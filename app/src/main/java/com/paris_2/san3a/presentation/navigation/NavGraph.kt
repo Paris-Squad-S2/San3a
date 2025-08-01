@@ -1,6 +1,6 @@
 package com.paris_2.san3a.presentation.navigation
 
-import SplashScreen
+import com.paris_2.san3a.presentation.screen.splash.SplashScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController

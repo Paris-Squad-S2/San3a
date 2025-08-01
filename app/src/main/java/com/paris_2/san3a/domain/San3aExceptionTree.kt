@@ -14,3 +14,5 @@ class DeleteChatException(id: String) : San3aException("Chat with id $id is cant
 class SavePhoneNumberException : San3aException("Failed to save phone number")
 class PhoneNumberCheckException : San3aException("Failed to check if phone number is saved")
 class GetAllServicesException : San3aException("Services can't be read")
+class SetOnboardingCompletedException : San3aException("Failed to set onboarding completed")
+class GetOnboardingCompletedException : San3aException("Failed to get onboarding completed status")
