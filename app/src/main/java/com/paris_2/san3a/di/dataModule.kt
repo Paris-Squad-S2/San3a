@@ -8,6 +8,9 @@ import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSourceImpl
+
+import com.paris_2.san3a.data.source.AppPreferences
+import org.koin.android.ext.koin.androidApplication
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSourceImp
 import okhttp3.OkHttpClient
@@ -20,6 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 val WHATSAPP_API_KEY = "kikoe6wZMu7DwYl5t8uH5FqHIVMoWg4GKcIF"
 private const val BASE_URL = "https://www.whatsapp.api.funtaste.xyz/"
 val dataModule = module {
+    single { AppPreferences(androidApplication().applicationContext) }
     single<FireStoreService> { FireStoreServiceImpl(get()) }
     single { FirebaseFirestore.getInstance() }
     single { FirebaseAuth.getInstance() }

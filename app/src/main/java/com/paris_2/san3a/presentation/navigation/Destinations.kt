@@ -27,4 +27,10 @@ sealed interface Destinations : Graph {
 
     @Serializable
     data object More : Destination
-}
+
+    @Serializable
+    data object Splash : Destination
+
+    @Serializable
+    data object OnBoarding : Destination
+
