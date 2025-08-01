@@ -310,7 +310,7 @@ fun GuestButtonSection(interactionListener: RegisterInteractionListener) {
     AppButton(
         type = AppButtonType.Secondary,
         state = AppButtonState.Enable,
-        onClick = { interactionListener::onClickContinueAsGuest },
+        onClick = interactionListener::onClickContinueAsGuest ,
         modifier = Modifier.fillMaxWidth(),
         size = AppButtonSize.Large,
         text = stringResource(R.string.continue_as_a_guest),
