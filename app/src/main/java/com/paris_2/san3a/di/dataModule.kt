@@ -2,19 +2,46 @@ package com.paris_2.san3a.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.paris_2.san3a.data.service.auth.AuthApiServices
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSourceImpl
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSourceImp
+import okhttp3.OkHttpClient
 import org.koin.dsl.module
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
+val WHATSAPP_API_KEY = "kikoe6wZMu7DwYl5t8uH5FqHIVMoWg4GKcIF"
+private const val BASE_URL = "https://www.whatsapp.api.funtaste.xyz/"
 val dataModule = module {
     single<FireStoreService> { FireStoreServiceImpl(get()) }
     single { FirebaseFirestore.getInstance() }
     single { FirebaseAuth.getInstance() }
     single<MessagesRemoteDataSource> { MessagesRemoteDataSourceImp(get()) }
-    single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl() }
+    single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(get()) }
+    single<AuthApiServices> {
+        get<Retrofit>().create(AuthApiServices::class.java)
+    }
+    single {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(get())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 
+    single {
+        OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader("x-api-key", WHATSAPP_API_KEY)
+                    .addHeader("Content-Type", "application/json")
+                    .build()
+                chain.proceed(request)
+            }
+            .build()
+    }
 }

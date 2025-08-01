@@ -1,17 +1,9 @@
 package com.paris_2.san3a.data.source.remote.auth
 
+import com.paris_2.san3a.data.service.auth.WhatsAppMessage
 import com.paris_2.san3a.data.source.remote.auth.dto.OtpDto
-import retrofit2.http.Body
-import retrofit2.http.POST
 
 interface AuthRemoteDataSource {
-    @POST("api/send-message")
-    suspend fun sendMessage(
-        @Body body: WhatsAppMessage,
-        ): OtpDto
+    suspend fun sendMessage(body: WhatsAppMessage): OtpDto
 }
 
-data class WhatsAppMessage(
-    val phoneNumber: String,
-    val message: String
-)
