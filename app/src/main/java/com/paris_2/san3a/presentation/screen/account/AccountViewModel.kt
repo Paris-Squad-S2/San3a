@@ -1,8 +1,11 @@
 package com.paris_2.san3a.presentation.screen.account
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 
@@ -15,6 +18,17 @@ class AccountViewModel : ViewModel() {
 
     val progress: State<Float> get() = mutableFloatStateOf((_currentScreen.intValue + 1) / stepsCount.toFloat())
 
+
+    private var _userType by mutableStateOf(AccountScreenUiState())
+    val userType: State<AccountScreenUiState> get() = mutableStateOf(_userType)
+
+    fun updateUserType(type: UserType) {
+        _userType = _userType.copy(
+            accountUiState = _userType.accountUiState.copy(
+                userType = type
+            )
+        )
+    }
     fun nextStep() {
         if (_currentScreen.intValue < stepsCount - 1) {
             _currentScreen.intValue++
@@ -26,7 +40,6 @@ class AccountViewModel : ViewModel() {
             _currentScreen.intValue--
         }
     }
-
     fun getTitle(): String = when (_currentScreen.intValue) {
         0 -> "How would you like to use San3a?"
         1 -> "What do you usually need help with?"
@@ -44,5 +57,7 @@ class AccountViewModel : ViewModel() {
     }
 
     fun getButtonText(): String = if (_currentScreen.intValue == stepsCount - 1) "Browse Services" else "Next"
+
+
 }
 

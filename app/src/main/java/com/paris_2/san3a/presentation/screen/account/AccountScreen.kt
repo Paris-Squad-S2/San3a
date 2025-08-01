@@ -19,9 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.paris_2.san3a.presentation.screen.account.components.AccountProgressIndicator
-import com.paris_2.san3a.presentation.screen.account.components.StepFourContent
+import com.paris_2.san3a.presentation.screen.account.components.StepFourCustomerContent
 import com.paris_2.san3a.presentation.screen.account.components.StepOneContent
-import com.paris_2.san3a.presentation.screen.account.components.StepThreeContent
+import com.paris_2.san3a.presentation.screen.account.components.StepThreeCustomerContent
 import com.paris_2.san3a.presentation.screen.account.components.StepTwoContent
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.components.AppButton
@@ -90,10 +90,14 @@ fun AccountScreenContent(
             style = Theme.textStyle.body.large.regular,
         )
         when (currentScreen) {
-            0 -> StepOneContent( modifier = Modifier.padding(vertical = 32.dp))
+            0 -> StepOneContent(
+                modifier = Modifier.padding(vertical = 32.dp),
+                onUserTypeSelected = {  },
+                selectedType = null
+            )
             1 -> StepTwoContent( modifier = Modifier.padding(vertical = 32.dp))
-            2 -> StepThreeContent( modifier = Modifier.padding(vertical =32.dp))
-            3 -> StepFourContent( modifier = Modifier.padding(vertical = 32.dp))
+            2 -> StepThreeCustomerContent( modifier = Modifier.padding(vertical =32.dp))
+            3 -> StepFourCustomerContent( modifier = Modifier.padding(vertical = 32.dp))
         }
        AppButton(
            onClick = onNext,
