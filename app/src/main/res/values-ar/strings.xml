@@ -4,6 +4,11 @@
     <string name="forgot_password">نسيت كلمة المرور؟</string>
     <string name="toggle_password_visibility">تبديل رؤية كلمة المرور</string>
     <string name="error">خطأ</string>
+    <string name="enter_verification_code">ادخل رمز التأكيد</string>
+    <string name="we_sent_a_5_digit_code_to_your_phone_number">لقد أرسلنا رمز مكون من 5 أرقام إلى رقم هاتفك</string>
+    <string name="didn_t_receive_the_code">لم تستلم الرمز؟</string>
+    <string name="otp_image">صورة رمز التأكيد</string>
+    <string name="welcome_to_san3a">اهلا بك في صنعة  👋</string>
     <string name="show_more">رأية المزيد</string>
     <string name="ok">حسنا</string>
     <string name="button">زر</string>
@@ -31,4 +36,18 @@
     <string name="next">التالي</string>
     <string name="chat">محادثة</string>
     <string name="accept_offer">قبول العرض</string>
+    <string name="verify">تأكيد</string>
+    <string name="resend_code_after">اعادة ارسال رمز بعد</string>
+    <string name="_0">" 0:"</string>
+    <string name="resend_code">طلب رمز جديد</string>
+    <string name="otp_code_is_incorrect">رمز تأكيد غير متطابق</string>
+    <string name="occurred_an_error_for_sending_otp">حدث خطأ اثناء ارسال الرمز</string>
+    <string name="enter_your_phone_number_to_continue">أدخل رقم هاتفك\nللمتابعة </string>
+    <string name="or">أو</string>
+    <string name="by_continuing_you_agree_on_our">بمتابعتك، فإنك توافق على </string>
+    <string name="terms_and_conditions"> الشروط والأحكام</string>
+    <string name="and"> و </string>
+    <string name="Continue">متابعة</string>
+    <string name="privacy_policy"> سياسة الخصوصية</string>
+    <string name="continue_as_a_guest">المتابعة كزائر</string>
 </resources>
