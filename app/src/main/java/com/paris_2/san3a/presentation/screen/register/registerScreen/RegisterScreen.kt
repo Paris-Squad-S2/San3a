@@ -59,7 +59,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RegisterScreen(viewModel: RegisterViewModel = koinViewModel()) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState = viewModel.screenState.collectAsStateWithLifecycle()
     RegisterScreenContent(uiState.value, viewModel)
 }
 
