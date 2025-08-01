@@ -2,7 +2,7 @@ package com.paris_2.san3a.data.repository
 
 import com.paris_2.san3a.domain.repository.LocationRepository
 
-class LocationRepositoryImp(): LocationRepository {
+class LocationRepositoryImp() : LocationRepository, BaseRepository() {
     override suspend fun getGovernmentsInCountry(countryName: String): List<String> {
         TODO("Not yet implemented")
     }
