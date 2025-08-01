@@ -1,11 +1,11 @@
 package com.paris_2.san3a.domain.usecase
 
-import com.paris_2.san3a.data.source.AppPreferences
+import com.paris_2.san3a.domain.repository.OnboardingRepository
 
 class IsOnboardingCompletedUseCase(
-    private val appPreferences: AppPreferences
+    private val onboardingRepository: OnboardingRepository
 ) {
     operator fun invoke(): Boolean {
-        return appPreferences.isOnboardingCompleted()
+        return onboardingRepository.isOnboardingCompleted()
     }
 }

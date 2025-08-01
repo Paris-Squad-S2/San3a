@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.San3a" parent="android:Theme.Material.Light.NoActionBar">
-        // hide splash screen
-        <item name="android:windowDisablePreview">true</item>
     </style>
     <style name="Theme.San3a.Splash" parent="Theme.SplashScreen">
         <item name="android:windowDisablePreview">true</item>
