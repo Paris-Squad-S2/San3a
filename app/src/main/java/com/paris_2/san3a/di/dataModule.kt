@@ -12,7 +12,6 @@ import com.paris_2.san3a.data.repository.HomeRepositoryImpl
 import com.paris_2.san3a.BuildConfig
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
-import com.paris_2.san3a.data.source.local.UserLocalDataSourceImp
 import com.paris_2.san3a.data.source.remote.UserRemoteDataSourceImp
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSourceImpl
@@ -30,7 +29,6 @@ import com.paris_2.san3a.domain.repository.HomeRepository
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import com.paris_2.san3a.domain.repository.UserRemoteDataSource
-import com.paris_2.san3a.domain.source.local.UserLocalDataSource
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -41,16 +39,13 @@ val dataModule = module {
     singleOf(::MessagesRemoteDataSourceImp) { bind<MessagesRemoteDataSource>() }
     singleOf(::FirebaseStorageDataSource) { bind<StorageRemoteDataSource>() }
     singleOf(::UserRemoteDataSourceImp) { bind<UserRemoteDataSource>() }
-    singleOf(::UserLocalDataSourceImp) { bind<UserLocalDataSource>() }
     singleOf(::ServiceRemoteDataSourceImpl) { bind<ServiceRemoteDataSource>() }
     singleOf(::HomeRepositoryImpl) { bind<HomeRepository>() }
-    single<MessagesRemoteDataSource> { MessagesRemoteDataSourceImp(get()) }
-
-    single<StorageRemoteDataSource> { FirebaseStorageDataSource(get()) }
-    single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(get()) }
-    single<AuthApiServices> {
-        get<Retrofit>().create(AuthApiServices::class.java)
-    }
+    singleOf(::MessagesRemoteDataSourceImp) { bind<MessagesRemoteDataSource>() }
+    singleOf(::FirebaseStorageDataSource) { bind<StorageRemoteDataSource>() }
+    singleOf(::AuthRemoteDataSourceImpl) { bind<AuthRemoteDataSource>() }
+    
+    single<AuthApiServices> { get<Retrofit>().create(AuthApiServices::class.java) }
     single {
         Retrofit.Builder()
             .baseUrl(BASE_URL)

@@ -5,7 +5,6 @@ import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.repository.UserRemoteDataSource
 import com.paris_2.san3a.domain.repository.UserRepository
-import com.paris_2.san3a.domain.source.local.UserLocalDataSource
 import android.net.Uri
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.domain.CompleteUserSetupException
@@ -19,13 +18,11 @@ import com.paris_2.san3a.domain.SaveWorkShowcaseException
 import com.paris_2.san3a.domain.UploadNationalIdImagesException
 
 class UserRepositoryImp(
-    private val userLocalDataSource: UserLocalDataSource,
     private val userRemoteDataSource: UserRemoteDataSource,
     private val storageRemoteDataSource: StorageRemoteDataSource
 ) : UserRepository, BaseRepository() {
     override suspend fun saveAccountType(phone: String, accountType: AccountType) =
         safeCall(SaveAccountTypeException()) {
-            userLocalDataSource.setAccountType(accountType)
             userRemoteDataSource.saveAccountType(phone, accountType)
         }
 
