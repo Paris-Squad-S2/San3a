@@ -36,6 +36,7 @@ fun DeleteChatBottomSheet(
     BottomSheet(
         modifier = modifier,
         isVisible = isVisible,
+        onDismissRequest = onDismissRequest
     ) {
         Column(
             modifier = Modifier
