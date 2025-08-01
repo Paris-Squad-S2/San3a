@@ -27,7 +27,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,8 +34,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -200,21 +197,6 @@ fun PhoneNumberInput(
     onPhoneNumberChanged: (String) -> Unit,
     onCountrySelected: (Country) -> Unit,
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    val focusRequester = remember { FocusRequester() }
-    var shouldRequestFocus by remember { mutableStateOf(false) }
-
-    val dialCode = selectedCountry.code
-    val numberOnly = phoneNumber.removePrefix(dialCode)
-
-    // ✅ Trigger focus only when flag is set
-    LaunchedEffect(shouldRequestFocus) {
-        if (shouldRequestFocus) {
-            focusRequester.requestFocus()
-            shouldRequestFocus = false
-        }
-    }
-
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -223,8 +205,11 @@ fun PhoneNumberInput(
             style = Theme.textStyle.title.medium,
             color = Theme.colors.shade.primary
         )
-
         Spacer(modifier = Modifier.height(16.dp))
+        var expanded by remember { mutableStateOf(false) }
+
+        val dialCode = selectedCountry.code
+        val numberOnly = phoneNumber.removePrefix(dialCode)
 
         AppTextField(
             value = numberOnly,
@@ -232,9 +217,7 @@ fun PhoneNumberInput(
                 val digitsOnly = newInput.filter { it.isDigit() }.take(11)
                 onPhoneNumberChanged(dialCode + digitsOnly)
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester),
+            modifier = Modifier.fillMaxWidth(),
             placeholder = "000-0000-000",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             visualTransformation = PhoneNumberVisualTransformation(),
@@ -251,12 +234,9 @@ fun PhoneNumberInput(
                         onCountrySelected = {
                             onCountrySelected(it)
                             onPhoneNumberChanged(it.code)
-                            expanded = false
-                            shouldRequestFocus = true  // ✅ triggers LaunchedEffect
                         },
                         onDismissDropdown = { expanded = false }
                     )
-
                     Spacer(modifier = Modifier.width(4.dp))
                     Divider(
                         color = Theme.colors.stroke.primary,
@@ -273,6 +253,7 @@ fun PhoneNumberInput(
                 }
             }
         )
+
     }
 }
 
