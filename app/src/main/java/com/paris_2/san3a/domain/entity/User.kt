@@ -11,8 +11,8 @@ data class User(
     val workMedia: List<String>,
     val workDescription: List<Service>,
     val requestedServices: List<Service>,
-    val accountType: AccountType
-    // val location: String, todo implement the location
+    val accountType: AccountType,
+    val location: Location
 )
 
 enum class AccountType {
