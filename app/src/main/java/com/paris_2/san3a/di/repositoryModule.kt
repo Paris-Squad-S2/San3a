@@ -12,7 +12,7 @@ import com.paris_2.san3a.domain.repository.OnboardingRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single<AuthRepository> { AuthRepositoryImpl(get(),get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(),get(),get()) }
     single { NetworkConnectionChecker(get()) }
     single<MessageRepository> { MessageRepositoryImpl(get(), get()) }
     single<ChatRepository> { ChatRepositoryImpl(get()) }
