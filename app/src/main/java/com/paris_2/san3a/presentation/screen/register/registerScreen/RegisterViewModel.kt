@@ -37,7 +37,7 @@ class RegisterViewModel : ViewModel(), RegisterInteractionListener, KoinComponen
     }
 
     override fun onClickContinue() {
-        navigate(Destinations.OTPRegisterScreen)
+        navigate(Destinations.OTPRegisterScreen(_uiState.value.phoneNumber))
     }
 
     override fun onClickContinueAsGuest() {
