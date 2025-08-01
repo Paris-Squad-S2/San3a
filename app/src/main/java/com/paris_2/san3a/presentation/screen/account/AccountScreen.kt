@@ -111,7 +111,7 @@ fun AccountScreenContent(
             }
             3 -> when (uiState.accountUiState.userType) {
                 UserType.CUSTOMER -> StepFourCustomerContent(modifier = Modifier.padding(vertical = 32.dp))
-                UserType.CRAFTSMAN -> StepFourCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))
+                UserType.CRAFTSMAN -> StepFourCraftsmanContent(modifier = Modifier.padding(top = 32.dp, bottom = 12.dp))
                 else -> {}
             }
         }
