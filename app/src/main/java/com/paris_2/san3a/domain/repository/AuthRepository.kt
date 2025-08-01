@@ -6,4 +6,8 @@ interface AuthRepository {
         phoneNumber: String,
         message: String,
     ): Boolean
+
+    suspend fun savePhoneNumber(phoneNumber: String)
+
+    suspend fun isPhoneNumberSaved(): Boolean
 }

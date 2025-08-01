@@ -2,6 +2,7 @@ package com.paris_2.san3a.data.repository
 
 import android.util.Log
 import com.paris_2.san3a.data.service.auth.WhatsAppMessage
+import com.paris_2.san3a.data.source.AppPreferences
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
 import com.paris_2.san3a.domain.NoInternetConnectionException
@@ -11,7 +12,8 @@ import com.paris_2.san3a.domain.repository.AuthRepository
 
 class AuthRepositoryImpl(
     private val networkConnectionChecker: NetworkConnectionChecker,
-    private val remoteDataSource: AuthRemoteDataSource
+    private val remoteDataSource: AuthRemoteDataSource,
+    private val appPreferences: AppPreferences
 ): AuthRepository {
 
 
@@ -44,5 +46,13 @@ class AuthRepositoryImpl(
                 body
             ).success ?: false
         }
+    }
+
+    override suspend fun savePhoneNumber(phoneNumber: String) {
+        appPreferences.savePhoneNumber(phoneNumber)
+    }
+
+    override suspend fun isPhoneNumberSaved(): Boolean {
+        return appPreferences.isPhoneNumberSaved()
     }
 }
