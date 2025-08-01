@@ -1,7 +1,7 @@
 package com.paris_2.san3a.presentation.navigation
 
-import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingScreen
 import SplashScreen
+import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -9,11 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.paris_2.san3a.presentation.screen.home.HomeScreen
 import com.paris_2.san3a.presentation.screen.messages.MessagesScreen
 import com.paris_2.san3a.presentation.screen.more.MoreScreen
 import com.paris_2.san3a.presentation.screen.myRequest.MyRequestScreen
-import androidx.navigation.compose.composable
 import com.paris_2.san3a.presentation.screen.HomeScreen
 import com.paris_2.san3a.presentation.screen.onboarding.onboardingPages
 
@@ -45,7 +43,7 @@ fun San3aNavGraph(
 }
 
 fun NavGraphBuilder.buildSan3aNavGraph() {
-    navigation<Destinations.Graph1>(startDestination = Destinations.ٍSplash) {
+    navigation<Destinations.Graph1>(startDestination = Destinations.Splash) {
         composable<Destinations.Home> { HomeScreen() }
         composable<Destinations.Messages> { MessagesScreen() }
         composable<Destinations.MyRequest> { MyRequestScreen() }
