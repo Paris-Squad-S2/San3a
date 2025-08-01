@@ -6,11 +6,11 @@ import androidx.compose.ui.text.font.FontWeight
 import com.paris_2.san3a.R
 
 val manrope = FontFamily(
-    Font(R.font.manrope, weight = FontWeight.Normal),
-    Font(R.font.manrope_bold, weight = FontWeight.Bold),
-    Font(R.font.manrope_extrabold, weight = FontWeight.ExtraBold),
-    Font(R.font.manrope_extralight, weight = FontWeight.ExtraLight),
-    Font(R.font.manrope_light, weight = FontWeight.Light),
-    Font(R.font.manrope_medium, weight = FontWeight.Medium),
-    Font(R.font.manrope_semibold, weight = FontWeight.SemiBold),
+    Font(R.font.plus_jakarta_sans, weight = FontWeight.Normal),
+    Font(R.font.plus_jakarta_sans_bold, weight = FontWeight.Bold),
+    Font(R.font.plus_jakarta_sans_extrabold, weight = FontWeight.ExtraBold),
+    Font(R.font.plus_jakarta_sans_extralight, weight = FontWeight.ExtraLight),
+    Font(R.font.plus_jakarta_sans_light, weight = FontWeight.Light),
+    Font(R.font.plus_jakarta_sans_medium, weight = FontWeight.Medium),
+    Font(R.font.plus_jakarta_sans_semibold, weight = FontWeight.SemiBold),
 )
