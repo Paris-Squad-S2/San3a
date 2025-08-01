@@ -19,8 +19,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.paris_2.san3a.presentation.screen.account.components.AccountProgressIndicator
+import com.paris_2.san3a.presentation.screen.account.components.StepFourCraftsmanContent
 import com.paris_2.san3a.presentation.screen.account.components.StepFourCustomerContent
 import com.paris_2.san3a.presentation.screen.account.components.StepOneContent
+import com.paris_2.san3a.presentation.screen.account.components.StepThreeCraftsmanContent
 import com.paris_2.san3a.presentation.screen.account.components.StepThreeCustomerContent
 import com.paris_2.san3a.presentation.screen.account.components.StepTwoContent
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
@@ -45,7 +47,9 @@ fun AccountScreen(viewModel: AccountViewModel = viewModel()) {
         currentScreen = currentScreen,
         progress = progress,
         onPrevious = viewModel::previousStep,
-        onNext = viewModel::nextStep
+        onNext = viewModel::nextStep,
+        onUserTypeSelected = viewModel::updateUserType,
+        uiState = viewModel.userType
     )
 }
 @Composable
@@ -57,6 +61,8 @@ fun AccountScreenContent(
     progress: Float,
     onNext: () -> Unit,
     onPrevious: () -> Unit,
+    onUserTypeSelected: (UserType) -> Unit,
+    uiState: AccountScreenUiState,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -92,14 +98,23 @@ fun AccountScreenContent(
         when (currentScreen) {
             0 -> StepOneContent(
                 modifier = Modifier.padding(vertical = 32.dp),
-                onUserTypeSelected = {  },
-                selectedType = null
+                onUserTypeSelected = onUserTypeSelected ,
+                selectedType = uiState.accountUiState.userType
             )
-            1 -> StepTwoContent( modifier = Modifier.padding(vertical = 32.dp))
-            2 -> StepThreeCustomerContent( modifier = Modifier.padding(vertical =32.dp))
-            3 -> StepFourCustomerContent( modifier = Modifier.padding(vertical = 32.dp))
+            1 -> StepTwoContent(modifier = Modifier.padding(vertical = 32.dp))
+            2 -> when (uiState.accountUiState.userType) {
+                UserType.CUSTOMER -> StepThreeCustomerContent(modifier = Modifier.padding(vertical = 32.dp))
+                UserType.CRAFTSMAN -> StepThreeCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))
+                else -> {}
+            }
+            3 -> when (uiState.accountUiState.userType) {
+                UserType.CUSTOMER -> StepFourCustomerContent(modifier = Modifier.padding(vertical = 32.dp))
+                UserType.CRAFTSMAN -> StepFourCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))
+                else -> {}
+            }
         }
-       AppButton(
+
+        AppButton(
            onClick = onNext,
            type = AppButtonType.Primary,
            text = textButton,
@@ -121,6 +136,8 @@ private fun AccountScreenPreview() {
             currentScreen = 1,
             onNext = {},
             onPrevious = {},
+            onUserTypeSelected = {},
+            uiState = AccountScreenUiState()
         )
     }
 }

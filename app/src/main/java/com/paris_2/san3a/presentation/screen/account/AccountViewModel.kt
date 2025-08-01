@@ -18,9 +18,8 @@ class AccountViewModel : ViewModel() {
 
     val progress: State<Float> get() = mutableFloatStateOf((_currentScreen.intValue + 1) / stepsCount.toFloat())
 
-
     private var _userType by mutableStateOf(AccountScreenUiState())
-    val userType: State<AccountScreenUiState> get() = mutableStateOf(_userType)
+    val userType: AccountScreenUiState get() = _userType
 
     fun updateUserType(type: UserType) {
         _userType = _userType.copy(
@@ -40,24 +39,62 @@ class AccountViewModel : ViewModel() {
             _currentScreen.intValue--
         }
     }
-    fun getTitle(): String = when (_currentScreen.intValue) {
-        0 -> "How would you like to use San3a?"
-        1 -> "What do you usually need help with?"
-        2 -> "Where are you located?"
-        3 -> "Let’s personalize your profile"
-        else -> ""
+    fun getTitle(): String {
+        return when (_currentScreen.intValue) {
+            0 -> "How would you like to use San3a?"
+            1 -> when (userType.accountUiState.userType) {
+                UserType.CUSTOMER -> "What do you usually need help with?"
+                UserType.CRAFTSMAN -> "What services do you offer?"
+                else -> ""
+            }
+            2 -> when (userType.accountUiState.userType) {
+                UserType.CUSTOMER -> "Where are you located?"
+                UserType.CRAFTSMAN -> "Show Us Your Work"
+                else -> ""
+            }
+            3 -> when (userType.accountUiState.userType) {
+                UserType.CUSTOMER -> "Let’s personalize your profile"
+                UserType.CRAFTSMAN -> "Verify Your Identity (Optional)"
+                else -> ""
+            }
+            else -> ""
+        }
     }
 
-    fun getDescription(): String = when (_currentScreen.intValue) {
-        0 -> "You can switch roles anytime from your profile."
-        1 -> "This helps us personalize your experience. You can change it anytime."
-        2 -> "Location helps improve accuracy, but don’t worry, you can update it later."
-        3 -> "We’ll use this to personalize your experience. You can add a profile photo too, or skip for now."
-        else -> ""
+    fun getDescription(): String {
+        return when (_currentScreen.intValue) {
+            0 -> "You can switch roles anytime from your profile."
+            1 -> when (userType.accountUiState.userType) {
+                UserType.CUSTOMER -> "This helps us personalize your experience. You can change it anytime."
+                UserType.CRAFTSMAN -> "Choose your specialties to get relevant job requests. You can change this later."
+                else -> ""
+            }
+            2 -> when(userType.accountUiState.userType) {
+                UserType.CUSTOMER -> "Location helps improve accuracy, but don’t worry, you can update it later."
+                UserType.CRAFTSMAN ->"Add photos or a video of your past work. This helps build trust with customers."
+                else ->""
+            }
+            3 -> when (userType.accountUiState.userType) {
+                UserType.CUSTOMER -> "We’ll use this to personalize your experience. You can add a profile photo too, or skip for now."
+                UserType.CRAFTSMAN -> "Uploading your ID helps build trust with customers. Verified craftsmen get more jobs and a special badge on their profile."
+                else -> ""
+            }
+            else -> ""
+        }
     }
 
-    fun getButtonText(): String = if (_currentScreen.intValue == stepsCount - 1) "Browse Services" else "Next"
 
+    fun getButtonText(): String {
+        return if (_currentScreen.intValue == stepsCount - 1) {
+            when (userType.accountUiState.userType) {
+                UserType.CUSTOMER -> "Browse Services"
+                UserType.CRAFTSMAN -> "See Nearby Requests"
+                else -> "Next"
+            }
+        } else {
+            "Next"
+        }
+    }
 
 }
 
