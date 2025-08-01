@@ -67,4 +67,9 @@
     <string name="upload_back_of_national_id">حمّل ظهر بطاقة الرقم القومي</string>
     <string name="i_ll_verify_later">سأقوم بالتحقق لاحقًا</string>
     <string name="describe_your_work">صف عملك</string>
+    <string name="oops_no_internet">Oops! No Internet</string>
+    <string name="please_check_your_connection_and_try_again_we_ll_keep_trying_in_the_background">Please check your connection and try again. We\'ll keep trying in the background.</string>
+    <string name="try_again">Try Again</string>
+    <string name="no_messages_yet">No Messages Yet</string>
+    <string name="once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here">Once you start accepting or posting requests, chats with craftsmen will appear here.</string>
 </resources>
