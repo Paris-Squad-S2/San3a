@@ -19,6 +19,14 @@ class UserRemoteDataSourceImp(
         updateUserData(phone, data)
     }
 
+    override suspend fun getAccountType(phone: String): AccountType {
+        val userData = fireStoreService.getDoc(
+            path = "$USERS_COLLECTION/$phone",
+            fromJson = { data, _ -> data["accountType"]?.toString() }
+        )
+        return AccountType.entries.find { it.name == userData } ?: AccountType.CUSTOMER
+    }
+
     override suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean) {
         val data = if (isCraftsman) {
             mapOf(

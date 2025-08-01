@@ -11,6 +11,8 @@ interface UserRemoteDataSource {
 
     suspend fun saveAccountType(phone: String, accountType: AccountType)
 
+    suspend fun getAccountType(phone: String) :AccountType
+
     suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean)
 
     suspend fun saveLocation(phone: String, location: Location)

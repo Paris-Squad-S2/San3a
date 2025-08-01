@@ -18,6 +18,7 @@ class SetOnboardingCompletedException : San3aException("Failed to set onboarding
 class GetOnboardingCompletedException : San3aException("Failed to get onboarding completed status")
 
 class SaveAccountTypeException : San3aException("Account type couldn't be saved")
+class GetAccountTypeException : San3aException("Account type couldn't be retrieved")
 class SaveServicesException : San3aException("Services couldn't be saved")
 class SaveLocationException : San3aException("Location couldn't be saved")
 class SavePersonalInfoException : San3aException("Personal info couldn't be saved")

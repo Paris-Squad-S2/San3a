@@ -9,6 +9,7 @@ import com.paris_2.san3a.domain.source.local.UserLocalDataSource
 import android.net.Uri
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.domain.CompleteUserSetupException
+import com.paris_2.san3a.domain.GetAccountTypeException
 import com.paris_2.san3a.domain.GetUserProgressException
 import com.paris_2.san3a.domain.SaveAccountTypeException
 import com.paris_2.san3a.domain.SaveLocationException
@@ -26,6 +27,11 @@ class UserRepositoryImp(
         safeCall(SaveAccountTypeException()) {
             userLocalDataSource.setAccountType(accountType)
             userRemoteDataSource.saveAccountType(phone, accountType)
+        }
+
+    override suspend fun getAccountType(phone: String): AccountType =
+        safeCall(GetAccountTypeException()) {
+            userRemoteDataSource.getAccountType(phone)
         }
 
     override suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean) =
@@ -54,11 +60,9 @@ class UserRepositoryImp(
 
         }
 
-
     override suspend fun getUserProgress(phone: String): AccountSetupStep =
         safeCall(GetUserProgressException()) {
             userRemoteDataSource.getUserProgress(phone)
-
         }
 
     override suspend fun completeUserSetup(phone: String) =
