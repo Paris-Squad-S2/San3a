@@ -94,4 +94,6 @@ dependencies {
 
     implementation(libs.accompanist.flowlayout)
 
+    implementation(libs.accompanist.pager)
+
 }

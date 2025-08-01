@@ -26,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
