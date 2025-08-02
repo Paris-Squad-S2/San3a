@@ -13,15 +13,13 @@ import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
 
 class OTPRegisterViewModel(
     private val sendOtpUseCase: SendOtpUseCase,
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
     private val setLoginUseCase: SetLoginUseCase,
     saveStateHandle: SavedStateHandle,
-) : BaseViewModel<OTPRegisterScreenState>(OTPRegisterScreenState()), OTPRegisterListenerInteraction,
-    KoinComponent {
+) : BaseViewModel<OTPRegisterScreenState>(OTPRegisterScreenState()), OTPRegisterListenerInteraction{
 
     private val otp = generateOtp()
 
@@ -39,11 +37,13 @@ class OTPRegisterViewModel(
     }
 
     private fun sendOtpToPhoneNumber() {
-        updateState(screenState.value.copy(
-            otpRegisterUiState = screenState.value
-                .otpRegisterUiState
-                .copy(loadingVerifyButton = true)
-        ))
+        updateState(
+            screenState.value.copy(
+                otpRegisterUiState = screenState.value
+                    .otpRegisterUiState
+                    .copy(loadingVerifyButton = true)
+            )
+        )
         tryToExecute(
             execute = {
                 sendOtpUseCase(
@@ -62,8 +62,7 @@ class OTPRegisterViewModel(
             updateState(
                 screenState.value.copy(
                     errorMessage = null,
-                    otpRegisterUiState = screenState.value.
-                    otpRegisterUiState.copy(
+                    otpRegisterUiState = screenState.value.otpRegisterUiState.copy(
                         verificationId = otp,
                         loadingVerifyButton = false
                     ),
@@ -77,6 +76,7 @@ class OTPRegisterViewModel(
     private fun onSendOtpToPhoneNumberError(message: String) {
         updateState(
             screenState.value.copy(
+                isLoading = false,
                 errorMessage = null,
                 snackBarMessage = R.string.occurred_an_error_for_sending_otp,
                 showSnackBar = true,
@@ -116,11 +116,13 @@ class OTPRegisterViewModel(
 
     override fun onOtpTextChange(otp: String) {
         if (otp.isDigitsOnly()) {
-            updateState(screenState.value.copy(
-                otpRegisterUiState = screenState.value.otpRegisterUiState.copy(
-                    otp = otp
+            updateState(
+                screenState.value.copy(
+                    otpRegisterUiState = screenState.value.otpRegisterUiState.copy(
+                        otp = otp
+                    )
                 )
-            ))
+            )
         }
     }
 
@@ -131,17 +133,32 @@ class OTPRegisterViewModel(
     private fun verifyOTP() {
         tryToExecute(
             execute = {
-                updateState(screenState.value.copy(isLoading = true))
+                updateState(
+                    screenState.value.copy(
+                        isLoading = false,
+                        errorMessage = null,
+                        snackBarMessage = null,
+                        otpRegisterUiState = screenState.value.otpRegisterUiState.copy(
+                            loadingVerifyButton = true
+                        )
+                    )
+                )
                 delay(1000)
                 if (screenState.value.otpRegisterUiState.otp == screenState.value.otpRegisterUiState.verificationId) {
                     savePhoneNumberUseCase(screenState.value.otpRegisterUiState.phoneNumber)
-                    updateState(screenState.value.copy(isLoading = false))
+                    updateState(screenState.value.copy(
+                        otpRegisterUiState = screenState.value.otpRegisterUiState.copy(
+                            loadingVerifyButton = false
+                        )
+                    ))
                     setLoginUseCase(true)
                     navigate(Destinations.Home)
                 }
             },
             onError = { errorMessage ->
-                updateState(screenState.value.copy(errorMessage = R.string.otp_code_is_incorrect))
+                updateState(screenState.value.copy(
+                    snackBarMessage = R.string.otp_code_is_incorrect)
+                )
             }
         )
     }
