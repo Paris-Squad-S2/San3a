@@ -1,9 +1,14 @@
 package com.paris_2.san3a.data.repository
 
+import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
+import com.paris_2.san3a.data.mapper.toMostRequestedServices
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
 import com.paris_2.san3a.domain.GetAllServicesException
+import com.paris_2.san3a.domain.GetMostRequestedServicesException
 import com.paris_2.san3a.domain.SearchServicesException
+import com.paris_2.san3a.domain.entity.MostRequestedServices
+import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.repository.HomeRepository
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +17,7 @@ import kotlinx.coroutines.flow.map
 
 class HomeRepositoryImpl(
     private val serviceRemoteDataSource: ServiceRemoteDataSource,
-): HomeRepository, BaseRepository()  {
+) : HomeRepository, BaseRepository() {
 
     override fun getAllServices(): Flow<List<Service>> {
         return serviceRemoteDataSource.getAllServices()
@@ -25,4 +30,16 @@ class HomeRepositoryImpl(
             .map { dto -> dto.map { it.toEntity() } }
             .catch { throw SearchServicesException() }
     }
+
+    override suspend fun requestService(requestedService: RequestService) {
+        serviceRemoteDataSource.requestService(requestedService.toDto())
+    }
+
+    override fun getMostRequestedServices(userId: String): Flow<List<MostRequestedServices>> {
+        return serviceRemoteDataSource.getMostRequestedServices(userId)
+            .map { dto -> dto.map { it.toMostRequestedServices() } }
+            .catch { throw GetMostRequestedServicesException() }
+    }
+
+
 }
