@@ -88,4 +88,5 @@
     <string name="upload_id_build_trust_get_jobs">Uploading your ID helps build trust with customers. Verified craftsmen get more jobs and a special badge on their profile.</string>
     <string name="browse_services">Browse Services</string>
     <string name="see_nearby_requests">See Nearby Requests</string>
+    <string name="mention_your_years_of_experience">You can mention your years of experience, tools you use, or types of jobs you usually handle.</string>
 </resources>
