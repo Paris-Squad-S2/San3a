@@ -26,10 +26,8 @@ data class ServiceUiState(
 )
 
 data class LocationUiState(
-    val latitude: Double = 0.0,
-    val longitude: Double = 0.0,
-    val countryName: String = "",
-    val cityName: String = "",
+    val government: String = "",
+    val city: String = "",
 )
 
 enum class UserType(val displayActor: Int) {

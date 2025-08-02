@@ -72,8 +72,7 @@ fun AccountScreenContent(
     onDismissRequest: () -> Unit = {},
     onUserTypeSelected: (UserType) -> Unit,
     onGovernmentSelected: (String) -> Unit,
-    uiState
-    : AccountScreenUiState,
+    uiState: AccountScreenUiState,
     viewModel: AccountViewModel,
     modifier: Modifier = Modifier,
 ) {
@@ -122,15 +121,25 @@ fun AccountScreenContent(
                     isGovernmentSheetShowed = uiState.accountUiState.isGovernmentBottomSheetShowed,
                     onGovernmentDismissRequest = onDismissRequest,
                     governments = uiState.accountUiState.governments,
-                    onGovernmentSelected = {
-                        viewModel.getCities(it).also {
+                    onGovernmentSelected = { governemnt ->
+                        viewModel.getCities(governemnt).also {
                             viewModel.updateCitiesBottomSheetVisibility()
+                            viewModel.updateGovernmentLocation(governemnt)
                         }
                     },
                     isCitiesSheetShowed = uiState.accountUiState.isCitiesBottomSheetShowed,
                     onCitiesDismissRequest = viewModel::onCitiesButtonSheetDismiss,
-                    cities = uiState.accountUiState.cities
+                    onCitiesSelected = { city ->
+                        viewModel.updateCityLocation(city).also {
+                            viewModel.updateCitiesBottomSheetVisibility()
+                            viewModel.updateGovernmentBottomSheetVisibility()
+                            viewModel.updateCityLocation(city)
+                        }
 
+                    },
+                    cities = uiState.accountUiState.cities,
+                    government = uiState.accountUiState.locationUiState.government,
+                    city = uiState.accountUiState.locationUiState.city
                 )
 
                 UserType.CRAFTSMAN -> StepThreeCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))
@@ -141,8 +150,7 @@ fun AccountScreenContent(
                 UserType.CUSTOMER -> StepFourCustomerContent(modifier = Modifier.padding(vertical = 32.dp))
                 UserType.CRAFTSMAN -> StepFourCraftsmanContent(
                     modifier = Modifier.padding(
-                        top = 32.dp,
-                        bottom = 12.dp
+                        top = 32.dp, bottom = 12.dp
                     )
                 )
 

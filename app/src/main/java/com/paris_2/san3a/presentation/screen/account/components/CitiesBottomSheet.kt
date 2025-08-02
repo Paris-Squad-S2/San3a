@@ -49,7 +49,7 @@ fun CitiesBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Choose Government",
+                    text = "Choose City",
                     style = Theme.textStyle.title.medium,
                     modifier = Modifier.weight(1F)
                 )

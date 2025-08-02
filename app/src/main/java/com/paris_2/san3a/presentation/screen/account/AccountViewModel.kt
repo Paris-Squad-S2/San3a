@@ -175,5 +175,29 @@ class AccountViewModel(
             )
         )
     }
+
+    fun updateGovernmentLocation(government: String) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    locationUiState = screenState.value.accountUiState.locationUiState.copy(
+                        government = government
+                    )
+                )
+            )
+        )
+    }
+
+    fun updateCityLocation(city: String) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    locationUiState = screenState.value.accountUiState.locationUiState.copy(
+                        city = city
+                    )
+                )
+            )
+        )
+    }
 }
 

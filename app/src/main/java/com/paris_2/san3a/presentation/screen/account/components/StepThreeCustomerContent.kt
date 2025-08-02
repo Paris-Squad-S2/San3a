@@ -40,6 +40,8 @@ fun StepThreeCustomerContent(
     cities: List<String>,
     onGovernmentSelected: (String) -> Unit = {},
     onCitiesSelected: (String) -> Unit = {},
+    government: String = "",
+    city: String = "",
 ) {
     val address by remember { mutableStateOf("Ahmed") }
     val addressInDetail by remember { mutableStateOf("") }
@@ -49,7 +51,7 @@ fun StepThreeCustomerContent(
     ) {
 
         AppTextField(
-            value = address,
+            value = if (government.isEmpty()) "Enter your location" else "$city, $government",
             onValueChange = { address },
             placeholder = "Get your location",
             trailingIcon = {
