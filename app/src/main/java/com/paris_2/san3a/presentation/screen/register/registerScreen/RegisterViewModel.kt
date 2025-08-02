@@ -13,7 +13,20 @@ class RegisterViewModel : BaseViewModel<RegisterUiState>(RegisterUiState()),
     }
 
     override fun onClickContinue() {
-        navigate(Destinations.OTPRegisterScreen(screenState.value.phoneNumber))
+        val phone = screenState.value.phoneNumber
+        val isValid =
+            !phone.isNullOrBlank() &&
+            phone.removePrefix("+20").length == 10
+                    && phone.removePrefix(
+                "+20"
+            ).all { it.isDigit() }
+
+        if (isValid) {
+            navigate(Destinations.OTPRegisterScreen(phone))
+        } else {
+            updateState(screenState.value.copy(phoneNumber = ""))
+
+        }
     }
 
     override fun onClickContinueAsGuest() {
