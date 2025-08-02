@@ -2,6 +2,8 @@ package com.paris_2.san3a.presentation.screen.account.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,42 +31,46 @@ import com.paris_2.san3a.presentation.shared.utils.BasePreview
 @Composable
 fun StepThreeCustomerContent(
     modifier: Modifier = Modifier,
+    onGetLocationClicked: () -> Unit = {},
 ) {
-    val address by remember { mutableStateOf("") }
+    val address by remember { mutableStateOf("Ahmed") }
+    val addressInDetail by remember { mutableStateOf("") }
     Column(
         modifier = modifier.padding(16.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .clip(RoundedCornerShape(Theme.radius.large))
-                .border(
-                    width = 2.dp, color =
-                        Theme.colors.stroke.primary
-                )
-                .padding(vertical = 14.dp, horizontal = 16.dp)
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_location_pin),
-                contentDescription = null,
-                tint = Color.Unspecified,
-            )
-            Text(
-                text = "New Cairo, Cairo",
-                modifier = Modifier
-                    .weight(1F)
-                    .padding(horizontal = 8.dp)
-            )
-            Icon(
-                painter = painterResource(R.drawable.ic_alt_arrow_down),
-                contentDescription = null,
-                tint = Color.Unspecified
-            )
-        }
-        Spacer(Modifier.height(12.dp))
 
         AppTextField(
             value = address,
             onValueChange = { address },
+            placeholder = "Get your location",
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_alt_arrow_down),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+            },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_location_pin),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                )
+            },
+            enabled = false,
+            modifier = Modifier.clickable(
+                enabled = true, onClick = {
+                    onGetLocationClicked()
+                },
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            )
+        )
+        Spacer(Modifier.height(12.dp))
+
+        AppTextField(
+            value = addressInDetail,
+            onValueChange = { addressInDetail },
             placeholder = "Enter your location in details",
         )
     }

@@ -129,5 +129,15 @@ class AccountViewModel(
             )
         }
     }
+
+    fun updateBottomSheetVisibility(isVisible: Boolean) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    isBottomSheetShowed = isVisible
+                )
+            )
+        )
+    }
 }
 

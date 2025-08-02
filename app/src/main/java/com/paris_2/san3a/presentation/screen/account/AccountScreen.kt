@@ -110,6 +110,9 @@ fun AccountScreenContent(
             2 -> when (uiState.accountUiState.userType) {
                 UserType.CUSTOMER -> StepThreeCustomerContent(
                     modifier = Modifier.padding(vertical = 32.dp),
+                    onGetLocationClicked = {
+
+                    }
                 )
 
                 UserType.CRAFTSMAN -> StepThreeCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))
