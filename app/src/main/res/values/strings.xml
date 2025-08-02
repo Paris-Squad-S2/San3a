@@ -108,10 +108,12 @@ We reserve the right to suspend or terminate any account that violates these ter
 
 8. Changes to Terms\n
 We may update these terms from time to time. Continued use of the app implies your acceptance of the updated terms.\n</string>
-    <string name="privacy_and_policy_content">We value your privacy. This Privacy Policy explains how San3a collects, uses, and protects your information.\n\n
+
+    <string name="privacy_and_policy_content">
+We value your privacy. This Privacy Policy explains how San3a collects, uses, and protects your information.\n\n
 1. Information We Collect\n
-Personal Data: Name, phone number, location, profile photo, ID (for craftsmen).
-Usage Data: How you interact with the app, device type, IP address.
+Personal Data: Name, phone number, location, profile photo, ID (for craftsmen).\n
+Usage Data: How you interact with the app, device type, IP address.\n
 Photos and Files: Only those you upload voluntarily for service requests or profile verification.\n\n
 2. How We Use Your Information\n
 To connect customers with suitable craftsmen.\n
@@ -127,14 +129,15 @@ For payment processing (if integrated).\n\n
 We collect your location to:\n
 Show you nearby services or job requests.\n
 Help you navigate to job locations.\n
- You can disable location sharing at any time in your device settings.\n\n
+You can disable location sharing at any time in your device settings.\n\n
 5. Security\n
-We use encryption and secure storage methods to protect your data. However, no system is 100% secure.\n\n
+We use encryption and secure storage methods to protect your data. However, no system is 100%% secure.\n\n
 6. Your Rights\n
 You can:\n
 Access and edit your profile at any time.\n
 Request deletion of your data by contacting us at [your support email].\n\n
 7. Policy Updates\n
-We may revise this policy from time to time. You will be notified of significant changes.\n</string>
+We may revise this policy from time to time. You will be notified of significant changes.\n
+</string>
 
 </resources>
