@@ -148,6 +148,7 @@ fun TopSection(
     showTitle: Boolean,
     isKeyboardVisible: Boolean,
 ) {
+    Spacer(modifier = Modifier.height(68.dp))
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -170,9 +171,7 @@ fun TopSection(
                 Text(
                     text = stringResource(R.string.welcome_to_san3a),
                     color = Theme.colors.background.card,
-                    style = if (isKeyboardVisible)
-                        Theme.textStyle.title.small else
-                        Theme.textStyle.title.medium
+                    style = Theme.textStyle.title.large
                 )
             }
         }
