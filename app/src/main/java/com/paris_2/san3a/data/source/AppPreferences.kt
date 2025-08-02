@@ -16,11 +16,16 @@ class AppPreferences(context: Context) {
         prefs.edit { putString(PHONE_NUMBER, phoneNumber) }
     }
 
-    fun isPhoneNumberSaved(): Boolean = !prefs.getString(PHONE_NUMBER, null).isNullOrEmpty()
+    fun setLoggedIn(isLoggedIn: Boolean) {
+        prefs.edit { putBoolean(KEY_USER_LOGGED_IN, isLoggedIn) }
+    }
+
+    fun isLoggedIn(): Boolean = prefs.getBoolean(KEY_USER_LOGGED_IN, false)
 
     companion object {
         private const val PREFS_NAME = "app_prefs"
         private const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
         private const val PHONE_NUMBER = "phone_number"
+        private const val KEY_USER_LOGGED_IN = "user_logged_in"
     }
 }
