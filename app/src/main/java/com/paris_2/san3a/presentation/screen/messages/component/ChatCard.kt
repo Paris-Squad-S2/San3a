@@ -46,7 +46,7 @@ fun ChatCard(
     name: String,
     imageUrl: String,
     lastMessage: String,
-    unreadMessagesCount: Int,
+    unreadMessagesCount: Int = 0,
     dateTime: String,
     isCurrentUserSendLastMessage: Boolean,
 ) {
