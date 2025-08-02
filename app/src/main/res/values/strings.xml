@@ -37,4 +37,9 @@
     <string name="resend_code">Resend Code</string>
     <string name="otp_code_is_incorrect">OTP code is incorrect</string>
     <string name="occurred_an_error_for_sending_otp">occurred an error for sending otp</string>
+    <string name="some_error_happened">some error happened</string>
+    <string name="no_internet_connection">no internet connection</string>
+    <string name="oops_no_internet">Oops! No Internet</string>
+    <string name="please_check_your_connection_and_try_again_we_ll_keep_trying_in_the_background">Please check your connection and try again. We\'ll keep trying in the background.</string>
+    <string name="try_again">Try Again</string>
 </resources>
