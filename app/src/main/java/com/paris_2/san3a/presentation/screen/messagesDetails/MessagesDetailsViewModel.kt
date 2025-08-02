@@ -8,7 +8,6 @@ import com.paris_2.san3a.domain.usecase.DeleteChatByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.SendMessageUseCase
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.delay
 
 class MessagesDetailsViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
@@ -33,7 +32,7 @@ class MessagesDetailsViewModel(
                         isLoading = true
                     )
                 )
-                getMessagesByChatIdUseCase("4SIGv3zmkMKwtO0BeQgN")
+                getMessagesByChatIdUseCase(chatId)
             },
             onSuccess = { flowMessages ->
                 flowMessages.collect { messages ->
