@@ -13,6 +13,6 @@ fun StatesDto.toStates(): States {
 
 fun CitiesDto.toCities(): Cities {
     return Cities(
-        names = this.cities ?: emptyList()
+        names = this.data ?: emptyList()
     )
 }

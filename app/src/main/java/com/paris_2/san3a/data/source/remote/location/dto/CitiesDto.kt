@@ -1,15 +1,12 @@
 package com.paris_2.san3a.data.source.remote.location.dto
 
+import com.google.gson.annotations.SerializedName
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class CitiesDto(
-    @SerialName("data")
-    val cities: List<String>? = null,
-    @SerialName("error")
+class CitiesDto(
+    @SerializedName("data")
+    val data: List<String>? = null,
+    @SerializedName("error")
     val error: Boolean? = null,
-    @SerialName("msg")
-    val msg: String? = null
+    @SerializedName("msg")
+    val msg: String? = null,
 )
