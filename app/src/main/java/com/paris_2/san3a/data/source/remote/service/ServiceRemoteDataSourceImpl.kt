@@ -47,22 +47,29 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
-    override  fun getMostRequestedServices(userId:String): Flow<List<RequestServiceDto>> {
+    override fun getMostRequestedServices(): Flow<List<ServiceDto>> {
         return fireStoreService.streamCollection(
             path = SERVICE_REQUESTS_COLLECTION,
-            fromJson = RequestServiceDto::fromJson,
+            fromJson = ServiceDto::fromJson,
             limit = null,
             queryBuilder = { collection ->
                 collection
-                    .whereEqualTo("userId", userId)
-                    .whereGreaterThan("requestedCount", 0)
-                    .orderBy("requestedCount", Query.Direction.DESCENDING)
+                    .whereGreaterThan(NUMBER_OF_REQUESTS_FIELD, 0)
+                    .orderBy(NUMBER_OF_REQUESTS_FIELD, Query.Direction.DESCENDING)
             }
+        )
+    }
+
+    override fun getAvailableJobs(): Flow<List<RequestServiceDto>> {
+        return fireStoreService.streamCollection(
+            path = SERVICE_REQUESTS_COLLECTION,
+            fromJson = RequestServiceDto::fromJson,
         )
     }
 
     companion object {
         const val SERVICES_COLLECTION = "services"
         const val SERVICE_REQUESTS_COLLECTION = "service_requests"
+        const val NUMBER_OF_REQUESTS_FIELD = "numberOfRequests"
     }
 }
