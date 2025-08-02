@@ -34,6 +34,7 @@ fun StepThreeCustomerContent(
     onGetLocationClicked: () -> Unit = {},
     isBottomSheetShowed: Boolean = false,
     onDismissRequest: () -> Unit = {},
+    governments: List<String>,
 ) {
     val address by remember { mutableStateOf("Ahmed") }
     val addressInDetail by remember { mutableStateOf("") }
@@ -76,7 +77,7 @@ fun StepThreeCustomerContent(
             placeholder = "Enter your location in details",
         )
         GovernmentBottomSheet(
-            governments = listOf("Cairo", "Giza"),
+            governments = governments,
             isVisible = isBottomSheetShowed,
             onDismissRequest = onDismissRequest
         )
@@ -131,6 +132,8 @@ fun StepThreeCraftsmanContent(modifier: Modifier = Modifier) {
 @Composable
 private fun StepThreeCraftsmanContentPreview() {
     BasePreview {
-        StepThreeCustomerContent()
+        StepThreeCustomerContent(
+            governments = listOf<String>("Cairo")
+        )
     }
 }

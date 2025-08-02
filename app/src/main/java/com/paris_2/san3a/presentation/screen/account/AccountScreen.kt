@@ -115,7 +115,8 @@ fun AccountScreenContent(
                     modifier = Modifier.padding(vertical = 32.dp),
                     onGetLocationClicked = onBottomSheetVisibility,
                     isBottomSheetShowed = uiState.accountUiState.isBottomSheetShowed,
-                    onDismissRequest = onDismissRequest
+                    onDismissRequest = onDismissRequest,
+                    governments = uiState.accountUiState.governments
                 )
 
                 UserType.CRAFTSMAN -> StepThreeCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))

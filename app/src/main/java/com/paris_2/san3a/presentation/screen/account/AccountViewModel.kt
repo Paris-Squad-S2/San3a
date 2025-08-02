@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.account
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.viewModelScope
@@ -17,6 +18,10 @@ class AccountViewModel(
 
     val progress: Float
         get() = (_currentScreen.intValue + 1) / stepsCount.toFloat()
+
+    init {
+        getGovernments()
+    }
 
     fun updateUserType(type: UserType) {
         val updatedUiState = screenState.value.copy(
@@ -104,6 +109,7 @@ class AccountViewModel(
     fun getGovernments() {
         viewModelScope.launch {
             val governments = getCurrentLocatedUseCase.getGovernments(countryName = "Egypt")
+            Log.d("TAG", "getGovernments: ")
             updateState(
                 screenState.value.copy(
                     accountUiState = screenState.value.accountUiState.copy(
