@@ -24,7 +24,7 @@ fun VerifyIdentityContent(
     onFrontOfNationalIdUploadClick: () -> Unit,
     onBackOfNationalIdUploadClick: () -> Unit,
     frontOfNationalIdUri: Uri? = null,
-    backOfNationalIdUri: Uri? = null
+    backOfNationalIdUri: Uri? = null,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),

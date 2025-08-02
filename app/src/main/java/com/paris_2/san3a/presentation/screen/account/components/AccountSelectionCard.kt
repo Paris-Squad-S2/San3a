@@ -92,7 +92,7 @@ private fun AccountSelectionCardSelectedPreview() {
             title = "title",
             caption = "caption",
             userImage = painterResource(id = R.drawable.customer),
-            onClick = { isSelected = !isSelected}
+            onClick = { isSelected = !isSelected }
         )
     }
 }

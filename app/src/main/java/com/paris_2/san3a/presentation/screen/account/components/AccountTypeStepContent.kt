@@ -16,7 +16,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 fun AccountTypeContent(
     selectedType: UserType?,
     onUserTypeSelected: (UserType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -39,6 +39,7 @@ fun AccountTypeContent(
         )
     }
 }
+
 @Preview
 @Composable
 private fun StepOneContentPreview() {

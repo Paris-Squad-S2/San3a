@@ -20,9 +20,10 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun ServicesContent(
     services: List<ServiceUiState>,
     onChipClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val selectedColors = remember { mutableStateMapOf<String, androidx.compose.ui.graphics.Color>() }
+    val selectedColors =
+        remember { mutableStateMapOf<String, androidx.compose.ui.graphics.Color>() }
 
     val primaryColors = listOf(
         Theme.colors.additional.primary.error,

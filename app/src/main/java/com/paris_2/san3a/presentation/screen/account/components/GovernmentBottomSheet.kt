@@ -80,8 +80,8 @@ fun GovernmentItem(modifier: Modifier = Modifier, title: String, onClick: (Strin
             .padding(vertical = 4.dp)
             .clickable(
                 enabled = true, onClick = {
-                onClick(title)
-            }, interactionSource = remember { MutableInteractionSource() }, indication = null
+                    onClick(title)
+                }, interactionSource = remember { MutableInteractionSource() }, indication = null
             ),
         colors = CardDefaults.cardColors(containerColor = Theme.colors.background.bottomSheetCard)
     ) {

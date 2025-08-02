@@ -23,7 +23,7 @@ fun ProfileContent(
     name: String,
     onNameChanged: (String) -> Unit,
     onAddPhotoClick: () -> Unit,
-    profilePhotoUri: Uri?
+    profilePhotoUri: Uri?,
 ) {
 
     Column(
