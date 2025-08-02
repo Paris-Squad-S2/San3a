@@ -28,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -46,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -140,14 +143,6 @@ fun RegisterScreenContent(
                         size = AppButtonSize.Large,
                         text = stringResource(R.string.Continue),
                     )
-
-                    if (!isKeyboardVisible) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        GuestButtonSection(registerInteractionListener)
-                        Spacer(modifier = Modifier.padding(bottom = 24.dp))
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
@@ -184,6 +179,7 @@ fun TopSection(
     isKeyboardVisible: Boolean,
 ) {
     Spacer(modifier = Modifier.height(68.dp))
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -191,23 +187,27 @@ fun TopSection(
             .background(Theme.colors.brand.primary),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_logo_white_background),
-                contentDescription = "Register Background",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.size(logoSize)
-            )
-
-            if (showTitle) {
-                Spacer(modifier = Modifier.height(if (isKeyboardVisible) 8.dp else 16.dp))
-                Text(
-                    text = stringResource(R.string.welcome_to_san3a),
-                    color = Theme.colors.background.card,
-                    style = Theme.textStyle.title.large
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_logo_white_background),
+                    contentDescription = "Register Background",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.size(logoSize)
                 )
+
+                if (showTitle) {
+                    Spacer(modifier = Modifier.height(if (isKeyboardVisible) 8.dp else 16.dp))
+                    Text(
+                        text = stringResource(R.string.welcome_to_san3a),
+                        color = Theme.colors.background.card,
+                        style = Theme.textStyle.title.large
+                    )
+                }
             }
         }
     }
@@ -369,25 +369,6 @@ fun TermsAndConditionsText(
     )
 }
 
-@Composable
-fun GuestButtonSection(interactionListener: RegisterInteractionListener) {
-    Text(
-        stringResource(R.string.or),
-        style = Theme.textStyle.body.medium.regular,
-        color = Theme.colors.shade.secondary
-    )
-
-    Spacer(modifier = Modifier.height(14.dp))
-
-    AppButton(
-        type = AppButtonType.Secondary,
-        state = AppButtonState.Enable,
-        onClick = interactionListener::onClickContinueAsGuest,
-        modifier = Modifier.fillMaxWidth(),
-        size = AppButtonSize.Large,
-        text = stringResource(R.string.continue_as_a_guest),
-    )
-}
 
 @Preview(showBackground = false, showSystemUi = true)
 @Composable
