@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class AccountViewModel(
     private val getCurrentLocatedUseCase: GetCurrentLocatedUseCase,
     private val getAllServicesUseCase: GetAllServicesUseCase,
-    private val setUpAccountUseCase: SetUpAccountUseCase
+    private val setUpAccountUseCase: SetUpAccountUseCase,
 ) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
 
     private val _currentScreen = mutableIntStateOf(0)
@@ -80,7 +80,8 @@ class AccountViewModel(
             ServiceUiState(
                 id = it.id,
                 serviceTitle = it.title[currentLocale] ?: it.title.values.firstOrNull() ?: "",
-                serviceDescription = it.description[currentLocale] ?: it.description.values.firstOrNull() ?: "",
+                serviceDescription = it.description[currentLocale]
+                    ?: it.description.values.firstOrNull() ?: "",
                 isSelected = false
             )
         }
@@ -208,7 +209,8 @@ class AccountViewModel(
 
                         2 -> {
                             val fullName = screenState.value.accountUiState.customerName
-                            val profilePhotoUri = screenState.value.accountUiState.customerProfilePhotoUri
+                            val profilePhotoUri =
+                                screenState.value.accountUiState.customerProfilePhotoUri
                             setUpAccountUseCase.savePersonalInfo(
                                 phoneNumber,
                                 fullName,
@@ -420,6 +422,18 @@ class AccountViewModel(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
                     isCitiesBottomSheetShowed = false
+                )
+            )
+        )
+    }
+
+    override fun onAddressDetailsChanged(addressDetails: String) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    locationUiState = screenState.value.accountUiState.locationUiState.copy(
+                        addressInDetails = addressDetails
+                    )
                 )
             )
         )

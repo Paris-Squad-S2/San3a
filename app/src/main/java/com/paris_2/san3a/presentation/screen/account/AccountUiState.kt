@@ -21,9 +21,9 @@ data class AccountUiState(
     val isCitiesBottomSheetShowed: Boolean = false,
     val customerName: String = "",
     val customerProfilePhotoUri: Uri? = null,
-    val frontOfNationalIdUri : Uri? = null,
-    val backOfNationalIdUri : Uri? = null,
-    val workImagesUris : List<Uri>? = null,
+    val frontOfNationalIdUri: Uri? = null,
+    val backOfNationalIdUri: Uri? = null,
+    val workImagesUris: List<Uri>? = null,
     val workDescription: String = "",
 )
 
@@ -37,6 +37,7 @@ data class ServiceUiState(
 data class LocationUiState(
     val government: String = "",
     val city: String = "",
+    val addressInDetails: String = "",
 )
 
 fun LocationUiState.toEntity(): Location {

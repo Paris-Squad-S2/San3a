@@ -114,10 +114,10 @@ fun AccountScreenContent(
     textButton: String,
     currentScreen: Int,
     progress: Float,
-    onCustomerProfilePhotoClick : () -> Unit,
-    onFrontNationalIdClick : () -> Unit,
-    onBackNationalIdClick : () -> Unit,
-    onWorkImageClick : () -> Unit,
+    onCustomerProfilePhotoClick: () -> Unit,
+    onFrontNationalIdClick: () -> Unit,
+    onBackNationalIdClick: () -> Unit,
+    onWorkImageClick: () -> Unit,
     interactionListener: AccountInteractionListener,
     uiState: AccountScreenUiState,
     modifier: Modifier = Modifier,
@@ -170,7 +170,7 @@ fun AccountScreenContent(
                 modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
                 name = uiState.accountUiState.customerName,
                 onNameChanged = interactionListener::onCustomerNameChanged,
-                onAddPhotoClick =onCustomerProfilePhotoClick,
+                onAddPhotoClick = onCustomerProfilePhotoClick,
                 profilePhotoUri = uiState.accountUiState.customerProfilePhotoUri
             )
 
@@ -187,7 +187,9 @@ fun AccountScreenContent(
                     onCitiesSelected = interactionListener::onCitiesSelected,
                     cities = uiState.accountUiState.cities,
                     government = uiState.accountUiState.locationUiState.government,
-                    city = uiState.accountUiState.locationUiState.city
+                    city = uiState.accountUiState.locationUiState.city,
+                    addressInDetails = uiState.accountUiState.locationUiState.addressInDetails,
+                    onAddressDetailsChange = interactionListener::onAddressDetailsChanged
                 )
 
                 UserType.CRAFTSMAN -> ShowYourWorkContent(
@@ -197,6 +199,7 @@ fun AccountScreenContent(
                     workDescription = uiState.accountUiState.workDescription,
                     onDescriptionChanged = interactionListener::onDescriptionChanged
                 )
+
                 else -> {}
             }
 
@@ -211,6 +214,7 @@ fun AccountScreenContent(
                     uiState.accountUiState.frontOfNationalIdUri,
                     uiState.accountUiState.backOfNationalIdUri
                 )
+
                 else -> {}
             }
         }
@@ -223,7 +227,6 @@ fun AccountScreenContent(
         )
     }
 }
-
 
 
 /*

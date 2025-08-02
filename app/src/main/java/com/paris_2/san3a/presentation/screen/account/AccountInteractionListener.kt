@@ -12,4 +12,5 @@ interface AccountInteractionListener {
     fun onGovernmentBottomSheetVisibilityToggled()
     fun onGovernmentBottomSheetDismissed()
     fun onCitiesBottomSheetDismissed()
+    fun onAddressDetailsChanged(addressDetails: String)
 }
