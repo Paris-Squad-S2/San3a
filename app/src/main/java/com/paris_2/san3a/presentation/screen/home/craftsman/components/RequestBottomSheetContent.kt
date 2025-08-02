@@ -22,10 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.screen.onboarding.sections.TextSection
 import com.paris_2.san3a.presentation.shared.components.ProgressBar
 import com.paris_2.san3a.presentation.shared.components.RequestTitleContent
-import com.paris_2.san3a.presentation.shared.designSystem.color.Button
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
@@ -33,15 +31,14 @@ fun RequestBottomSheetContent(
     title: String,
     icon: Int,
     color: Color,
-    description: String,
+    subTitle: String,
     step: Int,
-    buttonTitle: String = "Next",
-    buttonIsActive: Boolean = true,
-    buttonBack: Boolean = false,
-    onClickBack: () -> Unit = {},
+    buttonTitle: String ,
+    modifier: Modifier = Modifier,
+    buttonIsActive: Boolean = false,
+    onClickBack: (() -> Unit)? = null,
     onButtonClick: () -> Unit,
     onExitClick: () -> Unit,
-    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Box(
@@ -65,7 +62,7 @@ fun RequestBottomSheetContent(
                 )
             }
             Text(
-                text = description,
+                text = subTitle,
                 style = Theme.textStyle.title.small,
                 color = Theme.colors.shade.primary,
                 modifier = Modifier.padding(top = 8.dp)
@@ -74,22 +71,24 @@ fun RequestBottomSheetContent(
             Row(modifier = Modifier
                 .padding(top = 24.dp)
             ){
-                Box(
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(Theme.radius.full))
-                        .background(
-                            Theme.colors.background.bottomSheetCard
-                        )
-                        .clickable { onClickBack() }
-                ){
-                    Icon(
-                        painter = painterResource(R.drawable.ic_alt_arrow_left_outline),
-                        contentDescription = null,
+                if (onClickBack != null) {
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.Center)
-                    )
+                            .padding(end = 16.dp)
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(Theme.radius.full))
+                            .background(
+                                Theme.colors.background.bottomSheetCard
+                            )
+                            .clickable { onClickBack() }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_alt_arrow_left_outline),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                        )
+                    }
                 }
                 Box(
                     modifier = Modifier
@@ -140,7 +139,8 @@ private fun Preview(){
         title = "Plumping Request",
         icon = R.drawable.ic_waterdrops_bold,
         color = Theme.colors.shade.primary,
-        description = "What do you need help with?",
+        subTitle = "What do you need help with?",
+        buttonTitle = "Next",
         onButtonClick = {},
         onExitClick = {},
         step = 1,
