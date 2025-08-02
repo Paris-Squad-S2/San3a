@@ -236,50 +236,52 @@ fun PhoneNumberInput(
         val dialCode = "+20"
         val numberOnly = phoneNumber.removePrefix(dialCode)
 
-        AppTextField(
-            value = numberOnly,
-            onValueChange = { newInput ->
-                val digitsOnly = newInput.filter { it.isDigit() }.take(10)
-                onPhoneNumberChanged(dialCode + digitsOnly)
-            },
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = "000 - 000 - 0000",
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            visualTransformation = PhoneNumberVisualTransformation(), // formats as 000-000-0000
-            leadingIcon = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .background(Theme.colors.background.card)
-                ) {
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Image(
-                        painter = painterResource(R.drawable.ic_eg_flag),
-                        contentDescription = "Egypt Flag",
-                        contentScale = ContentScale.Crop,
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            AppTextField(
+                value = numberOnly,
+                onValueChange = { newInput ->
+                    val digitsOnly = newInput.filter { it.isDigit() }.take(10)
+                    onPhoneNumberChanged(dialCode + digitsOnly)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = "000 - 000 - 0000",
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                visualTransformation = PhoneNumberVisualTransformation(),
+                leadingIcon = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .width(20.dp)
-                            .height(15.dp)
-                            .clip(RoundedCornerShape(3.dp))
-                    )
-                    Spacer(modifier = Modifier.width(14.dp))
-                    Divider(
-                        color = Theme.colors.stroke.primary,
-                        modifier = Modifier
-                            .height(24.dp)
-                            .width(1.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+                            .padding(start = 8.dp)
+                            .background(Theme.colors.background.card)
+                    ) {
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Image(
+                            painter = painterResource(R.drawable.ic_eg_flag),
+                            contentDescription = "Egypt Flag",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .width(20.dp)
+                                .height(15.dp)
+                                .clip(RoundedCornerShape(3.dp))
+                        )
+                        Spacer(modifier = Modifier.width(14.dp))
+                        Divider(
+                            color = Theme.colors.stroke.primary,
+                            modifier = Modifier
+                                .height(24.dp)
+                                .width(1.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
 
-                    Text(
-                        text = dialCode,
-                        color = Theme.colors.shade.primary,
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
+                        Text(
+                            text = dialCode,
+                            color = Theme.colors.shade.primary,
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
                 }
-            }
-        )
+            )
+        }
 
 
     }
