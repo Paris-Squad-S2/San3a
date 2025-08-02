@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,7 +10,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -19,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.MostRequestedServices
 import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.presentation.screen.home.customer.component.CustomerBottomSheetService
 import com.paris_2.san3a.presentation.screen.home.customer.component.MostRequestedServices
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.screen.home.utils.getResourceColors
@@ -48,6 +52,18 @@ private fun CustomerHomeScreenContent(
     action : CustomerHomeInteractionListener
 ) {
     val isArabic = remember { Locale.getDefault().language == "ar" }
+    var title by remember { mutableStateOf("") }
+    var serviceId by remember { mutableStateOf("") }
+    if (state.bottomSheetState){
+        CustomerBottomSheetService(
+            title = title,
+            icon = getResource(serviceId),
+            isVisible = true,
+            onExitClick = {
+                action.onDismissBottomSheet()
+            }
+        )
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -103,6 +119,11 @@ private fun CustomerHomeScreenContent(
                     painter = painterResource(getResource(service.id)),
                     modifier = Modifier
                         .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
+                        .clickable{
+                            action.onServiceClick(service.id)
+                            title = service.title[if (isArabic) "arabicName" else "englishName"] ?: ""
+                            serviceId = service.id
+                        }
                 )
             }
 
@@ -232,6 +253,7 @@ fun PreviewHomeScreen() {
 
 
             override fun onBecomeCraftsmanClick() {}
+            override fun onDismissBottomSheet() {}
         }
     )
 }

@@ -7,6 +7,7 @@ data class CustomerHomeUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val customerUiState: CustomerUiState = CustomerUiState(),
+    val bottomSheetState: Boolean = false
 )
 
 data class CustomerUiState(
