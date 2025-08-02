@@ -8,6 +8,6 @@ interface ServiceRemoteDataSource {
     fun getAllServices(): Flow<List<ServiceDto>>
     suspend fun requestService(requestedServiceDto: RequestServiceDto)
     fun searchServices(query: String): Flow<List<ServiceDto>>
-    fun getMostRequestedServices(): Flow<List<ServiceDto>>
+    fun getMostRequestedServices(): Flow<List<RequestServiceDto>>
     fun getAvailableJobs(): Flow<List<RequestServiceDto>>
 }
