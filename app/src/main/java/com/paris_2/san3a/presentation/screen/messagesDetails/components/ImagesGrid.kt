@@ -13,10 +13,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
-fun ImagesGrid(images: List<Painter>) {
+fun ImagesGrid(images: List<String>) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 124.dp),
         modifier = Modifier.padding(12.dp),
@@ -24,8 +25,8 @@ fun ImagesGrid(images: List<Painter>) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(images.size) { index ->
-            Image(
-                painter = images[index],
+            AsyncImage(
+                model = images[index],
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

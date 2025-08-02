@@ -20,7 +20,7 @@ fun MessageBubble(
     time: String?,
     isReceived: Boolean,
     isSeen: Boolean?,
-    images: List<Painter>
+    images: List<String>
 ) {
     Column(
         modifier = Modifier

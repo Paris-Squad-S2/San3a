@@ -13,7 +13,7 @@ fun MessageContent(
     time: String?,
     isReceived: Boolean,
     isSeen: Boolean?,
-    images: List<Painter>,
+    images: List<String>,
     onPlayClick: (() -> Unit)?,
     recordWave: List<Float>,
     listenRatio: Float,
