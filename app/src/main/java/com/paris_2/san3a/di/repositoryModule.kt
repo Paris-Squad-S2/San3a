@@ -15,6 +15,8 @@ import com.paris_2.san3a.domain.repository.OnboardingRepository
 import com.paris_2.san3a.domain.repository.UserRepository
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import com.paris_2.san3a.domain.repository.OnboardingRepository
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -22,7 +24,7 @@ val repositoryModule = module {
     singleOf(::ChatRepositoryImpl) { bind<ChatRepository>() }
     singleOf(::UserRepositoryImp) { bind<UserRepository>() }
     singleOf(::OnboardingRepositoryImpl) { bind<OnboardingRepository>() }
-    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
-    single { NetworkConnectionChecker(get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(),get(),get()) }
+    single { NetworkConnectionChecker(androidApplication().applicationContext) }}
     singleOf(::LocationRepositoryImp) { bind<LocationRepository>() }
 }
