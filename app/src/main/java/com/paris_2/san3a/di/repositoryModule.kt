@@ -7,6 +7,8 @@ import com.paris_2.san3a.data.repository.ChatRepositoryImpl
 import com.paris_2.san3a.data.repository.MessageRepositoryImpl
 import com.paris_2.san3a.data.repository.UserRepositoryImp
 import com.paris_2.san3a.data.repository.OnboardingRepositoryImpl
+import com.paris_2.san3a.data.source.remote.location.LocationRemoteDataSource
+import com.paris_2.san3a.data.source.remote.location.LocationRemoteDataSourceImp
 import com.paris_2.san3a.domain.repository.ChatRepository
 import com.paris_2.san3a.domain.repository.MessageRepository
 import com.paris_2.san3a.domain.repository.UserRepository
@@ -22,4 +24,5 @@ val repositoryModule = module {
     singleOf(::OnboardingRepositoryImpl) { bind<OnboardingRepository>() }
     single<AuthRepository> { AuthRepositoryImpl(get(),get(),get()) }
     single { NetworkConnectionChecker(get()) }
+    singleOf(::LocationRemoteDataSourceImp) { bind<LocationRemoteDataSource>() }
 }
