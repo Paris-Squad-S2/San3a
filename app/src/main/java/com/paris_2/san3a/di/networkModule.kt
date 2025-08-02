@@ -1,5 +1,6 @@
 package com.paris_2.san3a.di
 
+import com.paris_2.san3a.BuildConfig
 import com.paris_2.san3a.data.service.auth.AuthApiServices
 import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named

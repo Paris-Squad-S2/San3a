@@ -11,25 +11,29 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.screen.account.AccountScreenUiState
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
-fun StepThreeCustomerContent(modifier: Modifier = Modifier) {
+fun StepThreeCustomerContent(
+    modifier: Modifier = Modifier,
+    uiState: AccountScreenUiState,
+) {
     Column(
         modifier = modifier
     ) {
-         Text(
-             "location"
-         )
+        Text(
+            "location"
+        )
     }
 
 }
+
 
 @Composable
 fun StepThreeCraftsmanContent(modifier: Modifier = Modifier) {
@@ -57,12 +61,13 @@ fun StepThreeCraftsmanContent(modifier: Modifier = Modifier) {
                 color = Theme.colors.shade.secondary
             )
         }
-        Row (
-            modifier = Modifier.fillMaxWidth()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
                 .border(1.dp, Theme.colors.stroke.primary, RoundedCornerShape(Theme.radius.large))
                 .background(Theme.colors.background.card, RoundedCornerShape(Theme.radius.large))
-                .padding(start = 16.dp, top = 16.dp , end = 16.dp, bottom = 32.dp),
-        ){
+                .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 32.dp),
+        ) {
             Text(
                 text = "You can mention your years of experience, tools you use, or types of jobs you usually handle.",
                 style = Theme.textStyle.body.medium.regular,
@@ -71,6 +76,7 @@ fun StepThreeCraftsmanContent(modifier: Modifier = Modifier) {
         }
     }
 }
+
 @Preview
 @Composable
 private fun StepThreeCraftsmanContentPreview() {
