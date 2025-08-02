@@ -10,6 +10,7 @@ data class RequestServiceDto(
     val relatedJob: String,
     val offers: List<Double>,
     val userId: String,
+    val requestedCount: Int = 0
 ) {
     companion object {
         fun fromJson(data: Map<String, Any>, id: String): RequestServiceDto {
@@ -21,7 +22,8 @@ data class RequestServiceDto(
                 relatedJob = data["relatedJob"] as? String ?: "",
                 offers = (data["offers"] as? List<*>)
                     ?.mapNotNull { (it as? Number)?.toDouble() } ?: emptyList(),
-                userId = data["userId"] as? String ?: ""
+                userId = data["userId"] as? String ?: "",
+                requestedCount = (data["requestedCount"] as? Long)?.toInt() ?: 0
             )
         }
     }
