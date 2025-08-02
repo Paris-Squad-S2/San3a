@@ -13,10 +13,6 @@ class NetworkConnectionChecker(private val context: Context) {
     private val _isConnected = MutableStateFlow(false)
     val isConnected: StateFlow<Boolean> = _isConnected
 
-    init {
-        startChecker()
-    }
-
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             _isConnected.value = true
@@ -28,7 +24,7 @@ class NetworkConnectionChecker(private val context: Context) {
     }
 
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-    private fun startChecker() {
+    fun startChecker() {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetwork
         val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
