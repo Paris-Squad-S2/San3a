@@ -33,7 +33,7 @@ class UserRemoteDataSourceImp(
         val servicesData = services.map {
             mapOf(
                 "id" to it.id,
-                "title" to it.title,
+                "name" to it.title,
                 "description" to it.description
             )
         }
