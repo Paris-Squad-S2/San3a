@@ -68,7 +68,6 @@ fun RegisterBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
         ) {
             if(isErrorMessage) {
                 Image(
