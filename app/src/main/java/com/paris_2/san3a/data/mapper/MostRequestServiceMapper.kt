@@ -8,7 +8,6 @@ fun RequestServiceDto.toMostRequestedServices(): MostRequestedServices {
         id = id,
         title = title,
         description = description,
-        userId = userId,
         requestedCount = requestedCount
     )
 }
