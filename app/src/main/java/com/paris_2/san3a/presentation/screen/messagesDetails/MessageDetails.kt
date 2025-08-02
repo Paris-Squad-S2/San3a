@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.screen.messagesDetails.components.DeleteChatBottomSheet
 import com.paris_2.san3a.presentation.screen.messagesDetails.components.Message
 import com.paris_2.san3a.presentation.screen.messagesDetails.components.MessageTextField
 import com.paris_2.san3a.presentation.shared.components.AppBar
@@ -179,13 +180,13 @@ fun MessageDetailsContent(
                         onClick = messageInteractionListener::onDropMenuItemClick
                     )
                 }
-//                 Todo(edit bottom sheet)
-//                DeleteChatBottomSheet(
-//                    onDismissRequest = viewModel::onDismissDeleteBottomSheet,
-//                    onDeleteChat = viewModel::onDeleteButtonClick,
-//                    buttonState = AppButtonState.Disabled,
-//                    isVisible = state.showDeleteChatBottomSheet
-//                )
+                if (state.showDeleteChatBottomSheet) {
+                    DeleteChatBottomSheet(
+                        onDismissRequest = viewModel::onDismissDeleteBottomSheet,
+                        onDeleteChat = viewModel::onDeleteButtonClick,
+                        buttonState = state.bottomSheetButtonState,
+                    )
+                }
             }
         }
     }

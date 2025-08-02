@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.messagesDetails
 
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 
 data class MessageDetailsUiState(
     val textMessage: String = "",
@@ -9,6 +10,7 @@ data class MessageDetailsUiState(
     val chatTitle: String = "",
     val showDropMenu: Boolean = false,
     val showDeleteChatBottomSheet: Boolean = false,
+    val bottomSheetButtonState: AppButtonState = AppButtonState.Enable,
     val errorMessage: String? = null,
     val isLoading:Boolean = false,
 )

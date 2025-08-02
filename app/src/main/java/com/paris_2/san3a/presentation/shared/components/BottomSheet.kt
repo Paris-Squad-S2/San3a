@@ -44,7 +44,7 @@ fun BottomSheet(
     }
 
     ModalBottomSheet(
-        onDismissRequest = { onDismissRequest },
+        onDismissRequest = onDismissRequest,
         modifier = modifier
             .fillMaxWidth(),
         sheetState = sheetState,

@@ -2,11 +2,13 @@ package com.paris_2.san3a.presentation.screen.messagesDetails
 
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
 import com.paris_2.san3a.domain.usecase.DeleteChatByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.SendMessageUseCase
+import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class MessagesDetailsViewModel(
@@ -18,7 +20,7 @@ class MessagesDetailsViewModel(
     MessageDetailsUiState()
 ) {
 
-    val chatId by lazy { savedStateHandle.get<String>("chatId") ?: "" }
+    val chatId = savedStateHandle.toRoute<Destinations.MessageDetails>().chatId
 
     init {
         loadMessages(chatId)

@@ -77,4 +77,5 @@
     <string name="voice_icon">voice icon</string>
     <string name="send_icon">send icon</string>
     <string name="you">You: </string>
+    <string name="delete_chat_icon">delete chat icon</string>
 </resources>
