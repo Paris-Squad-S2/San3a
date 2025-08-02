@@ -80,7 +80,7 @@ fun RegisterBottomSheet(
             item {
                 if (isErrorMessage) {
                     Image(
-                        painter = painterResource(R.drawable.placeholder_lllustration),
+                        painter = painterResource(R.drawable.img_placeholder_lllustration),
                         contentDescription = null,
                         modifier = Modifier.size(120.dp)
                     )
