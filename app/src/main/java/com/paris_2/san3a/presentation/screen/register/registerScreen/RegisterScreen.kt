@@ -294,7 +294,7 @@ fun TermsAndConditionsText(
 ) {
     Spacer(modifier = Modifier.height(8.dp))
 
-    val termsText = stringResource(R.string.terms_and_conditions)
+    val termsText = stringResource(R.string.terms_conditions)
     val privacyText = stringResource(R.string.privacy_policy)
     val prefixText = stringResource(R.string.by_continuing_you_agree_on_our)
     val andText = stringResource(R.string.and)
