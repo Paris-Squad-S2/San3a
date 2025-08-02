@@ -21,8 +21,9 @@ class OnBoardingViewModel(
                 updateState(screenState.value.copy(isCompleted = true))
                 navigateToHome()
             },
-            onError = { message ->
-                updateState(screenState.value.copy(error = message))
+
+            onError = { exception ->
+                updateState(screenState.value.copy(error = exception.message))
             },
         )
     }

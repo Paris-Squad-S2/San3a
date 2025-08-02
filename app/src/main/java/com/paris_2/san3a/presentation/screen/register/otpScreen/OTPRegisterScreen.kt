@@ -2,6 +2,10 @@ package com.paris_2.san3a.presentation.screen.register.otpScreen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,15 +30,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.screen.common.LoadingScreen
-import com.paris_2.san3a.presentation.screen.common.NoInternetScreen
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
+import com.paris_2.san3a.presentation.shared.components.LoadingScreen
+import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.OTPInputTextField
 import com.paris_2.san3a.presentation.shared.components.ProgressIndicator
+import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -60,21 +65,25 @@ private fun OTPRegisterScreenContent(
             .statusBarsPadding()
     ) {
         when {
-            otpRegisterScreenState.errorMessage != null -> {
-                NoInternetScreen(onClickRetry = otpRegisterListenerInteraction::onClickRetry)
+            otpRegisterScreenState.isNoInternet  -> {
+                LostConnectionScreen(
+                    onRetry = otpRegisterListenerInteraction::onClickRetry,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 60.dp)
+                )
             }
 
             otpRegisterScreenState.isLoading -> {
-                LoadingScreen()
+                LoadingScreen(
+                    modifier = Modifier.fillMaxSize()
+                )
             }
 
             else -> {
                 Column(
                     modifier = modifier
                         .fillMaxSize()
-                        .background(Theme.colors.background.screen)
-                        .statusBarsPadding()
-                        .navigationBarsPadding()
 
                 ) {
 
@@ -104,6 +113,22 @@ private fun OTPRegisterScreenContent(
                 }
             }
         }
+        AnimatedVisibility(
+            visible = otpRegisterScreenState.showSnackBar,
+            enter = fadeIn() + slideInVertically(),
+            exit = fadeOut() + slideOutVertically(),
+        ) {
+            SnackBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                    .align(Alignment.TopCenter),
+                text = otpRegisterScreenState.snackBarMessage ?: R.string.empty,
+                onClick = otpRegisterListenerInteraction::onHideSnackBar
+            )
+        }
+
     }
 
 }
@@ -241,6 +266,10 @@ private fun OTPRegisterScreenContentPreview() {
             }
 
             override fun onClickRetry() {
+
+            }
+
+            override fun onHideSnackBar() {
 
             }
         }

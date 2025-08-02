@@ -1,17 +1,18 @@
 package com.paris_2.san3a.presentation.screen.register.otpScreen
 
+import android.util.Log
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class OTPRegisterViewModel(
@@ -19,7 +20,8 @@ class OTPRegisterViewModel(
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
     private val setLoginUseCase: SetLoginUseCase,
     saveStateHandle: SavedStateHandle,
-) : BaseViewModel<OTPRegisterScreenState>(OTPRegisterScreenState()), OTPRegisterListenerInteraction{
+) : BaseViewModel<OTPRegisterScreenState>(OTPRegisterScreenState()),
+    OTPRegisterListenerInteraction {
 
     private val otp = generateOtp()
 
@@ -31,14 +33,13 @@ class OTPRegisterViewModel(
             )
         )
         sendOtpToPhoneNumber()
-        if (screenState.value.otpRegisterUiState.otp.count() == 5) {
-            verifyOTP()
-        }
+
     }
 
     private fun sendOtpToPhoneNumber() {
         updateState(
             screenState.value.copy(
+                isLoading = false,
                 otpRegisterUiState = screenState.value
                     .otpRegisterUiState
                     .copy(loadingVerifyButton = true)
@@ -61,7 +62,7 @@ class OTPRegisterViewModel(
         if (isSend) {
             updateState(
                 screenState.value.copy(
-                    errorMessage = null,
+                    isNoInternet = false,
                     otpRegisterUiState = screenState.value.otpRegisterUiState.copy(
                         verificationId = otp,
                         loadingVerifyButton = false
@@ -73,18 +74,23 @@ class OTPRegisterViewModel(
 
     }
 
-    private fun onSendOtpToPhoneNumberError(message: String) {
-        updateState(
-            screenState.value.copy(
-                isLoading = false,
-                errorMessage = null,
-                snackBarMessage = R.string.occurred_an_error_for_sending_otp,
-                showSnackBar = true,
-                otpRegisterUiState = screenState.value
-                    .otpRegisterUiState
-                    .copy(loadingVerifyButton = false)
+    private fun onSendOtpToPhoneNumberError(exception: Throwable) {
+        if(exception is NoInternetConnectionException){
+            updateState(
+                screenState.value.copy(isNoInternet = true)
             )
-        )
+        } else{
+            updateState(
+                screenState.value.copy(
+                    isLoading = false,
+                    snackBarMessage = R.string.occurred_an_error_for_sending_otp,
+                    showSnackBar = true,
+                    otpRegisterUiState = screenState.value
+                        .otpRegisterUiState
+                        .copy(loadingVerifyButton = false)
+                )
+            )
+        }
     }
 
     private fun updateSecondLeft() {
@@ -100,7 +106,6 @@ class OTPRegisterViewModel(
                 )
             )
             while (screenState.value.otpRegisterUiState.secondLeft > 0) {
-                delay(1000)
                 updateState(
                     screenState.value.copy(
                         otpRegisterUiState = screenState.value
@@ -127,37 +132,36 @@ class OTPRegisterViewModel(
     }
 
     override fun onClickVerify() {
-        verifyOTP()
-    }
-
-    private fun verifyOTP() {
         tryToExecute(
             execute = {
                 updateState(
                     screenState.value.copy(
                         isLoading = false,
-                        errorMessage = null,
-                        snackBarMessage = null,
                         otpRegisterUiState = screenState.value.otpRegisterUiState.copy(
                             loadingVerifyButton = true
                         )
                     )
                 )
-                delay(1000)
+
                 if (screenState.value.otpRegisterUiState.otp == screenState.value.otpRegisterUiState.verificationId) {
                     savePhoneNumberUseCase(screenState.value.otpRegisterUiState.phoneNumber)
-                    updateState(screenState.value.copy(
-                        otpRegisterUiState = screenState.value.otpRegisterUiState.copy(
-                            loadingVerifyButton = false
+                    updateState(
+                        screenState.value.copy(
+                            otpRegisterUiState = screenState.value.otpRegisterUiState.copy(
+                                loadingVerifyButton = false
+                            )
                         )
-                    ))
+                    )
                     setLoginUseCase(true)
                     navigate(Destinations.Home)
                 }
             },
             onError = { errorMessage ->
-                updateState(screenState.value.copy(
-                    snackBarMessage = R.string.otp_code_is_incorrect)
+                updateState(
+                    screenState.value.copy(
+                        snackBarMessage = R.string.otp_code_is_incorrect,
+                        showSnackBar = true
+                    )
                 )
             }
         )
@@ -175,7 +179,22 @@ class OTPRegisterViewModel(
     }
 
     override fun onClickRetry() {
-        updateState(screenState.value.copy(isLoading = true, errorMessage = null))
+        updateState(screenState.value.copy(
+            isLoading = true,
+            errorMessage = null,
+            isNoInternet = false
+        ))
+        sendOtpToPhoneNumber()
+
+    }
+
+    override fun onHideSnackBar() {
+        updateState(
+            screenState.value.copy(
+                showSnackBar = false,
+                snackBarMessage = null
+            )
+        )
     }
 
     fun generateOtp(): String = (10000..99999).random().toString()
