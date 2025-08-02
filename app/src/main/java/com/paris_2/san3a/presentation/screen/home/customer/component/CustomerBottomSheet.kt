@@ -27,6 +27,7 @@ fun CustomerBottomSheetService(
     icon: Int,
     onCreateRequestClick: () -> Unit = {},
     isVisible: Boolean,
+    onExitClick: () -> Unit = {}
 ){
     var currentStep by remember { mutableStateOf(BottomSheetStep.SELECT_SERVICE) }
     var serviceTextValue by remember { mutableStateOf("") }
@@ -47,7 +48,9 @@ fun CustomerBottomSheetService(
                     buttonTitle = "Next",
                     step = 1,
                     onButtonClick = {currentStep = BottomSheetStep.PROBLEM_DESCRIPTION},
-                    onExitClick = {},
+                    onExitClick = {
+                        onExitClick()
+                    },
                 ) {
                 RequestTitleContent(
                     value = serviceTextValue,
@@ -69,9 +72,11 @@ fun CustomerBottomSheetService(
                         subTitle = "Describe the problem in detail",
                         onButtonClick = {currentStep = BottomSheetStep.SELECT_LOCATION},
                         buttonTitle = "Next",
-                        onExitClick = {},
                         step = 2,
-                        onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE}
+                        onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE},
+                        onExitClick = {
+                            onExitClick()
+                        }
                     ) {
                         RequestDescriptionContent(
                             value = descriptionTextValue,
@@ -93,8 +98,10 @@ fun CustomerBottomSheetService(
                     buttonTitle = "Create Request",
                     step = 4,
                     onButtonClick = {onCreateRequestClick()},
-                    onExitClick = {},
-                    onClickBack = {currentStep = BottomSheetStep.SELECT_LOCATION}
+                    onClickBack = {currentStep = BottomSheetStep.SELECT_LOCATION},
+                    onExitClick = {
+                        onExitClick()
+                    }
                 ) {
                     AddPhotosContent(
                         icon = painterResource(id = R.drawable.ic_camera_outline),
