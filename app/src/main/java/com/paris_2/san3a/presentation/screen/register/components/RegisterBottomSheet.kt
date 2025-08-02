@@ -36,8 +36,8 @@ enum class BottomSheetType {
 fun RegisterBottomSheet(
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
-    headerText : String,
-    contentText : String,
+    headerText : String = "",
+    contentText : String = "",
     isErrorMessage : Boolean = false,
 ){
     BottomSheet(
@@ -95,7 +95,7 @@ fun RegisterBottomSheet(
                 )
             }
             AppButton(
-                type = AppButtonType.Secondary,
+                type = AppButtonType.Primary,
                 state = AppButtonState.Enable,
                 onClick = onCloseClick,
                 modifier = Modifier.fillMaxWidth(),
