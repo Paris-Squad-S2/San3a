@@ -75,7 +75,4 @@
     <string name="loading_icon">أيقونة التحميل</string>
     <string name="some_error_happened">حدث خطأ ما</string>
     <string name="no_internet_connection">الانترنت غير متوفر</string>
-    <string name="oops_no_internet">اوبس!، لا يوجد انترنت</string>
-    <string name="please_check_your_connection_and_try_again_we_ll_keep_trying_in_the_background">يرجى التحقق من اتصالك والمحاولة مرة أخرى. سنواصل المحاولة في الخلفية.</string>
-    <string name="try_again">اعد المحاولة</string>
 </resources>
