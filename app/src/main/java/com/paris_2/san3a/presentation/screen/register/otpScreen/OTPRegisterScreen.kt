@@ -2,10 +2,6 @@ package com.paris_2.san3a.presentation.screen.register.otpScreen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,9 +15,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.screen.register.components.RegisterBottomSheet
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
@@ -39,7 +41,6 @@ import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.OTPInputTextField
 import com.paris_2.san3a.presentation.shared.components.ProgressIndicator
-import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -50,6 +51,7 @@ fun OTPRegisterScreen(viewModel: OTPRegisterViewModel = koinViewModel()) {
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun OTPRegisterScreenContent(
     otpRegisterScreenState: OTPRegisterScreenState,
@@ -57,6 +59,8 @@ private fun OTPRegisterScreenContent(
     modifier: Modifier = Modifier
 ) {
 
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showBottomSheet by remember { mutableStateOf(false) }
     Box(
         Modifier
             .fillMaxSize()
@@ -113,22 +117,21 @@ private fun OTPRegisterScreenContent(
                 }
             }
         }
-        AnimatedVisibility(
-            visible = otpRegisterScreenState.showSnackBar,
-            enter = fadeIn() + slideInVertically(),
-            exit = fadeOut() + slideOutVertically(),
-        ) {
-            SnackBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding()
-                    .padding(start = 12.dp, end = 12.dp, top = 16.dp)
-                    .align(Alignment.TopCenter),
-                text = otpRegisterScreenState.snackBarMessage ?: R.string.empty,
-                onClick = otpRegisterListenerInteraction::onHideSnackBar
-            )
+
+        if (otpRegisterScreenState.showBottomSheet) {
+            showBottomSheet = true
         }
 
+        if (showBottomSheet) {
+            RegisterBottomSheet(
+                isErrorMessage = true,
+                sheetState = sheetState,
+                onCloseClick = {
+                    showBottomSheet = false
+                    otpRegisterListenerInteraction.onHideBottomSheet()
+                }
+            )
+        }
     }
 
 }
@@ -269,9 +272,9 @@ private fun OTPRegisterScreenContentPreview() {
 
             }
 
-            override fun onHideSnackBar() {
+             override fun onHideBottomSheet() {
 
-            }
+             }
         }
     )
 }

@@ -6,5 +6,5 @@ interface OTPRegisterListenerInteraction {
     fun onClickResendCode()
     fun onClickBackButton()
     fun onClickRetry()
-    fun onHideSnackBar()
+    fun onHideBottomSheet()
 }

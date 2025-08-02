@@ -4,7 +4,6 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
@@ -67,7 +66,7 @@ class OTPRegisterViewModel(
                         verificationId = otp,
                         loadingVerifyButton = false
                     ),
-                    showSnackBar = false
+                    showBottomSheet = false
                 )
             )
         }
@@ -83,8 +82,7 @@ class OTPRegisterViewModel(
             updateState(
                 screenState.value.copy(
                     isLoading = false,
-                    snackBarMessage = R.string.occurred_an_error_for_sending_otp,
-                    showSnackBar = true,
+                    showBottomSheet = true,
                     otpRegisterUiState = screenState.value
                         .otpRegisterUiState
                         .copy(loadingVerifyButton = false)
@@ -160,8 +158,7 @@ class OTPRegisterViewModel(
             onError = { errorMessage ->
                 updateState(
                     screenState.value.copy(
-                        snackBarMessage = R.string.otp_code_is_incorrect,
-                        showSnackBar = true
+                        showBottomSheet = true
                     )
                 )
             }
@@ -189,11 +186,10 @@ class OTPRegisterViewModel(
 
     }
 
-    override fun onHideSnackBar() {
+    override fun onHideBottomSheet() {
         updateState(
             screenState.value.copy(
-                showSnackBar = false,
-                snackBarMessage = null
+                showBottomSheet = false
             )
         )
     }
