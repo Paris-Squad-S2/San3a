@@ -1,15 +1,16 @@
 package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,12 +32,15 @@ fun RequestCardForCraftsMan(
     offers : String,
     description : String,
     location : String,
+    onClick : () -> Unit
 ){
-    Column(modifier = modifier
+    Column(
+        modifier = modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(defaultSan3aRadius.extraExtraLarge))
         .background(Theme.colors.background.card)
-        .padding(16.dp),
+        .padding(16.dp)
+        .clickable{ onClick() },
         verticalArrangement = Arrangement.Center
     )
     {
@@ -84,7 +88,7 @@ fun RequestCardForCraftsMan(
                             .background(Theme.colors.shade.tertiary)
                     )
                     Text(
-                        text = offers,
+                        text = "$offers offers",
                         style = Theme.textStyle.body.medium.semibold,
                         color = Theme.colors.brand.primary
                     )
@@ -95,13 +99,20 @@ fun RequestCardForCraftsMan(
 
         }
 
-        Box(
+//        Box(
+//            modifier = Modifier
+//                .padding(vertical = 16.dp)
+//                .fillMaxWidth()
+//                .height(1.dp)
+//                .clip(RoundedCornerShape(Theme.radius.full))
+//                .background(Theme.colors.shade.quaternary)
+//        )
+        HorizontalDivider(
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .fillMaxWidth()
-                .height(1.dp)
-                .clip(RoundedCornerShape(Theme.radius.full))
-                .background(Theme.colors.shade.quaternary)
+                .fillMaxWidth(),
+            color = Theme.colors.shade.quaternary,
+            thickness = 1.dp
         )
         Column{
             Text(
@@ -141,8 +152,9 @@ fun RequestCardForCraftsManPreview() {
     RequestCardForCraftsMan(
         title = "Title",
         type = "Type",
-        offers = "Offers",
+        offers = "2",
         description = "Description",
-        location = "Location"
+        location = "Location",
+        onClick = {}
     )
 }
