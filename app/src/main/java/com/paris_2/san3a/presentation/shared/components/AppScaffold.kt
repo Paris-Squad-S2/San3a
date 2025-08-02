@@ -9,13 +9,15 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun AppScaffold(
-    content: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     bottomBar: @Composable () -> Unit = { },
+    topBar: @Composable () -> Unit = { },
+    content: @Composable () -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
         bottomBar = bottomBar,
+        topBar = topBar,
         contentWindowInsets = WindowInsets(0)
     ) { paddingValues ->
         Box(
