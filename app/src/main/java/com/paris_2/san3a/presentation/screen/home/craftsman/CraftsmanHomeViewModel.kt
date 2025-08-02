@@ -4,8 +4,6 @@ import com.paris_2.san3a.domain.usecase.GetAvailableJobsUseCase
 import com.paris_2.san3a.domain.usecase.GetRecentRelatedJobsUseCase
 import com.paris_2.san3a.domain.usecase.GetStatsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
-import com.paris_2.san3a.presentation.screen.home.craftsman.CraftsmanInteractionListener
-import com.paris_2.san3a.presentation.screen.home.HomeState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.flow.first
 
@@ -13,7 +11,7 @@ class CraftsmanHomeViewModel(
     private val getStatsUseCase: GetStatsUseCase,
     private val getRecentRelatedJobsUseCase: GetRecentRelatedJobsUseCase,
     private val getAvailableJobsUseCase: GetAvailableJobsUseCase
-): CraftsmanInteractionListener, BaseViewModel<HomeState>(HomeState()) {
+): CraftsmanInteractionListener, BaseViewModel<CraftsmanHomeState>(CraftsmanHomeState()) {
 
     init {
         loadUserData()
