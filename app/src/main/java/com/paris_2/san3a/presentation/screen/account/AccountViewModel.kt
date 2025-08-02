@@ -20,7 +20,7 @@ class AccountViewModel(
     private val getCurrentLocatedUseCase: GetCurrentLocatedUseCase,
     private val getAllServicesUseCase: GetAllServicesUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase
-) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()),AccountInteractionListener {
+) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
 
     private val _currentScreen = mutableIntStateOf(0)
     val currentScreen: State<Int> get() = _currentScreen
@@ -224,7 +224,10 @@ class AccountViewModel(
                                     workDescription = screenState.value.accountUiState.workDescription
                                 )
                             } else {
-                                // Location for CUSTOMER
+                                setUpAccountUseCase.saveLocation(
+                                    phone = phoneNumber,
+                                    location = screenState.value.accountUiState.locationUiState.toEntity()
+                                )
                                 navigate(
                                     Destinations.Home
                                 )
@@ -320,7 +323,7 @@ class AccountViewModel(
         }
     }
 
-    fun getGovernments() {
+    private fun getGovernments() {
         viewModelScope.launch {
             val governments = getCurrentLocatedUseCase.getGovernments(countryName = "Egypt")
             Log.d("TAG", "getGovernments: ")
@@ -350,46 +353,6 @@ class AccountViewModel(
         }
     }
 
-    fun updateGovernmentBottomSheetVisibility() {
-        updateState(
-            screenState.value.copy(
-                accountUiState = screenState.value.accountUiState.copy(
-                    isGovernmentBottomSheetShowed = !screenState.value.accountUiState.isGovernmentBottomSheetShowed
-                )
-            )
-        )
-    }
-
-    fun updateCitiesBottomSheetVisibility() {
-        updateState(
-            screenState.value.copy(
-                accountUiState = screenState.value.accountUiState.copy(
-                    isCitiesBottomSheetShowed = !screenState.value.accountUiState.isCitiesBottomSheetShowed
-                )
-            )
-        )
-    }
-
-    fun onGovernmentButtonSheetDismiss() {
-        updateState(
-            screenState.value.copy(
-                accountUiState = screenState.value.accountUiState.copy(
-                    isGovernmentBottomSheetShowed = false
-                )
-            )
-        )
-    }
-
-    fun onCitiesButtonSheetDismiss() {
-        updateState(
-            screenState.value.copy(
-                accountUiState = screenState.value.accountUiState.copy(
-                    isCitiesBottomSheetShowed = false
-                )
-            )
-        )
-    }
-
     fun updateGovernmentLocation(government: String) {
         updateState(
             screenState.value.copy(
@@ -402,13 +365,61 @@ class AccountViewModel(
         )
     }
 
-    fun updateCityLocation(city: String) {
+    override fun onGovernmentSelected(government: String) {
+        getCities(government)
+        onCitiesBottomSheetVisibilityToggled()
+        updateGovernmentLocation(government)
+    }
+
+    override fun onCitiesSelected(city: String) {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
+                    isCitiesBottomSheetShowed = false,
+                    isGovernmentBottomSheetShowed = false,
                     locationUiState = screenState.value.accountUiState.locationUiState.copy(
-                        city = city
+                        city = city,
                     )
+                )
+            )
+        )
+    }
+
+    override fun onGovernmentBottomSheetVisibilityToggled() {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    isGovernmentBottomSheetShowed = !screenState.value.accountUiState.isGovernmentBottomSheetShowed
+                )
+            )
+        )
+    }
+
+    private fun onCitiesBottomSheetVisibilityToggled() {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    isCitiesBottomSheetShowed = !screenState.value.accountUiState.isCitiesBottomSheetShowed
+                )
+            )
+        )
+    }
+
+    override fun onGovernmentBottomSheetDismissed() {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    isGovernmentBottomSheetShowed = false
+                )
+            )
+        )
+    }
+
+    override fun onCitiesBottomSheetDismissed() {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    isCitiesBottomSheetShowed = false
                 )
             )
         )

@@ -60,10 +60,8 @@ class UserRemoteDataSourceImp(
     override suspend fun saveLocation(phone: String, location: Location) {
         val data = mapOf(
             "location" to mapOf(
-                "latitude" to location.latitude,
-                "longitude" to location.longitude,
                 "cityName" to location.cityName,
-                "countryName" to location.countryName
+                "government" to location.government
             ),
             "currentStep" to AccountSetupStep.PERSONAL_INFO.name
         )

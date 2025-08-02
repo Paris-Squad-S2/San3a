@@ -6,5 +6,10 @@ interface AccountInteractionListener {
     fun onUserTypeSelected(type: UserType)
     fun onToggleServiceClicked(serviceId: String)
     fun onCustomerNameChanged(name: String)
+    fun onGovernmentSelected(government: String)
+    fun onCitiesSelected(city: String)
     fun onDescriptionChanged(description: String)
+    fun onGovernmentBottomSheetVisibilityToggled()
+    fun onGovernmentBottomSheetDismissed()
+    fun onCitiesBottomSheetDismissed()
 }

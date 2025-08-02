@@ -22,22 +22,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.presentation.screen.account.components.AccountProgressIndicator
-import com.paris_2.san3a.presentation.screen.account.components.VerifyIdentityContent
-import com.paris_2.san3a.presentation.screen.account.components.ProfileContent
 import com.paris_2.san3a.presentation.screen.account.components.AccountTypeContent
-import com.paris_2.san3a.presentation.screen.account.components.ShowYourWorkContent
 import com.paris_2.san3a.presentation.screen.account.components.LocationContent
+import com.paris_2.san3a.presentation.screen.account.components.ProfileContent
 import com.paris_2.san3a.presentation.screen.account.components.ServicesContent
+import com.paris_2.san3a.presentation.screen.account.components.ShowYourWorkContent
+import com.paris_2.san3a.presentation.screen.account.components.VerifyIdentityContent
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
-import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
-import org.koin.compose.viewmodel.koinViewModel
 import com.paris_2.san3a.presentation.shared.utils.asString
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -95,21 +92,18 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
         }
     }
 
-
-
     AccountScreenContent(
         title = title.asString(),
         description = description.asString(),
         textButton = textButton.asString(),
         currentScreen = currentScreen,
         progress = progress,
-          uiState = uiState,
-        onGovernmentSelected = viewModel::getCities,
         onCustomerProfilePhotoClick = { profileImagePickerLauncher.launch(arrayOf("image/*")) },
         onFrontNationalIdClick = { frontNationalIdPickerLauncher.launch(arrayOf("image/*")) },
         onBackNationalIdClick = { backNationalIdPickerLauncher.launch(arrayOf("image/*")) },
         onWorkImageClick = { workImagePickerLauncher.launch(arrayOf("image/*")) },
-        interactionListener = viewModel
+        interactionListener = viewModel,
+        uiState = uiState
     )
 }
 
@@ -125,9 +119,7 @@ fun AccountScreenContent(
     onBackNationalIdClick : () -> Unit,
     onWorkImageClick : () -> Unit,
     interactionListener: AccountInteractionListener,
-    onGovernmentSelected: (String) -> Unit,
     uiState: AccountScreenUiState,
-    viewModel: AccountViewModel,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -183,28 +175,16 @@ fun AccountScreenContent(
             )
 
             3 -> when (uiState.accountUiState.userType) {
-                UserType.CUSTOMER -> StepThreeCustomerContent(
+                UserType.CUSTOMER -> LocationContent(
                     modifier = Modifier.padding(vertical = 32.dp),
-                    onGetLocationClicked = onBottomSheetVisibility,
+                    onGetLocationClicked = interactionListener::onGovernmentBottomSheetVisibilityToggled,
                     isGovernmentSheetShowed = uiState.accountUiState.isGovernmentBottomSheetShowed,
-                    onGovernmentDismissRequest = onDismissRequest,
+                    onGovernmentDismissRequest = interactionListener::onGovernmentBottomSheetDismissed,
                     governments = uiState.accountUiState.governments,
-                    onGovernmentSelected = { governemnt ->
-                        viewModel.getCities(governemnt).also {
-                            viewModel.updateCitiesBottomSheetVisibility()
-                            viewModel.updateGovernmentLocation(governemnt)
-                        }
-                    },
+                    onGovernmentSelected = interactionListener::onGovernmentSelected,
                     isCitiesSheetShowed = uiState.accountUiState.isCitiesBottomSheetShowed,
-                    onCitiesDismissRequest = viewModel::onCitiesButtonSheetDismiss,
-                    onCitiesSelected = { city ->
-                        viewModel.updateCityLocation(city).also {
-                            viewModel.updateCitiesBottomSheetVisibility()
-                            viewModel.updateGovernmentBottomSheetVisibility()
-                            viewModel.updateCityLocation(city)
-                        }
-
-                    },
+                    onCitiesDismissRequest = interactionListener::onCitiesBottomSheetDismissed,
+                    onCitiesSelected = interactionListener::onCitiesSelected,
                     cities = uiState.accountUiState.cities,
                     government = uiState.accountUiState.locationUiState.government,
                     city = uiState.accountUiState.locationUiState.city

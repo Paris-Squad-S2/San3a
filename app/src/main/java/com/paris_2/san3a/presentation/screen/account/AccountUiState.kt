@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.account
 
 import android.net.Uri
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.entity.Location
 
 data class AccountScreenUiState(
     val accountUiState: AccountUiState = AccountUiState(),
@@ -37,6 +38,13 @@ data class LocationUiState(
     val government: String = "",
     val city: String = "",
 )
+
+fun LocationUiState.toEntity(): Location {
+    return Location(
+        government = this.government,
+        cityName = this.city,
+    )
+}
 
 enum class UserType(val displayActor: Int) {
     CUSTOMER(R.string.customer),
