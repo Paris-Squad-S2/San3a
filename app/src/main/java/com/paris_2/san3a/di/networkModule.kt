@@ -2,6 +2,7 @@ package com.paris_2.san3a.di
 
 import com.paris_2.san3a.BuildConfig
 import com.paris_2.san3a.data.service.auth.AuthApiServices
+import com.paris_2.san3a.data.service.location.LocationService
 import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -31,6 +32,8 @@ val networkModule = module {
             }
             .build()
     }
+
+    single<LocationService> { get<Retrofit>(named("locationRetrofit")).create(LocationService::class.java) }
     single(named("locationRetrofit")) {
         Retrofit.Builder()
             .baseUrl(LOCATION_BASE_URL)

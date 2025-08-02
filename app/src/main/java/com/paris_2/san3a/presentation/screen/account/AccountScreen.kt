@@ -54,18 +54,19 @@ fun AccountScreen(viewModel: AccountViewModel = viewModel()) {
         uiState = uiState
     )
 }
+
 @Composable
 fun AccountScreenContent(
-    title : String,
-    description : String,
-    textButton : String,
+    title: String,
+    description: String,
+    textButton: String,
     currentScreen: Int,
     progress: Float,
     onNext: () -> Unit,
     onPrevious: () -> Unit,
     onUserTypeSelected: (UserType) -> Unit,
     uiState: AccountScreenUiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -74,10 +75,10 @@ fun AccountScreenContent(
             .background(Theme.colors.background.screen)
             .padding(16.dp)
     ) {
-        Row (
+        Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ){
+        ) {
             if (currentScreen != 0) {
                 AppBackButton(onClickBackButton = onPrevious)
             } else {
@@ -87,44 +88,53 @@ fun AccountScreenContent(
         }
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text =title,
+            text = title,
             color = Theme.colors.shade.secondary,
             style = Theme.textStyle.display.xLarge,
             modifier = Modifier.padding(bottom = 16.dp)
         )
         Text(
-            text =description,
+            text = description,
             color = Theme.colors.shade.primary,
             style = Theme.textStyle.body.large.regular,
         )
         when (currentScreen) {
             0 -> StepOneContent(
                 modifier = Modifier.padding(vertical = 32.dp),
-                onUserTypeSelected = onUserTypeSelected ,
+                onUserTypeSelected = onUserTypeSelected,
                 selectedType = uiState.accountUiState.userType
             )
+
             1 -> StepTwoContent(modifier = Modifier.padding(vertical = 32.dp))
             2 -> when (uiState.accountUiState.userType) {
                 UserType.CUSTOMER -> StepThreeCustomerContent(
                     modifier = Modifier.padding(vertical = 32.dp),
-                    uiState = uiState)
+                )
+
                 UserType.CRAFTSMAN -> StepThreeCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))
                 else -> {}
             }
+
             3 -> when (uiState.accountUiState.userType) {
                 UserType.CUSTOMER -> StepFourCustomerContent(modifier = Modifier.padding(vertical = 32.dp))
-                UserType.CRAFTSMAN -> StepFourCraftsmanContent(modifier = Modifier.padding(top = 32.dp, bottom = 12.dp))
+                UserType.CRAFTSMAN -> StepFourCraftsmanContent(
+                    modifier = Modifier.padding(
+                        top = 32.dp,
+                        bottom = 12.dp
+                    )
+                )
+
                 else -> {}
             }
         }
 
         AppButton(
-           onClick = onNext,
-           type = AppButtonType.Primary,
-           text = textButton,
-           state = AppButtonState.Enable,
-           modifier = Modifier.fillMaxWidth()
-       )
+            onClick = onNext,
+            type = AppButtonType.Primary,
+            text = textButton,
+            state = AppButtonState.Enable,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -133,7 +143,7 @@ fun AccountScreenContent(
 private fun AccountScreenPreview() {
     San3aTheme {
         AccountScreenContent(
-            title ="What do you usually need help with?" ,
+            title = "What do you usually need help with?",
             description = "This helps us personalize your experience. You can change it anytime.",
             textButton = "Next",
             progress = 0.25f,
@@ -152,5 +162,5 @@ private fun ScreenPreview() {
     San3aTheme {
         AccountScreen()
     }
-    
+
 }
