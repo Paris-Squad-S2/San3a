@@ -10,7 +10,7 @@ data class ServiceDto(
 ){
     companion object{
         fun fromJson(data: Map<String, Any>, id: String): ServiceDto {
-            val titleMap = (data["title"] as? Map<*, *>)?.mapNotNull {
+            val titleMap = (data["name"] as? Map<*, *>)?.mapNotNull {
                 val key = it.key as? String
                 val value = it.value as? String
                 if (key != null && value != null) key to value else null
