@@ -18,12 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
-import java.nio.file.WatchEvent
 
 @Composable
 fun StatsContainer(
@@ -37,7 +35,7 @@ fun StatsContainer(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .height(94.dp)
-            .clip(RoundedCornerShape(Theme.radius.extraLarge.value))
+            .clip(RoundedCornerShape(Theme.radius.extraLarge))
             .background(Theme.colors.background.card)
     ){
         Row(
@@ -133,7 +131,7 @@ fun StatsContainer(
 }
 
 @Preview
-@PreviewLightDark
+//@PreviewLightDark
 @Composable
 private fun Preview(){
     San3aTheme {

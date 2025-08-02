@@ -76,8 +76,7 @@ fun CraftsmanHomeContent(
                 StatsContainer(
                     jobsDone = state.craftsmanHomeUiState.stats.jobsDone,
                     earnings = state.craftsmanHomeUiState.stats.earnings,
-                    rating = state.craftsmanHomeUiState.stats.rating,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    rating = state.craftsmanHomeUiState.stats.rating
                 )
             }
 
