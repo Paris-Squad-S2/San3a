@@ -37,11 +37,13 @@ class MessagesDetailsViewModel(
                 getMessagesByChatIdUseCase(chatId)
             },
             onSuccess = { flowMessages ->
-                flowMessages.collect { messages ->
+                // Todo (get image of another user from getUserDetails)
+                // Todo (get User )
+                flowMessages.collect {  messages ->
                 updateState(
                     screenState.value.copy(
-                        messages =   messages.map { it.toMessageUi() },
-                        chatTitle = "CraftsMan",
+                        messages =   messages.map { it.toMessageUi(FAKE_IMAGE_URL) },
+                        chatTitle = FAKE_USER_NAME,
                         isLoading = false
                     ),
                 )
@@ -187,6 +189,8 @@ class MessagesDetailsViewModel(
 
     companion object {
         const val IMAGE_TYPE = "image/*"
+        const val FAKE_IMAGE_URL =   "https://firebasestorage.googleapis.com/v0/b/cell-monitor21.appspot.com/o/user2%2Fchat8%2F1000179245.jpg?alt=media&token=714e333b-7fc6-4be3-83a6-30d6b7f7fd4e"
+        const val FAKE_USER_NAME = "CraftsMan"
     }
 
 }

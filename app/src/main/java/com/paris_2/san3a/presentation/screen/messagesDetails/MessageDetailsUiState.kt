@@ -24,12 +24,12 @@ data class MessageUi(
     val isSeen: Boolean = false,
 )
 
-fun Message.toMessageUi() = MessageUi(
+fun Message.toMessageUi(imageUserUrl:String) = MessageUi(
     text = handleTextMessage(messageContent),
     images = handleImagesMessage(messageContent),
-    anotherUserImage = "https://firebasestorage.googleapis.com/v0/b/cell-monitor21.appspot.com/o/user2%2Fchat8%2F1000179245.jpg?alt=media&token=714e333b-7fc6-4be3-83a6-30d6b7f7fd4e", // todo(get user image from authentication)
-    time = time.time.toString(),
-    isReceived = receiverId == "1",
+    anotherUserImage = imageUserUrl,
+    time = this.time.time.toString(),
+    isReceived = this.receiverId == "1",
     isSeen = this.seen,
 )
 
