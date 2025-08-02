@@ -6,6 +6,7 @@ import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.repository.UserRemoteDataSource
 import com.paris_2.san3a.domain.repository.UserRepository
 import android.net.Uri
+import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.domain.CompleteUserSetupException
 import com.paris_2.san3a.domain.GetAccountTypeException
@@ -35,6 +36,11 @@ class UserRepositoryImp(
     override suspend fun saveServices(phone: String, services:  List<Service>, isCraftsman: Boolean) =
         safeCall(SaveServicesException()) {
             userRemoteDataSource.saveServices(phone, services, isCraftsman)
+        }
+
+    override suspend fun getServices(phone: String): List<Service> =
+        safeCall(SaveServicesException()) {
+            userRemoteDataSource.getServices(phone).toEntity()
         }
 
     override suspend fun saveLocation(phone: String, location: Location) =

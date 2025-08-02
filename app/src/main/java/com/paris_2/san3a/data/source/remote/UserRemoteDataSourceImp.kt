@@ -1,7 +1,9 @@
 package com.paris_2.san3a.data.source.remote
 
 import android.util.Log
+import com.google.firebase.firestore.FieldPath
 import com.paris_2.san3a.data.service.firestore.FireStoreService
+import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
@@ -29,27 +31,30 @@ class UserRemoteDataSourceImp(
         return AccountType.entries.find { it.name == userData } ?: AccountType.CUSTOMER
     }
 
-    override suspend fun saveServices(phone: String, services: List<Service>, isCraftsman: Boolean) {
-        val servicesData = services.map {
-            mapOf(
-                "id" to it.id,
-                "name" to it.title,
-                "description" to it.description
+    override suspend fun saveServices(
+        phone: String,
+        services: List<Service>,
+        isCraftsman: Boolean
+    ) {
+        services.forEach { service ->
+            val collectionPath = "$USERS_COLLECTION/$phone/services"
+            val serviceData = mapOf(
+                "serviceId" to service.id
             )
+            fireStoreService.addToCollection(path = collectionPath, data = serviceData)
         }
+    }
 
-        val data = if (isCraftsman) {
-            mapOf(
-                "offeredServices" to servicesData,
-                "currentStep" to AccountSetupStep.LOCATION.name
-            )
-        } else {
-            mapOf(
-                "requestedServices" to servicesData,
-                "currentStep" to AccountSetupStep.LOCATION.name
-            )
+    override suspend fun getServices(phone: String): List<ServiceDto> {
+        return fireStoreService.getCollection(path = "$USERS_COLLECTION/$phone/services", fromJson = ::getServices).let { docs ->
+            fireStoreService.getCollection(path = "services", fromJson = ServiceDto::fromJson, queryBuilder = { query ->
+                query.whereIn(FieldPath.documentId(), docs)
+            })
         }
-        updateUserData(phone, data)
+    }
+
+    fun getServices(data: Map<String, Any>, serviceId: String): String {
+        return data["serviceId"].toString()
     }
 
     override suspend fun saveLocation(phone: String, location: Location) {
