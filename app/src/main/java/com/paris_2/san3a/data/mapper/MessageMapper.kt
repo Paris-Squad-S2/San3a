@@ -37,6 +37,7 @@ fun handleMessageContent(
 fun Message.toImageMessageDto(urls: List<String>?=null): MessageDto {
     return MessageDto(
         id = id,
+        text = getMessageContentText(messageContent),
         chatId = chatId,
         senderId = senderId,
         receiverId = receiverId,
@@ -44,4 +45,12 @@ fun Message.toImageMessageDto(urls: List<String>?=null): MessageDto {
         dateTime = time,
         seen = seen
     )
+}
+
+fun getMessageContentText(messageContent: MessageContent): String{
+    return when(messageContent){
+        is MessageContent.Audio -> ""
+        is MessageContent.Image -> ""
+        is MessageContent.Text -> messageContent.content
+    }
 }
