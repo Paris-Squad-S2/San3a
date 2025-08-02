@@ -74,11 +74,11 @@ class OTPRegisterViewModel(
     }
 
     private fun onSendOtpToPhoneNumberError(exception: Throwable) {
-        if(exception is NoInternetConnectionException){
+        if (exception is NoInternetConnectionException) {
             updateState(
                 screenState.value.copy(isNoInternet = true)
             )
-        } else{
+        } else {
             updateState(
                 screenState.value.copy(
                     isLoading = false,
@@ -177,11 +177,13 @@ class OTPRegisterViewModel(
     }
 
     override fun onClickRetry() {
-        updateState(screenState.value.copy(
-            isLoading = true,
-            errorMessage = null,
-            isNoInternet = false
-        ))
+        updateState(
+            screenState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                isNoInternet = false
+            )
+        )
         sendOtpToPhoneNumber()
 
     }

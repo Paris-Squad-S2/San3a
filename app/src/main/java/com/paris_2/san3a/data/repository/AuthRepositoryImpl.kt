@@ -13,8 +13,8 @@ import com.paris_2.san3a.domain.repository.AuthRepository
 class AuthRepositoryImpl(
     private val networkConnectionChecker: NetworkConnectionChecker,
     private val remoteDataSource: AuthRemoteDataSource,
-    private val localDataStoreImpl: LocalDataStore
-): AuthRepository, BaseRepository() {
+    private val localDataStoreImpl: LocalDataStore,
+) : AuthRepository, BaseRepository() {
 
     override suspend fun sendMessage(
         phoneNumber: String,
