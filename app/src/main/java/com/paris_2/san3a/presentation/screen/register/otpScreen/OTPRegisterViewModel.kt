@@ -7,6 +7,7 @@ import androidx.navigation.toRoute
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
+import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.base.BaseViewModel
 import kotlinx.coroutines.Job
@@ -17,6 +18,7 @@ import org.koin.core.component.KoinComponent
 class OTPRegisterViewModel(
     private val sendOtpUseCase: SendOtpUseCase,
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
+    private val setLoginUseCase: SetLoginUseCase,
     saveStateHandle: SavedStateHandle,
 ) : BaseViewModel<OTPRegisterScreenState>(OTPRegisterScreenState()), OTPRegisterListenerInteraction,
     KoinComponent {
@@ -134,6 +136,7 @@ class OTPRegisterViewModel(
                 if (screenState.value.otpRegisterUiState.otp == screenState.value.otpRegisterUiState.verificationId) {
                     savePhoneNumberUseCase(screenState.value.otpRegisterUiState.phoneNumber)
                     updateState(screenState.value.copy(isLoading = false))
+                    setLoginUseCase(true)
                     navigate(Destinations.Home)
                 }
             },
