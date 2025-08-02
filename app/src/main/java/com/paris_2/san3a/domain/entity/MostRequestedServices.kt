@@ -4,6 +4,5 @@ data class MostRequestedServices(
     val id: String,
     val title: String,
     val description: String,
-    val userId: String,
     val requestedCount: Int = 0
 )
