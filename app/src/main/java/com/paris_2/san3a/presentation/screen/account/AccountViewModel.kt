@@ -2,15 +2,20 @@ package com.paris_2.san3a.presentation.screen.account
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.lifecycle.viewModelScope
+import com.paris_2.san3a.domain.usecase.GetCurrentLocatedUseCase
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.coroutines.launch
 
-class AccountViewModel : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()) {
+class AccountViewModel(
+    private val getCurrentLocatedUseCase: GetCurrentLocatedUseCase,
+) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()) {
 
     private val stepsCount = 4
     private val _currentScreen = mutableIntStateOf(0)
     val currentScreen: State<Int> get() = _currentScreen
 
-     val progress: Float
+    val progress: Float
         get() = (_currentScreen.intValue + 1) / stepsCount.toFloat()
 
     fun updateUserType(type: UserType) {
@@ -42,16 +47,19 @@ class AccountViewModel : BaseViewModel<AccountScreenUiState>(AccountScreenUiStat
                 UserType.CRAFTSMAN -> "What services do you offer?"
                 else -> ""
             }
+
             2 -> when (screenState.value.accountUiState.userType) {
                 UserType.CUSTOMER -> "Where are you located?"
                 UserType.CRAFTSMAN -> "Show Us Your Work"
                 else -> ""
             }
+
             3 -> when (screenState.value.accountUiState.userType) {
                 UserType.CUSTOMER -> "Let’s personalize your profile"
                 UserType.CRAFTSMAN -> "Verify Your Identity (Optional)"
                 else -> ""
             }
+
             else -> ""
         }
     }
@@ -64,16 +72,19 @@ class AccountViewModel : BaseViewModel<AccountScreenUiState>(AccountScreenUiStat
                 UserType.CRAFTSMAN -> "Choose your specialties to get relevant job requests. You can change this later."
                 else -> ""
             }
+
             2 -> when (screenState.value.accountUiState.userType) {
                 UserType.CUSTOMER -> "Location helps improve accuracy, but don’t worry, you can update it later."
                 UserType.CRAFTSMAN -> "Add photos or a video of your past work. This helps build trust with customers."
                 else -> ""
             }
+
             3 -> when (screenState.value.accountUiState.userType) {
                 UserType.CUSTOMER -> "We’ll use this to personalize your experience. You can add a profile photo too, or skip for now."
                 UserType.CRAFTSMAN -> "Uploading your ID helps build trust with customers. Verified craftsmen get more jobs and a special badge on their profile."
                 else -> ""
             }
+
             else -> ""
         }
     }
@@ -87,6 +98,35 @@ class AccountViewModel : BaseViewModel<AccountScreenUiState>(AccountScreenUiStat
             }
         } else {
             "Next"
+        }
+    }
+
+    fun getGovernments() {
+        viewModelScope.launch {
+            val governments = getCurrentLocatedUseCase.getGovernments(countryName = "Egypt")
+            updateState(
+                screenState.value.copy(
+                    accountUiState = screenState.value.accountUiState.copy(
+                        governments = governments.names
+                    )
+                )
+            )
+        }
+    }
+
+    fun getCities(stateName: String) {
+        viewModelScope.launch {
+            val cities = getCurrentLocatedUseCase.getCities(
+                countryName = "Egypt",
+                stateName = stateName
+            )
+            updateState(
+                screenState.value.copy(
+                    accountUiState = screenState.value.accountUiState.copy(
+                        cities = cities.names
+                    )
+                )
+            )
         }
     }
 }

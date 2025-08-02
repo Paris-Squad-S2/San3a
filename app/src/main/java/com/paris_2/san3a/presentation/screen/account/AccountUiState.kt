@@ -13,6 +13,8 @@ data class AccountUiState(
     val userType: UserType? = null,
     val serviceUiState: List<ServiceUiState> = emptyList(),
     val locationUiState: LocationUiState = LocationUiState(),
+    val governments: List<String> = emptyList(),
+    val cities: List<String> = emptyList(),
 )
 
 data class ServiceUiState(
