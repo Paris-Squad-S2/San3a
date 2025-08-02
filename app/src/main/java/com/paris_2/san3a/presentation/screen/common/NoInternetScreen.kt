@@ -38,7 +38,7 @@ fun NoInternetScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(R.drawable.customer),
+                painter = painterResource(R.drawable.image_no_internet),
                 contentDescription = stringResource(R.string.no_internet_connection),
                 modifier = Modifier.size(120.dp)
             )
