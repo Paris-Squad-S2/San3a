@@ -73,4 +73,20 @@
     <string name="no_messages_yet">لا توجد رسائل بعد</string>
     <string name="once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here">عند البدء في قبول أو نشر الطلبات، ستظهر المحادثات مع الحرفيين هنا.</string>
     <string name="loading_icon">أيقونة التحميل</string>
+    <string name="how_would_you_like_to_use_san3a">كيف تريد استخدام صنعة؟</string>
+    <string name="what_do_you_need_help_with">ما الذي تحتاج عادةً إلى مساعدة فيه؟</string>
+    <string name="what_services_do_you_offer">ما الخدمات التي تقدمها؟</string>
+    <string name="where_are_you_located">أين موقعك؟</string>
+    <string name="show_us_your_work">أرنا عملك</string>
+    <string name="personalize_your_profile">دعنا نخصص ملفك الشخصي</string>
+    <string name="verify_your_identity_optional">تحقق من هويتك (اختياري)</string>
+    <string name="switch_roles_anytime">يمكنك تبديل الأدوار في أي وقت من ملفك الشخصي.</string>
+    <string name="personalize_experience_change_anytime">هذا يساعدنا في تخصيص تجربتك. يمكنك تغييره في أي وقت.</string>
+    <string name="choose_specialties_change_later">اختر تخصصاتك للحصول على طلبات عمل ذات صلة. يمكنك تغيير ذلك لاحقًا.</string>
+    <string name="location_improves_accuracy_update_later">الموقع يساعد في تحسين الدقة، ولكن لا تقلق، يمكنك تحديثه لاحقًا.</string>
+    <string name="add_photos_or_video_build_trust">أضف صورًا أو فيديو لعملك السابق. هذا يساعد في بناء الثقة مع العملاء.</string>
+    <string name="use_to_personalize_experience_skip">سنستخدم هذا لتخصيص تجربتك. يمكنك أيضًا إضافة صورة ملف شخصي، أو تخطي ذلك الآن.</string>
+    <string name="upload_id_build_trust_get_jobs">ارسال صورة هويتك يساعد في بناء الثقة مع العملاء. الحرفيون الذين يتم التحقق منهم يحصلون على المزيد من الوظائف وشارة خاصة في ملفهم الشخصي.</string>
+    <string name="browse_services">تصفح الخدمات</string>
+    <string name="see_nearby_requests">عرض الطلبات القريبة</string>
 </resources>

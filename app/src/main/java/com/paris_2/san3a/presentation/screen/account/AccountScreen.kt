@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +37,7 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.shared.utils.asString
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -60,9 +62,9 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
     }
 
     AccountScreenContent(
-        title = title,
-        description = description,
-        textButton = textButton,
+        title = title.asString(),
+        description = description.asString(),
+        textButton = textButton.asString(),
         currentScreen = currentScreen,
         progress = progress,
         onPrevious = viewModel::previousStep,
@@ -95,6 +97,7 @@ fun AccountScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
+            .safeContentPadding()
             .background(Theme.colors.background.screen)
             .padding(16.dp)
     ) {
@@ -142,20 +145,14 @@ fun AccountScreenContent(
 
             3 -> when (uiState.accountUiState.userType) {
                 UserType.CUSTOMER -> StepFourCustomerContent(
-                    modifier = Modifier.padding(
-                        top = 32.dp,
-                        bottom = 12.dp
-                    ),
+                    modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
                     name = uiState.accountUiState.customerName,
                     onNameChanged = onCustomerNameChanged,
                     onAddPhotoClick = onCustomerProfilePhotoClick,
                     profilePhotoUri = uiState.accountUiState.customerProfilePhotoUri
                 )
                 UserType.CRAFTSMAN -> StepFourCraftsmanContent(
-                    modifier = Modifier.padding(
-                        top = 32.dp,
-                        bottom = 12.dp
-                    )
+                    modifier = Modifier.padding(top = 32.dp, bottom = 12.dp)
                 )
 
                 else -> {}

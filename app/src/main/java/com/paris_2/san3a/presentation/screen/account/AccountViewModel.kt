@@ -5,11 +5,13 @@ import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.viewModelScope
+import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.UiText
 
 class AccountViewModel(
     private val getAllServicesUseCase: GetAllServicesUseCase,
@@ -182,66 +184,65 @@ class AccountViewModel(
         }
     }
 
-    fun getTitle(): String {
+    fun getTitle(): UiText {
         return when (_currentScreen.intValue) {
-            0 -> "How would you like to use San3a?"
+            0 -> UiText.StringResource(R.string.how_would_you_like_to_use_san3a)
             1 -> when (screenState.value.accountUiState.userType) {
-                UserType.CUSTOMER -> "What do you usually need help with?"
-                UserType.CRAFTSMAN -> "What services do you offer?"
-                else -> ""
+                UserType.CUSTOMER -> UiText.StringResource(R.string.what_do_you_need_help_with)
+                UserType.CRAFTSMAN -> UiText.StringResource(R.string.what_services_do_you_offer)
+                else -> UiText.DynamicString("")
             }
 
             2 -> when (screenState.value.accountUiState.userType) {
-                UserType.CUSTOMER -> "Where are you located?"
-                UserType.CRAFTSMAN -> "Show Us Your Work"
-                else -> ""
+                UserType.CUSTOMER -> UiText.StringResource(R.string.where_are_you_located)
+                UserType.CRAFTSMAN -> UiText.StringResource(R.string.show_us_your_work)
+                else -> UiText.DynamicString("")
             }
 
             3 -> when (screenState.value.accountUiState.userType) {
-                UserType.CUSTOMER -> "Let’s personalize your profile"
-                UserType.CRAFTSMAN -> "Verify Your Identity (Optional)"
-                else -> ""
+                UserType.CUSTOMER -> UiText.StringResource(R.string.personalize_your_profile)
+                UserType.CRAFTSMAN -> UiText.StringResource(R.string.verify_your_identity_optional)
+                else -> UiText.DynamicString("")
             }
 
-            else -> ""
+            else -> UiText.DynamicString("")
         }
     }
 
-    fun getDescription(): String {
+    fun getDescription(): UiText {
         return when (_currentScreen.intValue) {
-            0 -> "You can switch roles anytime from your profile."
+            0 -> UiText.StringResource(R.string.switch_roles_anytime)
             1 -> when (screenState.value.accountUiState.userType) {
-                UserType.CUSTOMER -> "This helps us personalize your experience. You can change it anytime."
-                UserType.CRAFTSMAN -> "Choose your specialties to get relevant job requests. You can change this later."
-                else -> ""
+                UserType.CUSTOMER -> UiText.StringResource(R.string.personalize_experience_change_anytime)
+                UserType.CRAFTSMAN -> UiText.StringResource(R.string.choose_specialties_change_later)
+                else -> UiText.DynamicString("")
             }
 
             2 -> when (screenState.value.accountUiState.userType) {
-                UserType.CUSTOMER -> "Location helps improve accuracy, but don’t worry, you can update it later."
-                UserType.CRAFTSMAN -> "Add photos or a video of your past work. This helps build trust with customers."
-                else -> ""
+                UserType.CUSTOMER -> UiText.StringResource(R.string.location_improves_accuracy_update_later)
+                UserType.CRAFTSMAN -> UiText.StringResource(R.string.add_photos_or_video_build_trust)
+                else -> UiText.DynamicString("")
             }
 
             3 -> when (screenState.value.accountUiState.userType) {
-                UserType.CUSTOMER -> "We’ll use this to personalize your experience. You can add a profile photo too, or skip for now."
-                UserType.CRAFTSMAN -> "Uploading your ID helps build trust with customers. Verified craftsmen get more jobs and a special badge on their profile."
-                else -> ""
+                UserType.CUSTOMER -> UiText.StringResource(R.string.use_to_personalize_experience_skip)
+                UserType.CRAFTSMAN -> UiText.StringResource(R.string.upload_id_build_trust_get_jobs)
+                else -> UiText.DynamicString("")
             }
 
-            else -> ""
+            else -> UiText.DynamicString("")
         }
     }
 
-    fun getButtonText(): String {
+    fun getButtonText(): UiText {
         return if (_currentScreen.intValue == stepsCount - 1) {
             when (screenState.value.accountUiState.userType) {
-                UserType.CUSTOMER -> "Browse Services"
-                UserType.CRAFTSMAN -> "See Nearby Requests"
-                else -> "Next"
+                UserType.CUSTOMER -> UiText.StringResource(R.string.browse_services)
+                UserType.CRAFTSMAN -> UiText.StringResource(R.string.see_nearby_requests)
+                else -> UiText.StringResource(R.string.next)
             }
         } else {
-            "Next"
+            UiText.StringResource(R.string.next)
         }
     }
 }
-
