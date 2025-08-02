@@ -1,7 +1,7 @@
 package com.paris_2.san3a.data.repository
 
 import com.paris_2.san3a.data.service.auth.WhatsAppMessage
-import com.paris_2.san3a.data.source.AppPreferences
+import com.paris_2.san3a.data.source.local.LocalDataStore
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
 import com.paris_2.san3a.domain.LoginStatusException
@@ -13,7 +13,7 @@ import com.paris_2.san3a.domain.repository.AuthRepository
 class AuthRepositoryImpl(
     private val networkConnectionChecker: NetworkConnectionChecker,
     private val remoteDataSource: AuthRemoteDataSource,
-    private val appPreferences: AppPreferences
+    private val localDataStoreImpl: LocalDataStore
 ): AuthRepository, BaseRepository() {
 
     override suspend fun sendMessage(
@@ -36,19 +36,19 @@ class AuthRepositoryImpl(
 
     override suspend fun savePhoneNumber(phoneNumber: String) {
         safeCall(SavePhoneNumberException()) {
-            appPreferences.savePhoneNumber(phoneNumber)
+            localDataStoreImpl.savePhoneNumber(phoneNumber)
         }
     }
 
     override suspend fun setLoggedIn(isLoggedIn: Boolean) {
         return safeCall(LoginStatusException()) {
-            appPreferences.setLoggedIn(isLoggedIn)
+            localDataStoreImpl.setLoggedIn(isLoggedIn)
         }
     }
 
     override suspend fun isLoggedIn(): Boolean {
         return safeCall(LoginStatusException()) {
-            appPreferences.isLoggedIn()
+            localDataStoreImpl.isLoggedIn()
         }
     }
 }
