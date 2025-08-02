@@ -8,4 +8,5 @@ data class RequestService(
     val relatedJob: String,
     val offers: List<Double>,
     val userId: String,
+    val requestedCount: Int = 0
 )
