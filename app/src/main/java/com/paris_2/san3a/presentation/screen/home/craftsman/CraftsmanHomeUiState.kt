@@ -1,26 +1,17 @@
-package com.paris_2.san3a.presentation.screen.home
+package com.paris_2.san3a.presentation.screen.home.craftsman
 
 import com.paris_2.san3a.domain.entity.RequestService
-import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.Stats
 
-data class HomeState(
+data class CraftsmanHomeState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val customerHomeUiState: CustomerHomeUiState = CustomerHomeUiState(),
-    val craftsmanHomeUiState: CraftsmanHomeUiState = CraftsmanHomeUiState(),
-)
-
-data class CustomerHomeUiState(
-    val currentUserName: String = "",
-    val location: String = "",
-    val mostRequestedServices: List<Service> = emptyList(),
-    val services: List<Service> = emptyList(),
-    val isCraftsman: Boolean = false,
+    val craftsmanHomeUiState: CraftsmanHomeUiState = CraftsmanHomeUiState()
 )
 
 data class CraftsmanHomeUiState(
     val currentUserName: String = "",
+    val relatedJob: String = "",
     val location: String = "",
     val stats: Stats = Stats(
         userId = "",
