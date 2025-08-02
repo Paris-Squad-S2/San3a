@@ -32,4 +32,5 @@ val useCaseModule = module {
     factoryOf(::GetStatsUseCase)
     factoryOf(::GetRecentRelatedJobsUseCase)
     factoryOf(::GetAvailableJobsUseCase)
+    factoryOf(::GetMostRequestedServicesUseCase)
 }
