@@ -3,6 +3,7 @@ package com.paris_2.san3a.di
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.domain.usecase.DeleteChatByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
+import com.paris_2.san3a.domain.usecase.GetAvailableJobsUseCase
 import com.paris_2.san3a.domain.usecase.GetChatsByUserIdUseCase
 import com.paris_2.san3a.domain.usecase.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.GetRecentRelatedJobsUseCase
@@ -30,4 +31,5 @@ val useCaseModule = module {
     factoryOf(::SendOtpUseCase)
     factoryOf(::GetStatsUseCase)
     factoryOf(::GetRecentRelatedJobsUseCase)
+    factoryOf(::GetAvailableJobsUseCase)
 }

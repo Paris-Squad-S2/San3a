@@ -11,4 +11,6 @@ val viewModelModule = module {
     viewModelOf(::MessagesViewModel)
     viewModelOf(::MessagesDetailsViewModel)
     viewModelOf(::OnBoardingViewModel)
+    viewModelOf(::CraftsmanHomeViewModel)
+    viewModelOf(::CustomerHomeViewModel)
 }
