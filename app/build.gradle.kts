@@ -1,10 +1,10 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.kotlin.serialization)
-
 }
 
 android {
@@ -19,6 +19,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "WHATSAPP_API_KEY", "\"${project.findProperty("WHATSAPP_API_KEY")}\"")
+
     }
 
     buildTypes {
@@ -34,11 +36,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -73,12 +78,31 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(platform(libs.firebase.bom))
 
-    // Local Date ( kotlin x )
-    implementation(libs.kotlinx.datetime)
 
     //firestore
     implementation(libs.firebase.firestore.ktx)
 
+    //firebase storge
+    implementation(libs.firebase.storage)
+
+    // splash api
+    implementation(libs.androidx.core.splashscreen)
+
     //Kotlinx DateTime
     implementation(libs.kotlinx.datetime)
+
+    //coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
+    //dataStore
+    implementation(libs.androidx.datastore.preferences)
+
+    implementation(platform(libs.firebase.bom))
+
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    implementation(libs.accompanist.flowlayout)
 }
