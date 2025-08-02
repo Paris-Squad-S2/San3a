@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,11 +35,13 @@ enum class BottomSheetType {
     Privacy
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterBottomSheet(
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     headerText : String = "",
+    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false),
     contentText : String = "",
     isErrorMessage : Boolean = false,
 ){
@@ -63,7 +68,8 @@ fun RegisterBottomSheet(
                     }
                 }
             }
-        }
+        },
+        sheetState = sheetState
     ) {
         Column(
             modifier = Modifier

@@ -1,4 +1,5 @@
 package com.paris_2.san3a.presentation.screen.register.registerScreen
+
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -22,8 +23,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,7 +68,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = koinViewModel()) {
     RegisterScreenContent(uiState.value, viewModel)
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreenContent(
     registerUiState: RegisterUiState,
@@ -73,6 +76,7 @@ fun RegisterScreenContent(
 ) {
     val isKeyboardVisible = WindowInsets.isImeVisible
     var bottomSheetType by remember { mutableStateOf<BottomSheetType?>(null) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
     val topSectionHeight by animateDpAsState(
         targetValue = if (isKeyboardVisible) 172.dp else 240.dp,
@@ -158,7 +162,8 @@ fun RegisterScreenContent(
                     RegisterBottomSheet(
                         onCloseClick = { bottomSheetType = null },
                         headerText = stringResource(R.string.terms_and_conditions),
-                        contentText = stringResource(R.string.terms_and_conditions_content)
+                        contentText = stringResource(R.string.terms_and_conditions_content),
+                        sheetState = sheetState
                     )
                 }
 
@@ -166,7 +171,8 @@ fun RegisterScreenContent(
                     RegisterBottomSheet(
                         onCloseClick = { bottomSheetType = null },
                         headerText = stringResource(R.string.privacy_policy),
-                        contentText = stringResource(R.string.privacy_and_policy_content)
+                        contentText = stringResource(R.string.privacy_and_policy_content),
+                        sheetState = sheetState
                     )
                 }
             }

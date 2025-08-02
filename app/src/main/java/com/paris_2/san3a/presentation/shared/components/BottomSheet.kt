@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -30,17 +31,15 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 @Composable
 fun BottomSheet(
     modifier: Modifier = Modifier,
+    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     onDismissRequest: () -> Unit = {},
     isVisible: Boolean = true,
     header: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit = {},
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
     LaunchedEffect(isVisible) {
-        when {
-            isVisible -> sheetState.show()
-            else -> sheetState.hide()
-        }
+        if (isVisible) sheetState.show() else sheetState.hide()
     }
 
     ModalBottomSheet(
@@ -78,6 +77,7 @@ private fun BottomSheetDragHandle() {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun BottomSheetPrev() {
