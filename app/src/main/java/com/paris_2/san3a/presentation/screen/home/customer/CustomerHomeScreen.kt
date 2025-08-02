@@ -20,6 +20,9 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.MostRequestedServices
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.presentation.screen.home.customer.component.MostRequestedServices
+import com.paris_2.san3a.presentation.screen.home.utils.getResource
+import com.paris_2.san3a.presentation.screen.home.utils.getResourceColors
+import com.paris_2.san3a.presentation.screen.home.utils.getResourceTint
 import com.paris_2.san3a.presentation.shared.components.AdCard
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.CategoryItem
@@ -94,10 +97,10 @@ private fun CustomerHomeScreenContent(
                     title = service.title[if (isArabic) "arabicName" else "englishName"] ?: "",
                     description = service.description[if (isArabic) "arabicDescription" else "englishDescription"]
                         ?: "",
-                    tint = Theme.colors.additional.primary.blue,
-                    iconColor = Theme.colors.additional.secondary.blue,
+                    tint = getResourceTint(service.id),
+                    iconColor = getResourceColors(service.id),
                     isLarge = false,
-                    painter = painterResource(R.drawable.ic_washing_machine_bold),
+                    painter = painterResource(getResource(service.id)),
                     modifier = Modifier
                         .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
                 )
