@@ -12,4 +12,5 @@ interface AuthRepository {
     suspend fun setLoggedIn(isLoggedIn: Boolean)
 
     suspend fun isLoggedIn(): Boolean
+    suspend fun getPhoneNumber(): String
 }

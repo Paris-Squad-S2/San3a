@@ -35,6 +35,13 @@ class LocalDataStoreImpl(
         it[KEY_USER_LOGGED_IN] ?: false
     }.first()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override suspend fun getPhoneNumber(): String {
+        return dataStore.data.mapLatest {
+            it[PHONE_NUMBER] ?: ""
+        }.first()
+    }
+
     private suspend fun <T> DataStore<Preferences>.setValue(
         key: Preferences.Key<T>,
         value: T,
