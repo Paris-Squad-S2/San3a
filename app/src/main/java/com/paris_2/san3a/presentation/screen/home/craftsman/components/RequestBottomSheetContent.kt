@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.onboarding.sections.TextSection
+import com.paris_2.san3a.presentation.shared.components.ProgressBar
 import com.paris_2.san3a.presentation.shared.components.RequestTitleContent
 import com.paris_2.san3a.presentation.shared.designSystem.color.Button
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -33,6 +34,7 @@ fun RequestBottomSheetContent(
     icon: Int,
     color: Color,
     description: String,
+    step: Int,
     buttonTitle: String = "Next",
     buttonIsActive: Boolean = true,
     buttonBack: Boolean = false,
@@ -113,6 +115,12 @@ fun RequestBottomSheetContent(
                 }
 
             }
+            ProgressBar(
+                step = step
+                , modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp)
+            )
         }
         Icon(
             painter = painterResource(R.drawable.ic_close),
@@ -135,6 +143,7 @@ private fun Preview(){
         description = "What do you need help with?",
         onButtonClick = {},
         onExitClick = {},
+        step = 1,
     ){
         RequestTitleContent(
             value = "",
