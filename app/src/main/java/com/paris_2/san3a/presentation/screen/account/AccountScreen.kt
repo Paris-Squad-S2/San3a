@@ -32,9 +32,10 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AccountScreen(viewModel: AccountViewModel = viewModel()) {
+fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
     val progress = viewModel.progress
     val title = viewModel.getTitle()
     val description = viewModel.getDescription()
