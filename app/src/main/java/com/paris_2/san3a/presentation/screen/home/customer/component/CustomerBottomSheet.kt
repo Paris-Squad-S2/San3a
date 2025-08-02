@@ -73,7 +73,7 @@ fun CustomerBottomSheetService(
                         onButtonClick = {currentStep = BottomSheetStep.SELECT_LOCATION},
                         buttonTitle = "Next",
                         step = 2,
-                        onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE},
+                        onClickBack = {currentStep = BottomSheetStep.IMAGE_UPLOAD},
                         onExitClick = {
                             onExitClick()
                         }
@@ -98,7 +98,7 @@ fun CustomerBottomSheetService(
                     buttonTitle = "Create Request",
                     step = 4,
                     onButtonClick = {onCreateRequestClick()},
-                    onClickBack = {currentStep = BottomSheetStep.SELECT_LOCATION},
+                    onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE},
                     onExitClick = {
                         onExitClick()
                     }
