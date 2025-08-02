@@ -66,7 +66,7 @@ fun AddPhotosComponent(
                     stringResource(R.string.tap_to_add_photos),
                     color = Theme.colors.shade.secondary,
                     style = Theme.textStyle.body.small.medium
-                    )
+                )
             }
         }
     } else {
@@ -105,7 +105,10 @@ fun AddPhotosComponent(
 }
 
 @Composable
-fun AddSinglePhotoCircle(onTap: () -> Unit) {
+fun AddSinglePhotoCircle(
+    onTap: () -> Unit,
+    imageUri: Uri? = null
+) {
     Box(
         modifier = Modifier
             .size(80.dp)
@@ -121,17 +124,28 @@ fun AddSinglePhotoCircle(onTap: () -> Unit) {
             .clickable { onTap() },
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                painter = painterResource(R.drawable.ic_camera_outline),
+
+        if (imageUri != null) {
+            AsyncImage(
+                model = imageUri,
                 contentDescription = null,
-                tint = Theme.colors.shade.secondary
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape)
             )
-            Text(
-                stringResource(R.string.tap_here),
-                color = Theme.colors.shade.secondary,
-                style = Theme.textStyle.body.small.medium
-            )
+        } else {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_camera_outline),
+                    contentDescription = null,
+                    tint = Theme.colors.shade.secondary
+                )
+                Text(
+                    stringResource(R.string.tap_here),
+                    color = Theme.colors.shade.secondary,
+                    style = Theme.textStyle.body.small.medium
+                )
+            }
         }
     }
 }
@@ -179,6 +193,7 @@ fun Preview_AddPhotosComponent_Empty() {
 fun Preview_AddSinglePhotoCircle() {
     AddSinglePhotoCircle(onTap = {})
 }
+
 @Preview(showBackground = true)
 @Composable
 fun Preview_AddPhotosComponent_WithImages() {

@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.account.components
 
+import android.net.Uri
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,18 +29,23 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
-fun StepFourCustomerContent(modifier: Modifier = Modifier) {
-    var name by remember { mutableStateOf("") }
-    Column(
+fun StepFourCustomerContent(
+    modifier: Modifier = Modifier,
+    name: String,
+    onNameChanged: (String) -> Unit,
+    onAddPhotoClick: () -> Unit,
+    profilePhotoUri: Uri?
+) {
 
+    Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         AppTextField(
             label = stringResource(R.string.what_s_your_name),
             value = name,
-            onValueChange = { name = it },
+            onValueChange = onNameChanged,
             placeholder = stringResource(R.string.enter_your_full_name),
-            modifier = modifier
+            modifier = Modifier.fillMaxWidth()
         )
         Row(
             modifier = modifier,
@@ -56,16 +62,17 @@ fun StepFourCustomerContent(modifier: Modifier = Modifier) {
             )
         }
         AddSinglePhotoCircle(
-            onTap = {}
+            onTap = onAddPhotoClick,
+            imageUri = profilePhotoUri
         )
     }
 }
 
 @Composable
 fun StepFourCraftsmanContent(modifier: Modifier = Modifier) {
-    Column (
+    Column(
         modifier = modifier.fillMaxWidth(),
-    ){
+    ) {
         Text(
             text = stringResource(R.string.upload_front_of_national_id),
             style = Theme.textStyle.body.medium.regular,
@@ -75,14 +82,15 @@ fun StepFourCraftsmanContent(modifier: Modifier = Modifier) {
         AddPhotosComponent(
             images = emptyList(),
             onAddPhotoClick = {},
-            modifier = Modifier.height(96.dp)
+            modifier = Modifier
+                .height(96.dp)
                 .fillMaxWidth()
         )
         Text(
             text = stringResource(R.string.upload_back_of_national_id),
             style = Theme.textStyle.body.medium.regular,
             color = Theme.colors.shade.primary,
-            modifier = Modifier.padding(top = 16.dp,bottom = 12.dp)
+            modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
         )
         AddPhotosComponent(
             images = emptyList(),
@@ -94,18 +102,25 @@ fun StepFourCraftsmanContent(modifier: Modifier = Modifier) {
         AppButton(
             text = stringResource(R.string.i_ll_verify_later),
             onClick = {},
-            modifier = Modifier.fillMaxWidth()
-                .padding(top=32.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp),
             state = AppButtonState.Enable,
             type = AppButtonType.Secondary,
         )
     }
 }
+
 @Preview
 @Composable
 private fun StepFourCustomerContentPreview() {
     San3aTheme {
-        StepFourCustomerContent()
+        StepFourCustomerContent(
+            name = "John Doe",
+            onNameChanged = {},
+            profilePhotoUri = null,
+            onAddPhotoClick = {}
+        )
     }
 }
 

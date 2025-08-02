@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.account
 
+import android.net.Uri
 import com.paris_2.san3a.R
 
 data class AccountScreenUiState(
@@ -13,6 +14,8 @@ data class AccountUiState(
     val userType: UserType? = null,
     val serviceUiState: List<ServiceUiState> = emptyList(),
     val locationUiState: LocationUiState = LocationUiState(),
+    val customerName: String = "",
+    val customerProfilePhotoUri: Uri? = null,
 )
 
 data class ServiceUiState(

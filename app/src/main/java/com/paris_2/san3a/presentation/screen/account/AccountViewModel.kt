@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.account
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
@@ -99,7 +100,25 @@ class AccountViewModel(
         updateState(updatedUiState)
     }
 
+    fun onCustomerNameChanged(name: String) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    customerName = name
+                )
+            )
+        )
+    }
 
+    fun onCustomerProfilePhotoSelected(uri: Uri) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    customerProfilePhotoUri = uri
+                )
+            )
+        )
+    }
     fun nextStep() {
         val userType = screenState.value.accountUiState.userType
         if (userType != null) {
@@ -130,6 +149,16 @@ class AccountViewModel(
                                 phoneNumber,
                                 services,
                                 isCraftsman = isCraftsman
+                            )
+                        }
+
+                        3 -> {
+                            val fullName = screenState.value.accountUiState.customerName
+                            val profilePhotoUri = screenState.value.accountUiState.customerProfilePhotoUri
+                            setUpAccountUseCase.savePersonalInfo(
+                                phoneNumber,
+                                fullName,
+                                profilePhotoUri
                             )
                         }
                     }

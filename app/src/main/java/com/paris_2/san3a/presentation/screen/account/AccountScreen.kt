@@ -1,5 +1,9 @@
 package com.paris_2.san3a.presentation.screen.account
 
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,9 +20,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.paris_2.san3a.presentation.screen.account.components.AccountProgressIndicator
 import com.paris_2.san3a.presentation.screen.account.components.StepFourCraftsmanContent
 import com.paris_2.san3a.presentation.screen.account.components.StepFourCustomerContent
@@ -42,6 +46,18 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
     val textButton = viewModel.getButtonText()
     val currentScreen by viewModel.currentScreen
     val uiState by viewModel.screenState.collectAsState()
+    val context = LocalContext.current
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        uri?.let {
+            context.contentResolver.takePersistableUriPermission(
+                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            viewModel.onCustomerProfilePhotoSelected(it)
+        }
+    }
 
     AccountScreenContent(
         title = title,
@@ -53,7 +69,9 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
         onNext = viewModel::nextStep,
         onUserTypeSelected = viewModel::updateUserType,
         onChipClick = viewModel::toggleServiceSelection,
-        uiState = uiState
+        uiState = uiState,
+        onCustomerNameChanged = viewModel::onCustomerNameChanged,
+        onCustomerProfilePhotoClick = { imagePickerLauncher.launch(arrayOf("image/*")) }
     )
 }
 
@@ -69,6 +87,8 @@ fun AccountScreenContent(
     onUserTypeSelected: (UserType) -> Unit,
     onChipClick: (String) -> Unit,
     uiState: AccountScreenUiState,
+    onCustomerNameChanged: (String) -> Unit,
+    onCustomerProfilePhotoClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -121,7 +141,16 @@ fun AccountScreenContent(
             }
 
             3 -> when (uiState.accountUiState.userType) {
-                UserType.CUSTOMER -> StepFourCustomerContent(modifier = Modifier.padding(vertical = 32.dp))
+                UserType.CUSTOMER -> StepFourCustomerContent(
+                    modifier = Modifier.padding(
+                        top = 32.dp,
+                        bottom = 12.dp
+                    ),
+                    name = uiState.accountUiState.customerName,
+                    onNameChanged = onCustomerNameChanged,
+                    onAddPhotoClick = onCustomerProfilePhotoClick,
+                    profilePhotoUri = uiState.accountUiState.customerProfilePhotoUri
+                )
                 UserType.CRAFTSMAN -> StepFourCraftsmanContent(
                     modifier = Modifier.padding(
                         top = 32.dp,
@@ -152,7 +181,7 @@ private fun AccountScreenPreview() {
             description = "This helps us personalize your experience. You can change it anytime.",
             textButton = "Next",
             progress = 0.25f,
-            currentScreen = 0,
+            currentScreen = 3,
             onNext = {},
             onPrevious = {},
             onUserTypeSelected = {},
@@ -189,7 +218,9 @@ private fun AccountScreenPreview() {
                         )
                 )
             ),
-            onChipClick = {}
+            onChipClick = {},
+            onCustomerNameChanged = {},
+            onCustomerProfilePhotoClick = {}
         )
     }
 }
