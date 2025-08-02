@@ -76,12 +76,12 @@ class UserRemoteDataSourceImp(
         updateUserData(phone, data)
     }
 
-    override suspend fun saveWorkShowcase(phone: String, workMedia: List<String>, workDescription: String) {
-        val data = mapOf(
-            "workMedia" to workMedia,
+    override suspend fun saveWorkShowcase(phone: String, workMedia: List<String>?, workDescription: String) {
+        val data = mutableMapOf<String, Any>(
             "workDescription" to workDescription,
             "currentStep" to AccountSetupStep.UPLOAD_NATIONAL_ID.name
         )
+        workMedia?.let { data["workMedia"] = it }
         updateUserData(phone, data)
     }
 

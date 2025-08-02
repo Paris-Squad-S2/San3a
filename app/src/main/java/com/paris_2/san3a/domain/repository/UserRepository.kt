@@ -12,7 +12,7 @@ interface UserRepository {
     suspend fun saveServices(phone: String, services:  List<Service>, isCraftsman: Boolean)
     suspend fun saveLocation(phone: String, location: Location)
     suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?)
-    suspend fun saveWorkShowcase(phone: String, workMedia: List<String>, workDescription: String)
+    suspend fun saveWorkShowcase(phone: String, workMedia: List<Uri>?, workDescription: String)
     suspend fun getUserProgress(phone: String): AccountSetupStep
     suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?)
     suspend fun completeUserSetup(phone: String)

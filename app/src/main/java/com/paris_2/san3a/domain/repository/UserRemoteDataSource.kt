@@ -6,7 +6,7 @@ import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.Service
 
 interface UserRemoteDataSource {
-    suspend fun saveWorkShowcase(phone: String, workMedia: List<String>, workDescription: String)
+    suspend fun saveWorkShowcase(phone: String, workMedia: List<String>?, workDescription: String)
 
     suspend fun getUserProgress(phone: String): AccountSetupStep
 

@@ -52,10 +52,14 @@ class UserRepositoryImp(
             userRemoteDataSource.savePersonalInfo(phone, fullName, profileUrl)
         }
 
-    override suspend fun saveWorkShowcase(phone: String, workMedia: List<String>, workDescription: String) =
+    override suspend fun saveWorkShowcase(phone: String, workMedia: List<Uri>?, workDescription: String) =
         safeCall(SaveWorkShowcaseException()) {
-            userRemoteDataSource.saveWorkShowcase(phone, workMedia, workDescription)
-
+            val mediaUrls = workMedia?.mapIndexedNotNull { index, uri ->
+                val path = "$WORK_SHOWCASE_PATH/$phone/media_$index.jpg"
+                storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
+                storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
+            }
+            userRemoteDataSource.saveWorkShowcase(phone, mediaUrls, workDescription)
         }
 
     override suspend fun getUserProgress(phone: String): AccountSetupStep =
@@ -89,5 +93,6 @@ class UserRepositoryImp(
         private const val NATIONAL_ID_PATH = "national_ids"
         private const val FRONT_IMAGE_NAME = "front.jpg"
         private const val BACK_IMAGE_NAME = "back.jpg"
+        private const val WORK_SHOWCASE_PATH = "work_showcase"
     }
 }

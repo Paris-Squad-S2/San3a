@@ -30,7 +30,7 @@ class SetUpAccountUseCase(
         userRepository.savePersonalInfo(phone, fullName, profileUri)
     }
 
-    suspend fun saveWorkShowcase(phone: String, workMedia: List<String>, workDescription: String) {
+    suspend fun saveWorkShowcase(phone: String, workMedia: List<Uri>?, workDescription: String) {
         userRepository.saveWorkShowcase(phone, workMedia, workDescription)
     }
 
