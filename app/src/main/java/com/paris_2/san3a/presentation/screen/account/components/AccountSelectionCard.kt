@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
@@ -76,7 +77,8 @@ fun AccountSelectionCard(
             text = caption,
             color = Theme.colors.shade.secondary,
             style = Theme.textStyle.body.small.medium,
-            modifier = Modifier.padding(bottom = 12.dp)
+            modifier = Modifier.padding(bottom = 12.dp),
+            textAlign = TextAlign.Center
         )
     }
 }
