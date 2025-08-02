@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.shared.components.AppButton
+import com.paris_2.san3a.presentation.shared.components.AppButtonSize
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
+import com.paris_2.san3a.presentation.shared.components.AppButtonType
+import com.paris_2.san3a.presentation.shared.components.BottomSheet
+import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+
+
+enum class BottomSheetType {
+    Terms,
+    Privacy
+}
 
 @Composable
 fun RegisterBottomSheet(
@@ -78,7 +91,7 @@ fun RegisterBottomSheet(
                 Text(
                     text = contentText,
                     style = Theme.textStyle.body.medium.medium,
-                    color = Theme.colors.shade.error
+                    color = Theme.colors.shade.primary
                 )
             }
             AppButton(

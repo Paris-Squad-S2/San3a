@@ -1,5 +1,4 @@
 package com.paris_2.san3a.presentation.screen.register.registerScreen
-
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -20,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
@@ -47,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.screen.register.components.BottomSheetType
+import com.paris_2.san3a.presentation.screen.register.components.RegisterBottomSheet
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -70,6 +72,7 @@ fun RegisterScreenContent(
     registerInteractionListener: RegisterInteractionListener,
 ) {
     val isKeyboardVisible = WindowInsets.isImeVisible
+    var bottomSheetType by remember { mutableStateOf<BottomSheetType?>(null) }
 
     val topSectionHeight by animateDpAsState(
         targetValue = if (isKeyboardVisible) 172.dp else 240.dp,
@@ -123,7 +126,10 @@ fun RegisterScreenContent(
                         onCountrySelected = { registerInteractionListener.onCountrySelected(it) }
                     )
 
-                    TermsAndConditionsText()
+                    TermsAndConditionsText(
+                        onTermsClick = { bottomSheetType = BottomSheetType.Terms },
+                        onPrivacyClick = { bottomSheetType = BottomSheetType.Privacy }
+                    )
 
                     Spacer(modifier = Modifier.height(24.dp))
 
@@ -142,6 +148,26 @@ fun RegisterScreenContent(
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+        }
+
+        bottomSheetType?.let { type ->
+            when (type) {
+                BottomSheetType.Terms -> {
+                    RegisterBottomSheet(
+                        onCloseClick = { bottomSheetType = null },
+                        headerText = stringResource(R.string.terms_and_conditions),
+                        contentText = stringResource(R.string.terms_and_conditions_content)
+                    )
+                }
+
+                BottomSheetType.Privacy -> {
+                    RegisterBottomSheet(
+                        onCloseClick = { bottomSheetType = null },
+                        headerText = stringResource(R.string.privacy_policy),
+                        contentText = stringResource(R.string.privacy_and_policy_content)
+                    )
                 }
             }
         }
@@ -261,39 +287,87 @@ fun PhoneNumberInput(
     }
 }
 
-
 @Composable
-fun TermsAndConditionsText() {
+fun TermsAndConditionsText(
+    onTermsClick: (() -> Unit)? = null,
+    onPrivacyClick: (() -> Unit)? = null,
+) {
     Spacer(modifier = Modifier.height(8.dp))
 
-    Text(
-        text = buildAnnotatedString {
-            append(stringResource(R.string.by_continuing_you_agree_on_our))
-            withStyle(
-                style = SpanStyle(
-                    color = Theme.colors.brand.primary,
-                    fontWeight = FontWeight.SemiBold
-                )
-            ) {
-                append(stringResource(R.string.terms_and_conditions))
-            }
-            append(stringResource(R.string.and))
-            withStyle(
-                style = SpanStyle(
-                    color = Theme.colors.brand.primary,
-                    fontWeight = FontWeight.SemiBold
-                )
-            ) {
-                append(stringResource(R.string.privacy_policy))
-            }
-        },
-        style = Theme.textStyle.body.small.regular,
-        color = Theme.colors.shade.secondary,
-        textAlign = TextAlign.Center,
-        lineHeight = 20.sp,
+    val termsText = stringResource(R.string.terms_and_conditions)
+    val privacyText = stringResource(R.string.privacy_policy)
+    val prefixText = stringResource(R.string.by_continuing_you_agree_on_our)
+    val andText = stringResource(R.string.and)
+
+    val annotatedString = buildAnnotatedString {
+        append(prefixText)
+
+        val termsStart = length
+        withStyle(
+            style = SpanStyle(
+                color = Theme.colors.brand.primary,
+                fontWeight = FontWeight.SemiBold
+            )
+        ) {
+            append(termsText)
+        }
+        val termsEnd = length
+        addStringAnnotation(
+            tag = "TERMS",
+            annotation = "terms_and_conditions",
+            start = termsStart,
+            end = termsEnd
+        )
+
+        append(" $andText ")
+
+        val privacyStart = length
+        withStyle(
+            style = SpanStyle(
+                color = Theme.colors.brand.primary,
+                fontWeight = FontWeight.SemiBold
+            )
+        ) {
+            append(privacyText)
+        }
+        val privacyEnd = length
+        addStringAnnotation(
+            tag = "PRIVACY",
+            annotation = "privacy_policy",
+            start = privacyStart,
+            end = privacyEnd
+        )
+    }
+
+    ClickableText(
+        text = annotatedString,
+        style = Theme.textStyle.body.small.regular.copy(
+            color = Theme.colors.shade.secondary,
+            textAlign = TextAlign.Center,
+            lineHeight = 20.sp
+        ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 8.dp),
+        onClick = { offset ->
+            annotatedString.getStringAnnotations(
+                tag = "TERMS",
+                start = offset,
+                end = offset
+            ).firstOrNull()?.let {
+                onTermsClick?.invoke()
+                return@ClickableText
+            }
+
+            annotatedString.getStringAnnotations(
+                tag = "PRIVACY",
+                start = offset,
+                end = offset
+            ).firstOrNull()?.let {
+                onPrivacyClick?.invoke()
+                return@ClickableText
+            }
+        }
     )
 }
 
@@ -310,7 +384,7 @@ fun GuestButtonSection(interactionListener: RegisterInteractionListener) {
     AppButton(
         type = AppButtonType.Secondary,
         state = AppButtonState.Enable,
-        onClick = interactionListener::onClickContinueAsGuest ,
+        onClick = interactionListener::onClickContinueAsGuest,
         modifier = Modifier.fillMaxWidth(),
         size = AppButtonSize.Large,
         text = stringResource(R.string.continue_as_a_guest),
