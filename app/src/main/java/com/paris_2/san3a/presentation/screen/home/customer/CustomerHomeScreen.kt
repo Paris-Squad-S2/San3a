@@ -134,7 +134,7 @@ private fun CustomerHomeScreenContent(
                     buttonTitle = "Become a Craftsman",
                     onClick = { action.onBecomeCraftsmanClick() },
                     modifier = Modifier
-                        .padding(top = 12.dp)
+                        .padding(vertical = 12.dp)
                 )
             }
 
