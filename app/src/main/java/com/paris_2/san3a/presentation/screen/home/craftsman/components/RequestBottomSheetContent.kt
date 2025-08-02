@@ -44,16 +44,23 @@ fun RequestBottomSheetContent(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .background(Theme.colors.background.bottomSheet)
             .padding(horizontal = 16.dp)
+            .padding(top = 20.dp)
     ){
         Column {
             Row(
                 modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically,
+
             ){
                 Icon(
                     painter = painterResource(id = icon),
                     contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .padding(end = 4.dp),
+                    tint = color
                 )
                 Text(
                     text = title,
@@ -65,7 +72,7 @@ fun RequestBottomSheetContent(
                 text = subTitle,
                 style = Theme.textStyle.title.small,
                 color = Theme.colors.shade.primary,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 8.dp,bottom = 20.dp)
             )
             content()
             Row(modifier = Modifier
