@@ -3,7 +3,7 @@ package com.paris_2.san3a.presentation.screen.onboarding
 import androidx.navigation.NavOptions
 import com.paris_2.san3a.domain.usecase.SetOnboardingCompletedUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
-import com.paris_2.san3a.presentation.screen.base.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class OnBoardingViewModel(
     private val setOnboardingCompletedUseCase: SetOnboardingCompletedUseCase
