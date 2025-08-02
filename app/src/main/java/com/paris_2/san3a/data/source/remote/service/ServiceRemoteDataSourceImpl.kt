@@ -1,7 +1,9 @@
 package com.paris_2.san3a.data.source.remote.service
 
+import com.google.firebase.firestore.Query
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
+import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import kotlinx.coroutines.flow.Flow
 
 class ServiceRemoteDataSourceImpl(
@@ -16,8 +18,22 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
-    override suspend fun requestService() {
-        TODO("Not yet implemented")
+    override suspend fun requestService(requestedServiceDto: RequestServiceDto) {
+        val docPath = "${SERVICE_REQUESTS_COLLECTION}/${requestedServiceDto.id}"
+        val existingRequest = fireStoreService.getDoc(
+            path = docPath,
+            fromJson = RequestServiceDto.Companion::fromJson
+        )
+        if (existingRequest != null) {
+            val updatedCount = existingRequest.requestedCount + 1
+            fireStoreService.updateDoc(
+                docPath,
+                mapOf("requestedCount" to updatedCount)
+            )
+        } else {
+            val newRequest = requestedServiceDto.copy(requestedCount = 1)
+            fireStoreService.setDoc(docPath, newRequest)
+        }
     }
 
     override fun searchServices(query: String): Flow<List<ServiceDto>> {
@@ -31,7 +47,22 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
+    override  fun getMostRequestedServices(userId:String): Flow<List<RequestServiceDto>> {
+        return fireStoreService.streamCollection(
+            path = SERVICE_REQUESTS_COLLECTION,
+            fromJson = RequestServiceDto::fromJson,
+            limit = null,
+            queryBuilder = { collection ->
+                collection
+                    .whereEqualTo("userId", userId)
+                    .whereGreaterThan("requestedCount", 0)
+                    .orderBy("requestedCount", Query.Direction.DESCENDING)
+            }
+        )
+    }
+
     companion object {
         const val SERVICES_COLLECTION = "services"
+        const val SERVICE_REQUESTS_COLLECTION = "service_requests"
     }
 }
