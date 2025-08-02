@@ -7,6 +7,7 @@ import com.paris_2.san3a.domain.GetAllServicesException
 import com.paris_2.san3a.domain.GetAvailableJobsException
 import com.paris_2.san3a.domain.GetMostRequestedServicesException
 import com.paris_2.san3a.domain.SearchServicesException
+import com.paris_2.san3a.domain.entity.MostRequestedServices
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.repository.HomeRepository
@@ -34,10 +35,11 @@ class HomeRepositoryImpl(
         serviceRemoteDataSource.requestService(requestedService.toDto())
     }
 
-    override fun getMostRequestedServices(): Flow<List<Service>> {
+    override fun getMostRequestedServices(): Flow<List<MostRequestedServices>> {
         return serviceRemoteDataSource.getMostRequestedServices()
-            .map { dto -> dto.map { it.toEntity() } }
+            .map { dto -> dto.map { it.toMostRequestedServices() } }
             .catch { throw GetMostRequestedServicesException() }
+
     }
 
     override fun getAvailableJobs(): Flow<List<RequestService>> {
