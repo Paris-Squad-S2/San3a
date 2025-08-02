@@ -136,21 +136,41 @@ class AccountViewModel(
         }
     }
 
-    fun updateBottomSheetVisibility() {
+    fun updateGovernmentBottomSheetVisibility() {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    isBottomSheetShowed = !screenState.value.accountUiState.isBottomSheetShowed
+                    isGovernmentBottomSheetShowed = !screenState.value.accountUiState.isGovernmentBottomSheetShowed
                 )
             )
         )
     }
 
-    fun onButtonSheetDismiss() {
+    fun updateCitiesBottomSheetVisibility() {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    isBottomSheetShowed = false
+                    isCitiesBottomSheetShowed = !screenState.value.accountUiState.isCitiesBottomSheetShowed
+                )
+            )
+        )
+    }
+
+    fun onGovernmentButtonSheetDismiss() {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    isGovernmentBottomSheetShowed = false
+                )
+            )
+        )
+    }
+
+    fun onCitiesButtonSheetDismiss() {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    isCitiesBottomSheetShowed = false
                 )
             )
         )

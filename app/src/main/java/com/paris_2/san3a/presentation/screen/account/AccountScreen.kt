@@ -52,8 +52,10 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
         onNext = viewModel::nextStep,
         onUserTypeSelected = viewModel::updateUserType,
         uiState = uiState,
-        onBottomSheetVisibility = viewModel::updateBottomSheetVisibility,
-        onDismissRequest = viewModel::onButtonSheetDismiss
+        onBottomSheetVisibility = viewModel::updateGovernmentBottomSheetVisibility,
+        onDismissRequest = viewModel::onGovernmentButtonSheetDismiss,
+        onGovernmentSelected = viewModel::getCities,
+        viewModel = viewModel
     )
 }
 
@@ -69,7 +71,10 @@ fun AccountScreenContent(
     onPrevious: () -> Unit,
     onDismissRequest: () -> Unit = {},
     onUserTypeSelected: (UserType) -> Unit,
-    uiState: AccountScreenUiState,
+    onGovernmentSelected: (String) -> Unit,
+    uiState
+    : AccountScreenUiState,
+    viewModel: AccountViewModel,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -114,9 +119,18 @@ fun AccountScreenContent(
                 UserType.CUSTOMER -> StepThreeCustomerContent(
                     modifier = Modifier.padding(vertical = 32.dp),
                     onGetLocationClicked = onBottomSheetVisibility,
-                    isBottomSheetShowed = uiState.accountUiState.isBottomSheetShowed,
-                    onDismissRequest = onDismissRequest,
-                    governments = uiState.accountUiState.governments
+                    isGovernmentSheetShowed = uiState.accountUiState.isGovernmentBottomSheetShowed,
+                    onGovernmentDismissRequest = onDismissRequest,
+                    governments = uiState.accountUiState.governments,
+                    onGovernmentSelected = {
+                        viewModel.getCities(it).also {
+                            viewModel.updateCitiesBottomSheetVisibility()
+                        }
+                    },
+                    isCitiesSheetShowed = uiState.accountUiState.isCitiesBottomSheetShowed,
+                    onCitiesDismissRequest = viewModel::onCitiesButtonSheetDismiss,
+                    cities = uiState.accountUiState.cities
+
                 )
 
                 UserType.CRAFTSMAN -> StepThreeCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))
@@ -150,18 +164,20 @@ fun AccountScreenContent(
 @Composable
 private fun AccountScreenPreview() {
     San3aTheme {
-        AccountScreenContent(
-            title = "What do you usually need help with?",
-            description = "This helps us personalize your experience. You can change it anytime.",
-            textButton = "Next",
-            progress = 0.25f,
-            currentScreen = 1,
-            onNext = {},
-            onPrevious = {},
-            onUserTypeSelected = {},
-            uiState = AccountScreenUiState(),
-            onBottomSheetVisibility = {}
-        )
+//        AccountScreenContent(
+//            title = "What do you usually need help with?",
+//            description = "This helps us personalize your experience. You can change it anytime.",
+//            textButton = "Next",
+//            progress = 0.25f,
+//            currentScreen = 1,
+//            onNext = {},
+//            onPrevious = {},
+//            onUserTypeSelected = {},
+//            uiState = AccountScreenUiState(),
+//            onBottomSheetVisibility = {},
+//            onGovernmentSelected = {},
+//            viewModel = AccountViewModel() = koinViewModel()
+//        )
     }
 }
 

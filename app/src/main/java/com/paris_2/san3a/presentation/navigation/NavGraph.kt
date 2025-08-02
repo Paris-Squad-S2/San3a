@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.navigation
 
-import com.paris_2.san3a.presentation.screen.splash.SplashScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -18,6 +17,7 @@ import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingScreen
 import com.paris_2.san3a.presentation.screen.onboarding.onboardingPages
 import com.paris_2.san3a.presentation.screen.register.otpScreen.OTPRegisterScreen
 import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterScreen
+import com.paris_2.san3a.presentation.screen.splash.SplashScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -52,8 +52,8 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.MyRequest> { MyRequestScreen() }
         composable<Destinations.Notifications> { NotificationsScreen() }
         composable<Destinations.More> { MoreScreen() }
-        composable<Destinations.Splash>{ SplashScreen() }
-        composable<Destinations.OnBoarding>{ OnBoardingScreen(pages = onboardingPages()) }
+        composable<Destinations.Splash> { SplashScreen() }
+        composable<Destinations.OnBoarding> { OnBoardingScreen(pages = onboardingPages()) }
         composable<Destinations.OTPRegisterScreen> { OTPRegisterScreen() }
         composable<Destinations.RegisterScreen> { RegisterScreen() }
     }

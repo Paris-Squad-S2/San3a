@@ -23,5 +23,8 @@ class NavigatorImpl(override val startGraph: Graph) : Navigator {
             }
         }
     }
-    override suspend fun navigateUp() { _navigateEvent.send(NavigationEvent.NavigateUp) }
+
+    override suspend fun navigateUp() {
+        _navigateEvent.send(NavigationEvent.NavigateUp)
+    }
 }

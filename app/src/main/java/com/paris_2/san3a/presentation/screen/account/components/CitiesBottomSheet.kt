@@ -64,8 +64,8 @@ fun CitiesBottomSheet(
         },
         content = {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                items(cities) { government ->
-                    GovernmentItem(title = government, onClick = onClick)
+                items(cities) { cities ->
+                    CitiesItem(title = cities, onClick = onClick)
                 }
 
             }

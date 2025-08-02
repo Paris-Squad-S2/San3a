@@ -15,7 +15,8 @@ data class AccountUiState(
     val locationUiState: LocationUiState = LocationUiState(),
     val governments: List<String> = emptyList(),
     val cities: List<String> = emptyList(),
-    val isBottomSheetShowed: Boolean = false,
+    val isGovernmentBottomSheetShowed: Boolean = false,
+    val isCitiesBottomSheetShowed: Boolean = false,
 )
 
 data class ServiceUiState(

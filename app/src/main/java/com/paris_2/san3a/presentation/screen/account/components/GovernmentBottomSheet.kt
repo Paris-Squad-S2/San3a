@@ -1,5 +1,7 @@
 package com.paris_2.san3a.presentation.screen.account.components
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,9 +11,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,18 +32,35 @@ fun GovernmentBottomSheet(
     governments: List<String>,
     onClick: (String) -> Unit = {},
     isVisible: Boolean = false,
+    skipPartiallyExpanded: Boolean = false,
     onDismissRequest: () -> Unit = {},
 ) {
 
     BottomSheet(
         modifier = modifier,
         isVisible = isVisible,
+        skipPartiallyExpanded = skipPartiallyExpanded,
         onDismissRequest = onDismissRequest,
         header = {
-            Text(
-                text = "Choose Government",
-                style = Theme.textStyle.title.medium
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Choose Government",
+                    style = Theme.textStyle.title.medium,
+                    modifier = Modifier.weight(1F)
+                )
+                IconButton(onClick = onDismissRequest) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_close),
+                        contentDescription = null,
+                        tint = Color.Unspecified
+                    )
+                }
+            }
         },
         content = {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
@@ -46,8 +69,7 @@ fun GovernmentBottomSheet(
                 }
 
             }
-        }
-    )
+        })
 }
 
 @Composable
@@ -55,12 +77,17 @@ fun GovernmentItem(modifier: Modifier = Modifier, title: String, onClick: (Strin
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 4.dp)
+            .clickable(
+                enabled = true, onClick = {
+                onClick(title)
+            }, interactionSource = remember { MutableInteractionSource() }, indication = null
+            ),
         colors = CardDefaults.cardColors(containerColor = Theme.colors.background.bottomSheetCard)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -71,8 +98,7 @@ fun GovernmentItem(modifier: Modifier = Modifier, title: String, onClick: (Strin
             Icon(
                 painter = painterResource(
                     R.drawable.ic_alt_arrow_right_outline
-                ),
-                contentDescription = null
+                ), contentDescription = null
             )
         }
     }
@@ -83,8 +109,7 @@ fun GovernmentItem(modifier: Modifier = Modifier, title: String, onClick: (Strin
 private fun GovernmentBottomSheetPreview() {
     BasePreview {
         val list = listOf(
-            "Giza",
-            "Cairo"
+            "Giza", "Cairo"
         )
         GovernmentBottomSheet(governments = list)
     }

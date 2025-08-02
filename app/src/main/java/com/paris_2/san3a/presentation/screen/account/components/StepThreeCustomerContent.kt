@@ -32,12 +32,18 @@ import com.paris_2.san3a.presentation.shared.utils.BasePreview
 fun StepThreeCustomerContent(
     modifier: Modifier = Modifier,
     onGetLocationClicked: () -> Unit = {},
-    isBottomSheetShowed: Boolean = false,
-    onDismissRequest: () -> Unit = {},
+    isGovernmentSheetShowed: Boolean = false,
+    isCitiesSheetShowed: Boolean = false,
+    onGovernmentDismissRequest: () -> Unit = {},
+    onCitiesDismissRequest: () -> Unit = {},
     governments: List<String>,
+    cities: List<String>,
+    onGovernmentSelected: (String) -> Unit = {},
+    onCitiesSelected: (String) -> Unit = {},
 ) {
     val address by remember { mutableStateOf("Ahmed") }
     val addressInDetail by remember { mutableStateOf("") }
+
     Column(
         modifier = modifier.padding(16.dp)
     ) {
@@ -78,8 +84,15 @@ fun StepThreeCustomerContent(
         )
         GovernmentBottomSheet(
             governments = governments,
-            isVisible = isBottomSheetShowed,
-            onDismissRequest = onDismissRequest
+            isVisible = isGovernmentSheetShowed,
+            onDismissRequest = onGovernmentDismissRequest,
+            onClick = onGovernmentSelected
+        )
+        CitiesBottomSheet(
+            cities = cities,
+            isVisible = isCitiesSheetShowed,
+            onDismissRequest = onCitiesDismissRequest,
+            onClick = onCitiesSelected
         )
     }
 
@@ -133,7 +146,8 @@ fun StepThreeCraftsmanContent(modifier: Modifier = Modifier) {
 private fun StepThreeCraftsmanContentPreview() {
     BasePreview {
         StepThreeCustomerContent(
-            governments = listOf<String>("Cairo")
+            governments = listOf("Cairo"),
+            cities = listOf("Cairo"),
         )
     }
 }
