@@ -1,52 +1,99 @@
 package com.paris_2.san3a.presentation.screen.messagesDetails
 
 import android.net.Uri
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.SavedStateHandle
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
-import com.paris_2.san3a.domain.usecase.GetChatsByUserIdUseCase
+import com.paris_2.san3a.domain.usecase.DeleteChatByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.SendMessageUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.coroutines.delay
 
 class MessagesDetailsViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
     private val getMessagesByChatIdUseCase: GetMessagesByChatIdUseCase,
-    private val getChatsByUserIdUseCase: GetChatsByUserIdUseCase
-) : ViewModel() {
+    private val deleteChatByIdUseCase: DeleteChatByIdUseCase,
+    savedStateHandle: SavedStateHandle,
+) : MessageInteractionListener,BaseViewModel<MessageDetailsUiState>(
+    MessageDetailsUiState()
+) {
 
-    private val _state = MutableStateFlow(MediaDetails())
-    val state = _state.asStateFlow()
+    val chatId by lazy { savedStateHandle.get<String>("chatId") ?: "" }
 
-    fun onMessageChange(message: String) {
-        _state.update {
-            it.copy(
-                message = message
-            )
-        }
+    init {
+        loadMessages(chatId)
     }
+
+    private fun loadMessages(chatId: String) {
+        tryToExecute(
+            execute = {
+                updateState(
+                    screenState.value.copy(
+                        isLoading = true
+                    )
+                )
+                getMessagesByChatIdUseCase("4SIGv3zmkMKwtO0BeQgN")
+            },
+            onSuccess = { flowMessages ->
+                flowMessages.collect { messages ->
+                updateState(
+                    screenState.value.copy(
+                        messages =   messages.map { it.toMessageUi() },
+                        chatTitle = "CraftsMan",
+                        isLoading = false
+                    ),
+                )
+            }
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it,
+                        isLoading = false
+                    )
+                )
+            },
+        )
+    }
+
 
     fun sendMessage() {
-        // use cas
-        _state.update {
-            it.copy(
-                message = ""
-            )
-        }
+        tryToExecute(
+            execute = {
+                sendMessageUseCase(
+                    Message(
+                        senderId = "1",
+                        receiverId = "2",
+                        chatId = "8",
+                        messageContent = MessageContent.Text(
+                            content = screenState.value.textMessage
+                        ),
+                        seen = false
+                    )
+                )
+                updateState(
+                    screenState.value.copy(
+                        textMessage = ""
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it
+                    )
+                )
+            }
+        )
     }
 
-    fun saveImagesUris(uris: List<Uri>) {
-        viewModelScope.launch {
-            try {
-                state.value.copy(
-                    messageImageList = uris
-                )
-               sendMessageUseCase(
-                 Message(
+
+    fun saveImages(uris: List<Uri>) {
+        tryToExecute(
+            execute = {
+                sendMessageUseCase(
+                    Message(
                         senderId = "1",
                         receiverId = "2",
                         chatId = "8",
@@ -56,24 +103,89 @@ class MessagesDetailsViewModel(
                         seen = false
                     )
                 )
-            } catch (e: Exception) {
-                _state.update {
-                    it.copy(
-                        errorMessage =  e.message
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it
                     )
-                }
-            }
-        }
+                )
+            },
+        )
     }
+
+
+    fun onMessageChange(message: String) {
+        updateState(
+            screenState.value.copy(
+                textMessage = message
+            )
+        )
+    }
+
+    override fun onBackClick() {
+        navigateUp()
+    }
+
+    override fun onDropMenuClick() {
+        updateState(
+            screenState.value.copy(
+                showDropMenu = true
+            )
+        )
+    }
+
+    override fun onDismissDropMenu() {
+        updateState(
+            screenState.value.copy(
+                showDropMenu = false
+            )
+        )
+    }
+
+    override fun onDropMenuItemClick() {
+        updateState(
+            screenState.value.copy(
+                showDeleteChatBottomSheet = true
+            )
+        )
+    }
+
+    override fun onDeleteButtonClick() {
+        tryToExecute(
+            execute = {
+                deleteChatByIdUseCase(chatId)
+                updateState(
+                    screenState.value.copy(
+                        showDeleteChatBottomSheet = false
+                    )
+                )
+                navigateUp()
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it
+                    )
+                )
+            },
+        )
+    }
+
+    override fun onDismissDeleteBottomSheet() {
+        updateState(
+            screenState.value.copy(
+                showDeleteChatBottomSheet = false
+            )
+        )
+    }
+
+    override fun onRetryClick() {
+        loadMessages(chatId)
+    }
+
     companion object {
         const val IMAGE_TYPE = "image/*"
     }
 
 }
-
-data class MediaDetails(
-    val showMediaPicker: Boolean = false,
-    val message: String="",
-    val errorMessage: String?=null,
-    val messageImageList: List<Uri> = emptyList(),
-)
