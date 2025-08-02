@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,36 +36,29 @@ fun LocationContent(
     addressInDetails: String,
     onAddressDetailsChange: (String) -> Unit = {},
 ) {
-    val address by remember { mutableStateOf("Ahmed") }
+
     Column(
         modifier = modifier
     ) {
 
         AppTextField(
-            value = if (government.isEmpty()) "Enter your location" else "$city, $government",
-            onValueChange = { address },
-            placeholder = "Get your location",
-            trailingIcon = {
+            value = if (government.isEmpty()) stringResource(R.string.enter_your_location)
+            else "$city, $government", onValueChange = { "address" }, trailingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.ic_alt_arrow_down),
                     contentDescription = null,
                     tint = Color.Unspecified
                 )
-            },
-            leadingIcon = {
+            }, leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.ic_location_pin),
                     contentDescription = null,
                     tint = Color.Unspecified,
                 )
-            },
-            enabled = false,
-            modifier = Modifier.clickable(
+            }, enabled = false, modifier = Modifier.clickable(
                 enabled = true, onClick = {
                     onGetLocationClicked()
-                },
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
+                }, interactionSource = remember { MutableInteractionSource() }, indication = null
             )
         )
         Spacer(Modifier.height(12.dp))

@@ -90,4 +90,5 @@
     <string name="see_nearby_requests">See Nearby Requests</string>
     <string name="mention_your_years_of_experience">You can mention your years of experience, tools you use, or types of jobs you usually handle.</string>
     <string name="enter_your_location_in_details">Enter your location in details</string>
+    <string name="enter_your_location">Enter your location</string>
 </resources>
