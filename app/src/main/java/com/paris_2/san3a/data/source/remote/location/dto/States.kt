@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class States(
     @SerialName("name")
-    val name: String? = null,
+    val countryName: String? = null,
     @SerialName("states")
     val states: List<State?>? = null
 )
