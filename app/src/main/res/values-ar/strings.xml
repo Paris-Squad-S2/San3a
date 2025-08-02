@@ -20,6 +20,9 @@
     <string name="seen_icon">أيقونة تم رؤيتها</string>
     <string name="play_icon">أيقونة تشغيل</string>
     <string name="no_audio_wave_available">لا توجد موجة صوتية متاحة</string>
+    <string name="tap_to_add_photos">اضغط لأضافة صورة</string>
+    <string name="e_g_kitchen_sink_is_leaking">على سبيل المثال، حوض المطبخ يسرب</string>
+    <string name="category_item">عنصر الفئة</string>
     <string name="craftman">صنيعي</string>
     <string name="customer">عميل</string>
     <string name="home">الرئيسية</string>
@@ -61,7 +64,6 @@
     <string name="i_need_help_with_a_service">أحتاج إلى مساعدة في خدمة</string>
     <string name="craftsman">حرفي</string>
     <string name="i_offer_services">أُقدّم خدمات</string>
-    <string name="tap_to_add_photos">اضغط لإضافة الصور</string>
     <string name="tap_here">اضغط هنا</string>
     <string name="upload_front_of_national_id">حمّل وجه بطاقة الرقم القومي</string>
     <string name="upload_back_of_national_id">حمّل ظهر بطاقة الرقم القومي</string>
