@@ -9,12 +9,12 @@ class PhoneNumberVisualTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
         val input = text.text.filter { it.isDigit() }
 
-        val trimmed = if (input.length >= 11) input.substring(0..10) else input
+        val trimmed = if (input.length >= 10) input.substring(0..9) else input
 
         val formatted = buildString {
             for (i in trimmed.indices) {
                 append(trimmed[i])
-                if (i == 2 || i == 6) append('-')
+                if (i == 2 || i == 5) append('-')
             }
         }
 
@@ -22,8 +22,8 @@ class PhoneNumberVisualTransformation : VisualTransformation {
             override fun originalToTransformed(offset: Int): Int {
                 return when {
                     offset <= 3 -> offset
-                    offset <= 7 -> offset + 1
-                    offset <= 11 -> offset + 2
+                    offset <= 6 -> offset + 1
+                    offset <= 10 -> offset + 2
                     else -> formatted.length
                 }
             }
@@ -31,8 +31,8 @@ class PhoneNumberVisualTransformation : VisualTransformation {
             override fun transformedToOriginal(offset: Int): Int {
                 return when {
                     offset <= 3 -> offset
-                    offset <= 8 -> offset - 1
-                    offset <= 13 -> offset - 2
+                    offset <= 7 -> offset - 1
+                    offset <= 12 -> offset - 2
                     else -> trimmed.length
                 }
             }
