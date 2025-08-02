@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.screen.register.otpScreen
 
-import android.util.Log
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -13,6 +12,7 @@ import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class OTPRegisterViewModel(
@@ -106,6 +106,7 @@ class OTPRegisterViewModel(
                 )
             )
             while (screenState.value.otpRegisterUiState.secondLeft > 0) {
+                delay(1000)
                 updateState(
                     screenState.value.copy(
                         otpRegisterUiState = screenState.value
