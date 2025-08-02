@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.navigation
 
-import com.paris_2.san3a.presentation.screen.splash.SplashScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -8,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.paris_2.san3a.presentation.screen.home.HomeScreen
+import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeScreen
 import com.paris_2.san3a.presentation.screen.message.details.MessageDetails
 import com.paris_2.san3a.presentation.screen.messages.MessagesScreen
 import com.paris_2.san3a.presentation.screen.more.MoreScreen
@@ -18,6 +17,7 @@ import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingScreen
 import com.paris_2.san3a.presentation.screen.onboarding.onboardingPages
 import com.paris_2.san3a.presentation.screen.register.otpScreen.OTPRegisterScreen
 import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterScreen
+import com.paris_2.san3a.presentation.screen.splash.SplashScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -46,7 +46,7 @@ fun San3aNavGraph(
 
 fun NavGraphBuilder.buildSan3aNavGraph() {
     navigation<Destinations.MainGraph>(startDestination = Destinations.Splash) {
-        composable<Destinations.Home> { HomeScreen() }
+        composable<Destinations.Home> { CustomerHomeScreen() }
         composable<Destinations.Messages> { MessagesScreen() }
         composable<Destinations.MessageDetails> { MessageDetails() }
         composable<Destinations.MyRequest> { MyRequestScreen() }
