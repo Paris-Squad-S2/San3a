@@ -16,8 +16,5 @@ class San3aApplication : Application() {
             androidContext(this@San3aApplication)
             modules(appModule)
         }
-
-        val networkConnectionChecker: NetworkConnectionChecker = getKoin().get()
-        networkConnectionChecker.startChecker()
     }
 }
