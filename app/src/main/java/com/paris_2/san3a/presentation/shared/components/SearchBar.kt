@@ -34,12 +34,13 @@ fun SearchBar(
     value: String,
     onValueChange: (String) -> Unit,
     hint: String,
+    modifier: Modifier = Modifier
 ){
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
         singleLine = true,
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .height(48.dp)
