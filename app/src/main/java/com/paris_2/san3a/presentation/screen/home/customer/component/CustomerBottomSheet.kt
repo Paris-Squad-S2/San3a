@@ -45,6 +45,7 @@ fun CustomerBottomSheetService(
                     color = Theme.colors.additional.primary.blue,
                     subTitle = "What do you need help with?",
                     buttonTitle = "Next",
+                    step = 1,
                     onButtonClick = {currentStep = BottomSheetStep.PROBLEM_DESCRIPTION},
                     onExitClick = {},
                 ) {
@@ -69,6 +70,7 @@ fun CustomerBottomSheetService(
                         onButtonClick = {currentStep = BottomSheetStep.SELECT_LOCATION},
                         buttonTitle = "Next",
                         onExitClick = {},
+                        step = 2,
                         onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE}
                     ) {
                         RequestDescriptionContent(
@@ -89,6 +91,7 @@ fun CustomerBottomSheetService(
                     color = Theme.colors.additional.primary.blue,
                     subTitle = "Describe the problem in detail",
                     buttonTitle = "Create Request",
+                    step = 4,
                     onButtonClick = {onCreateRequestClick()},
                     onExitClick = {},
                     onClickBack = {currentStep = BottomSheetStep.SELECT_LOCATION}
