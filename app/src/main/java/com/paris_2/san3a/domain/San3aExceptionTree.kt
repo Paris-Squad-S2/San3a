@@ -26,3 +26,8 @@ class SaveWorkShowcaseException : San3aException("Work showcase couldn't be save
 class GetUserProgressException : San3aException("Couldn't get user progress")
 class CompleteUserSetupException : San3aException("Couldn't complete user setup")
 class UploadNationalIdImagesException : San3aException("Couldn't upload national ID images")
+class GetStatsException : San3aException("Couldn't get user stats")
+class GetRecentRelatedJobsException : San3aException("Couldn't get recent related jobs")
+class SearchServicesException : San3aException("Couldn't search services")
+class GetMostRequestedServicesException : San3aException("Couldn't get most requested services")
+class GetAvailableJobsException : San3aException("Couldn't get available jobs")
