@@ -26,9 +26,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,8 +49,6 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.AppTextField
-import com.paris_2.san3a.presentation.shared.components.Country
-import com.paris_2.san3a.presentation.shared.components.CountrySelector
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -117,10 +112,7 @@ fun RegisterScreenContent(
 
                     PhoneNumberInput(
                         phoneNumber = registerUiState.phoneNumber,
-                        selectedCountry = registerUiState.selectedCountry,
                         onPhoneNumberChanged = { registerInteractionListener.onPhoneNumberChanged(it) },
-                        countries = registerUiState.countries,
-                        onCountrySelected = { registerInteractionListener.onCountrySelected(it) }
                     )
 
                     TermsAndConditionsText()
@@ -137,8 +129,9 @@ fun RegisterScreenContent(
                     )
 
                     if (!isKeyboardVisible) {
-                        Spacer(modifier = Modifier.height(120.dp))
+                        Spacer(modifier = Modifier.weight(1f))
                         GuestButtonSection(registerInteractionListener)
+                        Spacer(modifier = Modifier.padding(bottom = 24.dp))
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -155,6 +148,7 @@ fun TopSection(
     showTitle: Boolean,
     isKeyboardVisible: Boolean,
 ) {
+    Spacer(modifier = Modifier.height(68.dp))
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,9 +171,7 @@ fun TopSection(
                 Text(
                     text = stringResource(R.string.welcome_to_san3a),
                     color = Theme.colors.background.card,
-                    style = if (isKeyboardVisible)
-                        Theme.textStyle.title.small else
-                        Theme.textStyle.title.medium
+                    style = Theme.textStyle.title.large
                 )
             }
         }
@@ -189,10 +181,7 @@ fun TopSection(
 @Composable
 fun PhoneNumberInput(
     phoneNumber: String,
-    selectedCountry: Country,
-    countries: List<Country>,
     onPhoneNumberChanged: (String) -> Unit,
-    onCountrySelected: (Country) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -208,21 +197,20 @@ fun PhoneNumberInput(
             color = Theme.colors.shade.primary
         )
         Spacer(modifier = Modifier.height(16.dp))
-        var expanded by remember { mutableStateOf(false) }
 
-        val dialCode = selectedCountry.code
+        val dialCode = "+20"
         val numberOnly = phoneNumber.removePrefix(dialCode)
 
         AppTextField(
             value = numberOnly,
             onValueChange = { newInput ->
-                val digitsOnly = newInput.filter { it.isDigit() }.take(11)
+                val digitsOnly = newInput.filter { it.isDigit() }.take(10)
                 onPhoneNumberChanged(dialCode + digitsOnly)
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = "000-0000-000",
+            placeholder = "000 - 000 - 0000",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            visualTransformation = PhoneNumberVisualTransformation(),
+            visualTransformation = PhoneNumberVisualTransformation(), // formats as 000-000-0000
             leadingIcon = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -230,33 +218,34 @@ fun PhoneNumberInput(
                         .padding(start = 8.dp)
                         .background(Theme.colors.background.card)
                 ) {
-                    CountrySelector(
-                        selectedCountry = selectedCountry,
-                        countries = countries,
-                        expanded = expanded,
-                        onToggleDropdown = { expanded = !expanded },
-                        onCountrySelected = {
-                            onCountrySelected(it)
-                            onPhoneNumberChanged(it.code)
-                        },
-                        onDismissDropdown = { expanded = false }
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Image(
+                        painter = painterResource(R.drawable.ic_eg_flag),
+                        contentDescription = "Egypt Flag",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .width(20.dp)
+                            .height(15.dp)
+                            .clip(RoundedCornerShape(3.dp))
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(14.dp))
                     Divider(
                         color = Theme.colors.stroke.primary,
                         modifier = Modifier
                             .height(24.dp)
                             .width(1.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+
                     Text(
                         text = dialCode,
-                        color = Theme.colors.shade.primary
+                        color = Theme.colors.shade.primary,
+                        modifier = Modifier.padding(end = 4.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
                 }
             }
         )
+
 
     }
 }
@@ -264,7 +253,7 @@ fun PhoneNumberInput(
 
 @Composable
 fun TermsAndConditionsText() {
-    Spacer(modifier = Modifier.height(8.dp))
+    Spacer(modifier = Modifier.height(12.dp))
 
     Text(
         text = buildAnnotatedString {
@@ -305,12 +294,12 @@ fun GuestButtonSection(interactionListener: RegisterInteractionListener) {
         color = Theme.colors.shade.secondary
     )
 
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(14.dp))
 
     AppButton(
         type = AppButtonType.Secondary,
         state = AppButtonState.Enable,
-        onClick = interactionListener::onClickContinueAsGuest ,
+        onClick = interactionListener::onClickContinueAsGuest,
         modifier = Modifier.fillMaxWidth(),
         size = AppButtonSize.Large,
         text = stringResource(R.string.continue_as_a_guest),
@@ -323,7 +312,6 @@ fun RegisterScreenPreview() {
     RegisterScreenContent(
         registerUiState = RegisterUiState(),
         registerInteractionListener = object : RegisterInteractionListener {
-            override fun onCountrySelected(country: Country) {}
             override fun onPhoneNumberChanged(phone: String) {}
             override fun onClickContinue() {}
             override fun onClickContinueAsGuest() {}
