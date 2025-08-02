@@ -75,4 +75,5 @@
     <string name="loading_icon">أيقونة التحميل</string>
     <string name="some_error_happened">حدث خطأ ما</string>
     <string name="no_internet_connection">الانترنت غير متوفر</string>
+    <string name="empty" />
 </resources>
