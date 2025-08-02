@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.account.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -51,10 +52,15 @@ fun GovernmentBottomSheet(
 fun GovernmentItem(modifier: Modifier = Modifier, title: String, onClick: (String) -> Unit = {}) {
     Card(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Theme.colors.background.bottomSheetCard)
     ) {
-        Row(modifier = Modifier.padding(16.dp)) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
             Text(
                 text = title,
                 style = Theme.textStyle.body.medium.medium,
