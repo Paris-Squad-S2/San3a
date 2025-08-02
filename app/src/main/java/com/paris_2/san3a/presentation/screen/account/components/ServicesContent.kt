@@ -17,7 +17,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
-fun StepTwoContent(
+fun ServicesContent(
     services: List<ServiceUiState>,
     onChipClick: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -97,7 +97,7 @@ private fun StepTwoContentPreview() {
 
         )
     San3aTheme {
-        StepTwoContent(
+        ServicesContent(
             services = dummyServices,
             onChipClick = {},
             modifier = Modifier.padding(vertical = 32.dp)
