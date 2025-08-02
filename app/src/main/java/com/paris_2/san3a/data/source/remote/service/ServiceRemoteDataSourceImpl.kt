@@ -19,23 +19,27 @@ class ServiceRemoteDataSourceImpl(
     }
 
     override suspend fun requestService(requestedServiceDto: RequestServiceDto) {
-        val docPath = "${SERVICE_REQUESTS_COLLECTION}/${requestedServiceDto.id}"
-        val existingRequest = fireStoreService.getDoc(
-            path = docPath,
-            fromJson = RequestServiceDto.Companion::fromJson
-        )
-        if (existingRequest != null) {
-            val updatedCount = existingRequest.requestedCount + 1
-            fireStoreService.updateDoc(
-                docPath,
-                mapOf("requestedCount" to updatedCount)
-            )
-        } else {
-            val newRequest = requestedServiceDto.copy(requestedCount = 1)
-            fireStoreService.setDoc(docPath, newRequest)
+        try {
+            val docPath = "${SERVICE_REQUESTS_COLLECTION}/${requestedServiceDto.id}"
+            val existingRequest = try {
+                fireStoreService.getDoc(docPath, RequestServiceDto.Companion::fromJson)
+            } catch (e: Exception) {
+                null
+            }
+            if (existingRequest != null) {
+                val updatedRequest = existingRequest.copy(
+                    requestedCount = existingRequest.requestedCount + 1
+                )
+                fireStoreService.setDoc(docPath, updatedRequest)
+            } else {
+
+                val newRequest = requestedServiceDto.copy(requestedCount = 1)
+                fireStoreService.setDoc(docPath, newRequest)
+            }
+        } catch (e: Exception) {
+            throw e
         }
     }
-
     override fun searchServices(query: String): Flow<List<ServiceDto>> {
         return fireStoreService.streamCollection(
             path = SERVICES_COLLECTION,
@@ -70,6 +74,6 @@ class ServiceRemoteDataSourceImpl(
     companion object {
         const val SERVICES_COLLECTION = "services"
         const val SERVICE_REQUESTS_COLLECTION = "service_requests"
-        const val NUMBER_OF_REQUESTS_FIELD = "numberOfRequests"
+        const val NUMBER_OF_REQUESTS_FIELD = "requestedCount"
     }
 }
