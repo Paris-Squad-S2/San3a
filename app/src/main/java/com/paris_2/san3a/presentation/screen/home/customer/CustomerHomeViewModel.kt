@@ -69,11 +69,23 @@ class CustomerHomeViewModel(
     override fun onSearch(query: String) {}
 
     override fun onServiceClick(serviceId: String) {
-        // open bottom sheet
+        updateState(
+            screenState.value.copy(
+                bottomSheetState = true
+            )
+        )
     }
 
     override fun onBecomeCraftsmanClick() {
         navigate(Destinations.More)
+    }
+
+    override fun onDismissBottomSheet() {
+        updateState(
+            screenState.value.copy(
+                bottomSheetState = false
+            )
+        )
     }
 
 }

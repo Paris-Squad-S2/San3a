@@ -10,4 +10,5 @@ interface CustomerHomeInteractionListener {
 
     fun onBecomeCraftsmanClick()
 
+    fun onDismissBottomSheet()
 }
