@@ -130,11 +130,11 @@ class AccountViewModel(
         }
     }
 
-    fun updateBottomSheetVisibility(isVisible: Boolean) {
+    fun updateBottomSheetVisibility() {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    isBottomSheetShowed = isVisible
+                    isBottomSheetShowed = !screenState.value.accountUiState.isBottomSheetShowed
                 )
             )
         )

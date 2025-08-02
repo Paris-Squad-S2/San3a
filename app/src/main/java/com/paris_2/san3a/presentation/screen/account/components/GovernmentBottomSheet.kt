@@ -51,11 +51,10 @@ fun GovernmentBottomSheet(
 fun GovernmentItem(modifier: Modifier = Modifier, title: String, onClick: (String) -> Unit = {}) {
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Theme.colors.background.bottomSheetCard)
     ) {
-        Row {
+        Row(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = title,
                 style = Theme.textStyle.body.medium.medium,

@@ -32,6 +32,7 @@ import com.paris_2.san3a.presentation.shared.utils.BasePreview
 fun StepThreeCustomerContent(
     modifier: Modifier = Modifier,
     onGetLocationClicked: () -> Unit = {},
+    isBottomSheetShowed: Boolean = false,
 ) {
     val address by remember { mutableStateOf("Ahmed") }
     val addressInDetail by remember { mutableStateOf("") }
@@ -72,6 +73,10 @@ fun StepThreeCustomerContent(
             value = addressInDetail,
             onValueChange = { addressInDetail },
             placeholder = "Enter your location in details",
+        )
+        GovernmentBottomSheet(
+            governments = listOf("Cairo", "Giza"),
+            isVisible = isBottomSheetShowed
         )
     }
 

@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.paris_2.san3a.presentation.screen.account.components.AccountProgressIndicator
 import com.paris_2.san3a.presentation.screen.account.components.StepFourCraftsmanContent
 import com.paris_2.san3a.presentation.screen.account.components.StepFourCustomerContent
@@ -52,7 +51,8 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
         onPrevious = viewModel::previousStep,
         onNext = viewModel::nextStep,
         onUserTypeSelected = viewModel::updateUserType,
-        uiState = uiState
+        uiState = uiState,
+        onBottomSheetVisibility = viewModel::updateBottomSheetVisibility
     )
 }
 
@@ -64,6 +64,7 @@ fun AccountScreenContent(
     currentScreen: Int,
     progress: Float,
     onNext: () -> Unit,
+    onBottomSheetVisibility: () -> Unit,
     onPrevious: () -> Unit,
     onUserTypeSelected: (UserType) -> Unit,
     uiState: AccountScreenUiState,
@@ -111,8 +112,9 @@ fun AccountScreenContent(
                 UserType.CUSTOMER -> StepThreeCustomerContent(
                     modifier = Modifier.padding(vertical = 32.dp),
                     onGetLocationClicked = {
-
-                    }
+                        onBottomSheetVisibility()
+                    },
+                    isBottomSheetShowed = uiState.accountUiState.isBottomSheetShowed
                 )
 
                 UserType.CRAFTSMAN -> StepThreeCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))
@@ -155,7 +157,8 @@ private fun AccountScreenPreview() {
             onNext = {},
             onPrevious = {},
             onUserTypeSelected = {},
-            uiState = AccountScreenUiState()
+            uiState = AccountScreenUiState(),
+            onBottomSheetVisibility = {}
         )
     }
 }
