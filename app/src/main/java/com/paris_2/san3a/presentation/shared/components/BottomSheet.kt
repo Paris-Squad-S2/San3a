@@ -31,10 +31,14 @@ fun BottomSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
     isVisible: Boolean = false,
+    skipPartiallyExpanded: Boolean = false,
     header: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit = {},
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState =
+        rememberModalBottomSheetState(
+            skipPartiallyExpanded = skipPartiallyExpanded,
+        )
 
     if (isVisible) {
         ModalBottomSheet(
