@@ -20,8 +20,8 @@ class CraftsmanHomeViewModel(
         loadAvailableJobs()
     }
 
-    fun loadUserData(){}
-    fun loadStats(userId: String){
+    private fun loadUserData(){}
+    private fun loadStats(userId: String){
         tryToExecute(
             execute = { getStatsUseCase(userId) },
             onSuccess = {
