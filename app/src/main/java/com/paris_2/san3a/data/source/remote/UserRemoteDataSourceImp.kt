@@ -116,7 +116,7 @@ class UserRemoteDataSourceImp(
     }
 
     private suspend fun updateUserData(phone: String, data: Map<String, Any>) {
-        fireStoreService.setDoc(documentPath = "$USERS_COLLECTION/$phone", data = data)
+        fireStoreService.updateDoc(path = "$USERS_COLLECTION/$phone", data = data)
         Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
     }
 
