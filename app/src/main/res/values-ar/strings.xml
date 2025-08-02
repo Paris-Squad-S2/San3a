@@ -75,4 +75,8 @@
     <string name="no_messages_yet">لا توجد رسائل بعد</string>
     <string name="once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here">عند البدء في قبول أو نشر الطلبات، ستظهر المحادثات مع الحرفيين هنا.</string>
     <string name="loading_icon">أيقونة التحميل</string>
+    <string name="good_morning">صباح الخير، %1$s!</string>
+    <string name="your_stats">إحصائياتك</string>
+    <string name="recent_jobs">أحدث وظائف %1$s</string>
+    <string name="available_jobs">الوظائف المتاحة</string>
 </resources>

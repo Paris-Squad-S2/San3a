@@ -74,4 +74,8 @@
     <string name="no_messages_yet">No Messages Yet</string>
     <string name="once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here">Once you start accepting or posting requests, chats with craftsmen will appear here.</string>
     <string name="loading_icon">Loading Icon</string>
+    <string name="good_morning">Good morning, %1$s!</string>
+    <string name="your_stats">Your Stats</string>
+    <string name="recent_jobs">Recent %1$s Jobs</string>
+    <string name="available_jobs">Available Jobs</string>
 </resources>
