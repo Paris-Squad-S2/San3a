@@ -1,12 +1,12 @@
 package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -21,13 +21,12 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
-    actionIcon: @Composable () -> Unit = {},
+    onActionIconClick: (() -> Unit)? = null,
     title: String,
-    location : String? = null,
+    location: String? = null,
     onBackClick: (() -> Unit)? = null,
     showBackGround: Boolean = true,
 ) {
@@ -54,13 +53,13 @@ fun AppBar(
             modifier = Modifier
                 .weight(1f)
                 .padding(start = if (onBackClick == null) 16.dp else 0.dp)
-        ){
+        ) {
             Text(
                 text = title,
                 style = Theme.textStyle.title.small,
                 color = Theme.colors.shade.primary,
             )
-            if(location != null) {
+            if (location != null) {
                 Row(
                     modifier = Modifier
                         .padding(top = 8.dp),
@@ -93,7 +92,15 @@ fun AppBar(
 
         }
 
-        actionIcon()
+        if (onActionIconClick != null)
+            Icon(
+                painter = painterResource(R.drawable.ic_notification_outline),
+                contentDescription = null,
+                tint = Theme.colors.shade.primary,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable { onActionIconClick() }
+            )
     }
 
 }
@@ -105,13 +112,6 @@ private fun AppBarPrev() {
         AppBar(
             title = "Title",
             onBackClick = {},
-            actionIcon = {
-                Icon(
-                    painter = painterResource(R.drawable.ic_notification_outline),
-                    contentDescription = null,
-                    tint = Theme.colors.shade.primary
-                )
-            }
         )
     }
 }
@@ -123,13 +123,6 @@ private fun AppBarPrev2() {
         AppBar(
             title = "Title",
             onBackClick = null,
-            actionIcon = {
-                Icon(
-                    painter = painterResource(R.drawable.ic_notification_outline),
-                    contentDescription = null,
-                    tint = Theme.colors.shade.primary
-                )
-            },
             location = "Location",
         )
     }
