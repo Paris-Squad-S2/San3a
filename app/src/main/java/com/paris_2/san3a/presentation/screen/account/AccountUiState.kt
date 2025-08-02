@@ -16,6 +16,10 @@ data class AccountUiState(
     val locationUiState: LocationUiState = LocationUiState(),
     val customerName: String = "",
     val customerProfilePhotoUri: Uri? = null,
+    val frontOfNationalIdUri : Uri? = null,
+    val backOfNationalIdUri : Uri? = null,
+    val workImagesUris : List<Uri>? = null,
+    val workDescription: String = "",
 )
 
 data class ServiceUiState(

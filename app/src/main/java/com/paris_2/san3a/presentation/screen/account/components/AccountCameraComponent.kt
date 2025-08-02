@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,15 +30,16 @@ import androidx.compose.ui.unit.Dp
 import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.shared.utils.BasePreview
+import androidx.core.net.toUri
 
 @Composable
-fun AddPhotosComponent(
+fun AddWorkPhotosComponent(
     modifier: Modifier = Modifier,
-    images: List<Uri>,
+    images: List<Uri>?= null,
     onAddPhotoClick: () -> Unit
 ) {
-
-    if (images.isEmpty()) {
+    if (images == null) {
         Box(
             modifier = modifier
                 .clip(RoundedCornerShape(Theme.radius.large))
@@ -80,6 +82,7 @@ fun AddPhotosComponent(
                 AsyncImage(
                     model = uri,
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(80.dp)
                         .padding(4.dp)
@@ -107,10 +110,11 @@ fun AddPhotosComponent(
 @Composable
 fun AddSinglePhotoCircle(
     onTap: () -> Unit,
+    modifier: Modifier = Modifier,
     imageUri: Uri? = null
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(80.dp)
             .clip(CircleShape)
             .background(Theme.colors.background.bottomSheet)
@@ -129,6 +133,7 @@ fun AddSinglePhotoCircle(
             AsyncImage(
                 model = imageUri,
                 contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(CircleShape)
@@ -146,6 +151,55 @@ fun AddSinglePhotoCircle(
                     style = Theme.textStyle.body.small.medium
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun AddSingleDocumentPhoto(
+    modifier: Modifier = Modifier,
+    imageUri: Uri? = null,
+    onAddPhotoClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(Theme.radius.large))
+            .background(Theme.colors.background.bottomSheet)
+            .dashedBorder(
+                color = Theme.colors.shade.quaternary,
+                strokeWidth = 1.dp,
+                dashLength = 6.dp,
+                gapLength = 6.dp,
+                shape = RoundedCornerShape(Theme.radius.large)
+            )
+            .clickable { onAddPhotoClick() }
+    ) {
+        if (imageUri == null) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_camera_outline),
+                    contentDescription = "Add Photo",
+                    tint = Theme.colors.shade.secondary
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    stringResource(R.string.tap_to_add_photos),
+                    color = Theme.colors.shade.secondary,
+                    style = Theme.textStyle.body.small.medium
+                )
+            }
+        } else {
+            AsyncImage(
+                model = imageUri,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
         }
     }
 }
@@ -182,7 +236,7 @@ fun Modifier.dashedBorder(
 @Preview(showBackground = true)
 @Composable
 fun Preview_AddPhotosComponent_Empty() {
-    AddPhotosComponent(
+    AddWorkPhotosComponent(
         images = emptyList(),
         onAddPhotoClick = {}
     )
@@ -194,15 +248,31 @@ fun Preview_AddSinglePhotoCircle() {
     AddSinglePhotoCircle(onTap = {})
 }
 
-@Preview(showBackground = true)
+@Preview()
 @Composable
 fun Preview_AddPhotosComponent_WithImages() {
     val fakeUris = listOf(
-        Uri.parse("https://placekitten.com/200/200"),
-        Uri.parse("https://placekitten.com/210/210")
+        "https://placekitten.com/200/200".toUri(),
+        "https://placekitten.com/210/210".toUri()
     )
-    AddPhotosComponent(
+    AddWorkPhotosComponent(
         images = fakeUris,
         onAddPhotoClick = {}
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AddSingleDocumentPhotoPreview() {
+    BasePreview {
+
+        AddSingleDocumentPhoto(
+            modifier = Modifier
+                .height(96.dp)
+                .fillMaxWidth(),
+            imageUri = null,
+            onAddPhotoClick = {}
+        )
+
+    }
 }

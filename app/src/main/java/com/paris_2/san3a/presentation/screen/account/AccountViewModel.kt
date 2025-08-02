@@ -10,20 +10,26 @@ import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
 
 class AccountViewModel(
     private val getAllServicesUseCase: GetAllServicesUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase
-) :
-    BaseViewModel<AccountScreenUiState>(AccountScreenUiState()) {
+) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()),AccountInteractionListener {
 
-    private val stepsCount = 4
     private val _currentScreen = mutableIntStateOf(0)
     val currentScreen: State<Int> get() = _currentScreen
 
-    private val phoneNumber = "123456789"
+    private val phoneNumber = "1234"
+
+    private val stepsCount: Int
+        get() = when (screenState.value.accountUiState.userType) {
+            UserType.CRAFTSMAN -> 5
+            UserType.CUSTOMER -> 4
+            else -> 4
+        }
 
     val progress: Float
         get() = (_currentScreen.intValue + 1) / stepsCount.toFloat()
@@ -76,7 +82,7 @@ class AccountViewModel(
         }
     }
 
-    fun toggleServiceSelection(serviceId: String) {
+    override fun onToggleServiceClicked(serviceId: String) {
         val updatedServices = screenState.value.accountUiState.serviceUiState.map {
             if (it.id == serviceId) {
                 it.copy(isSelected = !it.isSelected)
@@ -93,7 +99,7 @@ class AccountViewModel(
         )
     }
 
-    fun updateUserType(type: UserType) {
+    override fun onUserTypeSelected(type: UserType) {
         val updatedUiState = screenState.value.copy(
             accountUiState = screenState.value.accountUiState.copy(
                 userType = type
@@ -102,11 +108,21 @@ class AccountViewModel(
         updateState(updatedUiState)
     }
 
-    fun onCustomerNameChanged(name: String) {
+    override fun onCustomerNameChanged(name: String) {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
                     customerName = name
+                )
+            )
+        )
+    }
+
+    override fun onDescriptionChanged(description: String) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    workDescription = description
                 )
             )
         )
@@ -121,7 +137,39 @@ class AccountViewModel(
             )
         )
     }
-    fun nextStep() {
+
+    fun onFrontNationalIdSelected(uri: Uri) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    frontOfNationalIdUri = uri
+                )
+            )
+        )
+    }
+
+    fun onBackNationalIdSelected(uri: Uri) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    backOfNationalIdUri = uri
+                )
+            )
+        )
+    }
+
+    fun onWorkImageSelected(uris: List<Uri>) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    workImagesUris = uris
+                )
+            )
+        )
+
+    }
+
+    override fun onNextClicked() {
         val userType = screenState.value.accountUiState.userType
         if (userType != null) {
             tryToExecute(
@@ -154,7 +202,7 @@ class AccountViewModel(
                             )
                         }
 
-                        3 -> {
+                        2 -> {
                             val fullName = screenState.value.accountUiState.customerName
                             val profilePhotoUri = screenState.value.accountUiState.customerProfilePhotoUri
                             setUpAccountUseCase.savePersonalInfo(
@@ -162,6 +210,32 @@ class AccountViewModel(
                                 fullName,
                                 profilePhotoUri
                             )
+                        }
+
+                        3 -> {
+                            if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
+                                setUpAccountUseCase.saveWorkShowcase(
+                                    phone = phoneNumber,
+                                    workMedia = screenState.value.accountUiState.workImagesUris,
+                                    workDescription = screenState.value.accountUiState.workDescription
+                                )
+                            } else {
+                                // Location for CUSTOMER
+                                navigate(
+                                    Destinations.Home
+                                )
+                            }
+                        }
+
+                        4 -> {
+                            if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
+                                setUpAccountUseCase.uploadNationalIdImages(
+                                    phoneNumber,
+                                    screenState.value.accountUiState.frontOfNationalIdUri,
+                                    screenState.value.accountUiState.backOfNationalIdUri
+                                )
+                                navigate(Destinations.Home)
+                            }
                         }
                     }
                 },
@@ -178,7 +252,7 @@ class AccountViewModel(
         }
     }
 
-    fun previousStep() {
+    override fun onPreviousClicked() {
         if (_currentScreen.intValue > 0) {
             _currentScreen.intValue--
         }
@@ -193,17 +267,15 @@ class AccountViewModel(
                 else -> UiText.DynamicString("")
             }
 
-            2 -> when (screenState.value.accountUiState.userType) {
+            2 -> UiText.StringResource(R.string.personalize_your_profile)
+
+            3 -> when (screenState.value.accountUiState.userType) {
                 UserType.CUSTOMER -> UiText.StringResource(R.string.where_are_you_located)
                 UserType.CRAFTSMAN -> UiText.StringResource(R.string.show_us_your_work)
                 else -> UiText.DynamicString("")
             }
 
-            3 -> when (screenState.value.accountUiState.userType) {
-                UserType.CUSTOMER -> UiText.StringResource(R.string.personalize_your_profile)
-                UserType.CRAFTSMAN -> UiText.StringResource(R.string.verify_your_identity_optional)
-                else -> UiText.DynamicString("")
-            }
+            4 -> UiText.StringResource(R.string.verify_your_identity_optional)
 
             else -> UiText.DynamicString("")
         }
@@ -218,17 +290,15 @@ class AccountViewModel(
                 else -> UiText.DynamicString("")
             }
 
-            2 -> when (screenState.value.accountUiState.userType) {
+            2 -> UiText.StringResource(R.string.use_to_personalize_experience_skip)
+
+            3 -> when (screenState.value.accountUiState.userType) {
                 UserType.CUSTOMER -> UiText.StringResource(R.string.location_improves_accuracy_update_later)
                 UserType.CRAFTSMAN -> UiText.StringResource(R.string.add_photos_or_video_build_trust)
                 else -> UiText.DynamicString("")
             }
 
-            3 -> when (screenState.value.accountUiState.userType) {
-                UserType.CUSTOMER -> UiText.StringResource(R.string.use_to_personalize_experience_skip)
-                UserType.CRAFTSMAN -> UiText.StringResource(R.string.upload_id_build_trust_get_jobs)
-                else -> UiText.DynamicString("")
-            }
+            4 -> UiText.StringResource(R.string.upload_id_build_trust_get_jobs)
 
             else -> UiText.DynamicString("")
         }

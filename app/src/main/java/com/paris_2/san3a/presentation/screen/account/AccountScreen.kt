@@ -25,12 +25,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.presentation.screen.account.components.AccountProgressIndicator
-import com.paris_2.san3a.presentation.screen.account.components.StepFourCraftsmanContent
-import com.paris_2.san3a.presentation.screen.account.components.StepFourCustomerContent
-import com.paris_2.san3a.presentation.screen.account.components.StepOneContent
-import com.paris_2.san3a.presentation.screen.account.components.StepThreeCraftsmanContent
-import com.paris_2.san3a.presentation.screen.account.components.StepThreeCustomerContent
-import com.paris_2.san3a.presentation.screen.account.components.StepTwoContent
+import com.paris_2.san3a.presentation.screen.account.components.VerifyIdentityContent
+import com.paris_2.san3a.presentation.screen.account.components.ProfileContent
+import com.paris_2.san3a.presentation.screen.account.components.AccountTypeContent
+import com.paris_2.san3a.presentation.screen.account.components.ShowYourWorkContent
+import com.paris_2.san3a.presentation.screen.account.components.LocationContent
+import com.paris_2.san3a.presentation.screen.account.components.ServicesContent
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -50,7 +50,7 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
     val uiState by viewModel.screenState.collectAsState()
     val context = LocalContext.current
 
-    val imagePickerLauncher = rememberLauncherForActivityResult(
+    val profileImagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
         uri?.let {
@@ -61,19 +61,53 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
         }
     }
 
+    val frontNationalIdPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        uri?.let {
+            context.contentResolver.takePersistableUriPermission(
+                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            viewModel.onFrontNationalIdSelected(it)
+        }
+    }
+
+    val backNationalIdPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        uri?.let {
+            context.contentResolver.takePersistableUriPermission(
+                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            viewModel.onBackNationalIdSelected(it)
+        }
+    }
+
+    val workImagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenMultipleDocuments()
+    ) { uris: List<Uri>? ->
+        uris?.forEach { uri ->
+            context.contentResolver.takePersistableUriPermission(
+                uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            viewModel.onWorkImageSelected(uris)
+        }
+    }
+
+
+
     AccountScreenContent(
         title = title.asString(),
         description = description.asString(),
         textButton = textButton.asString(),
         currentScreen = currentScreen,
         progress = progress,
-        onPrevious = viewModel::previousStep,
-        onNext = viewModel::nextStep,
-        onUserTypeSelected = viewModel::updateUserType,
-        onChipClick = viewModel::toggleServiceSelection,
-        uiState = uiState,
-        onCustomerNameChanged = viewModel::onCustomerNameChanged,
-        onCustomerProfilePhotoClick = { imagePickerLauncher.launch(arrayOf("image/*")) }
+          uiState = uiState,
+        onCustomerProfilePhotoClick = { profileImagePickerLauncher.launch(arrayOf("image/*")) },
+        onFrontNationalIdClick = { frontNationalIdPickerLauncher.launch(arrayOf("image/*")) },
+        onBackNationalIdClick = { backNationalIdPickerLauncher.launch(arrayOf("image/*")) },
+        onWorkImageClick = { workImagePickerLauncher.launch(arrayOf("image/*")) },
+        interactionListener = viewModel
     )
 }
 
@@ -84,21 +118,20 @@ fun AccountScreenContent(
     textButton: String,
     currentScreen: Int,
     progress: Float,
-    onNext: () -> Unit,
-    onPrevious: () -> Unit,
-    onUserTypeSelected: (UserType) -> Unit,
-    onChipClick: (String) -> Unit,
+    onCustomerProfilePhotoClick : () -> Unit,
+    onFrontNationalIdClick : () -> Unit,
+    onBackNationalIdClick : () -> Unit,
+    onWorkImageClick : () -> Unit,
+    interactionListener: AccountInteractionListener,
     uiState: AccountScreenUiState,
-    onCustomerNameChanged: (String) -> Unit,
-    onCustomerProfilePhotoClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
-            .safeContentPadding()
             .background(Theme.colors.background.screen)
+            .safeContentPadding()
             .padding(16.dp)
     ) {
         Row(
@@ -106,7 +139,7 @@ fun AccountScreenContent(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             if (currentScreen != 0) {
-                AppBackButton(onClickBackButton = onPrevious)
+                AppBackButton(onClickBackButton = interactionListener::onPreviousClicked)
             } else {
                 Box(modifier = Modifier.size(48.dp))
             }
@@ -125,42 +158,51 @@ fun AccountScreenContent(
             style = Theme.textStyle.body.large.regular,
         )
         when (currentScreen) {
-            0 -> StepOneContent(
+            0 -> AccountTypeContent(
                 modifier = Modifier.padding(vertical = 32.dp),
-                onUserTypeSelected = onUserTypeSelected,
+                onUserTypeSelected = interactionListener::onUserTypeSelected,
                 selectedType = uiState.accountUiState.userType
             )
 
-            1 -> StepTwoContent(
+            1 -> ServicesContent(
                 services = uiState.accountUiState.serviceUiState,
-                onChipClick = onChipClick,
+                onChipClick = interactionListener::onToggleServiceClicked,
                 modifier = Modifier.padding(vertical = 32.dp)
             )
 
-            2 -> when (uiState.accountUiState.userType) {
-                UserType.CUSTOMER -> StepThreeCustomerContent(modifier = Modifier.padding(vertical = 32.dp))
-                UserType.CRAFTSMAN -> StepThreeCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))
+            2 -> ProfileContent(
+                modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+                name = uiState.accountUiState.customerName,
+                onNameChanged = interactionListener::onCustomerNameChanged,
+                onAddPhotoClick =onCustomerProfilePhotoClick,
+                profilePhotoUri = uiState.accountUiState.customerProfilePhotoUri
+            )
+
+            3 -> when (uiState.accountUiState.userType) {
+                UserType.CUSTOMER -> LocationContent(modifier = Modifier.padding(vertical = 32.dp))
+                UserType.CRAFTSMAN -> ShowYourWorkContent(
+                    modifier = Modifier.padding(vertical = 32.dp),
+                    onAddWorkImagesClick = onWorkImageClick,
+                    workImages = uiState.accountUiState.workImagesUris,
+                    workDescription = uiState.accountUiState.workDescription,
+                    onDescriptionChanged = interactionListener::onDescriptionChanged
+                )
                 else -> {}
             }
 
-            3 -> when (uiState.accountUiState.userType) {
-                UserType.CUSTOMER -> StepFourCustomerContent(
+            4 -> when (uiState.accountUiState.userType) {
+                UserType.CRAFTSMAN -> VerifyIdentityContent(
                     modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    name = uiState.accountUiState.customerName,
-                    onNameChanged = onCustomerNameChanged,
-                    onAddPhotoClick = onCustomerProfilePhotoClick,
-                    profilePhotoUri = uiState.accountUiState.customerProfilePhotoUri
+                    onFrontNationalIdClick,
+                    onBackNationalIdClick,
+                    uiState.accountUiState.frontOfNationalIdUri,
+                    uiState.accountUiState.backOfNationalIdUri
                 )
-                UserType.CRAFTSMAN -> StepFourCraftsmanContent(
-                    modifier = Modifier.padding(top = 32.dp, bottom = 12.dp)
-                )
-
                 else -> {}
             }
         }
-
         AppButton(
-            onClick = onNext,
+            onClick = interactionListener::onNextClicked,
             type = AppButtonType.Primary,
             text = textButton,
             state = AppButtonState.Enable,
@@ -168,6 +210,7 @@ fun AccountScreenContent(
         )
     }
 }
+
 
 @Preview
 @Composable
@@ -179,9 +222,14 @@ private fun AccountScreenPreview() {
             textButton = "Next",
             progress = 0.25f,
             currentScreen = 3,
-            onNext = {},
-            onPrevious = {},
-            onUserTypeSelected = {},
+            interactionListener = object : AccountInteractionListener {
+                override fun onPreviousClicked() {}
+                override fun onNextClicked() {}
+                override fun onUserTypeSelected(type: UserType) {}
+                override fun onToggleServiceClicked(serviceId: String) {}
+                override fun onCustomerNameChanged(name: String) {}
+                override fun onDescriptionChanged(description: String) {}
+            },
             uiState = AccountScreenUiState(
                 accountUiState = AccountUiState(
                     serviceUiState = listOf(
@@ -215,9 +263,11 @@ private fun AccountScreenPreview() {
                         )
                 )
             ),
-            onChipClick = {},
-            onCustomerNameChanged = {},
-            onCustomerProfilePhotoClick = {}
+
+            onCustomerProfilePhotoClick = {},
+            onFrontNationalIdClick = {},
+            onBackNationalIdClick = {},
+            onWorkImageClick = {},
         )
     }
 }
