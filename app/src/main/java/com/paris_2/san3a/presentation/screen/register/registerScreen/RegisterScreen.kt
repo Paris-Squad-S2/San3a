@@ -137,7 +137,8 @@ fun RegisterScreenContent(
                     )
 
                     if (!isKeyboardVisible) {
-                        Spacer(modifier = Modifier.height(120.dp))
+                        Spacer(modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier.padding(bottom = 24.dp))
                         GuestButtonSection(registerInteractionListener)
                     }
 
