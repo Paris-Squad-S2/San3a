@@ -51,4 +51,10 @@ class AuthRepositoryImpl(
             localDataStoreImpl.isLoggedIn()
         }
     }
+
+    override suspend fun getPhoneNumber(): String {
+        return safeCall(LoginStatusException()) {
+            localDataStoreImpl.getPhoneNumber()
+        }
+    }
 }
