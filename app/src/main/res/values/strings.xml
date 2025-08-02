@@ -107,7 +107,7 @@ Both customers and craftsmen can leave ratings after a job is completed. Reviews
 We reserve the right to suspend or terminate any account that violates these terms.\n\n
 
 8. Changes to Terms\n
-We may update these terms from time to time. Continued use of the app implies your acceptance of the updated terms.</string>
+We may update these terms from time to time. Continued use of the app implies your acceptance of the updated terms.\n</string>
     <string name="privacy_and_policy_content">We value your privacy. This Privacy Policy explains how San3a collects, uses, and protects your information.\n\n
 1. Information We Collect\n
 Personal Data: Name, phone number, location, profile photo, ID (for craftsmen).
@@ -135,6 +135,6 @@ You can:\n
 Access and edit your profile at any time.\n
 Request deletion of your data by contacting us at [your support email].\n\n
 7. Policy Updates\n
-We may revise this policy from time to time. You will be notified of significant changes.</string>
+We may revise this policy from time to time. You will be notified of significant changes.\n</string>
 
 </resources>

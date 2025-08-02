@@ -2,13 +2,12 @@ package com.paris_2.san3a.presentation.screen.register.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -71,42 +70,46 @@ fun RegisterBottomSheet(
         },
         sheetState = sheetState
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            if(isErrorMessage) {
-                Image(
-                    painter = painterResource(R.drawable.placeholder_lllustration),
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.oops_something_broke),
-                    style = Theme.textStyle.title.small,
-                    color = Theme.colors.shade.primary
-                )
-                Text(
-                    text = stringResource(R.string.Our_team_is_working_on_a_fix__Please_try_again_later_),
-                    style = Theme.textStyle.body.medium.regular,
-                    color = Theme.colors.shade.secondary
+            item {
+                if(isErrorMessage) {
+                    Image(
+                        painter = painterResource(R.drawable.placeholder_lllustration),
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = stringResource(R.string.oops_something_broke),
+                        style = Theme.textStyle.title.small,
+                        color = Theme.colors.shade.primary
+                    )
+                    Text(
+                        text = stringResource(R.string.Our_team_is_working_on_a_fix__Please_try_again_later_),
+                        style = Theme.textStyle.body.medium.regular,
+                        color = Theme.colors.shade.secondary
+                    )
+                }
+                else{
+                    Text(
+                        text = contentText,
+                        style = Theme.textStyle.body.medium.medium,
+                        color = Theme.colors.shade.primary
+                    )
+                }
+            }
+            item {
+                AppButton(
+                    type = AppButtonType.Primary,
+                    state = AppButtonState.Enable,
+                    onClick = onCloseClick,
+                    modifier = Modifier.fillMaxWidth(),
+                    size = AppButtonSize.Large,
+                    text = stringResource(R.string.ok),
                 )
             }
-            else{
-                Text(
-                    text = contentText,
-                    style = Theme.textStyle.body.medium.medium,
-                    color = Theme.colors.shade.primary
-                )
-            }
-            AppButton(
-                type = AppButtonType.Primary,
-                state = AppButtonState.Enable,
-                onClick = onCloseClick,
-                modifier = Modifier.fillMaxWidth(),
-                size = AppButtonSize.Large,
-                text = stringResource(R.string.ok),
-            )
         }
     }
 }
