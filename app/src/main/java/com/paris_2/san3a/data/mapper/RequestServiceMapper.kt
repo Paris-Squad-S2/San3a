@@ -10,7 +10,9 @@ fun RequestServiceDto.toEntity() = RequestService(
     location = location,
     relatedJob = relatedJob,
     offers = offers,
-    userId = userId
+    userId = userId,
+    requestedCount = requestedCount
+
 )
 
 fun RequestService.toDto() = RequestServiceDto(
@@ -20,5 +22,6 @@ fun RequestService.toDto() = RequestServiceDto(
     location = location,
     relatedJob = relatedJob,
     offers = offers,
-    userId = userId
+    userId = userId,
+    requestedCount = requestedCount
 )
