@@ -139,5 +139,15 @@ class AccountViewModel(
             )
         )
     }
+
+    fun onButtonSheetDismiss() {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    isBottomSheetShowed = false
+                )
+            )
+        )
+    }
 }
 

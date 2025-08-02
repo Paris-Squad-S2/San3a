@@ -33,6 +33,7 @@ fun StepThreeCustomerContent(
     modifier: Modifier = Modifier,
     onGetLocationClicked: () -> Unit = {},
     isBottomSheetShowed: Boolean = false,
+    onDismissRequest: () -> Unit = {},
 ) {
     val address by remember { mutableStateOf("Ahmed") }
     val addressInDetail by remember { mutableStateOf("") }
@@ -76,7 +77,8 @@ fun StepThreeCustomerContent(
         )
         GovernmentBottomSheet(
             governments = listOf("Cairo", "Giza"),
-            isVisible = isBottomSheetShowed
+            isVisible = isBottomSheetShowed,
+            onDismissRequest = onDismissRequest
         )
     }
 

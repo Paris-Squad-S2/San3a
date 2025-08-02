@@ -52,7 +52,8 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
         onNext = viewModel::nextStep,
         onUserTypeSelected = viewModel::updateUserType,
         uiState = uiState,
-        onBottomSheetVisibility = viewModel::updateBottomSheetVisibility
+        onBottomSheetVisibility = viewModel::updateBottomSheetVisibility,
+        onDismissRequest = viewModel::onButtonSheetDismiss
     )
 }
 
@@ -66,6 +67,7 @@ fun AccountScreenContent(
     onNext: () -> Unit,
     onBottomSheetVisibility: () -> Unit,
     onPrevious: () -> Unit,
+    onDismissRequest: () -> Unit = {},
     onUserTypeSelected: (UserType) -> Unit,
     uiState: AccountScreenUiState,
     modifier: Modifier = Modifier,
@@ -111,10 +113,9 @@ fun AccountScreenContent(
             2 -> when (uiState.accountUiState.userType) {
                 UserType.CUSTOMER -> StepThreeCustomerContent(
                     modifier = Modifier.padding(vertical = 32.dp),
-                    onGetLocationClicked = {
-                        onBottomSheetVisibility()
-                    },
-                    isBottomSheetShowed = uiState.accountUiState.isBottomSheetShowed
+                    onGetLocationClicked = onBottomSheetVisibility,
+                    isBottomSheetShowed = uiState.accountUiState.isBottomSheetShowed,
+                    onDismissRequest = onDismissRequest
                 )
 
                 UserType.CRAFTSMAN -> StepThreeCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))

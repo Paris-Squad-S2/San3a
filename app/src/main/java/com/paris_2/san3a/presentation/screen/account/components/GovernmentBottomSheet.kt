@@ -26,11 +26,13 @@ fun GovernmentBottomSheet(
     governments: List<String>,
     onClick: (String) -> Unit = {},
     isVisible: Boolean = false,
+    onDismissRequest: () -> Unit = {},
 ) {
 
     BottomSheet(
         modifier = modifier,
         isVisible = isVisible,
+        onDismissRequest = onDismissRequest,
         header = {
             Text(
                 text = "Choose Government",
