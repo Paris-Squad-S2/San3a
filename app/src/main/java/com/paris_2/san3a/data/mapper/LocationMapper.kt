@@ -7,7 +7,7 @@ import com.paris_2.san3a.domain.entity.States
 
 fun StatesDto.toStates(): States {
     return States(
-        names = this.states?.states?.mapNotNull { it?.name } ?: emptyList()
+        names = this.data?.states?.mapNotNull { it?.name } ?: emptyList()
     )
 }
 

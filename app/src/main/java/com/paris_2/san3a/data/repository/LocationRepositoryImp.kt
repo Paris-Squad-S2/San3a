@@ -17,7 +17,7 @@ class LocationRepositoryImp(
     override suspend fun getGovernmentsInCountry(countryName: String): States {
         Log.d(
             "TAG",
-            "getGovernments: in RpoImp ${locationRemoteDataSource.getGovernmentsInCountry(countryName).states?.states?.size} "
+            "getGovernments: in RpoImp ${locationRemoteDataSource.getGovernmentsInCountry(countryName).data?.states?.size} "
         )
         return safeCall(
             exception = NoGovernmentsFoundException(),

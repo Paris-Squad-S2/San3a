@@ -4,6 +4,7 @@ import com.paris_2.san3a.BuildConfig
 import com.paris_2.san3a.data.service.auth.AuthApiServices
 import com.paris_2.san3a.data.service.location.LocationService
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -42,8 +43,12 @@ val networkModule = module {
             .build()
     }
 
+    val logging = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
     single(named("locationOkHttp")) {
         OkHttpClient.Builder()
+            .addInterceptor(logging)
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
                     .addHeader("Content-Type", "application/json")

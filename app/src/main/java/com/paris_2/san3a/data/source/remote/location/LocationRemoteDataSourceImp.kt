@@ -15,7 +15,7 @@ class LocationRemoteDataSourceImp(
         val c = Coutry()
         Log.d(
             "TAG",
-            "getGovernments: in Remote Data Source ${locationService.getStates(c).states?.states?.size} "
+            "getGovernments: in Remote Data Source ${locationService.getStates(c).data?.states} "
         )
         return locationService.getStates(c)
     }
