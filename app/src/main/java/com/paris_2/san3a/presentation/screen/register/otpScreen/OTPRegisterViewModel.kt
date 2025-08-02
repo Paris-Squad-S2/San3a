@@ -18,23 +18,34 @@ class OTPRegisterViewModel(
     private val sendOtpUseCase: SendOtpUseCase,
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
     saveStateHandle: SavedStateHandle,
-) : BaseViewModel<OTPRegisterUiState>(OTPRegisterUiState()), OTPRegisterListenerInteraction,
+) : BaseViewModel<OTPRegisterScreenState>(OTPRegisterScreenState()), OTPRegisterListenerInteraction,
     KoinComponent {
 
     private val otp = generateOtp()
 
     init {
         val phoneNumber = saveStateHandle.toRoute<Destinations.OTPRegisterScreen>().phoneNumber
-        updateState(screenState.value.copy(phoneNumber = phoneNumber))
+        updateState(
+            screenState.value.copy(
+                otpRegisterUiState = screenState.value.otpRegisterUiState.copy(phoneNumber = phoneNumber),
+            )
+        )
         sendOtpToPhoneNumber()
-
+        if (screenState.value.otpRegisterUiState.otp.count() == 5) {
+            verifyOTP()
+        }
     }
 
     private fun sendOtpToPhoneNumber() {
+        updateState(screenState.value.copy(
+            otpRegisterUiState = screenState.value
+                .otpRegisterUiState
+                .copy(loadingVerifyButton = true)
+        ))
         tryToExecute(
             execute = {
                 sendOtpUseCase(
-                    screenState.value.phoneNumber,
+                    screenState.value.otpRegisterUiState.phoneNumber,
                     "Your verification code is ${generateOtp()}"
                 )
             },
@@ -46,13 +57,32 @@ class OTPRegisterViewModel(
 
     private fun onSendOtpToPhoneNumberSuccess(isSend: Boolean) {
         if (isSend) {
-            updateState(screenState.value.copy(verificationId = otp))
+            updateState(
+                screenState.value.copy(
+                    errorMessage = null,
+                    otpRegisterUiState = screenState.value.
+                    otpRegisterUiState.copy(
+                        verificationId = otp,
+                        loadingVerifyButton = false
+                    ),
+                    showSnackBar = false
+                )
+            )
         }
 
     }
 
     private fun onSendOtpToPhoneNumberError(message: String) {
-        updateState(screenState.value.copy(errorMessage = R.string.occurred_an_error_for_sending_otp))
+        updateState(
+            screenState.value.copy(
+                errorMessage = null,
+                snackBarMessage = R.string.occurred_an_error_for_sending_otp,
+                showSnackBar = true,
+                otpRegisterUiState = screenState.value
+                    .otpRegisterUiState
+                    .copy(loadingVerifyButton = false)
+            )
+        )
     }
 
     private fun updateSecondLeft() {
@@ -60,10 +90,22 @@ class OTPRegisterViewModel(
 
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            updateState(screenState.value.copy(secondLeft = 59))
-            while (screenState.value.secondLeft > 0) {
+            updateState(
+                screenState.value.copy(
+                    otpRegisterUiState = screenState.value
+                        .otpRegisterUiState
+                        .copy(secondLeft = 59)
+                )
+            )
+            while (screenState.value.otpRegisterUiState.secondLeft > 0) {
                 delay(1000)
-                updateState(screenState.value.copy(secondLeft = screenState.value.secondLeft - 1))
+                updateState(
+                    screenState.value.copy(
+                        otpRegisterUiState = screenState.value
+                            .otpRegisterUiState
+                            .copy(secondLeft = screenState.value.otpRegisterUiState.secondLeft - 1)
+                    )
+                )
 
             }
         }
@@ -71,19 +113,29 @@ class OTPRegisterViewModel(
     }
 
     override fun onOtpTextChange(otp: String) {
-        if(otp.isDigitsOnly()){
-            updateState(screenState.value.copy(otp = otp))
+        if (otp.isDigitsOnly()) {
+            updateState(screenState.value.copy(
+                otpRegisterUiState = screenState.value.otpRegisterUiState.copy(
+                    otp = otp
+                )
+            ))
         }
     }
 
     override fun onClickVerify() {
+        verifyOTP()
+    }
 
+    private fun verifyOTP() {
         tryToExecute(
             execute = {
-                if (screenState.value.otp == screenState.value.verificationId) {
-                    savePhoneNumberUseCase(screenState.value.phoneNumber)
+                updateState(screenState.value.copy(isLoading = true))
+                delay(1000)
+                if (screenState.value.otpRegisterUiState.otp == screenState.value.otpRegisterUiState.verificationId) {
+                    savePhoneNumberUseCase(screenState.value.otpRegisterUiState.phoneNumber)
+                    updateState(screenState.value.copy(isLoading = false))
                     navigate(Destinations.Home)
-                } 
+                }
             },
             onError = { errorMessage ->
                 updateState(screenState.value.copy(errorMessage = R.string.otp_code_is_incorrect))
@@ -93,13 +145,17 @@ class OTPRegisterViewModel(
 
     override fun onClickResendCode() {
         updateSecondLeft()
-        if(screenState.value.secondLeft == 0){
+        if (screenState.value.otpRegisterUiState.secondLeft == 0) {
             sendOtpToPhoneNumber()
         }
     }
 
     override fun onClickBackButton() {
         navigateUp()
+    }
+
+    override fun onClickRetry() {
+        updateState(screenState.value.copy(isLoading = true, errorMessage = null))
     }
 
     fun generateOtp(): String = (10000..99999).random().toString()
