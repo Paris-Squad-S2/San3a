@@ -11,13 +11,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppTextField
+import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 
 
@@ -50,13 +50,13 @@ fun LocationContent(
                 Icon(
                     painter = painterResource(R.drawable.ic_alt_arrow_down),
                     contentDescription = null,
-                    tint = Color.Unspecified
+                    tint = Theme.colors.shade.tertiary
                 )
             }, leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.ic_location_pin),
                     contentDescription = null,
-                    tint = Color.Unspecified,
+                    tint = Theme.colors.shade.tertiary
                 )
             }, enabled = false, modifier = Modifier.clickable(
                 enabled = true, onClick = {

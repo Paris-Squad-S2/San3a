@@ -45,7 +45,8 @@ fun CitiesBottomSheet(
                 Text(
                     text = "Choose City",
                     style = Theme.textStyle.title.medium,
-                    modifier = Modifier.weight(1F)
+                    modifier = Modifier.weight(1F),
+                    color = Theme.colors.shade.primary
                 )
                 IconButton(onClick = onDismissRequest) {
                     Icon(
@@ -65,7 +66,6 @@ fun CitiesBottomSheet(
             }
         })
 }
-
 
 
 @Preview
