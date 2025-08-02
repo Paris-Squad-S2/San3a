@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,14 +40,14 @@ enum class BottomSheetType {
 fun RegisterBottomSheet(
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
-    headerText : String = "",
+    headerText: String = "",
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false),
-    contentText : String = "",
-    isErrorMessage : Boolean = false,
-){
+    contentText: String = "",
+    isErrorMessage: Boolean = false,
+) {
     BottomSheet(
         header = {
-            if(!isErrorMessage) {
+            if (!isErrorMessage) {
                 Row(
                     modifier = modifier
                         .fillMaxWidth()
@@ -72,13 +73,16 @@ fun RegisterBottomSheet(
     ) {
         LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             item {
-                if(isErrorMessage) {
+                if (isErrorMessage) {
                     Image(
                         painter = painterResource(R.drawable.placeholder_lllustration),
-                        contentDescription = null
+                        contentDescription = null,
+                        modifier = Modifier.size(120.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -86,13 +90,14 @@ fun RegisterBottomSheet(
                         style = Theme.textStyle.title.small,
                         color = Theme.colors.shade.primary
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = stringResource(R.string.Our_team_is_working_on_a_fix__Please_try_again_later_),
                         style = Theme.textStyle.body.medium.regular,
-                        color = Theme.colors.shade.secondary
+                        color = Theme.colors.shade.secondary,
+                        modifier = Modifier.padding(bottom = 24.dp)
                     )
-                }
-                else{
+                } else {
                     Text(
                         text = contentText,
                         style = Theme.textStyle.body.medium.medium,
