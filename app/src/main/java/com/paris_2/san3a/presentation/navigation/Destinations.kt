@@ -5,10 +5,7 @@ import kotlinx.serialization.Serializable
 sealed interface Destinations : Graph {
 
     @Serializable
-    data object Graph1 : Graph
-
-    @Serializable
-    data object Screen : Destination
+    data object MainGraph : Graph
 
     @Serializable
     data class OTPRegisterScreen(val phoneNumber: String = "") : Destination
@@ -24,6 +21,12 @@ sealed interface Destinations : Graph {
 
     @Serializable
     data object Messages : Destination
+
+    @Serializable
+    data class MessageDetails(val chatId: String) : Destination
+
+    @Serializable
+    data object Notifications : Destination
 
     @Serializable
     data object More : Destination
