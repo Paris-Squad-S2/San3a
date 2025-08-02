@@ -47,10 +47,10 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
-    override fun getMostRequestedServices(): Flow<List<ServiceDto>> {
+    override fun getMostRequestedServices(): Flow<List<RequestServiceDto>> {
         return fireStoreService.streamCollection(
             path = SERVICE_REQUESTS_COLLECTION,
-            fromJson = ServiceDto::fromJson,
+            fromJson = RequestServiceDto::fromJson,
             limit = null,
             queryBuilder = { collection ->
                 collection
