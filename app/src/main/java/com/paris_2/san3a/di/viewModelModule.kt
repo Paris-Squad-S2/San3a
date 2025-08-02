@@ -1,5 +1,7 @@
 package com.paris_2.san3a.di
 
+import com.paris_2.san3a.presentation.screen.home.craftsman.CraftsmanHomeViewModel
+import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeViewModel
 import com.paris_2.san3a.presentation.screen.message.details.MessagesDetailsViewModel
 import com.paris_2.san3a.presentation.screen.messages.MessagesViewModel
 import org.koin.core.module.dsl.viewModelOf
