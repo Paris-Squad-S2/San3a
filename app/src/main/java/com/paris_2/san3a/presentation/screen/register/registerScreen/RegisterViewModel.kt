@@ -29,8 +29,4 @@ class RegisterViewModel : BaseViewModel<RegisterUiState>(RegisterUiState()),
         }
     }
 
-    override fun onClickContinueAsGuest() {
-        navigate(Destinations.Home)
-    }
-
 }

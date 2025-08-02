@@ -380,7 +380,6 @@ fun RegisterScreenPreview() {
         registerInteractionListener = object : RegisterInteractionListener {
             override fun onPhoneNumberChanged(phone: String) {}
             override fun onClickContinue() {}
-            override fun onClickContinueAsGuest() {}
         }
     )
 }

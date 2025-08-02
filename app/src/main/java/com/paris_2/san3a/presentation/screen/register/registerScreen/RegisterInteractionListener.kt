@@ -5,5 +5,4 @@ interface RegisterInteractionListener {
 
     fun onClickContinue()
 
-    fun onClickContinueAsGuest()
 }
