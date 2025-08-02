@@ -8,15 +8,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.paris_2.san3a.presentation.screen.home.craftsman.CraftsmanHomeViewModel
+import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeViewModel
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
-    HomeScreenContent()
+fun HomeScreen(
+    customerViewModel: CustomerHomeViewModel = koinViewModel(),
+    craftsmanHomeViewModel: CraftsmanHomeViewModel = koinViewModel()
+) {
+    CustomerHomeScreenContent()
 }
 
 @Composable
-private fun HomeScreenContent() {
+private fun CustomerHomeScreenContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
