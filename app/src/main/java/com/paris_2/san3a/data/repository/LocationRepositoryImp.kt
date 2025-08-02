@@ -17,11 +17,11 @@ class LocationRepositoryImp(
 
     override suspend fun getCitiesInGovernment(
         countryName: String,
-        governmentName: String,
+        stateName: String,
     ): Cities = locationRemoteDataSource.getCitiesInGovernment(
         CitiesRequest(
             countryName,
-            governmentName
+            stateName
         )
     ).toCities()
 }

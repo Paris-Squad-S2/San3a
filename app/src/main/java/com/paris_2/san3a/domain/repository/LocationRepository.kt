@@ -5,5 +5,5 @@ import com.paris_2.san3a.domain.entity.States
 
 interface LocationRepository {
     suspend fun getGovernmentsInCountry(countryName: String): States
-    suspend fun getCitiesInGovernment(countryName: String, governmentName: String): Cities
+    suspend fun getCitiesInGovernment(countryName: String, stateName: String): Cities
 }
