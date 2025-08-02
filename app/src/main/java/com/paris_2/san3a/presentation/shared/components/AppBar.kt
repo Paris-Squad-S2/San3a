@@ -1,9 +1,11 @@
 package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,6 +27,7 @@ fun AppBar(
     modifier: Modifier = Modifier,
     actionIcon: @Composable () -> Unit = {},
     title: String,
+    location : String? = null,
     onBackClick: (() -> Unit)? = null,
     showBackGround: Boolean = true,
 ) {
@@ -33,7 +36,8 @@ fun AppBar(
         modifier = modifier
             .fillMaxWidth()
             .background(color = if (showBackGround) Theme.colors.background.card else Color.Unspecified)
-            .padding(8.dp),
+            .padding(start = 8.dp, end = 16.dp)
+            .padding(vertical = 8.dp),
 
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -46,12 +50,49 @@ fun AppBar(
                 )
             }
         }
-        Text(
-            text = title,
-            modifier = Modifier.weight(1F),
-            style = Theme.textStyle.title.small,
-            color = Theme.colors.shade.primary,
-        )
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = if (onBackClick == null) 16.dp else 0.dp)
+        ){
+            Text(
+                text = title,
+                style = Theme.textStyle.title.small,
+                color = Theme.colors.shade.primary,
+            )
+            if(location != null) {
+                Row(
+                    modifier = Modifier
+                        .padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_location_outline),
+                        contentDescription = "",
+                        tint = Theme.colors.shade.secondary,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .padding(end = 4.dp)
+                    )
+                    Text(
+                        text = location,
+                        style = Theme.textStyle.body.small.medium,
+                        color = Theme.colors.shade.secondary
+                    )
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_alt_arrow_down_outline),
+                        contentDescription = "",
+                        tint = Theme.colors.shade.secondary,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .padding(start = 4.dp)
+                    )
+                }
+            }
+
+
+        }
+
         actionIcon()
     }
 
@@ -71,6 +112,25 @@ private fun AppBarPrev() {
                     tint = Theme.colors.shade.primary
                 )
             }
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun AppBarPrev2() {
+    BasePreview {
+        AppBar(
+            title = "Title",
+            onBackClick = null,
+            actionIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_notification_outline),
+                    contentDescription = null,
+                    tint = Theme.colors.shade.primary
+                )
+            },
+            location = "Location",
         )
     }
 }
