@@ -49,7 +49,7 @@ class OnBoardingViewModel(
 
     private fun navigateToHome() {
         navigate(
-            destination = Destinations.Home,
+                destination = Destinations.Account,
             navOptions = NavOptions.Builder()
                 .setPopUpTo(Destinations.OnBoarding, inclusive = true)
                 .build()

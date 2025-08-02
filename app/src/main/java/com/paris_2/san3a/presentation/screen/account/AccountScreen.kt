@@ -32,9 +32,10 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AccountScreen(viewModel: AccountViewModel = viewModel()) {
+fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
     val progress = viewModel.progress
     val title = viewModel.getTitle()
     val description = viewModel.getDescription()
@@ -51,19 +52,22 @@ fun AccountScreen(viewModel: AccountViewModel = viewModel()) {
         onPrevious = viewModel::previousStep,
         onNext = viewModel::nextStep,
         onUserTypeSelected = viewModel::updateUserType,
+        onChipClick = viewModel::toggleServiceSelection,
         uiState = uiState
     )
 }
+
 @Composable
 fun AccountScreenContent(
-    title : String,
-    description : String,
-    textButton : String,
+    title: String,
+    description: String,
+    textButton: String,
     currentScreen: Int,
     progress: Float,
     onNext: () -> Unit,
     onPrevious: () -> Unit,
     onUserTypeSelected: (UserType) -> Unit,
+    onChipClick: (String) -> Unit,
     uiState: AccountScreenUiState,
     modifier: Modifier = Modifier
 ) {
@@ -74,10 +78,10 @@ fun AccountScreenContent(
             .background(Theme.colors.background.screen)
             .padding(16.dp)
     ) {
-        Row (
+        Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ){
+        ) {
             if (currentScreen != 0) {
                 AppBackButton(onClickBackButton = onPrevious)
             } else {
@@ -87,42 +91,55 @@ fun AccountScreenContent(
         }
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text =title,
-            color = Theme.colors.shade.secondary,
+            text = title,
+            color = Theme.colors.shade.primary,
             style = Theme.textStyle.display.xLarge,
             modifier = Modifier.padding(bottom = 16.dp)
         )
         Text(
-            text =description,
-            color = Theme.colors.shade.primary,
+            text = description,
+            color = Theme.colors.shade.secondary,
             style = Theme.textStyle.body.large.regular,
         )
         when (currentScreen) {
             0 -> StepOneContent(
                 modifier = Modifier.padding(vertical = 32.dp),
-                onUserTypeSelected = onUserTypeSelected ,
+                onUserTypeSelected = onUserTypeSelected,
                 selectedType = uiState.accountUiState.userType
             )
-            1 -> StepTwoContent(modifier = Modifier.padding(vertical = 32.dp))
+
+            1 -> StepTwoContent(
+                services = uiState.accountUiState.serviceUiState,
+                onChipClick = onChipClick,
+                modifier = Modifier.padding(vertical = 32.dp)
+            )
+
             2 -> when (uiState.accountUiState.userType) {
                 UserType.CUSTOMER -> StepThreeCustomerContent(modifier = Modifier.padding(vertical = 32.dp))
                 UserType.CRAFTSMAN -> StepThreeCraftsmanContent(modifier = Modifier.padding(vertical = 32.dp))
                 else -> {}
             }
+
             3 -> when (uiState.accountUiState.userType) {
                 UserType.CUSTOMER -> StepFourCustomerContent(modifier = Modifier.padding(vertical = 32.dp))
-                UserType.CRAFTSMAN -> StepFourCraftsmanContent(modifier = Modifier.padding(top = 32.dp, bottom = 12.dp))
+                UserType.CRAFTSMAN -> StepFourCraftsmanContent(
+                    modifier = Modifier.padding(
+                        top = 32.dp,
+                        bottom = 12.dp
+                    )
+                )
+
                 else -> {}
             }
         }
 
         AppButton(
-           onClick = onNext,
-           type = AppButtonType.Primary,
-           text = textButton,
-           state = AppButtonState.Enable,
-           modifier = Modifier.fillMaxWidth()
-       )
+            onClick = onNext,
+            type = AppButtonType.Primary,
+            text = textButton,
+            state = AppButtonState.Enable,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -131,15 +148,48 @@ fun AccountScreenContent(
 private fun AccountScreenPreview() {
     San3aTheme {
         AccountScreenContent(
-            title ="What do you usually need help with?" ,
+            title = "What do you usually need help with?",
             description = "This helps us personalize your experience. You can change it anytime.",
             textButton = "Next",
             progress = 0.25f,
-            currentScreen = 1,
+            currentScreen = 0,
             onNext = {},
             onPrevious = {},
             onUserTypeSelected = {},
-            uiState = AccountScreenUiState()
+            uiState = AccountScreenUiState(
+                accountUiState = AccountUiState(
+                    serviceUiState = listOf(
+                        ServiceUiState(id = "1", serviceTitle = "Plumbing", isSelected = false),
+                        ServiceUiState(id = "2", serviceTitle = "Electrical", isSelected = true),
+                        ServiceUiState(id = "3", serviceTitle = "Cleaning", isSelected = false),
+                        ServiceUiState(id = "1", serviceTitle = "AC Repair", isSelected = false),
+                        ServiceUiState(id = "2", serviceTitle = "Furniture", isSelected = true),
+                        ServiceUiState(id = "3", serviceTitle = "Landscaping", isSelected = false),
+                        ServiceUiState(id = "1", serviceTitle = "Roofing", isSelected = false),
+                        ServiceUiState(id = "2", serviceTitle = "Pest Control", isSelected = true),
+                        ServiceUiState(id = "3", serviceTitle = "Carpentry", isSelected = false),
+                        ServiceUiState(
+                            id = "3",
+                            serviceTitle = "Appliance Repair",
+                            isSelected = false
+                        ),
+                        ServiceUiState(id = "3", serviceTitle = "Painting", isSelected = false),
+                        ServiceUiState(id = "3", serviceTitle = "Masonry", isSelected = false),
+                        ServiceUiState(
+                            id = "3",
+                            serviceTitle = "HVAC Maintenance",
+                            isSelected = false
+                        ),
+                        ServiceUiState(
+                            id = "3",
+                            serviceTitle = "Pool Maintenance",
+                            isSelected = false
+                        ),
+
+                        )
+                )
+            ),
+            onChipClick = {}
         )
     }
 }
@@ -150,5 +200,5 @@ private fun ScreenPreview() {
     San3aTheme {
         AccountScreen()
     }
-    
+
 }

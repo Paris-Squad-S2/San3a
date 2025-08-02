@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class GetAllServicesUseCase(
     private val repository: HomeRepository
 ) {
-    suspend fun invoke(): Flow<List<Service>> {
+    operator fun invoke(): Flow<List<Service>> {
         return repository.getAllServices()
     }
 }

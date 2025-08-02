@@ -16,6 +16,7 @@ import com.paris_2.san3a.domain.SavePersonalInfoException
 import com.paris_2.san3a.domain.SaveServicesException
 import com.paris_2.san3a.domain.SaveWorkShowcaseException
 import com.paris_2.san3a.domain.UploadNationalIdImagesException
+import com.paris_2.san3a.domain.entity.Service
 
 class UserRepositoryImp(
     private val userRemoteDataSource: UserRemoteDataSource,
@@ -31,7 +32,7 @@ class UserRepositoryImp(
             userRemoteDataSource.getAccountType(phone)
         }
 
-    override suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean) =
+    override suspend fun saveServices(phone: String, services:  List<Service>, isCraftsman: Boolean) =
         safeCall(SaveServicesException()) {
             userRemoteDataSource.saveServices(phone, services, isCraftsman)
         }

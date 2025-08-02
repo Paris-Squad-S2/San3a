@@ -9,15 +9,16 @@ data class AccountScreenUiState(
 )
 
 data class AccountUiState(
-    val pageNumber: Int = 0,
+    val pageNumber: String = "",
     val userType: UserType? = null,
     val serviceUiState: List<ServiceUiState> = emptyList(),
     val locationUiState: LocationUiState = LocationUiState(),
 )
 
 data class ServiceUiState(
-    val id: Int = 0,
+    val id: String = "",
     val serviceTitle: String = "",
+    val serviceDescription: String = "",
     val isSelected: Boolean = false,
 )
 

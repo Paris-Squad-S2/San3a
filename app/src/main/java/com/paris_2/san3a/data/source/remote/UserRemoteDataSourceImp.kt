@@ -1,9 +1,11 @@
 package com.paris_2.san3a.data.source.remote
 
+import android.util.Log
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
+import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.repository.UserRemoteDataSource
 
 class UserRemoteDataSourceImp(
@@ -16,7 +18,7 @@ class UserRemoteDataSourceImp(
             "currentStep" to AccountSetupStep.SERVICES.name,
             "phone" to phone
         )
-        updateUserData(phone, data)
+        fireStoreService.setDoc(documentPath = "$USERS_COLLECTION/$phone", data = data)
     }
 
     override suspend fun getAccountType(phone: String): AccountType {
@@ -27,15 +29,23 @@ class UserRemoteDataSourceImp(
         return AccountType.entries.find { it.name == userData } ?: AccountType.CUSTOMER
     }
 
-    override suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean) {
+    override suspend fun saveServices(phone: String, services: List<Service>, isCraftsman: Boolean) {
+        val servicesData = services.map {
+            mapOf(
+                "id" to it.id,
+                "title" to it.title,
+                "description" to it.description
+            )
+        }
+
         val data = if (isCraftsman) {
             mapOf(
-                "offeredServices" to services,
+                "offeredServices" to servicesData,
                 "currentStep" to AccountSetupStep.LOCATION.name
             )
         } else {
             mapOf(
-                "requestedServices" to services,
+                "requestedServices" to servicesData,
                 "currentStep" to AccountSetupStep.LOCATION.name
             )
         }
@@ -106,7 +116,8 @@ class UserRemoteDataSourceImp(
     }
 
     private suspend fun updateUserData(phone: String, data: Map<String, Any>) {
-        fireStoreService.updateDoc(path = "$USERS_COLLECTION/$phone", data = data)
+        fireStoreService.setDoc(documentPath = "$USERS_COLLECTION/$phone", data = data)
+        Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
     }
 
     companion object {
