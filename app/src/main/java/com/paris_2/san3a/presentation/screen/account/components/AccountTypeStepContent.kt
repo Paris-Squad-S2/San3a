@@ -13,7 +13,7 @@ import com.paris_2.san3a.presentation.screen.account.UserType
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 
 @Composable
-fun StepOneContent(
+fun AccountTypeContent(
     selectedType: UserType?,
     onUserTypeSelected: (UserType) -> Unit,
     modifier: Modifier = Modifier
@@ -43,7 +43,7 @@ fun StepOneContent(
 @Composable
 private fun StepOneContentPreview() {
     San3aTheme {
-        StepOneContent(
+        AccountTypeContent(
             selectedType = UserType.CUSTOMER,
             onUserTypeSelected = {}
         )
