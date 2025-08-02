@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -118,6 +119,7 @@ fun MessageTextField(
                 }
             }
         },
+        cursorBrush = SolidColor(Theme.colors.shade.primary),
         textStyle = Theme.textStyle.body.medium.regular.copy(color = Theme.colors.shade.primary),
     )
 }
