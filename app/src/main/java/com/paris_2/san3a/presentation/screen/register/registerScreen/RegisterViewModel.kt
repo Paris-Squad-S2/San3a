@@ -7,26 +7,25 @@ class RegisterViewModel : BaseViewModel<RegisterUiState>(RegisterUiState()),
     RegisterInteractionListener {
 
     override fun onPhoneNumberChanged(phone: String) {
+        val cleanedPhone = phone.removePrefix("+20")
+        val isValid = cleanedPhone.length == 10 && cleanedPhone.all { it.isDigit() }
+
         updateState(
-            screenState.value.copy(phoneNumber = phone)
+            screenState.value.copy(
+                phoneNumber = phone,
+                isPhoneValid = isValid
+            )
         )
     }
 
     override fun onClickContinue() {
         val phone = screenState.value.phoneNumber
-        val isValid =
-            !phone.isNullOrBlank() &&
-            phone.removePrefix("+20").length == 10
-                    && phone.removePrefix(
-                "+20"
-            ).all { it.isDigit() }
+        val isValid = screenState.value.isPhoneValid
 
         if (isValid) {
             navigate(Destinations.OTPRegisterScreen(phone))
         } else {
             updateState(screenState.value.copy(phoneNumber = ""))
-
         }
     }
-
 }

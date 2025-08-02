@@ -106,7 +106,6 @@ fun RegisterScreenContent(
                 height = topSectionHeight,
                 logoSize = logoSize,
                 showTitle = true,
-                isKeyboardVisible = isKeyboardVisible
             )
 
             Surface(
@@ -138,11 +137,12 @@ fun RegisterScreenContent(
                     AppButton(
                         type = AppButtonType.Primary,
                         onClick = { registerInteractionListener.onClickContinue() },
-                        state = AppButtonState.Enable,
+                        state = if (registerUiState.isPhoneValid) AppButtonState.Enable else AppButtonState.Disabled,
                         modifier = Modifier.fillMaxWidth(),
                         size = AppButtonSize.Large,
                         text = stringResource(R.string.Continue),
                     )
+
                 }
             }
         }
@@ -176,7 +176,6 @@ fun TopSection(
     height: Dp,
     logoSize: Dp,
     showTitle: Boolean,
-    isKeyboardVisible: Boolean,
 ) {
     Spacer(modifier = Modifier.height(68.dp))
 
@@ -201,7 +200,7 @@ fun TopSection(
                 )
 
                 if (showTitle) {
-                    Spacer(modifier = Modifier.height(if (isKeyboardVisible) 8.dp else 16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = stringResource(R.string.welcome_to_san3a),
                         color = Theme.colors.background.card,
