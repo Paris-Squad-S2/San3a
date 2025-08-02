@@ -11,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.MostRequestedServices
+import com.paris_2.san3a.presentation.screen.home.utils.getResource
+import com.paris_2.san3a.presentation.screen.home.utils.getResourceColors
+import com.paris_2.san3a.presentation.screen.home.utils.getResourceTint
 import com.paris_2.san3a.presentation.shared.components.CategoryItem
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
@@ -38,10 +40,10 @@ fun MostRequestedServices(
                 CategoryItem(
                     title = service.title,
                     description = service.description,
-                    tint = Theme.colors.additional.primary.blue,
-                    iconColor = Theme.colors.additional.secondary.blue,
+                    tint = getResourceTint(service.id),
+                    iconColor = getResourceColors(service.id),
                     isLarge = true,
-                    painter = painterResource(R.drawable.ic_washing_machine_bold)
+                    painter = painterResource(getResource(service.id))
                 )
             }
         }
