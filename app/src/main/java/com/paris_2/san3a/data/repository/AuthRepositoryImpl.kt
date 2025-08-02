@@ -5,8 +5,8 @@ import com.paris_2.san3a.data.service.auth.WhatsAppMessage
 import com.paris_2.san3a.data.source.AppPreferences
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
+import com.paris_2.san3a.domain.LoginStatusException
 import com.paris_2.san3a.domain.NoInternetConnectionException
-import com.paris_2.san3a.domain.PhoneNumberCheckException
 import com.paris_2.san3a.domain.RegisterException
 import com.paris_2.san3a.domain.San3aException
 import com.paris_2.san3a.domain.SavePhoneNumberException
@@ -56,9 +56,15 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun isPhoneNumberSaved(): Boolean {
-        return safeCall(PhoneNumberCheckException()) {
-            appPreferences.isPhoneNumberSaved()
+    override suspend fun setLoggedIn(isLoggedIn: Boolean) {
+        return safeCall(LoginStatusException()) {
+            appPreferences.setLoggedIn(isLoggedIn)
+        }
+    }
+
+    override suspend fun isLoggedIn(): Boolean {
+        return safeCall(LoginStatusException()) {
+            appPreferences.isLoggedIn()
         }
     }
 }
