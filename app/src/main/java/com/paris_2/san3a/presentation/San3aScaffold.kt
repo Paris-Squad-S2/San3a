@@ -17,6 +17,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.paris_2.san3a.presentation.navigation.Navigator
 import com.paris_2.san3a.presentation.navigation.San3aNavGraph
+import com.paris_2.san3a.presentation.screen.account.AccountScreen
 import com.paris_2.san3a.presentation.shared.components.AppNavBarItem
 import com.paris_2.san3a.presentation.shared.components.AppNavigationBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
@@ -54,7 +55,7 @@ fun San3aScaffold(
     San3aTheme {
         AppScaffold(
             modifier = Modifier.fillMaxSize(),
-            content = { San3aNavGraph(navController = navController) },
+            content = { AccountScreen() },
             bottomBar = {
                 AnimatedVisibility(
                     visible = isVisible,

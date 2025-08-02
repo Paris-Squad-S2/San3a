@@ -37,6 +37,7 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import org.koin.compose.viewmodel.koinViewModel
 import com.paris_2.san3a.presentation.shared.utils.asString
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -103,6 +104,7 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
         currentScreen = currentScreen,
         progress = progress,
           uiState = uiState,
+        onGovernmentSelected = viewModel::getCities,
         onCustomerProfilePhotoClick = { profileImagePickerLauncher.launch(arrayOf("image/*")) },
         onFrontNationalIdClick = { frontNationalIdPickerLauncher.launch(arrayOf("image/*")) },
         onBackNationalIdClick = { backNationalIdPickerLauncher.launch(arrayOf("image/*")) },
@@ -123,8 +125,10 @@ fun AccountScreenContent(
     onBackNationalIdClick : () -> Unit,
     onWorkImageClick : () -> Unit,
     interactionListener: AccountInteractionListener,
+    onGovernmentSelected: (String) -> Unit,
     uiState: AccountScreenUiState,
-    modifier: Modifier = Modifier
+    viewModel: AccountViewModel,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -179,7 +183,33 @@ fun AccountScreenContent(
             )
 
             3 -> when (uiState.accountUiState.userType) {
-                UserType.CUSTOMER -> LocationContent(modifier = Modifier.padding(vertical = 32.dp))
+                UserType.CUSTOMER -> StepThreeCustomerContent(
+                    modifier = Modifier.padding(vertical = 32.dp),
+                    onGetLocationClicked = onBottomSheetVisibility,
+                    isGovernmentSheetShowed = uiState.accountUiState.isGovernmentBottomSheetShowed,
+                    onGovernmentDismissRequest = onDismissRequest,
+                    governments = uiState.accountUiState.governments,
+                    onGovernmentSelected = { governemnt ->
+                        viewModel.getCities(governemnt).also {
+                            viewModel.updateCitiesBottomSheetVisibility()
+                            viewModel.updateGovernmentLocation(governemnt)
+                        }
+                    },
+                    isCitiesSheetShowed = uiState.accountUiState.isCitiesBottomSheetShowed,
+                    onCitiesDismissRequest = viewModel::onCitiesButtonSheetDismiss,
+                    onCitiesSelected = { city ->
+                        viewModel.updateCityLocation(city).also {
+                            viewModel.updateCitiesBottomSheetVisibility()
+                            viewModel.updateGovernmentBottomSheetVisibility()
+                            viewModel.updateCityLocation(city)
+                        }
+
+                    },
+                    cities = uiState.accountUiState.cities,
+                    government = uiState.accountUiState.locationUiState.government,
+                    city = uiState.accountUiState.locationUiState.city
+                )
+
                 UserType.CRAFTSMAN -> ShowYourWorkContent(
                     modifier = Modifier.padding(vertical = 32.dp),
                     onAddWorkImagesClick = onWorkImageClick,
@@ -192,7 +222,10 @@ fun AccountScreenContent(
 
             4 -> when (uiState.accountUiState.userType) {
                 UserType.CRAFTSMAN -> VerifyIdentityContent(
-                    modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+
+                    modifier = Modifier.padding(
+                        top = 32.dp, bottom = 12.dp
+                    ),
                     onFrontNationalIdClick,
                     onBackNationalIdClick,
                     uiState.accountUiState.frontOfNationalIdUri,
@@ -211,6 +244,9 @@ fun AccountScreenContent(
     }
 }
 
+
+
+/*
 
 @Preview
 @Composable
@@ -279,4 +315,4 @@ private fun ScreenPreview() {
         AccountScreen()
     }
 
-}
+}*/

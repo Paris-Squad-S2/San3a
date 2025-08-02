@@ -39,5 +39,4 @@ sealed interface Destinations : Graph {
 
     @Serializable
     data object OnBoarding : Destination
-
 }

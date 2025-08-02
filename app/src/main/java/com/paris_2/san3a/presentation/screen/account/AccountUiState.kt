@@ -14,6 +14,10 @@ data class AccountUiState(
     val userType: UserType? = null,
     val serviceUiState: List<ServiceUiState> = emptyList(),
     val locationUiState: LocationUiState = LocationUiState(),
+    val governments: List<String> = emptyList(),
+    val cities: List<String> = emptyList(),
+    val isGovernmentBottomSheetShowed: Boolean = false,
+    val isCitiesBottomSheetShowed: Boolean = false,
     val customerName: String = "",
     val customerProfilePhotoUri: Uri? = null,
     val frontOfNationalIdUri : Uri? = null,
@@ -30,10 +34,8 @@ data class ServiceUiState(
 )
 
 data class LocationUiState(
-    val latitude: Double = 0.0,
-    val longitude: Double = 0.0,
-    val countryName: String = "",
-    val cityName: String = "",
+    val government: String = "",
+    val city: String = "",
 )
 
 enum class UserType(val displayActor: Int) {

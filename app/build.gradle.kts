@@ -103,6 +103,6 @@ dependencies {
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-
     implementation(libs.accompanist.flowlayout)
+    implementation(libs.logging.interceptor)
 }
