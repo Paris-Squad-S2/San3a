@@ -15,10 +15,10 @@ import coil3.compose.AsyncImage
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
-fun ImagesGrid(images: List<String>) {
+fun ImagesGrid(modifier: Modifier = Modifier, images: List<String>) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 124.dp),
-        modifier = Modifier.padding(12.dp),
+        modifier = modifier.padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
