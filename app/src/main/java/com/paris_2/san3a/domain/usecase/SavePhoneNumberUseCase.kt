@@ -1,6 +1,5 @@
 package com.paris_2.san3a.domain.usecase
 
-import android.R.attr.phoneNumber
 import com.paris_2.san3a.domain.repository.AuthRepository
 
 class SavePhoneNumberUseCase(

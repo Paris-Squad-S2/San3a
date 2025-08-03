@@ -1,9 +1,14 @@
 package com.paris_2.san3a.data.source.remote
 
+import android.util.Log
+import com.google.firebase.firestore.FieldPath
 import com.paris_2.san3a.data.service.firestore.FireStoreService
+import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
+import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.repository.UserRemoteDataSource
 
 class UserRemoteDataSourceImp(
@@ -16,7 +21,7 @@ class UserRemoteDataSourceImp(
             "currentStep" to AccountSetupStep.SERVICES.name,
             "phone" to phone
         )
-        updateUserData(phone, data)
+        fireStoreService.setDoc(documentPath = "$USERS_COLLECTION/$phone", data = data)
     }
 
     override suspend fun getAccountType(phone: String): AccountType {
@@ -27,28 +32,37 @@ class UserRemoteDataSourceImp(
         return AccountType.entries.find { it.name == userData } ?: AccountType.CUSTOMER
     }
 
-    override suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean) {
-        val data = if (isCraftsman) {
-            mapOf(
-                "offeredServices" to services,
-                "currentStep" to AccountSetupStep.LOCATION.name
+    override suspend fun saveServices(
+        phone: String,
+        services: List<Service>,
+        isCraftsman: Boolean
+    ) {
+        services.forEach { service ->
+            val collectionPath = "$USERS_COLLECTION/$phone/services"
+            val serviceData = mapOf(
+                "serviceId" to service.id
             )
-        } else {
-            mapOf(
-                "requestedServices" to services,
-                "currentStep" to AccountSetupStep.LOCATION.name
-            )
+            fireStoreService.addToCollection(path = collectionPath, data = serviceData)
         }
-        updateUserData(phone, data)
+    }
+
+    override suspend fun getServices(phone: String): List<ServiceDto> {
+        return fireStoreService.getCollection(path = "$USERS_COLLECTION/$phone/services", fromJson = ::getServices).let { docs ->
+            fireStoreService.getCollection(path = "services", fromJson = ServiceDto::fromJson, queryBuilder = { query ->
+                query.whereIn(FieldPath.documentId(), docs)
+            })
+        }
+    }
+
+    fun getServices(data: Map<String, Any>, serviceId: String): String {
+        return data["serviceId"].toString()
     }
 
     override suspend fun saveLocation(phone: String, location: Location) {
         val data = mapOf(
             "location" to mapOf(
-                "latitude" to location.latitude,
-                "longitude" to location.longitude,
                 "cityName" to location.cityName,
-                "countryName" to location.countryName
+                "government" to location.government
             ),
             "currentStep" to AccountSetupStep.PERSONAL_INFO.name
         )
@@ -66,12 +80,12 @@ class UserRemoteDataSourceImp(
         updateUserData(phone, data)
     }
 
-    override suspend fun saveWorkShowcase(phone: String, workMedia: List<String>, workDescription: String) {
-        val data = mapOf(
-            "workMedia" to workMedia,
+    override suspend fun saveWorkShowcase(phone: String, workMedia: List<String>?, workDescription: String) {
+        val data = mutableMapOf<String, Any>(
             "workDescription" to workDescription,
             "currentStep" to AccountSetupStep.UPLOAD_NATIONAL_ID.name
         )
+        workMedia?.let { data["workMedia"] = it }
         updateUserData(phone, data)
     }
 
@@ -105,8 +119,44 @@ class UserRemoteDataSourceImp(
         updateUserData(phone, data)
     }
 
+    override suspend fun getUser(phone: String): User {
+        val userData = fireStoreService.getDoc(
+            path = "$USERS_COLLECTION/$phone",
+            fromJson = { data, _ -> data }
+        ) ?: throw Exception("User not found with phone number: $phone")
+
+        return User(
+            id = phone,
+            phone = phone,
+            fullName = userData["fullName"]?.toString() ?: "",
+            profilePhoto = userData["profilePhoto"]?.toString() ?: "",
+            nationalIdFrontImage = userData["nationalIdFrontImage"]?.toString() ?: "",
+            nationalIdBackImage = userData["nationalIdBackImage"]?.toString() ?: "",
+            workDescription = userData["workDescription"]?.toString() ?: "",
+            accountType = AccountType.entries.find {
+                it.name == userData["accountType"]?.toString()
+            } ?: AccountType.CUSTOMER,
+            location = (userData["location"] as? Map<*, *>)?.let { locationData ->
+                Location(
+                    government = locationData["government"]?.toString() ?: "",
+                    cityName = locationData["cityName"]?.toString() ?: ""
+                )
+            } ?: Location("", "")
+        )
+    }
+
+    override suspend fun getWorkMedia(phone: String): List<String> {
+        val userData = fireStoreService.getDoc(
+            path = "$USERS_COLLECTION/$phone",
+            fromJson = { data, _ -> data }
+        ) ?: throw Exception("User not found with phone number: $phone")
+
+        return (userData["workMedia"] as? List<*>)?.filterIsInstance<String>() ?: emptyList()
+    }
+
     private suspend fun updateUserData(phone: String, data: Map<String, Any>) {
         fireStoreService.updateDoc(path = "$USERS_COLLECTION/$phone", data = data)
+        Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
     }
 
     companion object {

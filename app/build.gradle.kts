@@ -20,6 +20,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "WHATSAPP_API_KEY", "\"${project.findProperty("WHATSAPP_API_KEY")}\"")
+        buildConfigField("String", "SESSION_ID", "\"${project.findProperty("SESSION_ID")}\"")
 
     }
 
@@ -103,6 +104,6 @@ dependencies {
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-
     implementation(libs.accompanist.flowlayout)
+    implementation(libs.logging.interceptor)
 }
