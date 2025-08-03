@@ -48,7 +48,7 @@ class OTPRegisterViewModel(
             execute = {
                 sendOtpUseCase(
                     screenState.value.otpRegisterUiState.phoneNumber,
-                    "Your verification code is ${generateOtp()}"
+                    "Your verification code is $otp"
                 )
             },
             onSuccess = ::onSendOtpToPhoneNumberSuccess,
@@ -152,7 +152,7 @@ class OTPRegisterViewModel(
                         )
                     )
                     setLoginUseCase(true)
-                    navigate(Destinations.Home)
+                    navigate(Destinations.Account)
                 }
             },
             onError = { errorMessage ->

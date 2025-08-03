@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.paris_2.san3a.BuildConfig
 import com.paris_2.san3a.data.repository.HomeRepositoryImpl
 import com.paris_2.san3a.data.service.auth.AuthApiServices
 import com.paris_2.san3a.data.service.firestore.FireStoreService
@@ -58,7 +57,7 @@ val dataModule = module {
         OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer ${BuildConfig.WHATSAPP_API_KEY}")
+                    .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhlNWQ3ZTFlNjZkZWQ5NmU0MTdjNTgiLCJpYXQiOjE3NTQyMTg4MjQsImV4cCI6MTc1NDMwNTIyNH0.ar8mYg5JhiBrusNBZUzUdxIS51L9Ff6TrWB0StP5_Ag")
                     .addHeader("Content-Type", "application/json")
                     .build()
                 chain.proceed(request)
