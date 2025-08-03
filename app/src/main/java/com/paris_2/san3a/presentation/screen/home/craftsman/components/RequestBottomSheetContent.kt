@@ -110,7 +110,7 @@ fun RequestBottomSheetContent(
                             if (buttonIsActive) Theme.colors.button.primary else Theme.colors.button.disabled
                         )
                         .clickable {
-                            onButtonClick()
+                            if (buttonIsActive) { onButtonClick() }
                         }
                 ){
                     Row(
