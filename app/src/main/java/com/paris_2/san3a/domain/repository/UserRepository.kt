@@ -7,7 +7,6 @@ import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Stats
 import kotlinx.coroutines.flow.Flow
-import android.net.Uri
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 
