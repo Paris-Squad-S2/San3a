@@ -1,9 +1,11 @@
 package com.paris_2.san3a.di
 
+import android.system.Os.bind
 import com.paris_2.san3a.data.repository.AuthRepositoryImpl
 import com.paris_2.san3a.data.repository.ChatRepositoryImpl
 import com.paris_2.san3a.data.repository.LocationRepositoryImp
 import com.paris_2.san3a.data.repository.MessageRepositoryImpl
+import com.paris_2.san3a.data.repository.NotificationRepositoryImpl
 import com.paris_2.san3a.data.repository.OnboardingRepositoryImpl
 import com.paris_2.san3a.data.repository.UserRepositoryImp
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
@@ -11,6 +13,7 @@ import com.paris_2.san3a.domain.repository.AuthRepository
 import com.paris_2.san3a.domain.repository.ChatRepository
 import com.paris_2.san3a.domain.repository.LocationRepository
 import com.paris_2.san3a.domain.repository.MessageRepository
+import com.paris_2.san3a.domain.repository.NotificationRepository
 import com.paris_2.san3a.domain.repository.OnboardingRepository
 import com.paris_2.san3a.domain.repository.UserRepository
 import org.koin.android.ext.koin.androidApplication
@@ -26,4 +29,5 @@ val repositoryModule = module {
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
     single { NetworkConnectionChecker(androidApplication().applicationContext) }
     singleOf(::LocationRepositoryImp) { bind<LocationRepository>() }
+    singleOf(::NotificationRepositoryImpl) { bind<NotificationRepository>() }
 }
