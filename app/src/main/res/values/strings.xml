@@ -78,6 +78,11 @@
     <string name="send_icon">send icon</string>
     <string name="you">You: </string>
     <string name="delete_chat_icon">delete chat icon</string>
+    <string name="submitted">Submitted</string>
+    <string name="receiving_offers">Receiving Offers</string>
+    <string name="craftsman_selected">Craftsman Selected</string>
+    <string name="in_progress">In Progress</string>
+    <string name="done">Done</string>
     <string name="how_would_you_like_to_use_san3a">How would you like to use San3a?</string>
     <string name="what_do_you_need_help_with">What do you usually need help with?</string>
     <string name="what_services_do_you_offer">What services do you offer?</string>

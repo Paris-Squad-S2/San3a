@@ -81,6 +81,11 @@
     <string name="send_icon">أرسل الرسالة</string>
     <string name="you">أنت</string>
     <string name="delete_chat_icon">>أيقونة حذف المحادثة</string>
+    <string name="submitted">تم تقديم</string>
+    <string name="receiving_offers">تلقي العرض</string>
+    <string name="craftsman_selected">تم الاختيار</string>
+    <string name="in_progress">قيد التنفيذ</string>
+    <string name="done">انتهت</string>
     <string name="how_would_you_like_to_use_san3a">كيف تريد استخدام صنعة؟</string>
     <string name="what_do_you_need_help_with">ما الذي تحتاج عادةً إلى مساعدة فيه؟</string>
     <string name="what_services_do_you_offer">ما الخدمات التي تقدمها؟</string>
