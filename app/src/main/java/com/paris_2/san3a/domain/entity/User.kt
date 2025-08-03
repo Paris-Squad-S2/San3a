@@ -7,10 +7,7 @@ data class User(
     val profilePhoto: String,
     val nationalIdFrontImage: String,
     val nationalIdBackImage: String,
-    val offeredServices: List<String>,
-    val workMedia: List<String>,
-    val workDescription: List<Service>,
-    val requestedServices: List<Service>,
+    val workDescription: String,
     val accountType: AccountType,
     val location: Location
 )

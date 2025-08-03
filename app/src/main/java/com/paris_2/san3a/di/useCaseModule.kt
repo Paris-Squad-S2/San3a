@@ -16,6 +16,8 @@ import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetOnboardingCompletedUseCase
+import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.GetWorkMediaUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -34,4 +36,6 @@ val useCaseModule = module {
     factoryOf(::GetPhoneNumberUseCase)
     factoryOf(::GetLocationInfoUseCase)
     factoryOf(::GetUserServicesUseCase)
+    factoryOf(::GetUserUseCase)
+    factoryOf(::GetWorkMediaUseCase)
 }
