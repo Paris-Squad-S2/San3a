@@ -1,20 +1,45 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
+import android.util.Log
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
+import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.flow.first
 
 class CustomerHomeViewModel(
     private val getAllServicesUseCase: GetAllServicesUseCase,
-    private val getMostRequestedServicesUseCase: GetMostRequestedServicesUseCase
+    private val getMostRequestedServicesUseCase: GetMostRequestedServicesUseCase,
+    private val requestServicesUseCase: RequestServiceUseCase
 ): CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
 
     init{
         loadUserData()
         loadMostRequestedServices()
         loadServices()
+    }
+    override fun createRequest(service: RequestServiceUiState){
+        tryToExecute(
+            execute ={ requestServicesUseCase(service.toRequestService())},
+            onSuccess = {
+                updateState(
+                    screenState.value.copy(
+                        bottomSheetState = true
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it
+                    )
+                )
+                Log.e("CustomerHomeViewModel", it)
+            }
+        )
+
+
     }
     private fun loadServices(){
         tryToExecute(
