@@ -165,19 +165,19 @@ fun PreviewHomeScreen() {
                 mostRequestedServices = listOf(
                     MostRequestedServices(
                         id = "1",
-                        title = "Shower is not working",
+                        serviceType = "Shower is not working",
                         description = "Shower is not working",
                         requestedCount = 6
                     ),
                     MostRequestedServices(
                         id = "2",
-                        title = "Shower is not working",
+                        serviceType = "Shower is not working",
                         description = "Shower is not working",
                         requestedCount = 2
                     ),
                     MostRequestedServices(
                         id = "3",
-                        title = "Shower is not working",
+                        serviceType = "Shower is not working",
                         description = "Shower is not working",
                         requestedCount = 4
                     )
