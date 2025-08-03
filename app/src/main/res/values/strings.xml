@@ -72,4 +72,9 @@
     <string name="no_messages_yet">No Messages Yet</string>
     <string name="once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here">Once you start accepting or posting requests, chats with craftsmen will appear here.</string>
     <string name="loading_icon">Loading Icon</string>
+    <string name="submitted">Submitted</string>
+    <string name="receiving_offers">Receiving Offers</string>
+    <string name="craftsman_selected">Craftsman Selected</string>
+    <string name="in_progress">In Progress</string>
+    <string name="done">Done</string>
 </resources>
