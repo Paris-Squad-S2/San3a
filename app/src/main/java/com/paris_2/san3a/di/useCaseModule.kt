@@ -4,7 +4,7 @@ import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.domain.usecase.DeleteChatByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetChatsByUserIdUseCase
-import com.paris_2.san3a.domain.usecase.GetCurrentLocatedUseCase
+import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.SendMessageUseCase
@@ -28,6 +28,6 @@ val useCaseModule = module {
     factoryOf(::IsPhoneNumberSavedUseCase)
     factoryOf(::GetAllServicesUseCase)
     factoryOf(::SendOtpUseCase)
-    factoryOf(::GetCurrentLocatedUseCase)
+    factoryOf(::GetLocationInfoUseCase)
     factoryOf(::GetUserServicesUseCase)
 }

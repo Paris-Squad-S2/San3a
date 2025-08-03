@@ -4,7 +4,7 @@ import android.util.Log
 import com.paris_2.san3a.domain.entity.States
 import com.paris_2.san3a.domain.repository.LocationRepository
 
-class GetCurrentLocatedUseCase(private val locationRepository: LocationRepository) {
+class GetLocationInfoUseCase(private val locationRepository: LocationRepository) {
     suspend fun getGovernments(countryName: String): States {
         Log.d(
             "TAG",

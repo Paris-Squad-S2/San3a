@@ -9,7 +9,7 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetCurrentLocatedUseCase
+import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
@@ -17,7 +17,7 @@ import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.coroutines.launch
 
 class AccountViewModel(
-    private val getCurrentLocatedUseCase: GetCurrentLocatedUseCase,
+    private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getAllServicesUseCase: GetAllServicesUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
 ) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
@@ -327,7 +327,7 @@ class AccountViewModel(
 
     private fun getGovernments() {
         viewModelScope.launch {
-            val governments = getCurrentLocatedUseCase.getGovernments(countryName = "Egypt")
+            val governments = getLocationInfoUseCase.getGovernments(countryName = "Egypt")
             Log.d("TAG", "getGovernments: ")
             updateState(
                 screenState.value.copy(
@@ -341,7 +341,7 @@ class AccountViewModel(
 
     fun getCities(stateName: String) {
         viewModelScope.launch {
-            val cities = getCurrentLocatedUseCase.getCities(
+            val cities = getLocationInfoUseCase.getCities(
                 countryName = "Egypt",
                 stateName = stateName
             )
