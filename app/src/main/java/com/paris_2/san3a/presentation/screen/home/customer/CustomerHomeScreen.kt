@@ -66,7 +66,6 @@ private fun CustomerHomeScreenContent(
                 action.onDismissBottomSheet()
             },
             requestService = requestService
-
         )
         if(requestService.value != null){
             Log.d("CustomerHomeScreen", "RequestServiceUiState: ${requestService.value}")

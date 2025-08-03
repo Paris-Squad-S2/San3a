@@ -36,8 +36,7 @@ class HomeRepositoryImpl(
     }
 
     override suspend fun requestService(requestedService: RequestService) {
-
-        try {
+        try{
             val paths = requestedService.image.map { uri ->
                 "${requestedService.title}/${
                     uri.toUri().path?.substringAfterLast(
@@ -49,7 +48,6 @@ class HomeRepositoryImpl(
                 paths,
                 requestedService.image.map { it.toUri() })
             val imageUrls = firebaseStorageRemoteDataSource.getImagesByPaths(paths)
-
             serviceRemoteDataSource.requestService(requestedService.toDto(imageUrls))
         }catch (e: Exception){
             throw e

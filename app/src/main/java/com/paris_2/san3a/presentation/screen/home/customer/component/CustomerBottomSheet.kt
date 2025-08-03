@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.RequestBottomSheetContent
 import com.paris_2.san3a.presentation.screen.home.customer.RequestServiceUiState
+import com.paris_2.san3a.presentation.shared.components.AddPhotos
 import com.paris_2.san3a.presentation.shared.components.AddPhotosContent
 import com.paris_2.san3a.presentation.shared.components.BottomSheet
 import com.paris_2.san3a.presentation.shared.components.RequestDescriptionContent
@@ -43,7 +44,8 @@ fun CustomerBottomSheetService(
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents(),
         onResult = { uriList ->
-            imageValue = uriList.map { it.toString() }
+            val newImages = uriList.map { it.toString() }
+            imageValue = imageValue + newImages
         }
     )
     BottomSheet(
@@ -131,27 +133,37 @@ fun CustomerBottomSheetService(
                         requestService.value =
                             RequestServiceUiState(
                                 serviceType = title,
-                                customerComplain = serviceTextValue ,
+                                title = serviceTextValue ,
                                 description = descriptionTextValue,
                                 location = locationTextValue,
                                 locationDetails = locationDescriptionValue,
                                 image = imageValue,
                             )
-                                    },
+                    },
                     onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE},
                     onExitClick = {
                         onExitClick()
                     }
                 ) {
-                    AddPhotosContent(
-                        icon = painterResource(id = R.drawable.ic_camera_outline),
-                        onClick = {
-                            imagePicker.launch("")
-                        }
-                    )
-
+                    if (imageValue.isEmpty()){
+                        AddPhotosContent(
+                            icon = painterResource(id = R.drawable.ic_camera_outline),
+                            onClick = {
+                                imagePicker.launch("image/*")
+                            }
+                        )
+                    }else {
+                        AddPhotos(
+                            photos = imageValue,
+                            onClickAdd = {
+                                imagePicker.launch("image/*")
+                            },
+                            onClickDelete = { index ->
+                                imageValue = imageValue.toMutableList().apply { removeAt(index) }
+                            }
+                        )
+                    }
                 }
-
             }
         }
     }
