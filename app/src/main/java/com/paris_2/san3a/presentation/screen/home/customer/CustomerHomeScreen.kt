@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -54,6 +55,8 @@ private fun CustomerHomeScreenContent(
     val isArabic = remember { Locale.getDefault().language == "ar" }
     var title by remember { mutableStateOf("") }
     var serviceId by remember { mutableStateOf("") }
+    val requestService = remember { mutableStateOf<RequestServiceUiState?>(null) }
+
     if (state.bottomSheetState){
         CustomerBottomSheetService(
             title = title,
@@ -61,15 +64,24 @@ private fun CustomerHomeScreenContent(
             isVisible = true,
             onExitClick = {
                 action.onDismissBottomSheet()
-            }
+            },
+            requestService = requestService
+
         )
+        if(requestService.value != null){
+            Log.d("CustomerHomeScreen", "RequestServiceUiState: ${requestService.value}")
+            action.createRequest(requestService.value!!)
+        }
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.colors.background.screen)
     ) {
         AppBar(
+            modifier = Modifier
+                . padding(top = 40.dp),
             onActionIconClick = { action.onNotificationClick() },
             title = stringResource(
                 R.string.good_morning,
@@ -254,6 +266,7 @@ fun PreviewHomeScreen() {
 
             override fun onBecomeCraftsmanClick() {}
             override fun onDismissBottomSheet() {}
+            override fun createRequest(service: RequestServiceUiState) {}
         }
     )
 }
