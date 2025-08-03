@@ -31,8 +31,6 @@ class CustomerHomeViewModel(
                 Log.e("CustomerHomeViewModel", it)
             }
         )
-
-
     }
     private fun loadServices(){
         tryToExecute(
