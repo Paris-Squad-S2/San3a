@@ -123,12 +123,12 @@ fun CustomerBottomSheetService(
                     onButtonClick = {
                         requestService.value =
                             RequestServiceUiState(
-                                title = serviceTextValue,
+                                serviceType = title,
+                                customerComplain = serviceTextValue ,
                                 description = descriptionTextValue,
                                 location = locationTextValue,
                                 locationDetails = locationDescriptionValue,
                                 image = imageValue,
-                                userId = "",
                             )
                         Log.d("RequestService", "RequestService: ${requestService.value}")
                                     },

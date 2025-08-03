@@ -20,7 +20,7 @@ class ServiceRemoteDataSourceImpl(
 
     override suspend fun requestService(requestedServiceDto: RequestServiceDto) {
         try {
-            val docPath = "${SERVICE_REQUESTS_COLLECTION}/${requestedServiceDto.id}"
+            val docPath = "${SERVICE_REQUESTS_COLLECTION}/${requestedServiceDto.serviceType}"
             val existingRequest = try {
                 fireStoreService.getDoc(docPath, RequestServiceDto.Companion::fromJson)
             } catch (e: Exception) {
