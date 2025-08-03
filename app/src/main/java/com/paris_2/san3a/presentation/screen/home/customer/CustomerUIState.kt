@@ -20,41 +20,37 @@ data class CustomerUiState(
 )
 
 data class RequestServiceUiState(
+    val title: String,
     val serviceType: String,
-    val customerComplain: String,
     val description: String,
     val location: String,
     val locationDetails: String,
     val image: List<String>,
-    val requestedCount: Int = 0,
     val userId: String = "",
 )
 
 fun RequestService.toRequestServiceUiState(): RequestServiceUiState {
     return RequestServiceUiState(
+        title = this.title,
         serviceType = this.serviceType,
-        customerComplain = this.customerComplain,
         description = this.description,
         location = this.location,
         locationDetails = this.locationDetails,
         image = this.image,
-        requestedCount = this.requestedCount,
         userId = this.userId
     )
 }
 fun RequestServiceUiState.toRequestService(): RequestService {
     return RequestService(
+        id = "",
+        title = this.title,
         serviceType = this.serviceType,
-        customerComplain = this.customerComplain,
         description = this.description,
         location = this.location,
         locationDetails = this.locationDetails,
         image = this.image,
-        requestedCount = this.requestedCount,
         userId = this.userId,
-        id = "",
-        relatedJob = "",
-        offers = emptyList()
+        offers = emptyList(),
     )
 }
 
