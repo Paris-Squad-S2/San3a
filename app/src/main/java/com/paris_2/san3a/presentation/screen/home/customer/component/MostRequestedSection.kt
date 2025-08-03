@@ -38,7 +38,7 @@ fun MostRequestedServices(
         ) {
             items(listOfServices) { service ->
                 CategoryItem(
-                    title = service.title,
+                    title = service.serviceType,
                     description = service.description,
                     tint = getResourceTint(service.id),
                     iconColor = getResourceColors(service.id),
