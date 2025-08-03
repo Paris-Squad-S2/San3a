@@ -19,7 +19,7 @@ data class RequestServiceDto(
         fun fromJson(data: Map<String, Any>, id: String): RequestServiceDto {
             return RequestServiceDto(
                 id = id,
-                serviceType = data["title"] as? String ?: "",
+                serviceType = data["serviceType"] as? String ?: "",
                 customerComplain = data["customerComplain"] as? String ?: "",
                 description = data["description"] as? String ?: "",
                 location = data["location"] as? String ?: "",
