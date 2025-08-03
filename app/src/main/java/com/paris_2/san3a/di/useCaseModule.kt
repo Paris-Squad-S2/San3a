@@ -17,11 +17,11 @@ import com.paris_2.san3a.domain.usecase.messages.SendMessageUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import org.koin.core.module.dsl.factoryOf
 import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
-import com.paris_2.san3a.domain.usecase.IsPhoneNumberSavedUseCase
 import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetOnboardingCompletedUseCase
+import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.GetWorkMediaUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
@@ -51,4 +51,5 @@ val useCaseModule = module {
     factoryOf(::GetUserServicesUseCase)
     factoryOf(::GetUserUseCase)
     factoryOf(::GetWorkMediaUseCase)
+    factoryOf(::UpdateNumOfRequestsUseCase)
 }
