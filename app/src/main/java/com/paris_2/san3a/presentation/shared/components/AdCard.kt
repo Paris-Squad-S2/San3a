@@ -68,7 +68,7 @@ fun AdCard(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_sledge_hammer),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_sledgehammer_bold),
                     contentDescription = null,
                     tint = Theme.colors.brand.primary,
                     modifier = Modifier.then(
