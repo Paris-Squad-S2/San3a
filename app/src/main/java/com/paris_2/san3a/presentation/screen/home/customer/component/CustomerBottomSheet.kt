@@ -1,6 +1,8 @@
 package com.paris_2.san3a.presentation.screen.home.customer.component
 
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -9,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.RequestBottomSheetContent
+import com.paris_2.san3a.presentation.screen.home.customer.RequestServiceUiState
 import com.paris_2.san3a.presentation.shared.components.AddPhotosContent
 import com.paris_2.san3a.presentation.shared.components.BottomSheet
 import com.paris_2.san3a.presentation.shared.components.RequestDescriptionContent
@@ -25,14 +28,15 @@ enum class BottomSheetStep {
 fun CustomerBottomSheetService(
     title: String,
     icon: Int,
-    onCreateRequestClick: () -> Unit = {},
     isVisible: Boolean,
-    onExitClick: () -> Unit = {}
+    onExitClick: () -> Unit = {},
+    requestService: MutableState<RequestServiceUiState?>
 ){
     var currentStep by remember { mutableStateOf(BottomSheetStep.SELECT_SERVICE) }
     var serviceTextValue by remember { mutableStateOf("") }
     var descriptionTextValue by remember { mutableStateOf("") }
     var locationTextValue by remember { mutableStateOf("") }
+    var locationDescriptionValue by remember { mutableStateOf("") }
     var imageValue by remember { mutableStateOf(listOf<Int>()) }
 
     BottomSheet(
@@ -89,6 +93,22 @@ fun CustomerBottomSheetService(
                     }
             }
             BottomSheetStep.SELECT_LOCATION -> {
+                RequestBottomSheetContent(
+                    title = title,
+                    icon = icon,
+                    color = Theme.colors.additional.primary.blue,
+                    subTitle = "Describe the problem in detail",
+                    buttonTitle = "Create Request",
+                    buttonIsActive = locationTextValue.isNotEmpty(),
+                    step = 3,
+                    onButtonClick = {currentStep = BottomSheetStep.SELECT_SERVICE},
+                    onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE},
+                    onExitClick = {
+                        onExitClick()
+                    }
+                ) {
+
+                }
 
             }
             BottomSheetStep.IMAGE_UPLOAD -> {
@@ -100,7 +120,18 @@ fun CustomerBottomSheetService(
                     buttonTitle = "Create Request",
                     buttonIsActive = imageValue.isNotEmpty(),
                     step = 4,
-                    onButtonClick = {onCreateRequestClick()},
+                    onButtonClick = {
+                        requestService.value =
+                            RequestServiceUiState(
+                                title = serviceTextValue,
+                                description = descriptionTextValue,
+                                location = locationTextValue,
+                                locationDetails = locationDescriptionValue,
+                                image = imageValue,
+                                userId = "",
+                            )
+                        Log.d("RequestService", "RequestService: ${requestService.value}")
+                                    },
                     onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE},
                     onExitClick = {
                         onExitClick()
