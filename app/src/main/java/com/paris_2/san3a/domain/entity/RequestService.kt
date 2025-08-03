@@ -5,6 +5,8 @@ data class RequestService(
     val title: String,
     val description: String,
     val location: String,
+    val locationDetails: String,
+    val image : List<Int>,
     val relatedJob: String,
     val offers: List<Double>,
     val userId: String,
