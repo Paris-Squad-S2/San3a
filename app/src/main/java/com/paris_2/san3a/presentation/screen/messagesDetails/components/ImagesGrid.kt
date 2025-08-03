@@ -15,7 +15,7 @@ import coil3.compose.AsyncImage
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
-fun ImagesGrid(modifier: Modifier = Modifier, images: List<String>) {
+fun ImagesGrid(images: List<String>, modifier: Modifier = Modifier) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 124.dp),
         modifier = modifier.padding(12.dp),
