@@ -139,7 +139,8 @@ fun RequestBottomSheetContent(
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .clickable { onExitClick() }
+                .clickable { onExitClick() },
+            tint = Theme.colors.shade.secondary
         )
 
     }
