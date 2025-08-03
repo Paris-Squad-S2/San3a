@@ -96,9 +96,9 @@ private fun CustomerHomeScreenContent(
         ) {
             item {
                 SearchBar(
-                    value = " ",
+                    value = "",
                     onValueChange = { /*TODO*/ },
-                    hint = "Search for service",
+                    hint = "Search...",
                     modifier = Modifier
                         .padding(top = 16.dp, bottom = 24.dp)
                 )
