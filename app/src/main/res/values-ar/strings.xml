@@ -98,4 +98,5 @@
     <string name="my_location">عنواني</string>
     <string name="my_services">خدماتي</string>
     <string name="verification">التحقيق</string>
+    <string name="logout">تسجيل خروج</string>
 </resources>

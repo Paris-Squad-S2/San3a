@@ -97,4 +97,5 @@
     <string name="my_location">My Location</string>
     <string name="my_services">My Services</string>
     <string name="verification">Verification</string>
+    <string name="logout">Logout</string>
 </resources>
