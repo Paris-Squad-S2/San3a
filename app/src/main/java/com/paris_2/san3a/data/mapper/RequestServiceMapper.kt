@@ -11,8 +11,9 @@ fun RequestServiceDto.toEntity() = RequestService(
     relatedJob = relatedJob,
     offers = offers,
     userId = userId,
-    requestedCount = requestedCount
-
+    requestedCount = requestedCount,
+    locationDetails = "" ,
+    image = emptyList()
 )
 
 fun RequestService.toDto() = RequestServiceDto(
