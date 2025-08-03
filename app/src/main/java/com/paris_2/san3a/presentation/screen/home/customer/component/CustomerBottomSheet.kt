@@ -1,7 +1,6 @@
 package com.paris_2.san3a.presentation.screen.home.customer.component
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,9 +34,6 @@ fun CustomerBottomSheetService(
     var descriptionTextValue by remember { mutableStateOf("") }
     var locationTextValue by remember { mutableStateOf("") }
     var imageValue by remember { mutableStateOf(listOf<Int>()) }
-    val activeButton by remember {
-        derivedStateOf { serviceTextValue.isNotEmpty() }
-    }
 
     BottomSheet(
         isVisible = isVisible
@@ -76,10 +72,10 @@ fun CustomerBottomSheetService(
                         color = Theme.colors.additional.primary.blue,
                         subTitle = "Describe the problem in detail",
                         buttonIsActive = descriptionTextValue.isNotEmpty(),
-                        onButtonClick = {currentStep = BottomSheetStep.SELECT_LOCATION},
+                        onButtonClick = {currentStep = BottomSheetStep.IMAGE_UPLOAD},
                         buttonTitle = "Next",
                         step = 2,
-                        onClickBack = {currentStep = BottomSheetStep.IMAGE_UPLOAD},
+                        onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE},
                         onExitClick = {
                             onExitClick()
                         }
