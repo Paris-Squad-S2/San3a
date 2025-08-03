@@ -48,7 +48,7 @@ class AccountViewModel(
                 updateState(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
-                            pageNumber = phoneNumber
+                            phoneNumber = phoneNumber
                         )
                     )
                 )
@@ -276,6 +276,7 @@ class AccountViewModel(
                 },
                 onError = { errorMessage ->
                     Log.e("AccountSetup", "Error saving account type: $errorMessage")
+                    Log.e("PhoneNumber", "Phone number: ${screenState.value.accountUiState.phoneNumber}")
                 }
             )
         }

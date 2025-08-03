@@ -1,5 +1,6 @@
 package com.paris_2.san3a.data.service.firestore
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
@@ -117,6 +118,7 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
             firestore.document(documentPath).set(data).await()
             documentPath
         } catch (e: Exception) {
+            Log.e("TAG", "setDoc: $e")
             when (e) {
                 is FirebaseFirestoreException -> throw handleFirebaseException(e, documentPath)
                 else -> throw SetDataException(documentPath)
