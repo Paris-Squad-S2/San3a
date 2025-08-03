@@ -103,7 +103,7 @@ private fun CustomerHomeScreenContent(
                         .padding(top = 16.dp, bottom = 24.dp)
                 )
             }
-            if (state.customerUiState.mostRequestedServices.isEmpty()) {
+            if (state.customerUiState.mostRequestedServices.isNotEmpty()) {
                     item {
                         MostRequestedServices(
                             listOfServices = state.customerUiState.mostRequestedServices,
