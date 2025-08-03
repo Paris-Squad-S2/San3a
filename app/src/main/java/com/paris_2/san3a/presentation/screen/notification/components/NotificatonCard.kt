@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 @Composable
 fun NotificationCard(
@@ -74,7 +74,7 @@ private fun NotificationCardPreview() {
         NotificationCard(
             title = "title",
             caption = "caption",
-            date = LocalDate.now()
+            date = LocalDate.parse("2023-01-01"),
         )
     }
 }

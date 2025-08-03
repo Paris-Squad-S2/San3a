@@ -43,7 +43,11 @@ fun NotificationScreen(
     ) {
         when {
             state.isLoading -> {
-                LoadingScreen()
+                LoadingScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Theme.colors.background.screen)
+                )
             }
 
             state.notifications.isEmpty() -> {

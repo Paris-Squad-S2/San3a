@@ -13,9 +13,9 @@ class NotificationRepositoryImpl(
     private val notificationDataSource: NotificationDataSource
 ) : NotificationRepository, BaseRepository() {
 
-    override fun streamNotifications(): Flow<List<Notification>> {
-        return notificationDataSource.getStreamNotifications()
+    override fun getStreamNotifications(userId: String): Flow<List<Notification>> {
 
+        return notificationDataSource.getStreamNotifications(userId = userId)
             .map { dtoList ->
                 dtoList.map { dto -> dto.toDomain() }
             }

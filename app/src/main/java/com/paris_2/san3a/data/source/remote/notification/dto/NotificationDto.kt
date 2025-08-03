@@ -4,7 +4,8 @@ data class NotificationDto(
     val id: String = "",
     val title: String = "",
     val caption: String = "",
-    val date: String = ""
+    val date: String = "",
+    val userId: String = ""
 ) {
     companion object {
         fun fromMap(data: Map<String, Any>, id: String): NotificationDto {
@@ -12,7 +13,8 @@ data class NotificationDto(
                 id = id,
                 title = data["title"] as? String ?: "",
                 caption = data["caption"] as? String ?: "",
-                date = data["date"] as? String ?: ""
+                date = data["date"] as? String ?: "",
+                userId = data["userId"] as? String ?: ""
             )
         }
     }
@@ -21,7 +23,8 @@ data class NotificationDto(
         return mapOf(
             "title" to title,
             "caption" to caption,
-            "date" to date
+            "date" to date,
+            "userId" to userId
         )
     }
 }

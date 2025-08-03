@@ -13,10 +13,13 @@ class NotificationDataSourceImpl(
         private const val NOTIFICATION_COLLECTION = "notifications"
     }
 
-    override fun getStreamNotifications(): Flow<List<NotificationDto>> {
+    override fun getStreamNotifications(userId : String): Flow<List<NotificationDto>> {
         return fireStoreService.streamCollection(
             path = NOTIFICATION_COLLECTION,
-            fromJson = { data, id -> NotificationDto.fromMap(data, id) }
+            fromJson = { data, id -> NotificationDto.fromMap(data, id) },
+            queryBuilder = { query ->
+                query.whereEqualTo("userId", userId)
+            }
         )
     }
 
@@ -24,7 +27,7 @@ class NotificationDataSourceImpl(
     override suspend fun addNotification(notification: NotificationDto): String {
         return fireStoreService.addToCollection(
             path = NOTIFICATION_COLLECTION,
-            data = notification.toMap()
+            data = notification.toMap(),
         )
     }
 
