@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
 import com.paris_2.san3a.domain.entity.MostRequestedServices
+import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
 
 data class CustomerHomeUiState(
@@ -15,4 +16,42 @@ data class CustomerUiState(
     val location: String = "",
     val mostRequestedServices: List<MostRequestedServices> = emptyList(),
     val services: List<Service> = emptyList(),
+    val requestService : RequestServiceUiState? = null
 )
+
+data class RequestServiceUiState(
+    val title: String,
+    val description: String,
+    val location: String,
+    val locationDetails: String,
+    val image : List<Int>,
+    val requestedCount: Int = 0,
+    val userId: String,
+)
+
+fun RequestService.toRequestServiceUiState(): RequestServiceUiState {
+    return RequestServiceUiState(
+        title = this.title,
+        description = this.description,
+        location = this.location,
+        locationDetails = this.locationDetails,
+        image = this.image,
+        requestedCount = this.requestedCount,
+        userId = this.userId
+    )
+}
+fun RequestServiceUiState.toRequestService(): RequestService {
+    return RequestService(
+        title = this.title,
+        description = this.description,
+        location = this.location,
+        locationDetails = this.locationDetails,
+        image = this.image,
+        requestedCount = this.requestedCount,
+        userId = this.userId,
+        id = "",
+        relatedJob = "",
+        offers = emptyList()
+    )
+}
+
