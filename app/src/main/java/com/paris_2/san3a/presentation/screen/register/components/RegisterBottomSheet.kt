@@ -46,6 +46,7 @@ fun RegisterBottomSheet(
     isErrorMessage: Boolean = false,
 ) {
     BottomSheet(
+        onDismissRequest = onCloseClick,
         header = {
             if (!isErrorMessage) {
                 Row(
