@@ -3,48 +3,40 @@ package com.paris_2.san3a.data.source.remote.user.dto
 import com.google.firebase.firestore.DocumentId
 
 data class RequestServiceDto(
-    @DocumentId val id: String,
+    @DocumentId val id: String = "",
+    val title: String,
     val serviceType: String,
-    val customerComplain : String,
     val description: String,
     val location: String,
     val locationDetails: String,
-    val image : List<Int>,
-    val relatedJob: String,
+    val image : List<String>,
     val offers: List<Double>,
     val userId: String,
-    val requestedCount: Int = 0,
-    val images: List<String> = emptyList()
 ) {
     companion object {
         fun fromJson(data: Map<String, Any>, id: String): RequestServiceDto {
             return RequestServiceDto(
                 id = id,
+                title = data["title"] as? String ?: "",
                 serviceType = data["serviceType"] as? String ?: "",
-                customerComplain = data["customerComplain"] as? String ?: "",
                 description = data["description"] as? String ?: "",
                 location = data["location"] as? String ?: "",
                 locationDetails = data["locationDetails"] as? String ?: "",
-                image = (data["image"] as? List<*>)
-                    ?.mapNotNull { (it as? Number)?.toInt() } ?: emptyList(),
-                relatedJob = data["relatedJob"] as? String ?: "",
-                offers = (data["offers"] as? List<*>)
-                    ?.mapNotNull { (it as? Number)?.toDouble() } ?: emptyList(),
-                userId = data["userId"] as? String ?: "",
-                requestedCount = (data["requestedCount"] as? Long)?.toInt() ?: 0
+                image = (data["image"] as? List<*>)?.mapNotNull { it as? String } ?: emptyList(),
+                offers = (data["offers"] as? List<*>)?.mapNotNull { (it as? Number)?.toDouble() } ?: emptyList(),
+                userId = data["userId"] as? String ?: ""
             )
         }
         fun RequestServiceDto.toJson(): Map<String, Any> {
             val map = mutableMapOf<String, Any>(
-                "id" to id,
                 "title" to title,
+                "serviceType" to serviceType,
                 "description" to description,
                 "location" to location,
-                "relatedJob" to relatedJob,
+                "locationDetails" to locationDetails,
+                "image" to image,
                 "offers" to offers,
-                "userId" to userId,
-                "requestedCount" to requestedCount,
-                "images" to images
+                "userId" to userId
             )
             return map
         }
