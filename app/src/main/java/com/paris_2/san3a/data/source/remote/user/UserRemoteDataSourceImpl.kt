@@ -161,7 +161,7 @@ class UserRemoteDataSourceImpl(
     override suspend fun getStats(userId: String): StatsDto? {
         return fireStoreService.getDoc(
             path = "$CRAFTSMAN_COLLECTION/$userId",
-            fromJson = StatsDto.Companion::fromJson
+            fromJson = StatsDto::fromJson
         )
     }
 

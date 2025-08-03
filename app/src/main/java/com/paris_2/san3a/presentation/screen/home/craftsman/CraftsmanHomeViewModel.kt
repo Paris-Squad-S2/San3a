@@ -15,8 +15,8 @@ class CraftsmanHomeViewModel(
 
     init {
         loadUserData()
-        loadStats("")
-        loadRecentRelatedJobs("")
+        loadStats("aIqNtF3KQ84r5x6jc9O1")
+        loadRecentRelatedJobs("Plumbing")
         loadAvailableJobs()
     }
 
