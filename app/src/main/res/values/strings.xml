@@ -91,4 +91,8 @@
     <string name="mention_your_years_of_experience">You can mention your years of experience, tools you use, or types of jobs you usually handle.</string>
     <string name="enter_your_location_in_details">Enter your location in details</string>
     <string name="enter_your_location">Enter your location</string>
+    <string name="craftsman_title">Got a skill? Start earning</string>
+    <string name="craftsman_desc">Create your craftsman account and get job requests.</string>
+    <string name="craftsman_button">Become a Craftsman</string>
+
 </resources>
