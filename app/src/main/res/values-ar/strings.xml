@@ -75,6 +75,11 @@
     <string name="no_messages_yet">لا توجد رسائل بعد</string>
     <string name="once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here">عند البدء في قبول أو نشر الطلبات، ستظهر المحادثات مع الحرفيين هنا.</string>
     <string name="loading_icon">أيقونة التحميل</string>
+    <string name="submitted">تم تقديم</string>
+    <string name="receiving_offers">تلقي العرض</string>
+    <string name="craftsman_selected">تم الاختيار</string>
+    <string name="in_progress">قيد التنفيذ</string>
+    <string name="done">انتهت</string>
     <string name="how_would_you_like_to_use_san3a">كيف تريد استخدام صنعة؟</string>
     <string name="what_do_you_need_help_with">ما الذي تحتاج عادةً إلى مساعدة فيه؟</string>
     <string name="what_services_do_you_offer">ما الخدمات التي تقدمها؟</string>
