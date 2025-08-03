@@ -47,7 +47,7 @@ class MessagesViewModel(
 
     override fun onNotificationClick() {
         navigate(
-            Destinations.Notifications,
+            Destinations.Notification,
         )
     }
 

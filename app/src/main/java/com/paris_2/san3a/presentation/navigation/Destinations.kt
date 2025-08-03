@@ -29,7 +29,7 @@ sealed interface Destinations : Graph {
     data class MessageDetails(val chatId: String) : Destination
 
     @Serializable
-    data object Notifications : Destination
+    data object Notification : Destination
 
     @Serializable
     data object More : Destination
