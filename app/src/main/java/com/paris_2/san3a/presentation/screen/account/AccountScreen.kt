@@ -139,7 +139,7 @@ fun AccountScreenContent(
             } else {
                 Box(modifier = Modifier.size(48.dp))
             }
-            AccountProgressIndicator(progress = progress)
+            AccountProgressIndicator(progress = progress, modifier= Modifier.padding(end = 48.dp))
         }
         Spacer(modifier = Modifier.weight(1f))
         Text(
