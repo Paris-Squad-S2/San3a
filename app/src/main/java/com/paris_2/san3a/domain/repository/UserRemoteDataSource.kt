@@ -5,6 +5,7 @@ import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.domain.entity.User
 
 interface UserRemoteDataSource {
     suspend fun saveWorkShowcase(phone: String, workMedia: List<String>?, workDescription: String)
@@ -26,4 +27,8 @@ interface UserRemoteDataSource {
     suspend fun saveNationalIdImages(phone: String, frontUrl: String?, backUrl: String?)
 
     suspend fun completeUserSetup(phone: String)
+
+    suspend fun getUser(phone: String): User
+
+    suspend fun getWorkMedia(phone: String): List<String>
 }
