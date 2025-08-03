@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 
 data class OrderTrackItem(
     @StringRes val status: Int,
@@ -142,8 +143,16 @@ fun RequestDetails(currentStep: Int = 0) {
 }
 
 
-@Preview(showBackground = true, showSystemUi = true)
+@PreviewMultiDevices
+@Preview
 @Composable
 private fun RequestDetailsPreview() {
     RequestDetails()
+}
+
+@PreviewMultiDevices
+@Preview
+@Composable
+private fun RequestDetailsFooPreview() {
+    RequestDetails(2)
 }
