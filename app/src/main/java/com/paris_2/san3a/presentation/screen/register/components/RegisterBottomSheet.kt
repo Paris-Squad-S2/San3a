@@ -41,7 +41,7 @@ fun RegisterBottomSheet(
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     headerText: String = "",
-    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false),
+    skipPartiallyExpanded: Boolean = false,
     contentText: String = "",
     isErrorMessage: Boolean = false,
 ) {
@@ -69,7 +69,7 @@ fun RegisterBottomSheet(
                 }
             }
         },
-        sheetState = sheetState
+        skipPartiallyExpanded = skipPartiallyExpanded
     ) {
         LazyColumn(
             modifier = Modifier

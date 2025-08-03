@@ -77,7 +77,6 @@ fun RegisterScreenContent(
 ) {
     val isKeyboardVisible = WindowInsets.isImeVisible
     var bottomSheetType by remember { mutableStateOf<BottomSheetType?>(null) }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
     val topSectionHeight by animateDpAsState(
         targetValue = if (isKeyboardVisible) 172.dp else 240.dp,
@@ -154,7 +153,7 @@ fun RegisterScreenContent(
                         onCloseClick = { bottomSheetType = null },
                         headerText = stringResource(R.string.terms_and_conditions),
                         contentText = stringResource(R.string.terms_and_conditions_content),
-                        sheetState = sheetState
+                        skipPartiallyExpanded = false
                     )
                 }
 
@@ -163,7 +162,7 @@ fun RegisterScreenContent(
                         onCloseClick = { bottomSheetType = null },
                         headerText = stringResource(R.string.privacy_policy),
                         contentText = stringResource(R.string.privacy_and_policy_content),
-                        sheetState = sheetState
+                        skipPartiallyExpanded = false
                     )
                 }
             }

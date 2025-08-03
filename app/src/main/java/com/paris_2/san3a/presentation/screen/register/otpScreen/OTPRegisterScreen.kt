@@ -58,8 +58,6 @@ private fun OTPRegisterScreenContent(
     otpRegisterListenerInteraction: OTPRegisterListenerInteraction,
     modifier: Modifier = Modifier
 ) {
-
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
     Box(
         Modifier
@@ -125,7 +123,7 @@ private fun OTPRegisterScreenContent(
         if (showBottomSheet) {
             RegisterBottomSheet(
                 isErrorMessage = true,
-                sheetState = sheetState,
+                skipPartiallyExpanded = true,
                 onCloseClick = {
                     showBottomSheet = false
                     otpRegisterListenerInteraction.onHideBottomSheet()

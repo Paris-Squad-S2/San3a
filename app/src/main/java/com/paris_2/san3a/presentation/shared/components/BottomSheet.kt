@@ -31,19 +31,23 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 @Composable
 fun BottomSheet(
     modifier: Modifier = Modifier,
-    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+    skipPartiallyExpanded: Boolean = true,
     onDismissRequest: () -> Unit = {},
     isVisible: Boolean = true,
     header: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit = {},
 ) {
 
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = skipPartiallyExpanded)
     LaunchedEffect(isVisible) {
-        if (isVisible) sheetState.show() else sheetState.hide()
+        when {
+            isVisible -> sheetState.show()
+            else -> sheetState.hide()
+        }
     }
 
     ModalBottomSheet(
-        onDismissRequest = { onDismissRequest },
+        onDismissRequest = onDismissRequest,
         modifier = modifier
             .fillMaxWidth(),
         sheetState = sheetState,
