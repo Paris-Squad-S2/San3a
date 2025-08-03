@@ -33,3 +33,4 @@ class NoGovernmentsFoundException : San3aException("No Governments Found")
 class NoCitiesFoundException : San3aException("No Cities Found")
 
 class LoginStatusException: San3aException("Failed to check login status")
+class GetUserException(message: String = "register error"): San3aException("Failed to get User $message")
