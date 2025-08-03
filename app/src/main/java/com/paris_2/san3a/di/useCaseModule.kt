@@ -1,15 +1,15 @@
 package com.paris_2.san3a.di
 
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
-import com.paris_2.san3a.domain.usecase.DeleteChatByIdUseCase
+import com.paris_2.san3a.domain.usecase.messages.DeleteChatByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetChatsByUserIdUseCase
+import com.paris_2.san3a.domain.usecase.messages.GetChatsByUserIdUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
-import com.paris_2.san3a.domain.usecase.GetMessagesByChatIdUseCase
+import com.paris_2.san3a.domain.usecase.messages.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.IsLoggedInUseCase
 import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
-import com.paris_2.san3a.domain.usecase.SendMessageUseCase
+import com.paris_2.san3a.domain.usecase.messages.SendMessageUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import org.koin.core.module.dsl.factoryOf
 import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
@@ -18,6 +18,7 @@ import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetOnboardingCompletedUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.GetWorkMediaUseCase
+import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.StreamNotificationsUseCase
 
@@ -37,11 +38,11 @@ val useCaseModule = module {
     factoryOf(::IsLoggedInUseCase)
     factoryOf(::SetLoginUseCase)
     factoryOf(::GetPhoneNumberUseCase)
+    factoryOf(::CreateChatUseCase)
     factoryOf(::GetLocationInfoUseCase)
     factoryOf(::GetUserServicesUseCase)
     factoryOf(::GetUserUseCase)
     factoryOf(::GetWorkMediaUseCase)
     factoryOf(::AddNotificationUseCase)
     factoryOf(::StreamNotificationsUseCase)
-
 }

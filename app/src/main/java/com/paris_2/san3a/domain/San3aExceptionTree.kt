@@ -13,6 +13,7 @@ class ReadMessagesException(id: String) :
 
 class ReadChatException(id: String) : San3aException("Chat with id $id is cant be read")
 class DeleteChatException(id: String) : San3aException("Chat with id $id is cant be deleted")
+class CreateChatException(participants: List<String>): San3aException("Chat with participants $participants is cant be created")
 
 class SavePhoneNumberException : San3aException("Failed to save phone number")
 class PhoneNumberCheckException : San3aException("Failed to check if phone number is saved")

@@ -50,7 +50,7 @@ fun DeleteChatBottomSheet(
                     .size(120.dp)
                     .padding(bottom = 8.dp),
                 painter = painterResource(R.drawable.img_trash),
-                contentDescription = "delete chat icon"
+                contentDescription = stringResource(R.string.delete_chat_icon)
             )
             Text(
                 modifier = Modifier.padding(bottom = 8.dp),
