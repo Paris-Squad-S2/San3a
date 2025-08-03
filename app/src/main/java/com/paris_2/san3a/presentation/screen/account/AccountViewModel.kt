@@ -4,30 +4,26 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
+import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
-import kotlinx.coroutines.launch
 
 class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getAllServicesUseCase: GetAllServicesUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
+    private val getPhoneNumberUseCase: GetPhoneNumberUseCase
 ) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
 
     private val _currentScreen = mutableIntStateOf(0)
     val currentScreen: State<Int> get() = _currentScreen
-
-    private val phoneNumber = "1234"
 
     private val stepsCount: Int
         get() = when (screenState.value.accountUiState.userType) {
@@ -40,8 +36,31 @@ class AccountViewModel(
         get() = (_currentScreen.intValue + 1) / stepsCount.toFloat()
 
     init {
+        getPhoneNumber()
         getGovernments()
         getAllServices()
+    }
+
+    private fun getPhoneNumber() {
+        tryToExecute(
+            execute = { getPhoneNumberUseCase() },
+            onSuccess = { phoneNumber ->
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            pageNumber = phoneNumber
+                        )
+                    )
+                )
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMassage = errorMessage.message,
+                    )
+                )
+            },
+        )
     }
 
     private fun getAllServices() {
@@ -72,7 +91,6 @@ class AccountViewModel(
                     )
                 )
             },
-            scope = viewModelScope
         )
     }
 
@@ -184,7 +202,7 @@ class AccountViewModel(
                     when (_currentScreen.intValue) {
                         0 -> {
                             setUpAccountUseCase.saveAccountType(
-                                phoneNumber,
+                                phone = screenState.value.accountUiState.phoneNumber,
                                 AccountType.valueOf(userType.name)
                             )
                         }
@@ -203,7 +221,7 @@ class AccountViewModel(
                                 )
                             }
                             setUpAccountUseCase.saveServices(
-                                phoneNumber,
+                                phone = screenState.value.accountUiState.phoneNumber,
                                 services,
                                 isCraftsman = isCraftsman
                             )
@@ -214,7 +232,7 @@ class AccountViewModel(
                             val profilePhotoUri =
                                 screenState.value.accountUiState.customerProfilePhotoUri
                             setUpAccountUseCase.savePersonalInfo(
-                                phoneNumber,
+                                phone = screenState.value.accountUiState.phoneNumber,
                                 fullName,
                                 profilePhotoUri
                             )
@@ -223,13 +241,13 @@ class AccountViewModel(
                         3 -> {
                             if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
                                 setUpAccountUseCase.saveWorkShowcase(
-                                    phone = phoneNumber,
+                                    phone = screenState.value.accountUiState.phoneNumber,
                                     workMedia = screenState.value.accountUiState.workImagesUris,
                                     workDescription = screenState.value.accountUiState.workDescription
                                 )
                             } else {
                                 setUpAccountUseCase.saveLocation(
-                                    phone = phoneNumber,
+                                    phone = screenState.value.accountUiState.phoneNumber,
                                     location = screenState.value.accountUiState.locationUiState.toEntity()
                                 )
                                 navigate(
@@ -241,7 +259,7 @@ class AccountViewModel(
                         4 -> {
                             if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
                                 setUpAccountUseCase.uploadNationalIdImages(
-                                    phoneNumber,
+                                    phone = screenState.value.accountUiState.phoneNumber,
                                     screenState.value.accountUiState.frontOfNationalIdUri,
                                     screenState.value.accountUiState.backOfNationalIdUri
                                 )
@@ -352,7 +370,12 @@ class AccountViewModel(
 
     fun getCities(stateName: String) {
         tryToExecute(
-            execute = { getLocationInfoUseCase.getCities(countryName = "Egypt", stateName = stateName) },
+            execute = {
+                getLocationInfoUseCase.getCities(
+                    countryName = "Egypt",
+                    stateName = stateName
+                )
+            },
             onSuccess = { cities ->
                 updateState(
                     screenState.value.copy(
