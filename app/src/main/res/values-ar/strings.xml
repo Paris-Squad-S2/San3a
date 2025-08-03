@@ -8,7 +8,7 @@
     <string name="we_sent_a_5_digit_code_to_your_phone_number">لقد أرسلنا رمز مكون من 5 أرقام إلى رقم هاتفك</string>
     <string name="didn_t_receive_the_code">لم تستلم الرمز؟</string>
     <string name="otp_image">صورة رمز التأكيد</string>
-    <string name="welcome_to_san3a">اهلا بك في صنعة  👋</string>
+    <string name="welcome_to_san3a">👋 أهلا بك في صنعة</string>
     <string name="show_more">رأية المزيد</string>
     <string name="ok">حسنا</string>
     <string name="button">زر</string>
@@ -49,10 +49,10 @@
     <string name="enter_your_phone_number_to_continue">أدخل رقم هاتفك\nللمتابعة </string>
     <string name="or">أو</string>
     <string name="by_continuing_you_agree_on_our">بمتابعتك، فإنك توافق على </string>
-    <string name="terms_and_conditions"> الشروط والأحكام</string>
     <string name="and"> و </string>
     <string name="Continue">متابعة</string>
     <string name="privacy_policy"> سياسة الخصوصية</string>
+    <string name="terms_conditions"> الشروط والأحكام</string>
     <string name="continue_as_a_guest">المتابعة كزائر</string>
     <string name="what_s_your_name">ما اسمك؟</string>
     <string name="enter_your_full_name">أدخل اسمك الكامل</string>
@@ -68,6 +68,8 @@
     <string name="i_ll_verify_later">سأقوم بالتحقق لاحقًا</string>
     <string name="describe_your_work">صف عملك</string>
     <string name="oops_no_internet">عذراً! لا يوجد اتصال بالإنترنت</string>
+    <string name="oops_something_broke">عفواً، هناك شيء خطأ</string>
+    <string name="Our_team_is_working_on_a_fix._Please_try_again_later.">يعمل فريقنا على إصلاح المشكلة. يُرجى المحاولة لاحقًا.</string>
     <string name="please_check_your_connection_and_try_again_we_ll_keep_trying_in_the_background">يرجى التحقق من الاتصال وحاول مرة أخرى. سنستمر في المحاولة في الخلفية.</string>
     <string name="try_again">حاول مرة أخرى</string>
     <string name="no_messages_yet">لا توجد رسائل بعد</string>
@@ -79,4 +81,98 @@
     <string name="reviews">(%1$s مراجعة)</string>
     <string name="edit_icon">ايقونة تعديل</string>
     <string name="mohammed_akkad">محمد العقاد</string>
+    <string name="how_would_you_like_to_use_san3a">كيف تريد استخدام صنعة؟</string>
+    <string name="what_do_you_need_help_with">ما الذي تحتاج عادةً إلى مساعدة فيه؟</string>
+    <string name="what_services_do_you_offer">ما الخدمات التي تقدمها؟</string>
+    <string name="where_are_you_located">أين موقعك؟</string>
+    <string name="show_us_your_work">أرنا عملك</string>
+    <string name="personalize_your_profile">دعنا نخصص ملفك الشخصي</string>
+    <string name="verify_your_identity_optional">تحقق من هويتك (اختياري)</string>
+    <string name="switch_roles_anytime">يمكنك تبديل الأدوار في أي وقت من ملفك الشخصي.</string>
+    <string name="personalize_experience_change_anytime">هذا يساعدنا في تخصيص تجربتك. يمكنك تغييره في أي وقت.</string>
+    <string name="choose_specialties_change_later">اختر تخصصاتك للحصول على طلبات عمل ذات صلة. يمكنك تغيير ذلك لاحقًا.</string>
+    <string name="location_improves_accuracy_update_later">الموقع يساعد في تحسين الدقة، ولكن لا تقلق، يمكنك تحديثه لاحقًا.</string>
+    <string name="add_photos_or_video_build_trust">أضف صورًا أو فيديو لعملك السابق. هذا يساعد في بناء الثقة مع العملاء.</string>
+    <string name="use_to_personalize_experience_skip">سنستخدم هذا لتخصيص تجربتك. يمكنك أيضًا إضافة صورة ملف شخصي، أو تخطي ذلك الآن.</string>
+    <string name="upload_id_build_trust_get_jobs">ارسال صورة هويتك يساعد في بناء الثقة مع العملاء. الحرفيون الذين يتم التحقق منهم يحصلون على المزيد من الوظائف وشارة خاصة في ملفهم الشخصي.</string>
+    <string name="browse_services">تصفح الخدمات</string>
+    <string name="see_nearby_requests">عرض الطلبات القريبة</string>
+    <string name="mention_your_years_of_experience">يمكنك ذكر سنوات خبرتك، الأدوات التي تستخدمها، أو أنواع الوظائف التي عادةً ما تتعامل معها.</string>
+    <string name="enter_your_location_in_details">أدخل عنوانك بالتفصيل</string>
+    <string name="enter_your_location">أدخل موقعك</string>
+    <string name="some_error_happened">حدث خطأ ما</string>
+    <string name="no_internet_connection">الانترنت غير متوفر</string>
+    <string name="empty" />
+    <string name="privacy_and_policy">🔒 سياسة الخصوصية</string>
+    <string name="terms_and_conditions">📄الشروط والأحكام</string>
+    <string name="terms_and_conditions_content">
+أهلاً بكم في San3a! باستخدام تطبيقنا للهواتف المحمولة، فإنك توافق على الشروط التالية:\n\n
+
+1. أهلية الحساب\n
+يجب أن يكون عمرك 18 عامًا على الأقل لإنشاء حساب واستخدام San3a. أنت مسؤول عن الحفاظ على بيانات تسجيل الدخول آمنة.\n\n
+
+2. أنواع الحسابات\n
+يمكن للمستخدمين التسجيل كعميل أو حرفي. يمكنك التبديل بين الأدوار في أي وقت، ولكن يجب تقديم معلومات دقيقة لكل نوع ملف شخصي.\n\n
+
+3. طلبات الخدمة والعروض\n
+يمكن للعملاء نشر طلبات الخدمة، بما في ذلك الأوصاف والصور والمواقع.\n
+يمكن للحرفيين الرد على الطلبات من خلال تقديم عروض مع الأسعار والتوقيت.\n
+San3a ليست طرفًا في أي اتفاقية بين العملاء والحرفيين.\n\n
+
+4. الدفع والتسعير\n
+قد تقدم San3a ميزات دفع داخل التطبيق أو تُسهّل التواصل بشأن المدفوعات. نحن لسنا مسؤولين عن نزاعات الأسعار أو ترتيبات الدفع التي تتم خارج التطبيق.\n\n
+
+5. سلوك المستخدم\n
+يجب على جميع المستخدمين:\n
+تقديم معلومات دقيقة وصادقة.\n
+معاملة الآخرين باحترام واحترافية.\n
+الامتناع عن استخدام التطبيق لأغراض غير قانونية أو مسيئة أو خادعة.\n\n
+
+6. التقييمات والمراجعات\n
+يحق لكل من العملاء والحرفيين ترك تقييمات بعد إتمام العمل. يجب أن تكون المراجعات عادلة ومحترمة ومبنية على تفاعلات حقيقية.\n\n
+
+7. إنهاء الخدمة\n
+نحتفظ بالحق في تعليق أو إنهاء أي حساب ينتهك هذه الشروط.\n\n
+
+8. تعديلات الشروط\n
+قد نقوم بتحديث هذه الشروط من وقت لآخر. استمرار استخدام التطبيق يعني موافقتك على الشروط المحدثة.\n
+</string>
+
+    <string name="privacy_and_policy_content">
+نحن نقدّر خصوصيتك. توضح سياسة الخصوصية هذه كيفية جمع San3a لمعلوماتك واستخدامها وحمايتها.\n\n
+
+1. المعلومات التي نجمعها\n
+البيانات الشخصية: الاسم، رقم الهاتف، الموقع، صورة الملف الشخصي، الهوية (للحرفيين).\n
+بيانات الاستخدام: كيفية تفاعلك مع التطبيق، نوع الجهاز، عنوان IP.\n
+الصور والملفات: فقط تلك التي تُحمّلها طواعيةً لطلبات الخدمة أو للتحقق من الملف الشخصي.\n\n
+
+2. كيف نستخدم معلوماتك\n
+لربط العملاء بالحرفيين المناسبين.\n
+لتحسين أداء التطبيق وتجربة المستخدم.\n
+للتحقق من الهويات ومنع الاحتيال.\n
+لإرسال تحديثات أو إشعارات مهمة.\n\n
+
+3. مشاركة البيانات\n
+لا نبيع أو نشارك بياناتك الشخصية مع جهات خارجية إلا في الحالات التالية:\n
+عند الاقتضاء بموجب القانون.\n
+لتمكين المراسلة داخل التطبيق وتوزيع الوظائف بين المستخدمين.\n
+لمعالجة الدفع (إن وُجد).\n\n
+
+4. بيانات الموقع\n
+نجمع موقعك من أجل:\n
+عرض الخدمات القريبة أو طلبات الوظائف.\n
+مساعدتك في الوصول إلى مواقع الوظائف.\n
+يمكنك تعطيل مشاركة الموقع في أي وقت من إعدادات جهازك.\n\n
+
+5. الأمان\n
+نستخدم التشفير وطرق التخزين الآمنة لحماية بياناتك. ومع ذلك، لا يوجد نظام آمن تمامًا.\n\n
+
+6. حقوقك\n
+يمكنك:\n
+الوصول إلى ملفك الشخصي وتعديله في أي وقت.\n
+طلب حذف بياناتك بالتواصل معنا عبر [بريدك الإلكتروني المخصص للدعم].\n\n
+
+7. تحديثات السياسة\n
+قد نراجع هذه السياسة من وقت لآخر. سيتم إخطارك بأي تغييرات جوهرية.\n
+</string>
 </resources>

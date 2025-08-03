@@ -6,9 +6,11 @@ import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.repository.UserRemoteDataSource
 import com.paris_2.san3a.domain.repository.UserRepository
 import android.net.Uri
+import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.domain.CompleteUserSetupException
 import com.paris_2.san3a.domain.GetAccountTypeException
+import com.paris_2.san3a.domain.GetUserException
 import com.paris_2.san3a.domain.GetUserProgressException
 import com.paris_2.san3a.domain.SaveAccountTypeException
 import com.paris_2.san3a.domain.SaveLocationException
@@ -16,6 +18,8 @@ import com.paris_2.san3a.domain.SavePersonalInfoException
 import com.paris_2.san3a.domain.SaveServicesException
 import com.paris_2.san3a.domain.SaveWorkShowcaseException
 import com.paris_2.san3a.domain.UploadNationalIdImagesException
+import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.domain.entity.User
 
 class UserRepositoryImp(
     private val userRemoteDataSource: UserRemoteDataSource,
@@ -31,9 +35,14 @@ class UserRepositoryImp(
             userRemoteDataSource.getAccountType(phone)
         }
 
-    override suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean) =
+    override suspend fun saveServices(phone: String, services: List<Service>, isCraftsman: Boolean) =
         safeCall(SaveServicesException()) {
             userRemoteDataSource.saveServices(phone, services, isCraftsman)
+        }
+
+    override suspend fun getServices(phone: String): List<Service> =
+        safeCall(SaveServicesException()) {
+            userRemoteDataSource.getServices(phone).toEntity()
         }
 
     override suspend fun saveLocation(phone: String, location: Location) =
@@ -51,10 +60,14 @@ class UserRepositoryImp(
             userRemoteDataSource.savePersonalInfo(phone, fullName, profileUrl)
         }
 
-    override suspend fun saveWorkShowcase(phone: String, workMedia: List<String>, workDescription: String) =
+    override suspend fun saveWorkShowcase(phone: String, workMedia: List<Uri>?, workDescription: String) =
         safeCall(SaveWorkShowcaseException()) {
-            userRemoteDataSource.saveWorkShowcase(phone, workMedia, workDescription)
-
+            val mediaUrls = workMedia?.mapIndexedNotNull { index, uri ->
+                val path = "$WORK_SHOWCASE_PATH/$phone/media_$index.jpg"
+                storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
+                storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
+            }
+            userRemoteDataSource.saveWorkShowcase(phone, mediaUrls, workDescription)
         }
 
     override suspend fun getUserProgress(phone: String): AccountSetupStep =
@@ -83,10 +96,21 @@ class UserRepositoryImp(
             userRemoteDataSource.saveNationalIdImages(phone, frontUrl, backUrl)
         }
 
+    override suspend fun getUser(phone: String): User =
+        safeCall(GetUserException()) {
+            userRemoteDataSource.getUser(phone)
+        }
+
+    override suspend fun getWorkMedia(phone: String): List<String> =
+        safeCall(GetUserException()) {
+            userRemoteDataSource.getWorkMedia(phone)
+        }
+
     companion object {
         private const val PROFILE_IMAGE_PATH = "profile_images"
         private const val NATIONAL_ID_PATH = "national_ids"
         private const val FRONT_IMAGE_NAME = "front.jpg"
         private const val BACK_IMAGE_NAME = "back.jpg"
+        private const val WORK_SHOWCASE_PATH = "work_showcase"
     }
 }

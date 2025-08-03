@@ -5,4 +5,6 @@ interface OTPRegisterListenerInteraction {
     fun onClickVerify()
     fun onClickResendCode()
     fun onClickBackButton()
+    fun onClickRetry()
+    fun onHideBottomSheet()
 }
