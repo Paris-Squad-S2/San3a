@@ -15,7 +15,7 @@ fun RequestServiceDto.toEntity() = RequestService(
     title = title,
 )
 
-fun RequestService.toDto(imageUrls: List<String>) = RequestServiceDto(
+fun RequestService.toDto(imageUrls: List<String> = emptyList()) = RequestServiceDto(
     id = id,
     serviceType = serviceType,
     description = description,
