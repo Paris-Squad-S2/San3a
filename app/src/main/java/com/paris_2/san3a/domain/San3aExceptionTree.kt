@@ -31,3 +31,6 @@ class CompleteUserSetupException : San3aException("Couldn't complete user setup"
 class UploadNationalIdImagesException : San3aException("Couldn't upload national ID images")
 class NoGovernmentsFoundException : San3aException("No Governments Found")
 class NoCitiesFoundException : San3aException("No Cities Found")
+
+class LoginStatusException: San3aException("Failed to check login status")
+class GetUserException(message: String = "register error"): San3aException("Failed to get User $message")
