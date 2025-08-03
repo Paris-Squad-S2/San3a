@@ -4,6 +4,7 @@ import com.google.firebase.firestore.Query
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
+import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto.Companion.toJson
 import kotlinx.coroutines.flow.Flow
 
 class ServiceRemoteDataSourceImpl(
@@ -18,26 +19,11 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
-    override suspend fun requestService(requestedServiceDto: RequestServiceDto) {
-        try {
-            val docPath = "${SERVICE_REQUESTS_COLLECTION}/${requestedServiceDto.serviceType}"
-            val existingRequest = try {
-                fireStoreService.getDoc(docPath, RequestServiceDto.Companion::fromJson)
-            } catch (e: Exception) {
-                null
-            }
-            if (existingRequest != null) {
-                val updatedRequest = existingRequest.copy(
-                    requestedCount = existingRequest.requestedCount + 1
-                )
-                fireStoreService.updateDoc(docPath, mapOf("requestedCount" to updatedRequest.requestedCount))
-            } else {
-                val newRequest = requestedServiceDto.copy(requestedCount = 1)
-                fireStoreService.setDoc(docPath, newRequest)
-            }
-        } catch (e: Exception) {
-            throw e
-        }
+    override suspend fun requestService(requestedServiceDto: RequestServiceDto): String {
+        return fireStoreService.addToCollection(
+            path = SERVICE_REQUESTS_COLLECTION,
+            data = requestedServiceDto.toJson()
+        )
     }
     override fun searchServices(query: String): Flow<List<ServiceDto>> {
         return fireStoreService.streamCollection(
@@ -74,5 +60,6 @@ class ServiceRemoteDataSourceImpl(
         const val SERVICES_COLLECTION = "services"
         const val SERVICE_REQUESTS_COLLECTION = "service_requests"
         const val NUMBER_OF_REQUESTS_FIELD = "requestedCount"
+
     }
 }
