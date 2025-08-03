@@ -103,13 +103,15 @@ private fun CustomerHomeScreenContent(
                         .padding(top = 16.dp, bottom = 24.dp)
                 )
             }
-            item {
-                MostRequestedServices(
-                    listOfServices = state.customerUiState.mostRequestedServices,
-                    modifier = Modifier
-                        .padding(bottom = 24.dp, start = 16.dp)
-                )
-            }
+            if (state.customerUiState.mostRequestedServices.isEmpty()) {
+                    item {
+                        MostRequestedServices(
+                            listOfServices = state.customerUiState.mostRequestedServices,
+                            modifier = Modifier
+                                .padding(bottom = 24.dp, start = 16.dp)
+                        )
+                    }
+                }
             item {
                 Text(
                     text = "Find What You Need",
