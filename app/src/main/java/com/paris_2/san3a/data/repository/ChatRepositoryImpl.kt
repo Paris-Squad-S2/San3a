@@ -2,6 +2,7 @@ package com.paris_2.san3a.data.repository
 
 import com.paris_2.san3a.data.mapper.toChatList
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
+import com.paris_2.san3a.domain.CreateChatException
 import com.paris_2.san3a.domain.DeleteChatException
 import com.paris_2.san3a.domain.ReadChatException
 import com.paris_2.san3a.domain.entity.Chat
@@ -19,6 +20,12 @@ class ChatRepositoryImpl(
     override fun getChatsByUserId(userId: String): Flow<List<Chat>> {
         return messagesRemoteDataSource.getUserChats(userId).map { it.toChatList() }.catch {
             throw ReadChatException(userId)
+        }
+    }
+
+    override suspend fun createChat(participants: List<String>) {
+        safeCall(CreateChatException(participants)) {
+            messagesRemoteDataSource.addChat(participants)
         }
     }
 

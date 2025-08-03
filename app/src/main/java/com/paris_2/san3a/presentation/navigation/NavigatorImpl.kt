@@ -15,7 +15,7 @@ class NavigatorImpl(override val startGraph: Graph) : Navigator {
     override suspend fun navigate(destination: Destination, navOptions: NavOptions?) {
         mutex.withLock {
             val now = System.currentTimeMillis()
-            if (now - lastNavigateTime >= 1000) {
+            if (now - lastNavigateTime >= 500) {
                 lastNavigateTime = now
                 _navigateEvent.send(
                     NavigationEvent.Navigate(destination = destination, navOptions = navOptions)
