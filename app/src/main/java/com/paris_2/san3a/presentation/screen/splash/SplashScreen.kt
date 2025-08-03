@@ -31,7 +31,7 @@ fun SplashScreen(
         delay(2000)
         if (isOnboardingCompletedUseCase()) {
             navigator.navigate(
-                destination = Destinations.Home,
+                destination = Destinations.Account,
                 navOptions = NavOptions.Builder()
                     .setPopUpTo(Destinations.OnBoarding, inclusive = true)
                     .build()

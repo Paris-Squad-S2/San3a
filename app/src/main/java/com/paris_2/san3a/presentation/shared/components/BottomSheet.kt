@@ -16,7 +16,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -31,35 +30,35 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun BottomSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
-    isVisible: Boolean = true,
+    isVisible: Boolean = false,
+    skipPartiallyExpanded: Boolean = false,
     header: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit = {},
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    LaunchedEffect(isVisible) {
-        when {
-            isVisible -> sheetState.show()
-            else -> sheetState.hide()
-        }
-    }
+    val sheetState =
+        rememberModalBottomSheetState(
+            skipPartiallyExpanded = skipPartiallyExpanded,
+        )
 
-    ModalBottomSheet(
-        onDismissRequest = { onDismissRequest },
-        modifier = modifier
-            .fillMaxWidth(),
-        sheetState = sheetState,
-        containerColor = Theme.colors.background.bottomSheet,
-        dragHandle = {
-            BottomSheetDragHandle()
-        }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+    if (isVisible) {
+        ModalBottomSheet(
+            onDismissRequest = onDismissRequest,
+            modifier = modifier
+                .fillMaxWidth(),
+            sheetState = sheetState,
+            containerColor = Theme.colors.background.bottomSheet,
+            dragHandle = {
+                BottomSheetDragHandle()
+            }
         ) {
-            header?.invoke()
-            content()
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                header?.invoke()
+                content()
+            }
         }
     }
 }

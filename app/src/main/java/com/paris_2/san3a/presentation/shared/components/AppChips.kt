@@ -74,13 +74,11 @@ fun AppChip(
             )
         }
 
-        val paddingStart =
-            animateDpAsState(if (painter == null && isSelected) 16.dp else 0.dp)
+
         TextChips(
             label,
             isSelected,
             hasBackgroundColor,
-            modifier = Modifier.padding(start = paddingStart.value)
         )
     }
 }
@@ -92,8 +90,7 @@ private fun TextChips(
     hasBackgroundColor: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val paddingHorizontal = animateDpAsState(if (isSelected) 8.dp else 16.dp)
-    val paddingEnd = animateDpAsState(if (isSelected) 16.dp else 0.dp)
+
     val textColor =
         animateColorAsState(if (hasBackgroundColor) Theme.colors.background.card else Theme.colors.brand.primary)
 
@@ -101,8 +98,7 @@ private fun TextChips(
         if (it) {
             Text(
                 modifier = modifier
-                    .padding(horizontal = paddingHorizontal.value)
-                    .padding(end = paddingEnd.value),
+                    .padding(horizontal =16.dp),
                 text = label,
                 style = Theme.textStyle.label.medium.medium,
                 color = textColor.value
@@ -110,8 +106,7 @@ private fun TextChips(
         } else {
             Text(
                 modifier = modifier
-                    .padding(horizontal = paddingHorizontal.value)
-                    .padding(end = paddingEnd.value),
+                    .padding(horizontal =16.dp),
                 text = label,
                 style = Theme.textStyle.label.medium.medium,
                 color = Theme.colors.shade.secondary

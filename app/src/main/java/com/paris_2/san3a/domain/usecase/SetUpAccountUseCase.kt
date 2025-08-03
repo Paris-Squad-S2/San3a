@@ -4,6 +4,7 @@ import android.net.Uri
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
+import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.repository.UserRepository
 
 class SetUpAccountUseCase(
@@ -17,7 +18,7 @@ class SetUpAccountUseCase(
         userRepository.uploadNationalIdImages(phone, frontUri, backUri)
     }
 
-    suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean) {
+    suspend fun saveServices(phone: String, services: List<Service>, isCraftsman: Boolean) {
         userRepository.saveServices(phone, services, isCraftsman)
     }
 
@@ -29,7 +30,7 @@ class SetUpAccountUseCase(
         userRepository.savePersonalInfo(phone, fullName, profileUri)
     }
 
-    suspend fun saveWorkShowcase(phone: String, workMedia: List<String>, workDescription: String) {
+    suspend fun saveWorkShowcase(phone: String, workMedia: List<Uri>?, workDescription: String) {
         userRepository.saveWorkShowcase(phone, workMedia, workDescription)
     }
 
