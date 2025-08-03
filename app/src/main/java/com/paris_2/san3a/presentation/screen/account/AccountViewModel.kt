@@ -22,7 +22,6 @@ class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getAllServicesUseCase: GetAllServicesUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
-    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
 
     private val _currentScreen = mutableIntStateOf(0)
@@ -329,33 +328,51 @@ class AccountViewModel(
     }
 
     private fun getGovernments() {
-        viewModelScope.launch {
-            val governments = getLocationInfoUseCase.getGovernments(countryName = "Egypt")
-            Log.d("TAG", "getGovernments: ")
-            updateState(
-                screenState.value.copy(
-                    accountUiState = screenState.value.accountUiState.copy(
-                        governments = governments.names
+        tryToExecute(
+            execute = { getLocationInfoUseCase.getGovernments(countryName = "Egypt") },
+            onSuccess = { governments ->
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            governments = governments.names
+                        )
                     )
                 )
-            )
-        }
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMassage = errorMessage.message,
+                        isLoading = false
+                    )
+                )
+            },
+        )
     }
 
     fun getCities(stateName: String) {
-        viewModelScope.launch {
-            val cities = getLocationInfoUseCase.getCities(
-                countryName = "Egypt",
-                stateName = stateName
-            )
-            updateState(
-                screenState.value.copy(
-                    accountUiState = screenState.value.accountUiState.copy(
-                        cities = cities.names
+        tryToExecute(
+            execute = { getLocationInfoUseCase.getCities(countryName = "Egypt", stateName = stateName) },
+            onSuccess = { cities ->
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            cities = cities.names,
+                            isCitiesBottomSheetShowed = true,
+                            isGovernmentBottomSheetShowed = false
+                        )
                     )
                 )
-            )
-        }
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMassage = errorMessage.message,
+                        isLoading = false
+                    )
+                )
+            }
+        )
     }
 
     fun updateGovernmentLocation(government: String) {
