@@ -52,7 +52,7 @@ class MessagesDetailsViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it,
+                        errorMessage = it.message,
                         isLoading = false
                     )
                 )
@@ -84,7 +84,7 @@ class MessagesDetailsViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it
+                        errorMessage = it.message
                     )
                 )
             }
@@ -110,7 +110,7 @@ class MessagesDetailsViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it
+                        errorMessage = it.message
                     )
                 )
             },
@@ -168,7 +168,7 @@ class MessagesDetailsViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it
+                        errorMessage = it.message
                     )
                 )
             },
