@@ -37,11 +37,8 @@ class UserRemoteDataSourceImp(
         isCraftsman: Boolean
     ) {
         services.forEach { service ->
-            val collectionPath = "$USERS_COLLECTION/$phone/services"
-            val serviceData = mapOf(
-                "serviceId" to service.id
-            )
-            fireStoreService.addToCollection(path = collectionPath, data = serviceData)
+            val collectionPath = "$USERS_COLLECTION/$phone/services/${service.id}"
+            fireStoreService.setDoc(documentPath = collectionPath, data = mapOf<String, Any>())
         }
     }
 
@@ -54,7 +51,7 @@ class UserRemoteDataSourceImp(
     }
 
     fun getServices(data: Map<String, Any>, serviceId: String): String {
-        return data["serviceId"].toString()
+        return serviceId
     }
 
     override suspend fun saveLocation(phone: String, location: Location) {

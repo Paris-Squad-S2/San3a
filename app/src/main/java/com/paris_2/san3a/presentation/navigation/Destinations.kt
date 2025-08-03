@@ -14,7 +14,7 @@ sealed interface Destinations : Graph {
     data object RegisterScreen : Destination
 
     @Serializable
-    data object Account : Destination
+    data class Account(val phoneNumber: String) : Destination
 
     @Serializable
     data object Home : Destination

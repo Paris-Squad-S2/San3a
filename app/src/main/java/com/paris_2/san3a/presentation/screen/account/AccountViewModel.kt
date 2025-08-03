@@ -4,7 +4,9 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Service
@@ -20,12 +22,13 @@ class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getAllServicesUseCase: GetAllServicesUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
+    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
 
     private val _currentScreen = mutableIntStateOf(0)
     val currentScreen: State<Int> get() = _currentScreen
 
-    private val phoneNumber = "1234"
+    private val phoneNumber = savedStateHandle.toRoute<Destinations.Account>().phoneNumber
 
     private val stepsCount: Int
         get() = when (screenState.value.accountUiState.userType) {
