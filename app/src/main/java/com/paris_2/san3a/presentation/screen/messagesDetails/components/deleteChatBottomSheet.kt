@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ import com.paris_2.san3a.presentation.shared.components.BottomSheet
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeleteChatBottomSheet(
     modifier: Modifier = Modifier,
@@ -48,7 +50,7 @@ fun DeleteChatBottomSheet(
                     .size(120.dp)
                     .padding(bottom = 8.dp),
                 painter = painterResource(R.drawable.img_trash),
-                contentDescription = "delete chat icon"
+                contentDescription = stringResource(R.string.delete_chat_icon)
             )
             Text(
                 modifier = Modifier.padding(bottom = 8.dp),

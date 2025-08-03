@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -13,7 +12,7 @@ fun MessageContent(
     time: String?,
     isReceived: Boolean,
     isSeen: Boolean?,
-    images: List<Painter>,
+    images: List<String>,
     onPlayClick: (() -> Unit)?,
     recordWave: List<Float>,
     listenRatio: Float,

@@ -9,8 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.paris_2.san3a.presentation.screen.account.AccountScreen
 import com.paris_2.san3a.presentation.screen.home.HomeScreen
-import com.paris_2.san3a.presentation.screen.message.details.MessageDetails
 import com.paris_2.san3a.presentation.screen.messages.MessagesScreen
+import com.paris_2.san3a.presentation.screen.messagesDetails.MessageDetails
 import com.paris_2.san3a.presentation.screen.more.MoreScreen
 import com.paris_2.san3a.presentation.screen.myRequest.MyRequestScreen
 import com.paris_2.san3a.presentation.screen.notifications.NotificationsScreen

@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -20,7 +19,7 @@ fun MessageBubble(
     time: String?,
     isReceived: Boolean,
     isSeen: Boolean?,
-    images: List<Painter>
+    images: List<String>
 ) {
     Column(
         modifier = Modifier

@@ -2,11 +2,13 @@ package com.paris_2.san3a.presentation.screen.messages
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.Chat
+import com.paris_2.san3a.presentation.screen.messages.component.ChatCard
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
@@ -69,16 +72,18 @@ private fun MessagesScreenContent(
                     onRetry = messagesInteractionListener::onRetryClick,
                     modifier = Modifier
                         .fillMaxSize()
+                        .background(Theme.colors.background.screen)
                         .padding(horizontal = 60.dp)
                 )
             } else if (state.isLoading) {
                 LoadingScreen(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize().background(Theme.colors.background.screen)
                 )
             } else if (state.chats.isEmpty()) {
                 PlaceHolderScreen(
                     modifier = modifier
                         .fillMaxSize()
+                        .background(Theme.colors.background.screen)
                         .padding(horizontal = 60.dp),
                     image = R.drawable.img_message,
                     title = R.string.no_messages_yet,
@@ -86,7 +91,7 @@ private fun MessagesScreenContent(
                 )
             } else {
                 ChatList(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().background(Theme.colors.background.screen).padding(top = 16.dp, start = 16.dp, end = 16.dp),
                     chats = state.chats,
                     messagesInteractionListener = messagesInteractionListener
                 )
@@ -102,10 +107,20 @@ fun ChatList(
     messagesInteractionListener: MessagesInteractionListener
 ) {
 
-     LazyColumn(modifier = modifier) {
-         items(chats.size) { chat ->
-                val item = chats[chat]
-             //TODO: Implement ChatItem composable
+     LazyColumn(
+         modifier = modifier,
+         verticalArrangement = Arrangement.spacedBy(12.dp),
+     ) {
+         items(chats) { item ->
+             ChatCard(
+                 onChatClick = {messagesInteractionListener.onChatClick(item.id)},
+                 name = "kabanoka kazonga", // Todo
+                 imageUrl = "https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                 lastMessage = "where are you", // Todo()
+                 unreadMessagesCount = 99,
+                 dateTime = "9:40",
+                 isCurrentUserSendLastMessage = false // Todo()
+             )
          }
      }
 }

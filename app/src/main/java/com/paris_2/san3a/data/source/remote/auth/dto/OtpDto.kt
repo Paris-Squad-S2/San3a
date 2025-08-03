@@ -1,21 +1,15 @@
 package com.paris_2.san3a.data.source.remote.auth.dto
 
-import com.google.gson.annotations.SerializedName
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class OtpDto(
-    @SerializedName("data")
-    val `data`: Data?,
-    @SerializedName("message")
-    val message: String?,
-    @SerializedName("success")
-    val success: Boolean?
-) {
-    data class Data(
-        @SerializedName("messageId")
-        val messageId: String?,
-        @SerializedName("timestamp")
-        val timestamp: Int?,
-        @SerializedName("to")
-        val to: String?
-    )
-}
+    @SerialName("data")
+    val `data`: Data? = null,
+    @SerialName("message")
+    val message: String? = null,
+    @SerialName("success")
+    val success: Boolean? = null
+)
