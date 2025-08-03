@@ -11,8 +11,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.screen.account.components.LocationContent
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.RequestBottomSheetContent
 import com.paris_2.san3a.presentation.screen.home.customer.RequestServiceUiState
+import com.paris_2.san3a.presentation.screen.home.utils.getSuggestions
 import com.paris_2.san3a.presentation.shared.components.AddPhotos
 import com.paris_2.san3a.presentation.shared.components.AddPhotosContent
 import com.paris_2.san3a.presentation.shared.components.BottomSheet
@@ -31,16 +33,14 @@ fun CustomerBottomSheetService(
     title: String,
     icon: Int,
     isVisible: Boolean,
+    userId: String,
     onExitClick: () -> Unit = {},
     requestService: MutableState<RequestServiceUiState?>
 ){
     var currentStep by remember { mutableStateOf(BottomSheetStep.SELECT_SERVICE) }
     var serviceTextValue by remember { mutableStateOf("") }
     var descriptionTextValue by remember { mutableStateOf("") }
-    var locationTextValue by remember { mutableStateOf("") }
-    var locationDescriptionValue by remember { mutableStateOf("") }
     var imageValue by remember { mutableStateOf(listOf<String>()) }
-
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents(),
         onResult = { uriList ->
@@ -48,6 +48,16 @@ fun CustomerBottomSheetService(
             imageValue = imageValue + newImages
         }
     )
+    var selectedSuggestion by remember { mutableStateOf<String?>(null) }
+    var governments by remember { mutableStateOf(listOf("Cairo", "Giza", "Alex")) }
+    var cities by remember { mutableStateOf(listOf("Nasr City", "Dokki", "Smouha")) }
+    var selectedGovernment by remember { mutableStateOf("") }
+    var selectedCity by remember { mutableStateOf("") }
+    var addressDetails by remember { mutableStateOf("") }
+
+    var isGovernmentSheetVisible by remember { mutableStateOf(false) }
+    var isCitySheetVisible by remember { mutableStateOf(false) }
+
     BottomSheet(
         isVisible = isVisible
     ){
@@ -66,14 +76,18 @@ fun CustomerBottomSheetService(
                         onExitClick()
                     },
                 ) {
-                RequestTitleContent(
-                    value = serviceTextValue,
-                    onValueChange = { serviceTextValue = it },
-                    suggestions = listOf("Service 1", "Service 2", "Service 3"),
-                    selectedSuggestion = null,
-                    onChipClick = { serviceTextValue = it},
-                    modifier = Modifier,
-                    hint = "Select a service")
+                    RequestTitleContent(
+                        value = serviceTextValue,
+                        onValueChange = { serviceTextValue = it },
+                        suggestions = getSuggestions(serviceType = title),
+                        selectedSuggestion = selectedSuggestion,
+                        onChipClick = {
+                            selectedSuggestion = it
+                            serviceTextValue = it
+                        },
+                        modifier = Modifier,
+                        hint = "Select a service"
+                    )
                 }
 
             }
@@ -85,7 +99,7 @@ fun CustomerBottomSheetService(
                         color = Theme.colors.additional.primary.blue,
                         subTitle = "Describe the problem in detail",
                         buttonIsActive = descriptionTextValue.isNotEmpty(),
-                        onButtonClick = {currentStep = BottomSheetStep.IMAGE_UPLOAD},
+                        onButtonClick = {currentStep = BottomSheetStep.SELECT_LOCATION},
                         buttonTitle = "Next",
                         step = 2,
                         onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE},
@@ -107,16 +121,39 @@ fun CustomerBottomSheetService(
                     icon = icon,
                     color = Theme.colors.additional.primary.blue,
                     subTitle = "Describe the problem in detail",
-                    buttonTitle = "Create Request",
-                    buttonIsActive = locationTextValue.isNotEmpty(),
+                    buttonTitle = "Next",
+                    buttonIsActive = addressDetails.isNotEmpty(),
                     step = 3,
-                    onButtonClick = {currentStep = BottomSheetStep.SELECT_SERVICE},
+                    onButtonClick = {currentStep = BottomSheetStep.IMAGE_UPLOAD},
                     onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE},
                     onExitClick = {
                         onExitClick()
                     }
                 ) {
-
+                    LocationContent(
+                        governments = governments,
+                        cities = cities,
+                        addressInDetails = addressDetails,
+                        onAddressDetailsChange = { addressDetails = it },
+                        isGovernmentSheetShowed = isGovernmentSheetVisible,
+                        isCitiesSheetShowed = isCitySheetVisible,
+                        onGovernmentDismissRequest = { isGovernmentSheetVisible = false },
+                        onCitiesDismissRequest = { isCitySheetVisible = false },
+                        onGovernmentSelected = {
+                            selectedGovernment = it
+                            isGovernmentSheetVisible = false
+                        },
+                        onCitiesSelected = {
+                            selectedCity = it
+                            isCitySheetVisible = false
+                        },
+                        government = selectedGovernment,
+                        city = selectedCity,
+                        onGetLocationClicked = {
+                            isGovernmentSheetVisible = true
+                            isCitySheetVisible = true
+                        }
+                    )
                 }
 
             }
@@ -127,7 +164,7 @@ fun CustomerBottomSheetService(
                     color = Theme.colors.additional.primary.blue,
                     subTitle = "Describe the problem in detail",
                     buttonTitle = "Create Request",
-                    buttonIsActive = imageValue.isNotEmpty(),
+                    buttonIsActive = true,
                     step = 4,
                     onButtonClick = {
                         requestService.value =
@@ -135,12 +172,13 @@ fun CustomerBottomSheetService(
                                 serviceType = title,
                                 title = serviceTextValue ,
                                 description = descriptionTextValue,
-                                location = locationTextValue,
-                                locationDetails = locationDescriptionValue,
+                                location = "$selectedGovernment, $selectedCity",
+                                locationDetails = addressDetails,
                                 image = imageValue,
+                                userId = userId
                             )
                     },
-                    onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE},
+                    onClickBack = { currentStep = BottomSheetStep.SELECT_LOCATION },
                     onExitClick = {
                         onExitClick()
                     }
