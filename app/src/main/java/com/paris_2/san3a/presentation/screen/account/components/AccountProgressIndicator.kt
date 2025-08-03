@@ -62,7 +62,8 @@ fun AccountProgressIndicator(
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)@Composable
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
 private fun ProgressIndicatorInteractionPreview() {
     San3aTheme {
         var currentScreen by remember { mutableStateOf(0) }

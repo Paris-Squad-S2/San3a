@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.shared.utils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
+import com.paris_2.san3a.domain.San3aException
 import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Navigator
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -36,19 +37,19 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
 
     protected fun <T> tryToExecute(
         onSuccess: (suspend (T) -> Unit)? = null,
-        onError: (String) -> Unit,
+        onError: (Throwable) -> Unit,
         scope: CoroutineScope = viewModelScope,
         execute: suspend () -> T,
     ): Job {
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            onError(throwable.message ?: "Unexpected error")
+            onError(throwable)
         }
         return scope.launch(exceptionHandler) {
             try {
                 val result = execute()
                 onSuccess?.invoke(result)
             } catch (e: Exception) {
-                onError(e.message ?: "Unexpected error")
+                onError(e)
             }
         }
     }

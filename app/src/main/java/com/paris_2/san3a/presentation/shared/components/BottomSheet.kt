@@ -32,10 +32,12 @@ fun BottomSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
     isVisible: Boolean = true,
+    skipPartiallyExpanded: Boolean = true,
     header: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit = {},
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = skipPartiallyExpanded)
     LaunchedEffect(isVisible) {
         when {
             isVisible -> sheetState.show()
@@ -43,23 +45,25 @@ fun BottomSheet(
         }
     }
 
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        modifier = modifier
-            .fillMaxWidth(),
-        sheetState = sheetState,
-        containerColor = Theme.colors.background.bottomSheet,
-        dragHandle = {
-            BottomSheetDragHandle()
-        }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+    if (isVisible) {
+        ModalBottomSheet(
+            onDismissRequest = onDismissRequest,
+            modifier = modifier
+                .fillMaxWidth(),
+            sheetState = sheetState,
+            containerColor = Theme.colors.background.bottomSheet,
+            dragHandle = {
+                BottomSheetDragHandle()
+            }
         ) {
-            header?.invoke()
-            content()
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                header?.invoke()
+                content()
+            }
         }
     }
 }
@@ -78,6 +82,7 @@ private fun BottomSheetDragHandle() {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun BottomSheetPrev() {
