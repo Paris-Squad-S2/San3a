@@ -6,7 +6,7 @@ import com.paris_2.san3a.domain.entity.MostRequestedServices
 fun RequestServiceDto.toMostRequestedServices(): MostRequestedServices {
     return MostRequestedServices(
         id = id,
-        title = title,
+        serviceType = serviceType,
         description = description,
         requestedCount = requestedCount
     )
