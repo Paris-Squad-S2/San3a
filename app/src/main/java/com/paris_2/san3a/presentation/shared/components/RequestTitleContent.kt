@@ -61,7 +61,7 @@ fun RequestTitleContent(
                 )
                 .clip(RoundedCornerShape(Theme.radius.large))
                 .background(Theme.colors.background.card),
-            textStyle = Theme.textStyle.body.medium.regular,
+            textStyle = (Theme.textStyle.body.medium.medium),
             decorationBox = { innerTextField ->
                 Box(
                     modifier = Modifier
