@@ -26,13 +26,10 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -76,7 +73,6 @@ fun RegisterScreenContent(
     registerInteractionListener: RegisterInteractionListener,
 ) {
     val isKeyboardVisible = WindowInsets.isImeVisible
-    var bottomSheetType by remember { mutableStateOf<BottomSheetType?>(null) }
 
     val topSectionHeight by animateDpAsState(
         targetValue = if (isKeyboardVisible) 172.dp else 240.dp,
@@ -127,8 +123,8 @@ fun RegisterScreenContent(
                     )
 
                     TermsAndConditionsText(
-                        onTermsClick = { bottomSheetType = BottomSheetType.Terms },
-                        onPrivacyClick = { bottomSheetType = BottomSheetType.Privacy }
+                        onTermsClick = { registerInteractionListener.changeBottomSheetType(BottomSheetType.Terms) },
+                        onPrivacyClick = { registerInteractionListener.changeBottomSheetType(BottomSheetType.Privacy) }
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -146,11 +142,11 @@ fun RegisterScreenContent(
             }
         }
 
-        bottomSheetType?.let { type ->
+        registerUiState.bottomSheetType?.let { type ->
             when (type) {
                 BottomSheetType.Terms -> {
                     RegisterBottomSheet(
-                        onCloseClick = { bottomSheetType = null },
+                        onCloseClick = { registerInteractionListener.changeBottomSheetType(null) },
                         headerText = stringResource(R.string.terms_and_conditions),
                         contentText = stringResource(R.string.terms_and_conditions_content),
                         skipPartiallyExpanded = false
@@ -159,7 +155,7 @@ fun RegisterScreenContent(
 
                 BottomSheetType.Privacy -> {
                     RegisterBottomSheet(
-                        onCloseClick = { bottomSheetType = null },
+                        onCloseClick = { registerInteractionListener.changeBottomSheetType(null) },
                         headerText = stringResource(R.string.privacy_policy),
                         contentText = stringResource(R.string.privacy_and_policy_content),
                         skipPartiallyExpanded = false
@@ -263,7 +259,7 @@ fun PhoneNumberInput(
                                 .clip(RoundedCornerShape(3.dp))
                         )
                         Spacer(modifier = Modifier.width(14.dp))
-                        Divider(
+                        VerticalDivider(
                             color = Theme.colors.stroke.primary,
                             modifier = Modifier
                                 .height(24.dp)
@@ -378,6 +374,7 @@ fun RegisterScreenPreview() {
         registerInteractionListener = object : RegisterInteractionListener {
             override fun onPhoneNumberChanged(phone: String) {}
             override fun onClickContinue() {}
+            override fun changeBottomSheetType(bottomSheetType: BottomSheetType?) {}
         }
     )
 }

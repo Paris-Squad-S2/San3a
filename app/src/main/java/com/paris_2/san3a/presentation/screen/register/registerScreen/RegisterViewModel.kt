@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.register.registerScreen
 
 import com.paris_2.san3a.presentation.navigation.Destinations
+import com.paris_2.san3a.presentation.screen.register.components.BottomSheetType
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class RegisterViewModel : BaseViewModel<RegisterUiState>(RegisterUiState()),
@@ -27,5 +28,13 @@ class RegisterViewModel : BaseViewModel<RegisterUiState>(RegisterUiState()),
         } else {
             updateState(screenState.value.copy(phoneNumber = ""))
         }
+    }
+
+    override fun changeBottomSheetType(bottomSheetType: BottomSheetType?) {
+        updateState(
+            screenState.value.copy(
+                bottomSheetType = bottomSheetType
+            )
+        )
     }
 }
