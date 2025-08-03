@@ -81,6 +81,17 @@
     <string name="reviews">(%1$s مراجعة)</string>
     <string name="edit_icon">ايقونة تعديل</string>
     <string name="mohammed_akkad">محمد العقاد</string>
+    <string name="write_a_message">أكتب رسالة</string>
+    <string name="add_images">أضف صورة</string>
+    <string name="voice_icon">سجل صوت</string>
+    <string name="send_icon">أرسل الرسالة</string>
+    <string name="you">أنت</string>
+    <string name="delete_chat_icon">>أيقونة حذف المحادثة</string>
+    <string name="submitted">تم تقديم</string>
+    <string name="receiving_offers">تلقي العرض</string>
+    <string name="craftsman_selected">تم الاختيار</string>
+    <string name="in_progress">قيد التنفيذ</string>
+    <string name="done">انتهت</string>
     <string name="how_would_you_like_to_use_san3a">كيف تريد استخدام صنعة؟</string>
     <string name="what_do_you_need_help_with">ما الذي تحتاج عادةً إلى مساعدة فيه؟</string>
     <string name="what_services_do_you_offer">ما الخدمات التي تقدمها؟</string>

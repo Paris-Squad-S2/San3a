@@ -1,11 +1,13 @@
 package com.paris_2.san3a.presentation.screen.messages
 
-import com.paris_2.san3a.domain.usecase.GetChatsByUserIdUseCase
+import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.messages.GetChatsByUserIdUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class MessagesViewModel(
     private val getChatsByUserIdUseCase: GetChatsByUserIdUseCase,
+    private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
 ) : MessagesInteractionListener,
     BaseViewModel<MessagesState>(MessagesState()) {
 
@@ -17,7 +19,7 @@ class MessagesViewModel(
         tryToExecute(
             execute = {
                 updateState(screenState.value.copy(isLoading = true, error = null))
-                "1"
+                getPhoneNumberUseCase()
             },
             onSuccess = { userId ->
                 updateState(screenState.value.copy(currentUserId = userId))
@@ -36,7 +38,13 @@ class MessagesViewModel(
             },
             onSuccess = { chatsFlow ->
                 chatsFlow.collect { chats ->
-                    updateState(screenState.value.copy(chats = chats, isLoading = false, error = null))
+                    updateState(
+                        screenState.value.copy(
+                            chats = chats,
+                            isLoading = false,
+                            error = null
+                        )
+                    )
                 }
             },
             onError = { exception ->
