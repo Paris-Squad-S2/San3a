@@ -55,7 +55,7 @@ fun San3aScaffold(
     San3aTheme {
         AppScaffold(
             modifier = Modifier.fillMaxSize(),
-            content = { AccountScreen() },
+            content = { San3aNavGraph(navController = navController) },
             bottomBar = {
                 AnimatedVisibility(
                     visible = isVisible,
