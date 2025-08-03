@@ -1,15 +1,10 @@
 package com.paris_2.san3a.presentation.screen.notification
 
 
-import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.StreamNotificationsUseCase
 import com.paris_2.san3a.presentation.screen.notification.components.NotificationUiState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 
 class NotificationViewModel(
     private val streamNotificationsUseCase: StreamNotificationsUseCase,
@@ -27,18 +22,9 @@ class NotificationViewModel(
     }
 
     private fun observeNotifications(userId: String) {
-        streamNotificationsUseCase(userId)
-            .onStart {
-                updateState(
-                    screenState.value.copy(isLoading = true, error = null)
-                )
-            }
-            .catch { e ->
-                updateState(
-                    screenState.value.copy(isLoading = false, error = e.message)
-                )
-            }
-            .onEach { notifications ->
+        tryToExecuteFlow(
+            flow = { streamNotificationsUseCase(userId) },
+            onEach = { notifications ->
                 updateState(
                     screenState.value.copy(
                         notifications = notifications,
@@ -46,8 +32,14 @@ class NotificationViewModel(
                         error = null
                     )
                 )
+            },
+            onStart = {
+                updateState(screenState.value.copy(isLoading = true, error = null))
+            },
+            onError = { e ->
+                updateState(screenState.value.copy(isLoading = false, error = e.message))
             }
-            .launchIn(viewModelScope)
+        )
     }
 
     fun onBackClick() = navigateUp()
