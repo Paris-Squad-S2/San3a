@@ -20,19 +20,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -43,17 +45,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.screen.register.components.BottomSheetType
+import com.paris_2.san3a.presentation.screen.register.components.RegisterBottomSheet
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.AppTextField
-import com.paris_2.san3a.presentation.shared.components.Country
-import com.paris_2.san3a.presentation.shared.components.CountrySelector
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -63,7 +66,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = koinViewModel()) {
     RegisterScreenContent(uiState.value, viewModel)
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreenContent(
     registerUiState: RegisterUiState,
@@ -98,7 +101,6 @@ fun RegisterScreenContent(
                 height = topSectionHeight,
                 logoSize = logoSize,
                 showTitle = true,
-                isKeyboardVisible = isKeyboardVisible
             )
 
             Surface(
@@ -117,31 +119,47 @@ fun RegisterScreenContent(
 
                     PhoneNumberInput(
                         phoneNumber = registerUiState.phoneNumber,
-                        selectedCountry = registerUiState.selectedCountry,
                         onPhoneNumberChanged = { registerInteractionListener.onPhoneNumberChanged(it) },
-                        countries = registerUiState.countries,
-                        onCountrySelected = { registerInteractionListener.onCountrySelected(it) }
                     )
 
-                    TermsAndConditionsText()
+                    TermsAndConditionsText(
+                        onTermsClick = { registerInteractionListener.changeBottomSheetType(BottomSheetType.Terms) },
+                        onPrivacyClick = { registerInteractionListener.changeBottomSheetType(BottomSheetType.Privacy) }
+                    )
 
                     Spacer(modifier = Modifier.height(24.dp))
 
                     AppButton(
                         type = AppButtonType.Primary,
                         onClick = { registerInteractionListener.onClickContinue() },
-                        state = AppButtonState.Enable,
+                        state = if (registerUiState.isPhoneValid) AppButtonState.Enable else AppButtonState.Disabled,
                         modifier = Modifier.fillMaxWidth(),
                         size = AppButtonSize.Large,
                         text = stringResource(R.string.Continue),
                     )
 
-                    if (!isKeyboardVisible) {
-                        Spacer(modifier = Modifier.height(120.dp))
-                        GuestButtonSection(registerInteractionListener)
-                    }
+                }
+            }
+        }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+        registerUiState.bottomSheetType?.let { type ->
+            when (type) {
+                BottomSheetType.Terms -> {
+                    RegisterBottomSheet(
+                        onCloseClick = { registerInteractionListener.changeBottomSheetType(null) },
+                        headerText = stringResource(R.string.terms_and_conditions),
+                        contentText = stringResource(R.string.terms_and_conditions_content),
+                        skipPartiallyExpanded = false
+                    )
+                }
+
+                BottomSheetType.Privacy -> {
+                    RegisterBottomSheet(
+                        onCloseClick = { registerInteractionListener.changeBottomSheetType(null) },
+                        headerText = stringResource(R.string.privacy_policy),
+                        contentText = stringResource(R.string.privacy_and_policy_content),
+                        skipPartiallyExpanded = false
+                    )
                 }
             }
         }
@@ -153,8 +171,9 @@ fun TopSection(
     height: Dp,
     logoSize: Dp,
     showTitle: Boolean,
-    isKeyboardVisible: Boolean,
 ) {
+    Spacer(modifier = Modifier.height(68.dp))
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -162,25 +181,27 @@ fun TopSection(
             .background(Theme.colors.brand.primary),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_logo_white_background),
-                contentDescription = "Register Background",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.size(logoSize)
-            )
-
-            if (showTitle) {
-                Spacer(modifier = Modifier.height(if (isKeyboardVisible) 8.dp else 16.dp))
-                Text(
-                    text = stringResource(R.string.welcome_to_san3a),
-                    color = Theme.colors.background.card,
-                    style = if (isKeyboardVisible)
-                        Theme.textStyle.title.small else
-                        Theme.textStyle.title.medium
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_logo_white_background),
+                    contentDescription = "Register Background",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.size(logoSize)
                 )
+
+                if (showTitle) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = stringResource(R.string.welcome_to_san3a),
+                        color = Theme.colors.background.card,
+                        style = Theme.textStyle.title.large
+                    )
+                }
             }
         }
     }
@@ -189,10 +210,7 @@ fun TopSection(
 @Composable
 fun PhoneNumberInput(
     phoneNumber: String,
-    selectedCountry: Country,
-    countries: List<Country>,
     onPhoneNumberChanged: (String) -> Unit,
-    onCountrySelected: (Country) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -208,114 +226,145 @@ fun PhoneNumberInput(
             color = Theme.colors.shade.primary
         )
         Spacer(modifier = Modifier.height(16.dp))
-        var expanded by remember { mutableStateOf(false) }
 
-        val dialCode = selectedCountry.code
+        val dialCode = "+20"
         val numberOnly = phoneNumber.removePrefix(dialCode)
 
-        AppTextField(
-            value = numberOnly,
-            onValueChange = { newInput ->
-                val digitsOnly = newInput.filter { it.isDigit() }.take(11)
-                onPhoneNumberChanged(dialCode + digitsOnly)
-            },
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = "000-0000-000",
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            visualTransformation = PhoneNumberVisualTransformation(),
-            leadingIcon = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .background(Theme.colors.background.card)
-                ) {
-                    CountrySelector(
-                        selectedCountry = selectedCountry,
-                        countries = countries,
-                        expanded = expanded,
-                        onToggleDropdown = { expanded = !expanded },
-                        onCountrySelected = {
-                            onCountrySelected(it)
-                            onPhoneNumberChanged(it.code)
-                        },
-                        onDismissDropdown = { expanded = false }
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Divider(
-                        color = Theme.colors.stroke.primary,
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            AppTextField(
+                value = numberOnly,
+                onValueChange = { newInput ->
+                    val digitsOnly = newInput.filter { it.isDigit() }.take(10)
+                    onPhoneNumberChanged(dialCode + digitsOnly)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = "000 - 000 - 0000",
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                visualTransformation = PhoneNumberVisualTransformation(),
+                leadingIcon = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .height(24.dp)
-                            .width(1.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = dialCode,
-                        color = Theme.colors.shade.primary
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
+                            .padding(start = 8.dp)
+                            .background(Theme.colors.background.card)
+                    ) {
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Image(
+                            painter = painterResource(R.drawable.ic_eg_flag),
+                            contentDescription = "Egypt Flag",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .width(20.dp)
+                                .height(15.dp)
+                                .clip(RoundedCornerShape(3.dp))
+                        )
+                        Spacer(modifier = Modifier.width(14.dp))
+                        VerticalDivider(
+                            color = Theme.colors.stroke.primary,
+                            modifier = Modifier
+                                .height(24.dp)
+                                .width(1.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            text = dialCode,
+                            color = Theme.colors.shade.primary,
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
                 }
-            }
-        )
+            )
+        }
+
 
     }
 }
 
-
 @Composable
-fun TermsAndConditionsText() {
+fun TermsAndConditionsText(
+    onTermsClick: (() -> Unit)? = null,
+    onPrivacyClick: (() -> Unit)? = null,
+) {
     Spacer(modifier = Modifier.height(8.dp))
 
-    Text(
-        text = buildAnnotatedString {
-            append(stringResource(R.string.by_continuing_you_agree_on_our))
-            withStyle(
-                style = SpanStyle(
-                    color = Theme.colors.brand.primary,
-                    fontWeight = FontWeight.SemiBold
-                )
-            ) {
-                append(stringResource(R.string.terms_and_conditions))
-            }
-            append(stringResource(R.string.and))
-            withStyle(
-                style = SpanStyle(
-                    color = Theme.colors.brand.primary,
-                    fontWeight = FontWeight.SemiBold
-                )
-            ) {
-                append(stringResource(R.string.privacy_policy))
-            }
-        },
-        style = Theme.textStyle.body.small.regular,
-        color = Theme.colors.shade.secondary,
-        textAlign = TextAlign.Center,
-        lineHeight = 20.sp,
+    val termsText = stringResource(R.string.terms_conditions)
+    val privacyText = stringResource(R.string.privacy_policy)
+    val prefixText = stringResource(R.string.by_continuing_you_agree_on_our)
+    val andText = stringResource(R.string.and)
+
+    val annotatedString = buildAnnotatedString {
+        append(prefixText)
+
+        val termsStart = length
+        withStyle(
+            style = SpanStyle(
+                color = Theme.colors.brand.primary,
+                fontWeight = FontWeight.SemiBold
+            )
+        ) {
+            append(termsText)
+        }
+        val termsEnd = length
+        addStringAnnotation(
+            tag = "TERMS",
+            annotation = "terms_and_conditions",
+            start = termsStart,
+            end = termsEnd
+        )
+
+        append(" $andText ")
+
+        val privacyStart = length
+        withStyle(
+            style = SpanStyle(
+                color = Theme.colors.brand.primary,
+                fontWeight = FontWeight.SemiBold
+            )
+        ) {
+            append(privacyText)
+        }
+        val privacyEnd = length
+        addStringAnnotation(
+            tag = "PRIVACY",
+            annotation = "privacy_policy",
+            start = privacyStart,
+            end = privacyEnd
+        )
+    }
+
+    ClickableText(
+        text = annotatedString,
+        style = Theme.textStyle.body.small.regular.copy(
+            color = Theme.colors.shade.secondary,
+            textAlign = TextAlign.Center,
+            lineHeight = 20.sp
+        ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 8.dp),
+        onClick = { offset ->
+            annotatedString.getStringAnnotations(
+                tag = "TERMS",
+                start = offset,
+                end = offset
+            ).firstOrNull()?.let {
+                onTermsClick?.invoke()
+                return@ClickableText
+            }
+
+            annotatedString.getStringAnnotations(
+                tag = "PRIVACY",
+                start = offset,
+                end = offset
+            ).firstOrNull()?.let {
+                onPrivacyClick?.invoke()
+                return@ClickableText
+            }
+        }
     )
 }
 
-@Composable
-fun GuestButtonSection(interactionListener: RegisterInteractionListener) {
-    Text(
-        stringResource(R.string.or),
-        style = Theme.textStyle.body.medium.regular,
-        color = Theme.colors.shade.secondary
-    )
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    AppButton(
-        type = AppButtonType.Secondary,
-        state = AppButtonState.Enable,
-        onClick = interactionListener::onClickContinueAsGuest ,
-        modifier = Modifier.fillMaxWidth(),
-        size = AppButtonSize.Large,
-        text = stringResource(R.string.continue_as_a_guest),
-    )
-}
 
 @Preview(showBackground = false, showSystemUi = true)
 @Composable
@@ -323,10 +372,9 @@ fun RegisterScreenPreview() {
     RegisterScreenContent(
         registerUiState = RegisterUiState(),
         registerInteractionListener = object : RegisterInteractionListener {
-            override fun onCountrySelected(country: Country) {}
             override fun onPhoneNumberChanged(phone: String) {}
             override fun onClickContinue() {}
-            override fun onClickContinueAsGuest() {}
+            override fun changeBottomSheetType(bottomSheetType: BottomSheetType?) {}
         }
     )
 }

@@ -31,7 +31,7 @@ fun AppBackButton(
         modifier = modifier
             .size(48.dp)
             .clip(RoundedCornerShape(Theme.radius.full)),
-        onClick = { onClickBackButton() },
+        onClick = onClickBackButton ,
         enabled = enabled,
         interactionSource = remember { MutableInteractionSource() },
         colors = IconButtonDefaults.iconButtonColors(containerColor = Theme.colors.background.card),

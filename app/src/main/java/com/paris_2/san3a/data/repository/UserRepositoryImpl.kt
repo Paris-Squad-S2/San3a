@@ -24,6 +24,7 @@ import com.paris_2.san3a.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import com.paris_2.san3a.domain.entity.Service
 
 class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
@@ -39,9 +40,14 @@ class UserRepositoryImpl(
             userRemoteDataSource.getAccountType(phone)
         }
 
-    override suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean) =
+    override suspend fun saveServices(phone: String, services:  List<Service>, isCraftsman: Boolean) =
         safeCall(SaveServicesException()) {
             userRemoteDataSource.saveServices(phone, services, isCraftsman)
+        }
+
+    override suspend fun getServices(phone: String): List<Service> =
+        safeCall(SaveServicesException()) {
+            userRemoteDataSource.getServices(phone).toEntity()
         }
 
     override suspend fun saveLocation(phone: String, location: Location) =
@@ -59,10 +65,14 @@ class UserRepositoryImpl(
             userRemoteDataSource.savePersonalInfo(phone, fullName, profileUrl)
         }
 
-    override suspend fun saveWorkShowcase(phone: String, workMedia: List<String>, workDescription: String) =
+    override suspend fun saveWorkShowcase(phone: String, workMedia: List<Uri>?, workDescription: String) =
         safeCall(SaveWorkShowcaseException()) {
-            userRemoteDataSource.saveWorkShowcase(phone, workMedia, workDescription)
-
+            val mediaUrls = workMedia?.mapIndexedNotNull { index, uri ->
+                val path = "$WORK_SHOWCASE_PATH/$phone/media_$index.jpg"
+                storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
+                storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
+            }
+            userRemoteDataSource.saveWorkShowcase(phone, mediaUrls, workDescription)
         }
 
     override suspend fun getUserProgress(phone: String): AccountSetupStep =
@@ -108,5 +118,6 @@ class UserRepositoryImpl(
         private const val NATIONAL_ID_PATH = "national_ids"
         private const val FRONT_IMAGE_NAME = "front.jpg"
         private const val BACK_IMAGE_NAME = "back.jpg"
+        private const val WORK_SHOWCASE_PATH = "work_showcase"
     }
 }

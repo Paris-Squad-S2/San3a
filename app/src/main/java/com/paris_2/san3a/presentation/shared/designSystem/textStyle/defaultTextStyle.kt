@@ -7,29 +7,29 @@ import androidx.compose.ui.unit.sp
 val defaultTextStyle = San3aTextStyle(
     display = SizedDisplayTextStyle(
         xLarge = TextStyle(
-            fontFamily = manrope,
+            fontFamily = plus_jakarta,
             fontWeight = FontWeight.Bold,
-            fontSize = 40.sp,
+            fontSize = 28.sp,
         )
     ),
     title = SizedTitleTextStyle(
         xLarge = TextStyle(
-            fontFamily = manrope,
+            fontFamily = plus_jakarta,
             fontWeight = FontWeight.SemiBold,
             fontSize = 24.sp,
         ),
         large = TextStyle(
-            fontFamily = manrope,
+            fontFamily = plus_jakarta,
             fontWeight = FontWeight.Medium,
             fontSize = 20.sp,
         ),
         medium = TextStyle(
-            fontFamily = manrope,
+            fontFamily = plus_jakarta,
             fontWeight = FontWeight.Medium,
             fontSize = 18.sp,
         ),
         small = TextStyle(
-            fontFamily = manrope,
+            fontFamily = plus_jakarta,
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp,
         )
@@ -37,51 +37,51 @@ val defaultTextStyle = San3aTextStyle(
     body = SizedBodyTextStyle(
         large = WeightedBodyTextStyle(
             regular = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp
             ),
             medium = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp
             ),
             semibold = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp
             )
         ),
         medium = WeightedBodyTextStyle(
             regular = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp
             ),
             medium = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp
             ),
             semibold = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp
             )
         ),
         small = WeightedBodyTextStyle(
             regular = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.Normal,
                 fontSize = 12.sp
             ),
             medium = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.Medium,
                 fontSize = 12.sp
             ),
             semibold = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp
             )
@@ -90,17 +90,17 @@ val defaultTextStyle = San3aTextStyle(
     label = SizedLabelTextStyle(
         medium = WeightedLabelTextStyle(
             regular = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp
             ),
             medium = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp
             ),
             semibold = TextStyle(
-                fontFamily = manrope,
+                fontFamily = plus_jakarta,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp
             )

@@ -2,13 +2,15 @@ package com.paris_2.san3a.data.source.remote.user
 
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
+import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import kotlinx.coroutines.flow.Flow
+import com.paris_2.san3a.domain.entity.Service
 
 interface UserRemoteDataSource {
-    suspend fun saveWorkShowcase(phone: String, workMedia: List<String>, workDescription: String)
+    suspend fun saveWorkShowcase(phone: String, workMedia: List<String>?, workDescription: String)
 
     suspend fun getUserProgress(phone: String): AccountSetupStep
 
@@ -16,7 +18,9 @@ interface UserRemoteDataSource {
 
     suspend fun getAccountType(phone: String) : AccountType
 
-    suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean)
+    suspend fun saveServices(phone: String, services: List<Service>, isCraftsman: Boolean)
+
+    suspend fun getServices(phone: String): List<ServiceDto>
 
     suspend fun saveLocation(phone: String, location: Location)
 
