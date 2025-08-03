@@ -91,9 +91,7 @@ fun RequestBottomSheetContent(
                             .background(
                                 Theme.colors.background.bottomSheetCard
                             )
-                            .clickable {
-                                if (buttonIsActive) { onClickBack()}
-                            }
+                            .clickable { onClickBack() }
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_alt_arrow_left_outline),
@@ -111,7 +109,9 @@ fun RequestBottomSheetContent(
                         .background(
                             if (buttonIsActive) Theme.colors.button.primary else Theme.colors.button.disabled
                         )
-                        .clickable { onButtonClick() }
+                        .clickable {
+                            if (buttonIsActive) { onButtonClick()}
+                        }
                 ){
                     Row(
                         modifier = Modifier.align(Alignment.Center),
