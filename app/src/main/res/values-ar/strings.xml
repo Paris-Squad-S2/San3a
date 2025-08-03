@@ -95,5 +95,8 @@
     <string name="craftsman_title">هل لديك مهارة؟ ابدأ الربح</string>
     <string name="craftsman_desc">أنشئ حساب الحرفي الخاص بك وتلقى طلبات العمل.</string>
     <string name="craftsman_button">كن حرفياً</string>
-
+    <string name="change_language">تغيير اللغة</string>
+    <string name="english">الإنجليزية</string>
+    <string name="arabic">العربية</string>
+    <string name="close">إغلاق</string>
 </resources>

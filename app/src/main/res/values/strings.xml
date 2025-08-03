@@ -94,5 +94,9 @@
     <string name="craftsman_title">Got a skill? Start earning</string>
     <string name="craftsman_desc">Create your craftsman account and get job requests.</string>
     <string name="craftsman_button">Become a Craftsman</string>
+        <string name="change_language">Change Language</string>
+        <string name="english">English</string>
+        <string name="arabic">Arabic</string>
+        <string name="close">Close</string>
 
 </resources>
