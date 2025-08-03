@@ -9,6 +9,7 @@ import com.paris_2.san3a.domain.entity.Stats
 import kotlinx.coroutines.flow.Flow
 import android.net.Uri
 import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.domain.entity.User
 
 interface UserRepository {
     suspend fun saveAccountType(phone: String, accountType: AccountType)
@@ -21,6 +22,8 @@ interface UserRepository {
     suspend fun getUserProgress(phone: String): AccountSetupStep
     suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?)
     suspend fun completeUserSetup(phone: String)
+    suspend fun getUser(phone: String): User
+    suspend fun getWorkMedia(phone: String): List<String>
     suspend fun getStats(userId: String): Stats?
     fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestService>>
 }

@@ -6,6 +6,7 @@ import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
 import com.paris_2.san3a.domain.CompleteUserSetupException
 import com.paris_2.san3a.domain.GetAccountTypeException
+import com.paris_2.san3a.domain.GetUserException
 import com.paris_2.san3a.domain.GetRecentRelatedJobsException
 import com.paris_2.san3a.domain.GetStatsException
 import com.paris_2.san3a.domain.GetUserProgressException
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.domain.entity.User
 
 class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
@@ -40,7 +42,7 @@ class UserRepositoryImpl(
             userRemoteDataSource.getAccountType(phone)
         }
 
-    override suspend fun saveServices(phone: String, services:  List<Service>, isCraftsman: Boolean) =
+    override suspend fun saveServices(phone: String, services: List<Service>, isCraftsman: Boolean) =
         safeCall(SaveServicesException()) {
             userRemoteDataSource.saveServices(phone, services, isCraftsman)
         }
@@ -111,6 +113,16 @@ class UserRepositoryImpl(
                 storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
             }
             userRemoteDataSource.saveNationalIdImages(phone, frontUrl, backUrl)
+        }
+
+    override suspend fun getUser(phone: String): User =
+        safeCall(GetUserException()) {
+            userRemoteDataSource.getUser(phone)
+        }
+
+    override suspend fun getWorkMedia(phone: String): List<String> =
+        safeCall(GetUserException()) {
+            userRemoteDataSource.getWorkMedia(phone)
         }
 
     companion object {

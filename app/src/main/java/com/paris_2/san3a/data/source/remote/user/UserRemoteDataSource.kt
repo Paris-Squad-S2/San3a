@@ -8,6 +8,7 @@ import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import kotlinx.coroutines.flow.Flow
 import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.domain.entity.User
 
 interface UserRemoteDataSource {
     suspend fun saveWorkShowcase(phone: String, workMedia: List<String>?, workDescription: String)
@@ -29,6 +30,10 @@ interface UserRemoteDataSource {
     suspend fun saveNationalIdImages(phone: String, frontUrl: String?, backUrl: String?)
 
     suspend fun completeUserSetup(phone: String)
+
+    suspend fun getUser(phone: String): User
+
+    suspend fun getWorkMedia(phone: String): List<String>
     suspend fun getStats(userId: String): StatsDto?
     fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestServiceDto>>
 }
