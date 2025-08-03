@@ -29,13 +29,13 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 
-data class OrderTrackItem(
+private data class OrderTrackItem(
     @StringRes val status: Int,
     val isDone: Boolean,
     val icon: Int = R.drawable.ic_clipboard
 )
 
-fun orderTrackItems(currentStep: Int): List<OrderTrackItem> {
+private fun orderTrackItems(currentStep: Int): List<OrderTrackItem> {
     val statuses = listOf(
         R.string.submitted,
         R.string.receiving_offers,
@@ -53,9 +53,12 @@ fun orderTrackItems(currentStep: Int): List<OrderTrackItem> {
 }
 
 @Composable
-fun RequestDetails(currentStep: Int = 0) {
+fun RequestDetails(
+    modifier: Modifier = Modifier,
+    currentStep: Int = 0
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center
