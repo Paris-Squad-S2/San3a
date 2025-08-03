@@ -3,15 +3,17 @@ package com.paris_2.san3a.presentation.shared.utils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
-import com.paris_2.san3a.domain.San3aException
 import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Navigator
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -53,4 +55,18 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
             }
         }
     }
+    protected fun <T> tryToExecuteFlow(
+        flow: () -> Flow<T>,
+        onEach: suspend (T) -> Unit,
+        onError: (Throwable) -> Unit = {},
+        onStart: () -> Unit = {},
+    ) {
+        viewModelScope.launch {
+            flow()
+                .onStart { onStart() }
+                .catch { onError(it) }
+                .collect { onEach(it) }
+        }
+    }
+
 }
