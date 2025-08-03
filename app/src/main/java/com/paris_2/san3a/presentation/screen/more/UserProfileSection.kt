@@ -30,6 +30,7 @@ fun UserProfileSection(
     name: String,
     rating: Double,
     review: Int,
+    isVerify: Boolean,
     painter: Painter,
     onClickEdit: () -> Unit,
     modifier: Modifier = Modifier
@@ -45,6 +46,7 @@ fun UserProfileSection(
     ) {
 
         CraftsmanAvatar(
+            isVerify = isVerify,
             painter = painter
         )
 
@@ -101,6 +103,20 @@ private fun UserProfileSectionPreview() {
         rating = 4.7,
         review = 1127,
         onClickEdit = {},
+        isVerify = true,
+        painter = painterResource(R.drawable.person_chat)
+    )
+}
+
+@Preview
+@Composable
+private fun UserProfileSectionWithoutVerifyPreview() {
+    UserProfileSection(
+        name = stringResource(R.string.mohammed_akkad),
+        rating = 4.7,
+        review = 1127,
+        onClickEdit = {},
+        isVerify = false,
         painter = painterResource(R.drawable.person_chat)
     )
 }
