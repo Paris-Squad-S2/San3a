@@ -37,6 +37,6 @@ class GetMostRequestedServicesException : San3aException("Couldn't get most requ
 class GetAvailableJobsException : San3aException("Couldn't get available jobs")
 class NoGovernmentsFoundException : San3aException("No Governments Found")
 class NoCitiesFoundException : San3aException("No Cities Found")
-
 class LoginStatusException: San3aException("Failed to check login status")
+class UpdateNumOfRequestsException: San3aException("Failed to update number of requests")
 class GetUserException(message: String = "register error"): San3aException("Failed to get User $message")
