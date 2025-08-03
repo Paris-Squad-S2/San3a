@@ -25,7 +25,6 @@ import com.paris_2.san3a.data.source.remote.storage.FirebaseStorageDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.domain.repository.HomeRepository
 import com.paris_2.san3a.domain.repository.UserRemoteDataSource
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -43,13 +42,6 @@ val dataModule = module {
     singleOf(::LocationRemoteDataSourceImp) { bind<LocationRemoteDataSource>() }
     single { FirebaseFirestore.getInstance() }
     single { FirebaseStorage.getInstance() }
-
-    single<DataStore<Preferences>> {
-        PreferenceDataStoreFactory.create {
-            androidContext().preferencesDataStoreFile("AppPrefStorage")
-        }
-    }
-
     singleOf(::LocalDataStoreImpl) { bind<LocalDataStore>() }
     single<DataStore<Preferences>> {
         PreferenceDataStoreFactory.create { get<Context>().preferencesDataStoreFile("app_datastore") }

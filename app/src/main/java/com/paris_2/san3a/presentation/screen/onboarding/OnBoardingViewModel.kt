@@ -19,7 +19,7 @@ class OnBoardingViewModel(
             },
             onSuccess = {
                 updateState(screenState.value.copy(isCompleted = true))
-                navigateToHome()
+                navigateToRegister()
             },
 
             onError = { exception ->
@@ -48,9 +48,9 @@ class OnBoardingViewModel(
         updateCurrentPage(index)
     }
 
-    private fun navigateToHome() {
+    private fun navigateToRegister() {
         navigate(
-            destination = Destinations.Account,
+            destination = Destinations.RegisterScreen,
             navOptions = NavOptions.Builder()
                 .setPopUpTo(Destinations.OnBoarding, inclusive = true)
                 .build()
