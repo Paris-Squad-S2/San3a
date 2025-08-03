@@ -152,7 +152,7 @@ class OTPRegisterViewModel(
                         )
                     )
                     setLoginUseCase(true)
-                    navigate(Destinations.Account(phoneNumber = screenState.value.otpRegisterUiState.phoneNumber))
+                    navigate(Destinations.Account)
                 }
             },
             onError = { errorMessage ->

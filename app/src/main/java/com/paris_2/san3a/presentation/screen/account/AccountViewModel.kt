@@ -28,7 +28,7 @@ class AccountViewModel(
     private val _currentScreen = mutableIntStateOf(0)
     val currentScreen: State<Int> get() = _currentScreen
 
-    private val phoneNumber = savedStateHandle.toRoute<Destinations.Account>().phoneNumber
+    private val phoneNumber = "1234"
 
     private val stepsCount: Int
         get() = when (screenState.value.accountUiState.userType) {
