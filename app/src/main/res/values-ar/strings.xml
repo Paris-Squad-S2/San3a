@@ -99,4 +99,9 @@
     <string name="english">الإنجليزية</string>
     <string name="arabic">العربية</string>
     <string name="close">إغلاق</string>
+    <string name="logout_confirmation_title">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
+    <string name="logout_confirmation_subtitle">يمكنك دائمًا تسجيل الدخول مرة أخرى باستخدام حسابك.</string>
+    <string name="logout">تسجيل الخروج</string>
+
+
 </resources>
