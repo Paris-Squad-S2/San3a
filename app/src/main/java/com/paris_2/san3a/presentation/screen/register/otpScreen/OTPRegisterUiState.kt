@@ -15,5 +15,5 @@ data class OTPRegisterUiState(
     val phoneNumber: String = "",
     val secondLeft: Int = 0,
     val verificationId: String = "",
-    val loadingVerifyButton: Boolean = false
+    val loadingVerifyButton: Boolean = false,
 )
