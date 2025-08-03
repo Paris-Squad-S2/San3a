@@ -58,7 +58,7 @@ val dataModule = module {
         OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
-                    .addHeader("x-api-key", BuildConfig.WHATSAPP_API_KEY)
+                    .addHeader("Authorization", "Bearer ${BuildConfig.WHATSAPP_API_KEY}")
                     .addHeader("Content-Type", "application/json")
                     .build()
                 chain.proceed(request)
