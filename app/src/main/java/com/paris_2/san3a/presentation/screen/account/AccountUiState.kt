@@ -12,6 +12,7 @@ data class AccountScreenUiState(
 
 data class AccountUiState(
     val pageNumber: String = "",
+    val phoneNumber: String = "",
     val userType: UserType? = null,
     val serviceUiState: List<ServiceUiState> = emptyList(),
     val locationUiState: LocationUiState = LocationUiState(),

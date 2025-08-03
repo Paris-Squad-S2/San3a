@@ -75,6 +75,12 @@
     <string name="no_messages_yet">لا توجد رسائل بعد</string>
     <string name="once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here">عند البدء في قبول أو نشر الطلبات، ستظهر المحادثات مع الحرفيين هنا.</string>
     <string name="loading_icon">أيقونة التحميل</string>
+    <string name="write_a_message">أكتب رسالة</string>
+    <string name="add_images">أضف صورة</string>
+    <string name="voice_icon">سجل صوت</string>
+    <string name="send_icon">أرسل الرسالة</string>
+    <string name="you">أنت</string>
+    <string name="delete_chat_icon">>أيقونة حذف المحادثة</string>
     <string name="submitted">تم تقديم</string>
     <string name="receiving_offers">تلقي العرض</string>
     <string name="craftsman_selected">تم الاختيار</string>
