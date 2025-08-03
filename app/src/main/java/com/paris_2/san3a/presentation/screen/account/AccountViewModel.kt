@@ -65,7 +65,7 @@ class AccountViewModel(
             onError = { errorMessage ->
                 updateState(
                     screenState.value.copy(
-                        errorMassage = errorMessage,
+                        errorMassage = errorMessage.message,
                         isLoading = false
                     )
                 )
