@@ -52,7 +52,6 @@ fun RequestTitleContent(
             onValueChange = onValueChange,
             singleLine = true,
             modifier = Modifier
-                .padding(horizontal = 16.dp)
                 .fillMaxWidth()
                 .height(48.dp)
                 .border(
