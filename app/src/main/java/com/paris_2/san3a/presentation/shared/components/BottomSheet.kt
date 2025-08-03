@@ -13,7 +13,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -31,9 +30,9 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 @Composable
 fun BottomSheet(
     modifier: Modifier = Modifier,
-    skipPartiallyExpanded: Boolean = true,
     onDismissRequest: () -> Unit = {},
     isVisible: Boolean = true,
+    skipPartiallyExpanded: Boolean = true,
     header: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit = {},
 ) {
@@ -46,23 +45,25 @@ fun BottomSheet(
         }
     }
 
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        modifier = modifier
-            .fillMaxWidth(),
-        sheetState = sheetState,
-        containerColor = Theme.colors.background.bottomSheet,
-        dragHandle = {
-            BottomSheetDragHandle()
-        }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+    if (isVisible) {
+        ModalBottomSheet(
+            onDismissRequest = onDismissRequest,
+            modifier = modifier
+                .fillMaxWidth(),
+            sheetState = sheetState,
+            containerColor = Theme.colors.background.bottomSheet,
+            dragHandle = {
+                BottomSheetDragHandle()
+            }
         ) {
-            header?.invoke()
-            content()
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                header?.invoke()
+                content()
+            }
         }
     }
 }

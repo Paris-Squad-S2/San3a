@@ -4,9 +4,11 @@ import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.domain.usecase.DeleteChatByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetChatsByUserIdUseCase
+import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.IsLoggedInUseCase
+import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.SendMessageUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import org.koin.core.module.dsl.factoryOf
@@ -30,4 +32,6 @@ val useCaseModule = module {
     factoryOf(::IsLoggedInUseCase)
     factoryOf(::SetLoginUseCase)
     factoryOf(::GetPhoneNumberUseCase)
+    factoryOf(::GetLocationInfoUseCase)
+    factoryOf(::GetUserServicesUseCase)
 }

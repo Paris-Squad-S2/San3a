@@ -14,6 +14,9 @@ sealed interface Destinations : Graph {
     data object RegisterScreen : Destination
 
     @Serializable
+    data object Account : Destination
+
+    @Serializable
     data object Home : Destination
 
     @Serializable
@@ -36,8 +39,5 @@ sealed interface Destinations : Graph {
 
     @Serializable
     data object OnBoarding : Destination
-
-    @Serializable
-    data object Account : Destination
 
 }

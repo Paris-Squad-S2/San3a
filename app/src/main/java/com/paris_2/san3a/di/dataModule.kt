@@ -8,7 +8,6 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.paris_2.san3a.data.repository.HomeRepositoryImpl
-import com.paris_2.san3a.data.service.auth.AuthApiServices
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
 import com.paris_2.san3a.data.source.local.LocalDataStore
@@ -16,6 +15,8 @@ import com.paris_2.san3a.data.source.local.LocalDataStoreImpl
 import com.paris_2.san3a.data.source.remote.UserRemoteDataSourceImp
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSourceImpl
+import com.paris_2.san3a.data.source.remote.location.LocationRemoteDataSource
+import com.paris_2.san3a.data.source.remote.location.LocationRemoteDataSourceImp
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSourceImp
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
@@ -24,15 +25,11 @@ import com.paris_2.san3a.data.source.remote.storage.FirebaseStorageDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.domain.repository.HomeRepository
 import com.paris_2.san3a.domain.repository.UserRemoteDataSource
-import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-private const val BASE_URL = "https://www.whatsapp.api.funtaste.xyz/"
 val dataModule = module {
     singleOf(::FireStoreServiceImpl) { bind<FireStoreService>() }
     singleOf(::MessagesRemoteDataSourceImp) { bind<MessagesRemoteDataSource>() }
@@ -43,27 +40,7 @@ val dataModule = module {
     singleOf(::MessagesRemoteDataSourceImp) { bind<MessagesRemoteDataSource>() }
     singleOf(::FirebaseStorageDataSource) { bind<StorageRemoteDataSource>() }
     singleOf(::AuthRemoteDataSourceImpl) { bind<AuthRemoteDataSource>() }
-
-    single<AuthApiServices> { get<Retrofit>().create(AuthApiServices::class.java) }
-    single {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(get())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    single {
-        OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhlNWQ3ZTFlNjZkZWQ5NmU0MTdjNTgiLCJpYXQiOjE3NTQyMTg4MjQsImV4cCI6MTc1NDMwNTIyNH0.ar8mYg5JhiBrusNBZUzUdxIS51L9Ff6TrWB0StP5_Ag")
-                    .addHeader("Content-Type", "application/json")
-                    .build()
-                chain.proceed(request)
-            }
-            .build()
-    }
+    singleOf(::LocationRemoteDataSourceImp) { bind<LocationRemoteDataSource>() }
     single { FirebaseFirestore.getInstance() }
     single { FirebaseStorage.getInstance() }
 

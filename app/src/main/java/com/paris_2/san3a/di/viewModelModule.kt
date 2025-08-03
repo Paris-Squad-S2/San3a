@@ -1,5 +1,6 @@
 package com.paris_2.san3a.di
 
+import com.paris_2.san3a.presentation.screen.account.AccountViewModel
 import com.paris_2.san3a.presentation.screen.message.details.MessagesDetailsViewModel
 import com.paris_2.san3a.presentation.screen.messages.MessagesViewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -15,4 +16,5 @@ val viewModelModule = module {
     viewModelOf(::OnBoardingViewModel)
     viewModelOf(::OTPRegisterViewModel)
     viewModelOf(::RegisterViewModel)
+    viewModelOf(::AccountViewModel)
 }

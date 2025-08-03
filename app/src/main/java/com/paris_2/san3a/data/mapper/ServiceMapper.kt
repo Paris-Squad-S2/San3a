@@ -11,6 +11,10 @@ fun ServiceDto.toEntity(): Service {
     )
 }
 
+fun List<ServiceDto>.toEntity(): List<Service> {
+    return map { it.toEntity() }
+}
+
 fun Service.toDto(): ServiceDto {
     return ServiceDto(
         id = id,
