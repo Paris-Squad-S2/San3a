@@ -36,7 +36,7 @@ class CraftsmanHomeViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it
+                        errorMessage = it.message ?: "Unknown Error"
                     )
                 )
             }
@@ -57,7 +57,7 @@ class CraftsmanHomeViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it
+                        errorMessage = it.message ?: "Unknown Error"
                     )
                 )
             }
@@ -78,7 +78,7 @@ class CraftsmanHomeViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it
+                        errorMessage = it.message ?: "Unknown Error"
                     )
                 )
             }
