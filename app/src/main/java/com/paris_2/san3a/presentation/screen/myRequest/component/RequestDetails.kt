@@ -165,5 +165,5 @@ private fun RequestDetailsPreview() {
 @Preview
 @Composable
 private fun RequestDetailsFooPreview() {
-    RequestDetails(2)
+    RequestDetails(currentStep = 2)
 }
