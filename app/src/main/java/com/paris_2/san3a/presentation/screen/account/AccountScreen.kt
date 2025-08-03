@@ -128,7 +128,7 @@ fun AccountScreenContent(
             .fillMaxSize()
             .background(Theme.colors.background.screen)
             .safeContentPadding()
-            .padding(16.dp)
+            .padding( top = 16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

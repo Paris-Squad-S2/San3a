@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,6 +53,7 @@ fun AccountSelectionCard(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
+            .clip(RoundedCornerShape(Theme.radius.extraLarge))
             .clickable {
                 !isSelect
                 onClick()
