@@ -74,6 +74,12 @@
     <string name="no_messages_yet">لا توجد رسائل بعد</string>
     <string name="once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here">عند البدء في قبول أو نشر الطلبات، ستظهر المحادثات مع الحرفيين هنا.</string>
     <string name="loading_icon">أيقونة التحميل</string>
+    <string name="image_profile">صورة الملف الشخصي</string>
+    <string name="verified_check">جاري التحقق</string>
+    <string name="icon_start">ايقونة تقييم</string>
+    <string name="reviews">(%1$s مراجعة)</string>
+    <string name="edit_icon">ايقونة تعديل</string>
+    <string name="mohammed_akkad">محمد العقاد</string>
     <string name="write_a_message">أكتب رسالة</string>
     <string name="add_images">أضف صورة</string>
     <string name="voice_icon">سجل صوت</string>
