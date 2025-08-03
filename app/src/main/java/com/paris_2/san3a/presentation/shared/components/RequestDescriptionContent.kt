@@ -34,7 +34,6 @@ fun RequestDescriptionContent(
         onValueChange = onValueChange,
         singleLine = false,
         modifier = Modifier
-            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .height(120.dp)
             .border(
