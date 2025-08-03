@@ -24,7 +24,7 @@ data class RequestServiceUiState(
     val description: String,
     val location: String,
     val locationDetails: String,
-    val image : List<Int>,
+    val image: List<String>,
     val requestedCount: Int = 0,
     val userId: String,
 )

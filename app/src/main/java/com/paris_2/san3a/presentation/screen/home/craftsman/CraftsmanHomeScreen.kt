@@ -157,9 +157,11 @@ private fun Preview() {
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
                         relatedJob = "Plumbing",
-                        offers = listOf(3.0 , 2.0),
+                        offers = listOf(3.0, 2.0),
                         userId = "",
-                        requestedCount = 0
+                        requestedCount = 0,
+                        locationDetails = "",
+                        image = listOf(),
                     ),
                     RequestService(
                         id = "2",
@@ -169,7 +171,9 @@ private fun Preview() {
                         relatedJob = "Plumbing",
                         offers = listOf(3.0 , 2.0),
                         userId = "",
-                        requestedCount = 0
+                        requestedCount = 0,
+                        locationDetails = "",
+                        image = listOf(),
                     ),
                     RequestService(
                         id = "3",
@@ -179,7 +183,9 @@ private fun Preview() {
                         relatedJob = "Plumbing",
                         offers = listOf(3.0 , 2.0),
                         userId = "",
-                        requestedCount = 0
+                        requestedCount = 0,
+                        locationDetails = "",
+                        image = listOf(),
                     ),
                 ),
                 availableJobs = listOf(
@@ -191,7 +197,9 @@ private fun Preview() {
                         relatedJob = "Plumbing",
                         offers = listOf(3.0 , 2.0),
                         userId = "",
-                        requestedCount = 0
+                        requestedCount = 0,
+                        locationDetails = "",
+                        image = listOf(),
                     ),
                     RequestService(
                         id = "2",
@@ -201,7 +209,9 @@ private fun Preview() {
                         relatedJob = "Plumbing",
                         offers = listOf(3.0 , 2.0),
                         userId = "",
-                        requestedCount = 0
+                        requestedCount = 0,
+                        locationDetails = "",
+                        image = listOf(),
                     ),
                     RequestService(
                         id = "3",
@@ -211,7 +221,9 @@ private fun Preview() {
                         relatedJob = "Plumbing",
                         offers = listOf(3.0 , 2.0),
                         userId = "",
-                        requestedCount = 0
+                        requestedCount = 0,
+                        locationDetails = "",
+                        image = listOf(),
                     ),
                 )
             )

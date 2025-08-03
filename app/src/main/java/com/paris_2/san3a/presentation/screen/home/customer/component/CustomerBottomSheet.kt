@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.home.customer.component
 
-import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -37,8 +38,14 @@ fun CustomerBottomSheetService(
     var descriptionTextValue by remember { mutableStateOf("") }
     var locationTextValue by remember { mutableStateOf("") }
     var locationDescriptionValue by remember { mutableStateOf("") }
-    var imageValue by remember { mutableStateOf(listOf<Int>()) }
+    var imageValue by remember { mutableStateOf(listOf<String>()) }
 
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents(),
+        onResult = { uriList ->
+            imageValue = uriList.map { it.toString() }
+        }
+    )
     BottomSheet(
         isVisible = isVisible
     ){
@@ -130,7 +137,6 @@ fun CustomerBottomSheetService(
                                 image = imageValue,
                                 userId = "",
                             )
-                        Log.d("RequestService", "RequestService: ${requestService.value}")
                                     },
                     onClickBack = {currentStep = BottomSheetStep.SELECT_SERVICE},
                     onExitClick = {
@@ -139,7 +145,9 @@ fun CustomerBottomSheetService(
                 ) {
                     AddPhotosContent(
                         icon = painterResource(id = R.drawable.ic_camera_outline),
-                        onClick = {}
+                        onClick = {
+                            imagePicker.launch("")
+                        }
                     )
 
                 }

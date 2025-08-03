@@ -30,9 +30,8 @@ class ServiceRemoteDataSourceImpl(
                 val updatedRequest = existingRequest.copy(
                     requestedCount = existingRequest.requestedCount + 1
                 )
-                fireStoreService.setDoc(docPath, updatedRequest)
+                fireStoreService.updateDoc(docPath, mapOf("requestedCount" to updatedRequest.requestedCount))
             } else {
-
                 val newRequest = requestedServiceDto.copy(requestedCount = 1)
                 fireStoreService.setDoc(docPath, newRequest)
             }
