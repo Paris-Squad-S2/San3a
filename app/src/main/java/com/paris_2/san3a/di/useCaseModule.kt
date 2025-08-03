@@ -18,6 +18,9 @@ import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetOnboardingCompletedUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.GetWorkMediaUseCase
+import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.StreamNotificationsUseCase
+
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -38,4 +41,7 @@ val useCaseModule = module {
     factoryOf(::GetUserServicesUseCase)
     factoryOf(::GetUserUseCase)
     factoryOf(::GetWorkMediaUseCase)
+    factoryOf(::AddNotificationUseCase)
+    factoryOf(::StreamNotificationsUseCase)
+
 }
