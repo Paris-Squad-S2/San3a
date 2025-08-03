@@ -11,6 +11,6 @@ interface CustomerHomeInteractionListener {
     fun onBecomeCraftsmanClick()
 
     fun onDismissBottomSheet()
-    fun createRequest(service: RequestServiceUiState)
-
+    fun createRequest(service: RequestServiceUiState , serviceId: String)
+    fun updateNumOfRequests(serviceId: String)
 }
