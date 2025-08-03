@@ -91,4 +91,10 @@
     <string name="mention_your_years_of_experience">You can mention your years of experience, tools you use, or types of jobs you usually handle.</string>
     <string name="enter_your_location_in_details">Enter your location in details</string>
     <string name="enter_your_location">Enter your location</string>
+    <string name="switch_to_customer">Switch to Customer</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="language">Language</string>
+    <string name="my_location">My Location</string>
+    <string name="my_services">My Services</string>
+    <string name="verification">Verification</string>
 </resources>

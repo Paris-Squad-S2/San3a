@@ -92,4 +92,10 @@
     <string name="mention_your_years_of_experience">يمكنك ذكر سنوات خبرتك، الأدوات التي تستخدمها، أو أنواع الوظائف التي عادةً ما تتعامل معها.</string>
     <string name="enter_your_location_in_details">أدخل عنوانك بالتفصيل</string>
     <string name="enter_your_location">أدخل موقعك</string>
+    <string name="switch_to_customer">تبديل الى عميل</string>
+    <string name="dark_mode">وضع مظلم</string>
+    <string name="language">اللغة</string>
+    <string name="my_location">عنواني</string>
+    <string name="my_services">خدماتي</string>
+    <string name="verification">التحقيق</string>
 </resources>
