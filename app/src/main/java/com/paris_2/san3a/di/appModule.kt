@@ -9,7 +9,6 @@ val appModule = module {
         repositoryModule,
         useCaseModule,
         viewModelModule,
-        uiModule,
         networkModule
     )
 }

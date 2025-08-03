@@ -2,10 +2,10 @@ package com.paris_2.san3a.domain.usecase
 
 import com.paris_2.san3a.domain.repository.AuthRepository
 
-class SavePhoneNumberUseCase(
+class IsLoggedInUseCase(
     private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(phoneNumber: String){
-        authRepository.savePhoneNumber(phoneNumber)
+    suspend operator fun invoke(): Boolean {
+        return authRepository.isLoggedIn()
     }
 }
