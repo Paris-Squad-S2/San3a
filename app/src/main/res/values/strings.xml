@@ -91,4 +91,8 @@
     <string name="mention_your_years_of_experience">You can mention your years of experience, tools you use, or types of jobs you usually handle.</string>
     <string name="enter_your_location_in_details">Enter your location in details</string>
     <string name="enter_your_location">Enter your location</string>
+    <string name="filled_notification_icon">filled notification icon</string>
+    <string name="nothing_new_for_now">Nothing New for Now</string>
+    <string name="we_ll_keep_you_updated_when_there_s_something_new">We’ll keep you updated when there’s something new.</string>
+    <string name="empty_notification_screen">Empty Notification screen</string>
 </resources>

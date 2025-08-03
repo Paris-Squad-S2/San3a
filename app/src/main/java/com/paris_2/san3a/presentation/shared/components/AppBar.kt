@@ -19,7 +19,6 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
