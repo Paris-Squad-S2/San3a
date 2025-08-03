@@ -22,13 +22,6 @@ class CustomerHomeViewModel(
     override fun createRequest(service: RequestServiceUiState){
         tryToExecute(
             execute ={ requestServicesUseCase(service.toRequestService())},
-            onSuccess = {
-                updateState(
-                    screenState.value.copy(
-                        bottomSheetState = true
-                    )
-                )
-            },
             onError = {
                 updateState(
                     screenState.value.copy(
