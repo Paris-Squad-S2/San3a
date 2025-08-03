@@ -54,7 +54,7 @@ fun SettingAccountItems(
 ) {
     val items = settingAccountItems()
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth()
                 .background(Theme.colors.background.card,RoundedCornerShape(Theme.radius.extraLarge))
                 .clip(RoundedCornerShape(Theme.radius.extraLarge))
                 .padding(horizontal = 16.dp)
@@ -63,7 +63,7 @@ fun SettingAccountItems(
                 SettingItem(
                     icon = item.icon,
                     label = item.label,
-                    hasSwitchIcon = if(item.label == R.string.dark_mode) true else false,
+                    hasSwitchIcon = item.label == R.string.dark_mode,
                     isCheckSwitch = isCheckSwitch,
                     onCheckedChange = {onCheckedChange(it)},
                     onClickItem = {onClickItem()}
@@ -86,8 +86,8 @@ fun SettingAccountItems(
 @PreviewMultiDevices
 @Preview(showSystemUi = true, showBackground = false)
 @Composable
-private fun SettingAccountItems(){
+private fun SettingAccountItemsPreview(){
     BasePreview(modifier = Modifier.fillMaxSize().background(Theme.colors.background.screen)) {
-        SettingAccountItems(){}
+        SettingAccountItems{}
     }
 }
