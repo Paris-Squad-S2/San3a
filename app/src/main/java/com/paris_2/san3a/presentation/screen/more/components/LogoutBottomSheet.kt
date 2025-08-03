@@ -14,9 +14,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppButton
@@ -32,6 +35,7 @@ fun LogoutBottomSheet(
     onCancel: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
+    val layoutDirection = LocalLayoutDirection.current
     BottomSheet(
         isVisible = isVisible,
         onDismissRequest = onDismissRequest,
@@ -53,8 +57,7 @@ fun LogoutBottomSheet(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_close),
-                        contentDescription = null,
-                        tint = Theme.colors.shade.secondary
+                        contentDescription = null
                     )
                 }
             }
@@ -69,7 +72,12 @@ fun LogoutBottomSheet(
             Image(
                 painter = painterResource(id = R.drawable.logout),
                 contentDescription = null,
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier
+                    .size(120.dp)
+                    .graphicsLayer {
+                        scaleX = if (layoutDirection == LayoutDirection.Rtl) -1f else 1f
+                    }
+
             )
 
             Text(
