@@ -49,7 +49,9 @@ class MessageRepositoryImpl(
                     )
                 }
 
-                is MessageContent.Text -> null
+                is MessageContent.Text -> {
+                    messagesRemoteDataSource.sendMessage(message.toImageMessageDto())
+                }
             }
         }
     }

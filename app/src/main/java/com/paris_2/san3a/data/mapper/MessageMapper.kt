@@ -6,7 +6,7 @@ import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
 
 
-fun List<MessageDto>.toMessageList():List<Message> = this.map { it.toMessage() }
+fun List<MessageDto>.toMessageList(): List<Message> = this.map { it.toMessage() }
 
 fun MessageDto.toMessage(): Message {
     return Message(
@@ -29,14 +29,15 @@ fun handleMessageContent(
     } else if (imageUrls != null) {
         val imageUris = imageUrls.map { it.toUri().toString() }
         MessageContent.Image(imageUris)
-    }else(
+    } else {
         MessageContent.Text("")
-    )
+    }
 }
 
-fun Message.toImageMessageDto(urls: List<String>): MessageDto {
+fun Message.toImageMessageDto(urls: List<String>? = null): MessageDto {
     return MessageDto(
         id = id,
+        text = getMessageContentText(messageContent),
         chatId = chatId,
         senderId = senderId,
         receiverId = receiverId,
@@ -44,4 +45,12 @@ fun Message.toImageMessageDto(urls: List<String>): MessageDto {
         dateTime = time,
         seen = seen
     )
+}
+
+fun getMessageContentText(messageContent: MessageContent): String? {
+    return when (messageContent) {
+        is MessageContent.Audio -> null
+        is MessageContent.Image -> null
+        is MessageContent.Text -> messageContent.content
+    }
 }
