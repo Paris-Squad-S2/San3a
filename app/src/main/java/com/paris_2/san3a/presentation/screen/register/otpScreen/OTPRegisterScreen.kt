@@ -1,8 +1,10 @@
 package com.paris_2.san3a.presentation.screen.register.otpScreen
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,12 +26,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.screen.register.components.RegisterBottomSheet
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
+import com.paris_2.san3a.presentation.shared.components.LoadingScreen
+import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.OTPInputTextField
+import com.paris_2.san3a.presentation.shared.components.ProgressIndicator
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -39,44 +46,81 @@ fun OTPRegisterScreen(viewModel: OTPRegisterViewModel = koinViewModel()) {
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun OTPRegisterScreenContent(
-    otpRegisterUiState: OTPRegisterUiState,
+    otpRegisterScreenState: OTPRegisterScreenState,
     otpRegisterListenerInteraction: OTPRegisterListenerInteraction,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
+    Box(
+        Modifier
             .fillMaxSize()
             .background(Theme.colors.background.screen)
-            .statusBarsPadding()
             .navigationBarsPadding()
-
+            .statusBarsPadding()
     ) {
+        when {
+            otpRegisterScreenState.isNoInternet  -> {
+                LostConnectionScreen(
+                    onRetry = otpRegisterListenerInteraction::onClickRetry,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 60.dp)
+                )
+            }
 
+            otpRegisterScreenState.isLoading -> {
+                LoadingScreen(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
 
-        Row(modifier = Modifier.fillMaxWidth()) {
-            AppBackButton(
-                onClickBackButton = otpRegisterListenerInteraction::onClickBackButton,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Image(
-                modifier = Modifier.size(200.dp),
-                painter = painterResource(R.drawable.image_otp),
-                contentDescription = stringResource(R.string.otp_image)
-            )
+            else -> {
+                Column(
+                    modifier = modifier
+                        .fillMaxSize()
+
+                ) {
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        AppBackButton(
+                            onClickBackButton = otpRegisterListenerInteraction::onClickBackButton,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        Image(
+                            modifier = Modifier.size(200.dp),
+                            painter = painterResource(R.drawable.image_otp),
+                            contentDescription = stringResource(R.string.otp_image)
+                        )
+
+                    }
+
+                    VerificationCodeContent(
+                        otpRegisterScreenState.otpRegisterUiState.phoneNumber,
+                        otpRegisterScreenState.otpRegisterUiState.otp,
+                        otpRegisterScreenState.otpRegisterUiState.secondLeft,
+                        otpRegisterScreenState.otpRegisterUiState.loadingVerifyButton,
+                        otpRegisterListenerInteraction::onOtpTextChange,
+                        otpRegisterListenerInteraction::onClickVerify,
+                        otpRegisterListenerInteraction::onClickResendCode,
+                        Modifier.weight(1f)
+                    )
+                }
+            }
         }
 
-        VerificationCodeContent(
-            otpRegisterUiState.phoneNumber,
-            otpRegisterUiState.otp,
-            otpRegisterUiState.secondLeft,
-            otpRegisterListenerInteraction::onOtpTextChange,
-            otpRegisterListenerInteraction::onClickVerify,
-            otpRegisterListenerInteraction::onClickResendCode,
-            Modifier.weight(1f)
-        )
+        if (otpRegisterScreenState.showBottomSheet) {
+            RegisterBottomSheet(
+                isErrorMessage = true,
+                skipPartiallyExpanded = true,
+                onCloseClick = {
+                    otpRegisterListenerInteraction.onHideBottomSheet()
+                }
+            )
+        }
     }
+
 }
 
 @Composable
@@ -84,6 +128,7 @@ private fun VerificationCodeContent(
     phoneNumber: String,
     otp: String,
     secondLeft: Int,
+    isLoading: Boolean,
     onOtpTextChange: (String) -> Unit,
     onClickVerify: () -> Unit,
     onClickResendCode: () -> Unit,
@@ -138,10 +183,14 @@ private fun VerificationCodeContent(
                 .padding(bottom = 24.dp),
             type = AppButtonType.Primary,
             size = AppButtonSize.Large,
-            state = AppButtonState.Enable,
+            state = if (otp.count() < 5) AppButtonState.Disabled else AppButtonState.Enable,
             onClick = { onClickVerify() },
-            text = stringResource(R.string.verify)
-        )
+            text = stringResource(R.string.verify),
+        ) {
+            AnimatedVisibility(isLoading) {
+                ProgressIndicator()
+            }
+        }
 
         Text(
             text = stringResource(R.string.didn_t_receive_the_code),
@@ -188,7 +237,7 @@ private fun VerificationCodeContent(
 @Composable
 private fun OTPRegisterScreenContentPreview() {
     OTPRegisterScreenContent(
-        otpRegisterUiState = OTPRegisterUiState(),
+        otpRegisterScreenState = OTPRegisterScreenState(),
         otpRegisterListenerInteraction = object : OTPRegisterListenerInteraction {
             override fun onOtpTextChange(otp: String) {
 
@@ -205,6 +254,14 @@ private fun OTPRegisterScreenContentPreview() {
             override fun onClickBackButton() {
 
             }
+
+            override fun onClickRetry() {
+
+            }
+
+             override fun onHideBottomSheet() {
+
+             }
         }
     )
 }

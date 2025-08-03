@@ -16,6 +16,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -30,15 +31,19 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun BottomSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
-    isVisible: Boolean = false,
-    skipPartiallyExpanded: Boolean = false,
+    isVisible: Boolean = true,
+    skipPartiallyExpanded: Boolean = true,
     header: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit = {},
 ) {
-    val sheetState =
-        rememberModalBottomSheetState(
-            skipPartiallyExpanded = skipPartiallyExpanded,
-        )
+
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = skipPartiallyExpanded)
+    LaunchedEffect(isVisible) {
+        when {
+            isVisible -> sheetState.show()
+            else -> sheetState.hide()
+        }
+    }
 
     if (isVisible) {
         ModalBottomSheet(
@@ -77,6 +82,7 @@ private fun BottomSheetDragHandle() {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun BottomSheetPrev() {

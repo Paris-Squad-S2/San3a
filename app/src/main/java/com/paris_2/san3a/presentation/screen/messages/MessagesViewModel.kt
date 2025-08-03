@@ -23,8 +23,8 @@ class MessagesViewModel(
                 updateState(screenState.value.copy(currentUserId = userId))
                 getChatsForCurrentUser()
             },
-            onError = { message ->
-                updateState(screenState.value.copy(error = message))
+            onError = { exception ->
+                updateState(screenState.value.copy(error = exception.message))
             },
         )
     }
@@ -39,8 +39,8 @@ class MessagesViewModel(
                     updateState(screenState.value.copy(chats = chats, isLoading = false, error = null))
                 }
             },
-            onError = { message ->
-                updateState(screenState.value.copy(error = message))
+            onError = { exception ->
+                updateState(screenState.value.copy(error = exception.message))
             },
         )
     }

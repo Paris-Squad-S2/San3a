@@ -23,7 +23,7 @@ val repositoryModule = module {
     singleOf(::ChatRepositoryImpl) { bind<ChatRepository>() }
     singleOf(::UserRepositoryImp) { bind<UserRepository>() }
     singleOf(::OnboardingRepositoryImpl) { bind<OnboardingRepository>() }
-    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
+    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
     single { NetworkConnectionChecker(androidApplication().applicationContext) }
     singleOf(::LocationRepositoryImp) { bind<LocationRepository>() }
 }
