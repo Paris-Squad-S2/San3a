@@ -72,6 +72,12 @@
     <string name="no_messages_yet">No Messages Yet</string>
     <string name="once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here">Once you start accepting or posting requests, chats with craftsmen will appear here.</string>
     <string name="loading_icon">Loading Icon</string>
+    <string name="image_profile">image profile</string>
+    <string name="verified_check">verified check</string>
+    <string name="icon_start">icon start</string>
+    <string name="edit_icon">edit icon</string>
+    <string name="reviews">(%1$s reviews)</string>
+    <string name="mohammed_akkad">Mohammed Akkad</string>
     <string name="write_a_message">Write a message...</string>
     <string name="add_images">Add Images</string>
     <string name="voice_icon">voice icon</string>
