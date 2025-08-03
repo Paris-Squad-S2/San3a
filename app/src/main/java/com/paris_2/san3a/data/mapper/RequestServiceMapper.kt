@@ -6,27 +6,23 @@ import com.paris_2.san3a.domain.entity.RequestService
 fun RequestServiceDto.toEntity() = RequestService(
     id = id,
     serviceType = serviceType,
-    customerComplain = "",
     description = description,
     location = location,
-    relatedJob = relatedJob,
     offers = offers,
     userId = userId,
-    requestedCount = requestedCount,
     locationDetails = "" ,
-    image = emptyList()
+    image = emptyList(),
+    title = title,
 )
 
 fun RequestService.toDto(imageUrls: List<String>) = RequestServiceDto(
     id = id,
     serviceType = serviceType,
-    customerComplain = customerComplain,
     description = description,
     location = location,
-    relatedJob = relatedJob,
     offers = offers,
     userId = userId,
-    requestedCount = requestedCount,
-    images = imageUrls,
     locationDetails = locationDetails,
+    image = imageUrls,
+    title = title,
 )
