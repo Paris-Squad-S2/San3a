@@ -53,7 +53,8 @@ fun LogoutBottomSheet(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_close),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = Theme.colors.shade.secondary
                     )
                 }
             }

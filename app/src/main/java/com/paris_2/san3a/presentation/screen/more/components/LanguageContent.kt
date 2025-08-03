@@ -47,7 +47,8 @@ fun ChangeLanguageBottomSheet(
                     IconButton(onClick = onDismissRequest) {
                         Icon(
                             painterResource(id = R.drawable.ic_close),
-                            contentDescription = stringResource(R.string.close)
+                            contentDescription = stringResource(R.string.close),
+                            tint = Theme.colors.shade.secondary
                         )
                     }
                 }
