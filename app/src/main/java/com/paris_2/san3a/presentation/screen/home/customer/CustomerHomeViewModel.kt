@@ -109,6 +109,9 @@ class CustomerHomeViewModel(
     override fun setBottomSheetSelectedGovernment(government: String) {
         updateState(screenState.value.copy(bottomSheetSelectedGovernment = government))
     }
+    override fun setBottomSheetSelectedCity(city: String) {
+        updateState(screenState.value.copy(bottomSheetSelectedCity = city))
+    }
 
     override fun createRequest(service: RequestServiceUiState , serviceId: String) {
         tryToExecute(

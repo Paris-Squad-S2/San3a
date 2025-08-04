@@ -19,5 +19,6 @@ interface CustomerHomeInteractionListener {
     fun deleteBottomSheetImageAt(index: Int)
     fun setBottomSheetAddressDetails(address: String)
     fun setBottomSheetSelectedGovernment(government: String)
+    fun setBottomSheetSelectedCity(city: String)
 
 }
