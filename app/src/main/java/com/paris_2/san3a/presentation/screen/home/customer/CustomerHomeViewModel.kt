@@ -98,6 +98,11 @@ class CustomerHomeViewModel(
             )
         )
     }
+    override fun deleteBottomSheetImageAt(index: Int) {
+        val images = screenState.value.bottomSheetImages.toMutableList()
+        if (index in images.indices) images.removeAt(index)
+        updateState(screenState.value.copy(bottomSheetImages = images))
+    }
 
     override fun createRequest(service: RequestServiceUiState , serviceId: String) {
         tryToExecute(

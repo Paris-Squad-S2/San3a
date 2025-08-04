@@ -16,5 +16,6 @@ interface CustomerHomeInteractionListener {
     fun setBottomSheetDescription(description: String)
     fun setBottomSheetSelectedSuggestion(suggestion: String?)
     fun addBottomSheetImages(newImages: List<String>)
+    fun deleteBottomSheetImageAt(index: Int)
 
 }
