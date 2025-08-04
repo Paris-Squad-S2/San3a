@@ -103,6 +103,9 @@ class CustomerHomeViewModel(
         if (index in images.indices) images.removeAt(index)
         updateState(screenState.value.copy(bottomSheetImages = images))
     }
+    override fun setBottomSheetAddressDetails(address: String) {
+        updateState(screenState.value.copy(bottomSheetAddressDetails = address))
+    }
 
     override fun createRequest(service: RequestServiceUiState , serviceId: String) {
         tryToExecute(
