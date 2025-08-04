@@ -187,5 +187,9 @@ Request deletion of your data by contacting us at [your support email].\n\n
 7. Policy Updates\n
 We may revise this policy from time to time. You will be notified of significant changes.\n
 </string>
+    <string name="find_what_you_need">Find What You Need</string>
+    <string name="got_a_skill_start_earning">Got a skill? Start earning</string>
+    <string name="create_your_craftsman_account_and_get_job_requests">Create your craftsman account and get job requests.</string>
+    <string name="become_a_craftsman">Become a Craftsman</string>
 
 </resources>

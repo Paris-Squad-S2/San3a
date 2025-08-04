@@ -71,7 +71,6 @@ private fun CustomerHomeScreenContent(
             userId = state.customerUiState.id
         )
         if(requestService.value != null){
-            Log.d("CustomerHomeScreen", "RequestServiceUiState: ${requestService.value}")
             action.createRequest(requestService.value!! , serviceId)
             requestService.value = null
         }
@@ -121,7 +120,7 @@ private fun CustomerHomeScreenContent(
             }
             item {
                 Text(
-                    text = "Find What You Need",
+                    text = stringResource(R.string.find_what_you_need),
                     style = Theme.textStyle.title.small,
                     color = Theme.colors.shade.primary,
                     modifier = Modifier
@@ -142,7 +141,8 @@ private fun CustomerHomeScreenContent(
                         .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
                         .clickable {
                             action.onServiceClick(service.id)
-                            title = service.title[if (isArabic) "arabicName" else "englishName"] ?: ""
+                            title =
+                                service.title[if (isArabic) "arabicName" else "englishName"] ?: ""
                             serviceId = service.id
                         }
                 )
@@ -150,9 +150,9 @@ private fun CustomerHomeScreenContent(
 
             item {
                 AdCard(
-                    title = "Got a skill? Start earning",
-                    caption = "Create your craftsman account and get job requests.",
-                    buttonTitle = "Become a Craftsman",
+                    title = stringResource(R.string.got_a_skill_start_earning),
+                    caption = stringResource(R.string.create_your_craftsman_account_and_get_job_requests),
+                    buttonTitle = stringResource(R.string.become_a_craftsman),
                     onClick = { action.onBecomeCraftsmanClick() },
                     modifier = Modifier
                         .padding(vertical = 12.dp)
