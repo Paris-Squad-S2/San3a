@@ -18,6 +18,8 @@ data class CustomerHomeUiState(
     val bottomSheetSelectedSuggestion: String? = null,
     val bottomSheetGovernments: List<String> = listOf("Cairo", "Giza", "Alex"),
     val bottomSheetCities: List<String> = listOf("Nasr City", "Dokki", "Smouha"),
+    val bottomSheetSelectedGovernment: String = "",
+    val bottomSheetSelectedCity: String = ""
     )
 
 data class CustomerUiState(
