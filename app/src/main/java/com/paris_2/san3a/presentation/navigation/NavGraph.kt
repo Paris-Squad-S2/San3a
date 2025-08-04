@@ -60,7 +60,7 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.Messages> { MessagesScreen() }
         composable<Destinations.MessageDetails> { MessageDetails() }
         composable<Destinations.MyRequest> { MyRequestScreen() }
-        composable<Destinations.Notifications> { NotificationsScreen() }
+        composable<Destinations.Notification> { NotificationScreen() }
         composable<Destinations.More> { MoreScreen() }
     }
 
