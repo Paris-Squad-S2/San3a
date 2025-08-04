@@ -13,8 +13,10 @@ import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.invoke
 
 class CustomerHomeViewModel(
     private val getAllServicesUseCase: GetAllServicesUseCase,
@@ -298,15 +300,17 @@ class CustomerHomeViewModel(
 
     private fun loadServices() {
         tryToExecute(
-            execute = { getAllServicesUseCase().first() },
-            onSuccess = {
-                updateState(
-                    screenState.value.copy(
-                        customerUiState = screenState.value.customerUiState.copy(
-                            services = it
+            execute = getAllServicesUseCase::invoke,
+            onSuccess = { services ->
+                services.collect {
+                    updateState(
+                        screenState.value.copy(
+                            customerUiState = screenState.value.customerUiState.copy(
+                                services = it
+                            )
                         )
                     )
-                )
+                }
             },
             onError = {
                 updateState(
