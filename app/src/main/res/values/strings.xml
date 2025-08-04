@@ -215,4 +215,5 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="craftsman_not_chosen">Craftsman Not Chosen</string>
     <string name="offers">Offers</string>
     <string name="my_jobs">My Jobs</string>
+    <string name="search">Search...</string>
 </resources>

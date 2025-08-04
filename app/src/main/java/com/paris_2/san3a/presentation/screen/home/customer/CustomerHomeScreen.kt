@@ -233,7 +233,7 @@ private fun CustomerHomeScreenContent(
                 SearchBar(
                     value = "",
                     onValueChange = { /*TODO*/ },
-                    hint = "Search...",
+                    hint = stringResource(R.string.search),
                     modifier = Modifier
                         .padding(top = 16.dp, bottom = 24.dp)
                 )
