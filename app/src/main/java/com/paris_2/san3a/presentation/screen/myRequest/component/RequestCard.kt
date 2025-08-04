@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.myRequest.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,10 +39,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
+import com.paris_2.san3a.presentation.shared.components.CraftsmanAvatar
 import com.paris_2.san3a.presentation.shared.components.IconPosition
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
@@ -52,7 +55,7 @@ fun RequestCard(
     type: String,
     date: String,
     time: String,
-    craftsmanImageUri: String?,
+    craftsmanImageUri: Painter?,
     craftsmanName: String?,
     rating: Float?,
     actionButtonText: String,
@@ -220,47 +223,35 @@ private fun IconWithText(icon: ImageVector, text: String) {
 
 @Composable
 private fun CraftsmanSection(
-    imageUri: String?,
+    imageUri: Painter?,
     name: String?,
     rating: Float?,
     showOffersLink: Boolean,
     isVerified: Boolean = false,
 ) {
-    if (!imageUri.isNullOrEmpty() && !name.isNullOrEmpty()) {
+    if (imageUri != null && !name.isNullOrEmpty()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(modifier = Modifier.size(36.dp)) {
                 AsyncImage(
                     model = imageUri,
                     contentDescription = null,
                     modifier = Modifier
-                        .matchParentSize()
                         .clip(CircleShape)
                 )
 
-                if (isVerified) {
-                    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-                    Box(
-                        modifier = Modifier
-                            .size(14.dp)
-                            .align(Alignment.Center)
-                            .offset(
-                                x = if (isRtl) (-11).dp else 11.dp,
-                                y = 11.dp
-                            )
-                            .background(
-                                color = Theme.colors.background.card,
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_verified_check_bold),
-                            contentDescription = null,
-                            tint = Theme.colors.additional.primary.success,
-                            modifier = Modifier.size(10.dp)
-                        )
-                    }
-                }
+            if (isVerified) {
+                CraftsmanAvatar(
+                    painter = rememberAsyncImagePainter(model = imageUri),
+                    isVerify = true,
+                    modifier = Modifier.size(36.dp)
+                )
+            } else if (imageUri != null ) {
+                Image(
+                    painter = rememberAsyncImagePainter(model = imageUri),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                )
             }
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -381,7 +372,6 @@ private fun CraftsmanSection(
     }
 }
 
-//==============================Preview ====================//
 
 @Preview(showBackground = true)
 @Composable
@@ -391,7 +381,7 @@ fun RequestCardPreview() {
         type = "Plumbing",
         date = "2025-08-04",
         time = "10:30 AM",
-        craftsmanImageUri = "https://example.com/profile.jpg",
+        craftsmanImageUri = painterResource(R.drawable.craftsman),
         craftsmanName = "Mohamed Ali",
         rating = 4.8f,
         actionButtonText = stringResource(R.string.cancel),
@@ -401,23 +391,6 @@ fun RequestCardPreview() {
     )
 }
 
-@Preview(showBackground = true, name = "Request Card - With Craftsman")
-@Composable
-fun RequestCardWithCraftsmanPreview() {
-    RequestCard(
-        icon = painterResource(id = R.drawable.ic_conditioner_bold),
-        type = "Air Conditioning Repair",
-        date = "2025-08-04",
-        time = "10:30 AM",
-        craftsmanImageUri = "https://example.com/profile.jpg",
-        craftsmanName = "Mohamed Ali",
-        rating = 4.8f,
-        actionButtonText = stringResource(R.string.cancel),
-        onActionClick = {},
-        showOffersLink = false,
-        buttonIconPosition = null
-    )
-}
 
 @Preview(showBackground = true, name = "Request Card - No Craftsman with Offers")
 @Composable
@@ -455,165 +428,3 @@ fun RequestCardNoCraftsmanNoOffersPreview() {
     )
 }
 
-@Preview(showBackground = true, name = "Request Card - With High Rating")
-@Composable
-fun RequestCardHighRatingPreview() {
-    RequestCard(
-        icon = painterResource(id = R.drawable.ic_conditioner_bold),
-        type = "Carpentry Work",
-        date = "2025-08-07",
-        time = "11:15 AM",
-        craftsmanImageUri = "https://example.com/craftsman2.jpg",
-        craftsmanName = "Ahmed Hassan",
-        rating = 5.0f,
-        actionButtonText = "Chat",
-        onActionClick = {},
-        showOffersLink = false,
-        buttonIconPosition = IconPosition.Start
-    )
-}
-
-@Preview(showBackground = true, name = "Request Card - With Low Rating")
-@Composable
-fun RequestCardLowRatingPreview() {
-    RequestCard(
-        icon = painterResource(id = R.drawable.ic_conditioner_bold),
-        type = "Painting Services",
-        date = "2025-08-08",
-        time = "3:45 PM",
-        craftsmanImageUri = "https://example.com/craftsman3.jpg",
-        craftsmanName = "Omar Mahmoud",
-        rating = 3.2f,
-        actionButtonText = "Rate",
-        onActionClick = {},
-        showOffersLink = false,
-        buttonIconPosition = IconPosition.Start,
-        buttonIcon = ImageVector.vectorResource(R.drawable.ic_star_outline)
-    )
-}
-
-@Preview(showBackground = true, name = "Request Card - Long Service Name")
-@Composable
-fun RequestCardLongServiceNamePreview() {
-    RequestCard(
-        icon = painterResource(id = R.drawable.ic_conditioner_bold),
-        type = "Complete Home Renovation and Interior Design Services",
-        date = "2025-08-09",
-        time = "8:30 AM",
-        craftsmanImageUri = "https://example.com/craftsman4.jpg",
-        craftsmanName = "Mahmoud Abdel Rahman",
-        rating = 4.5f,
-        actionButtonText = "Contact",
-        onActionClick = {},
-        showOffersLink = false,
-        buttonIconPosition = null
-    )
-}
-
-@Preview(showBackground = true, name = "Request Card - Different Icon")
-@Composable
-fun RequestCardDifferentIconPreview() {
-    RequestCard(
-        icon = painterResource(id = R.drawable.ic_waterdrops_bold),
-        type = "General Maintenance",
-        date = "2025-08-10",
-        time = "1:00 PM",
-        craftsmanImageUri = "https://example.com/craftsman5.jpg",
-        craftsmanName = "Youssef Ali",
-        rating = 4.2f,
-        actionButtonText = "Reschedule",
-        onActionClick = {},
-        showOffersLink = false,
-        buttonIconPosition = IconPosition.End
-    )
-}
-
-@Preview(showBackground = true, name = "Request Card - Evening Time")
-@Composable
-fun RequestCardEveningTimePreview() {
-    RequestCard(
-        icon = painterResource(id = R.drawable.ic_conditioner_bold),
-        type = "Emergency Repair",
-        date = "2025-08-04",
-        time = "7:30 PM",
-        craftsmanImageUri = "https://example.com/craftsman6.jpg",
-        craftsmanName = "Karim Mohamed",
-        rating = 4.9f,
-        actionButtonText = "Complete",
-        onActionClick = {},
-        showOffersLink = false,
-        buttonIconPosition = null
-    )
-}
-
-@Preview(showBackground = true, name = "Request Card - No Rating")
-@Composable
-fun RequestCardNoRatingPreview() {
-    RequestCard(
-        icon = painterResource(id = R.drawable.ic_conditioner_bold),
-        type = "Kitchen Installation",
-        date = "2025-08-11",
-        time = "12:00 PM",
-        craftsmanImageUri = "https://example.com/craftsman7.jpg",
-        craftsmanName = "Hassan Ahmed",
-        rating = null,
-        actionButtonText = "Start Work",
-        onActionClick = {},
-        showOffersLink = false,
-        buttonIconPosition = null
-    )
-}
-
-@Preview(showBackground = true, name = "Request Card - Weekend Date")
-@Composable
-fun RequestCardWeekendPreview() {
-    RequestCard(
-        icon = painterResource(id = R.drawable.ic_conditioner_bold),
-        type = "Garden Landscaping",
-        date = "2025-08-09",
-        time = "10:00 AM",
-        craftsmanImageUri = null,
-        craftsmanName = null,
-        rating = null,
-        actionButtonText = "Edit Request",
-        onActionClick = {},
-        showOffersLink = true,
-        buttonIconPosition = IconPosition.Start
-    )
-}
-
-@Preview(showBackground = true, name = "Request Card - Short Service Name")
-@Composable
-fun RequestCardShortServiceNamePreview() {
-    RequestCard(
-        icon = painterResource(id = R.drawable.ic_conditioner_bold),
-        type = "AC Fix",
-        date = "2025-08-12",
-        time = "4:15 PM",
-        craftsmanImageUri = "https://example.com/craftsman8.jpg",
-        craftsmanName = "Ali",
-        rating = 4.1f,
-        actionButtonText = "Pay",
-        onActionClick = {},
-        showOffersLink = false,
-        buttonIconPosition = null
-    )
-}
-
-@Preview(showBackground = true, name = "Request Card - Early Morning")
-@Composable
-fun RequestCardEarlyMorningPreview() {
-    RequestCard(
-        icon = painterResource(id = R.drawable.ic_conditioner_bold),
-        type = "Urgent Plumbing",
-        date = "2025-08-13",
-        time = "6:00 AM",
-        craftsmanImageUri = "https://example.com/craftsman9.jpg",
-        craftsmanName = "Mohamed Farouk",
-        rating = 3.8f,
-        actionButtonText = "Confirm",
-        onActionClick = {},
-        showOffersLink = false,
-        buttonIconPosition = IconPosition.End
-    )
-}
