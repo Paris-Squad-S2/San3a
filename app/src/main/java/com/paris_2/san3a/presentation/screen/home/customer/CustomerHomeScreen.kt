@@ -64,29 +64,29 @@ private fun CustomerHomeScreenContent(
         }
     )
 
-    if (state.bottomSheetState) {
+    if (state.bottomSheetUiState.bottomSheetState) {
         BottomSheet(
             isVisible = true,
             onDismissRequest = { action.onDismissBottomSheet() }
         ) {
-            when (state.bottomSheetStep) {
+            when (state.bottomSheetUiState.bottomSheetStep) {
                 BottomSheetStep.SELECT_SERVICE -> {
                     RequestBottomSheetContent(
-                        title = state.bottomSheetServiceTitle,
-                        icon = state.bottomSheetIconRes,
+                        title = state.bottomSheetUiState.bottomSheetServiceTitle,
+                        icon = state.bottomSheetUiState.bottomSheetIconRes,
                         color = Theme.colors.additional.primary.blue,
                         subTitle = "What do you need help with?",
                         buttonTitle = "Next",
-                        buttonIsActive = state.bottomSheetServiceTitle.isNotEmpty(),
+                        buttonIsActive = state.bottomSheetUiState.bottomSheetServiceTitle.isNotEmpty(),
                         step = 1,
                         onButtonClick = { action.nextBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() },
                     ) {
                         RequestTitleContent(
-                            value = state.bottomSheetSubtitle,
+                            value = state.bottomSheetUiState.bottomSheetSubtitle,
                             onValueChange = { action.setBottomSheetServiceSubTitle(it) },
-                            suggestions = getSuggestions(serviceType = state.bottomSheetServiceTitle),
-                            selectedSuggestion = state.bottomSheetSelectedSuggestion,
+                            suggestions = getSuggestions(serviceType = state.bottomSheetUiState.bottomSheetServiceTitle),
+                            selectedSuggestion = state.bottomSheetUiState.bottomSheetSelectedSuggestion,
                             onChipClick = {
                                 action.setBottomSheetSelectedSuggestion(it)
                                 action.setBottomSheetServiceSubTitle(it)
@@ -99,11 +99,11 @@ private fun CustomerHomeScreenContent(
 
                 BottomSheetStep.PROBLEM_DESCRIPTION -> {
                     RequestBottomSheetContent(
-                        title = state.bottomSheetServiceTitle,
-                        icon = state.bottomSheetIconRes,
+                        title = state.bottomSheetUiState.bottomSheetServiceTitle,
+                        icon = state.bottomSheetUiState.bottomSheetIconRes,
                         color = Theme.colors.additional.primary.blue,
                         subTitle = "Describe the problem in detail",
-                        buttonIsActive = state.bottomSheetDescription.isNotEmpty(),
+                        buttonIsActive = state.bottomSheetUiState.bottomSheetDescription.isNotEmpty(),
                         onButtonClick = { action.nextBottomSheetStep() },
                         buttonTitle = "Next",
                         step = 2,
@@ -111,7 +111,7 @@ private fun CustomerHomeScreenContent(
                         onExitClick = { action.onDismissBottomSheet() }
                     ) {
                         RequestDescriptionContent(
-                            value = state.bottomSheetDescription,
+                            value = state.bottomSheetUiState.bottomSheetDescription,
                             onValueChange = { action.setBottomSheetDescription(it) },
                             hint = "Describe your problem"
                         )
@@ -120,24 +120,24 @@ private fun CustomerHomeScreenContent(
 
                 BottomSheetStep.SELECT_LOCATION -> {
                     RequestBottomSheetContent(
-                        title = state.bottomSheetServiceTitle,
-                        icon = state.bottomSheetIconRes,
+                        title = state.bottomSheetUiState.bottomSheetServiceTitle,
+                        icon = state.bottomSheetUiState.bottomSheetIconRes,
                         color = Theme.colors.additional.primary.blue,
                         subTitle = "Where are you from?",
                         buttonTitle = "Next",
-                        buttonIsActive = state.bottomSheetAddressDetails.isNotEmpty(),
+                        buttonIsActive = state.bottomSheetUiState.bottomSheetAddressDetails.isNotEmpty(),
                         step = 3,
                         onButtonClick = { action.nextBottomSheetStep() },
                         onClickBack = { action.previousBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() }
                     ) {
                         LocationContent(
-                            governments = state.bottomSheetGovernments,
-                            cities = state.bottomSheetCities,
-                            addressInDetails = state.bottomSheetAddressDetails,
+                            governments = state.bottomSheetUiState.bottomSheetGovernments,
+                            cities = state.bottomSheetUiState.bottomSheetCities,
+                            addressInDetails = state.bottomSheetUiState.bottomSheetAddressDetails,
                             onAddressDetailsChange = { action.setBottomSheetAddressDetails(it) },
-                            isGovernmentSheetShowed = state.isGovernmentSheetVisible,
-                            isCitiesSheetShowed = state.isCitySheetVisible,
+                            isGovernmentSheetShowed = state.bottomSheetUiState.isGovernmentSheetVisible,
+                            isCitiesSheetShowed = state.bottomSheetUiState.isCitySheetVisible,
                             onGovernmentDismissRequest = { action.showGovernmentSheet(false) },
                             onCitiesDismissRequest = { action.showCitySheet(false) },
                             onGovernmentSelected = {
@@ -149,8 +149,8 @@ private fun CustomerHomeScreenContent(
                                 action.setBottomSheetSelectedCity(it)
                                 action.showCitySheet(false)
                             },
-                            government = state.bottomSheetSelectedGovernment,
-                            city = state.bottomSheetSelectedCity,
+                            government = state.bottomSheetUiState.bottomSheetSelectedGovernment,
+                            city = state.bottomSheetUiState.bottomSheetSelectedCity,
                             onGetLocationClicked = {
                                 action.showGovernmentSheet(true)
                             }
@@ -160,8 +160,8 @@ private fun CustomerHomeScreenContent(
 
                 BottomSheetStep.IMAGE_UPLOAD -> {
                     RequestBottomSheetContent(
-                        title = state.bottomSheetServiceTitle,
-                        icon = state.bottomSheetIconRes,
+                        title = state.bottomSheetUiState.bottomSheetServiceTitle,
+                        icon = state.bottomSheetUiState.bottomSheetIconRes,
                         color = Theme.colors.additional.primary.blue,
                         subTitle = "Add some photos",
                         buttonTitle = "Create Request",
@@ -170,21 +170,21 @@ private fun CustomerHomeScreenContent(
                         onButtonClick = {
                             action.createRequest(
                                 RequestServiceUiState(
-                                    serviceType = state.bottomSheetServiceTitle,
-                                    title = state.bottomSheetServiceTitle,
-                                    description = state.bottomSheetDescription,
-                                    location = "${state.bottomSheetSelectedGovernment}, ${state.bottomSheetSelectedCity}",
-                                    locationDetails = state.bottomSheetAddressDetails,
-                                    image = state.bottomSheetImages,
+                                    serviceType = state.bottomSheetUiState.bottomSheetServiceTitle,
+                                    title = state.bottomSheetUiState.bottomSheetServiceTitle,
+                                    description = state.bottomSheetUiState.bottomSheetDescription,
+                                    location = "${state.bottomSheetUiState.bottomSheetSelectedGovernment}, ${state.bottomSheetUiState.bottomSheetSelectedCity}",
+                                    locationDetails = state.bottomSheetUiState.bottomSheetAddressDetails,
+                                    image = state.bottomSheetUiState.bottomSheetImages,
                                     userId = state.customerUiState.id
                                 ),
-                                state.bottomSheetServiceId
+                                state.bottomSheetUiState.bottomSheetServiceId
                             )
                         },
                         onClickBack = { action.previousBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() }
                     ) {
-                        if (state.bottomSheetImages.isEmpty()) {
+                        if (state.bottomSheetUiState.bottomSheetImages.isEmpty()) {
                             AddPhotosContent(
                                 icon = painterResource(id = R.drawable.ic_camera_outline),
                                 onClick = {
@@ -193,7 +193,7 @@ private fun CustomerHomeScreenContent(
                             )
                         } else {
                             AddPhotos(
-                                photos = state.bottomSheetImages,
+                                photos = state.bottomSheetUiState.bottomSheetImages,
                                 onClickAdd = {
                                     imagePicker.launch("image/*")
                                 },
