@@ -23,127 +23,211 @@ class CustomerHomeViewModel(
     private val updateNumOfRequestsUseCase: UpdateNumOfRequestsUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
-): CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
+) : CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
 
-    init{
+    init {
         loadUserData()
         loadMostRequestedServices()
         loadServices()
     }
+
     override fun initBottomSheet(serviceTitle: String, serviceId: String, iconRes: Int) {
         updateState(
             screenState.value.copy(
-                bottomSheetState = true,
-                bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
-                bottomSheetServiceTitle = serviceTitle,
-                bottomSheetServiceId = serviceId,
-                bottomSheetIconRes = iconRes,
-                bottomSheetDescription = "",
-                bottomSheetImages = emptyList(),
-                bottomSheetSelectedSuggestion = null,
-                bottomSheetSelectedGovernment = "",
-                bottomSheetSelectedCity = "",
-                bottomSheetAddressDetails = "",
-                isGovernmentSheetVisible = false,
-                isCitySheetVisible = false
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetState = true,
+                    bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
+                    bottomSheetServiceTitle = serviceTitle,
+                    bottomSheetServiceId = serviceId,
+                    bottomSheetIconRes = iconRes,
+                    bottomSheetDescription = "",
+                    bottomSheetImages = emptyList(),
+                    bottomSheetSelectedSuggestion = null,
+                    bottomSheetSelectedGovernment = "",
+                    bottomSheetSelectedCity = "",
+                    bottomSheetAddressDetails = "",
+                    isGovernmentSheetVisible = false,
+                    isCitySheetVisible = false
+                )
             )
         )
     }
+
     override fun updateBottomSheetStep(step: BottomSheetStep) {
-        updateState(screenState.value.copy(bottomSheetStep = step))
+        updateState(
+            screenState.value.copy(
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetStep = step
+                )
+            )
+        )
     }
+
     override fun nextBottomSheetStep() {
         updateState(
             screenState.value.copy(
-                bottomSheetStep = when (screenState.value.bottomSheetStep) {
-                    BottomSheetStep.SELECT_SERVICE -> BottomSheetStep.PROBLEM_DESCRIPTION
-                    BottomSheetStep.PROBLEM_DESCRIPTION -> BottomSheetStep.SELECT_LOCATION
-                    BottomSheetStep.SELECT_LOCATION -> BottomSheetStep.IMAGE_UPLOAD
-                    BottomSheetStep.IMAGE_UPLOAD -> BottomSheetStep.IMAGE_UPLOAD
-                }
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetStep = when (screenState.value.bottomSheetUiState.bottomSheetStep) {
+                        BottomSheetStep.SELECT_SERVICE -> BottomSheetStep.PROBLEM_DESCRIPTION
+                        BottomSheetStep.PROBLEM_DESCRIPTION -> BottomSheetStep.SELECT_LOCATION
+                        BottomSheetStep.SELECT_LOCATION -> BottomSheetStep.IMAGE_UPLOAD
+                        BottomSheetStep.IMAGE_UPLOAD -> BottomSheetStep.IMAGE_UPLOAD
+                    }
+                )
             )
         )
     }
+
     override fun previousBottomSheetStep() {
         updateState(
             screenState.value.copy(
-                bottomSheetStep = when (screenState.value.bottomSheetStep) {
-                    BottomSheetStep.IMAGE_UPLOAD -> BottomSheetStep.SELECT_LOCATION
-                    BottomSheetStep.SELECT_LOCATION -> BottomSheetStep.PROBLEM_DESCRIPTION
-                    BottomSheetStep.PROBLEM_DESCRIPTION -> BottomSheetStep.SELECT_SERVICE
-                    BottomSheetStep.SELECT_SERVICE -> BottomSheetStep.SELECT_SERVICE
-                }
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetStep = when (screenState.value.bottomSheetUiState.bottomSheetStep) {
+                        BottomSheetStep.IMAGE_UPLOAD -> BottomSheetStep.SELECT_LOCATION
+                        BottomSheetStep.SELECT_LOCATION -> BottomSheetStep.PROBLEM_DESCRIPTION
+                        BottomSheetStep.PROBLEM_DESCRIPTION -> BottomSheetStep.SELECT_SERVICE
+                        BottomSheetStep.SELECT_SERVICE -> BottomSheetStep.SELECT_SERVICE
+                    }
+                )
             )
         )
     }
+
     override fun setBottomSheetServiceSubTitle(title: String) {
-        updateState(screenState.value.copy(bottomSheetSubtitle = title))
+        updateState(
+            screenState.value.copy(
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetSubtitle = title
+                )
+            )
+        )
     }
+
     override fun setBottomSheetDescription(description: String) {
-        updateState(screenState.value.copy(bottomSheetDescription = description))
+        updateState(
+            screenState.value.copy(
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetDescription = description
+                )
+            )
+        )
     }
+
     override fun setBottomSheetSelectedSuggestion(suggestion: String?) {
         updateState(
             screenState.value.copy(
-                bottomSheetSelectedSuggestion = suggestion,
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetSelectedSuggestion = suggestion,
+                )
             )
         )
     }
+
     override fun addBottomSheetImages(newImages: List<String>) {
         updateState(
             screenState.value.copy(
-                bottomSheetImages = screenState.value.bottomSheetImages + newImages
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetImages = screenState.value.bottomSheetUiState.bottomSheetImages + newImages
+                )
             )
         )
     }
+
     override fun deleteBottomSheetImageAt(index: Int) {
-        val images = screenState.value.bottomSheetImages.toMutableList()
+        val images = screenState.value.bottomSheetUiState.bottomSheetImages.toMutableList()
         if (index in images.indices) images.removeAt(index)
-        updateState(screenState.value.copy(bottomSheetImages = images))
+        updateState(
+            screenState.value.copy(
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetImages = images
+                )
+            )
+        )
     }
+
     override fun setBottomSheetAddressDetails(address: String) {
-        updateState(screenState.value.copy(bottomSheetAddressDetails = address))
+        updateState(
+            screenState.value.copy(
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetAddressDetails = address
+                )
+            )
+        )
     }
+
     override fun setBottomSheetSelectedGovernment(government: String) {
-        updateState(screenState.value.copy(bottomSheetSelectedGovernment = government))
+        updateState(
+            screenState.value.copy(
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetSelectedGovernment = government
+                )
+            )
+        )
     }
+
     override fun setBottomSheetSelectedCity(city: String) {
-        updateState(screenState.value.copy(bottomSheetSelectedCity = city))
+        updateState(
+            screenState.value.copy(
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetSelectedCity = city
+                )
+            )
+        )
     }
-    override  fun showGovernmentSheet(show: Boolean) {
-        updateState(screenState.value.copy(isGovernmentSheetVisible = show))
+
+    override fun showGovernmentSheet(show: Boolean) {
+        updateState(
+            screenState.value.copy(
+                bottomSheetUiState = BottomSheetUiState(
+                    isGovernmentSheetVisible = show
+                )
+            )
+        )
     }
+
     override fun showCitySheet(show: Boolean) {
-        updateState(screenState.value.copy(isCitySheetVisible = show))
+        updateState(
+            screenState.value.copy(
+                bottomSheetUiState = BottomSheetUiState(
+                    isCitySheetVisible = show
+                )
+            )
+        )
     }
+
     override fun resetBottomSheetState() {
         updateState(
             screenState.value.copy(
-                bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
-                bottomSheetServiceTitle = "",
-                bottomSheetSubtitle = "",
-                bottomSheetServiceId = "",
-                bottomSheetIconRes = 0,
-                bottomSheetDescription = "",
-                bottomSheetImages = emptyList(),
-                bottomSheetSelectedSuggestion = null,
-                bottomSheetSelectedGovernment = "",
-                bottomSheetSelectedCity = "",
-                bottomSheetAddressDetails = "",
-                isGovernmentSheetVisible = false,
-                isCitySheetVisible = false
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
+                    bottomSheetServiceTitle = "",
+                    bottomSheetSubtitle = "",
+                    bottomSheetServiceId = "",
+                    bottomSheetIconRes = 0,
+                    bottomSheetDescription = "",
+                    bottomSheetImages = emptyList(),
+                    bottomSheetSelectedSuggestion = null,
+                    bottomSheetSelectedGovernment = "",
+                    bottomSheetSelectedCity = "",
+                    bottomSheetAddressDetails = "",
+                    isGovernmentSheetVisible = false,
+                    isCitySheetVisible = false
+                )
             )
         )
     }
-    override fun createRequest(service: RequestServiceUiState , serviceId: String) {
+
+    override fun createRequest(service: RequestServiceUiState, serviceId: String) {
         tryToExecute(
-            execute ={
+            execute = {
                 requestServicesUseCase(service.toRequestService())
             },
             onSuccess = {
                 updateState(
                     screenState.value.copy(
-                        bottomSheetState = false
+                        bottomSheetUiState = BottomSheetUiState(
+                            bottomSheetState = false
+                        )
                     )
                 )
                 updateNumOfRequests(serviceId)
@@ -210,7 +294,7 @@ class CustomerHomeViewModel(
         }
     }
 
-    private fun loadServices(){
+    private fun loadServices() {
         tryToExecute(
             execute = { getAllServicesUseCase().first() },
             onSuccess = {
@@ -232,7 +316,7 @@ class CustomerHomeViewModel(
         )
     }
 
-    private fun loadMostRequestedServices(){
+    private fun loadMostRequestedServices() {
         tryToExecute(
             execute = { getMostRequestedServicesUseCase().first() },
             onSuccess = {
@@ -254,7 +338,7 @@ class CustomerHomeViewModel(
         )
     }
 
-    private fun loadUserData(){
+    private fun loadUserData() {
         tryToExecute(
             execute = { getUserUseCase(getPhoneNumberUseCase()) },
             onSuccess = {
@@ -300,7 +384,9 @@ class CustomerHomeViewModel(
     override fun onDismissBottomSheet() {
         updateState(
             screenState.value.copy(
-                bottomSheetState = false
+                bottomSheetUiState = BottomSheetUiState(
+                    bottomSheetState = false
+                )
             )
         )
         resetBottomSheetState()
