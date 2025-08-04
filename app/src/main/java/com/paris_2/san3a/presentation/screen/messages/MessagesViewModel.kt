@@ -98,7 +98,7 @@ class MessagesViewModel(
 
     override fun onChatClick(chatId: String, otherUserId: String) {
         navigate(
-            Destinations.MessageDetails(chatId, screenState.value.currentUserId ,  otherUserId),
+            Destinations.MessageDetails(chatId, screenState.value.currentUserId, otherUserId),
         )
     }
 
