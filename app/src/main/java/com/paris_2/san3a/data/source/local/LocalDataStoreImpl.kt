@@ -54,6 +54,16 @@ class LocalDataStoreImpl(
         }
     }
 
+    override suspend fun updateAppLanguage(newLanguage: String): Boolean {
+        dataStore.setValue(LOCAL_LANGUAGE, newLanguage)
+        return true
+    }
+
+    override fun getLatestSelectedAppLanguage(): Flow<String> =
+        dataStore.data.map {
+            it[LOCAL_LANGUAGE] ?: ENGLISH
+        }
+
 
     private suspend fun <T> DataStore<Preferences>.setValue(
         key: Preferences.Key<T>,
@@ -71,5 +81,7 @@ class LocalDataStoreImpl(
         private val PHONE_NUMBER = stringPreferencesKey("phone_number")
         private val KEY_USER_LOGGED_IN = booleanPreferencesKey("user_logged_in")
         private val IS_DARK_THEME = booleanPreferencesKey("Is_Dark_Theme")
+        private val LOCAL_LANGUAGE = stringPreferencesKey("LOCAL_LANGUAGE")
+        const val ENGLISH = "en"
     }
 }

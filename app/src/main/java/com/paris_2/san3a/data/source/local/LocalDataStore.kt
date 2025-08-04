@@ -11,4 +11,6 @@ interface LocalDataStore {
     suspend fun getPhoneNumber(): String
     suspend fun setDarkTheme(isDarkTheme: Boolean)
     fun isDarkThemeEnabled(): Flow<Boolean>
+    fun getLatestSelectedAppLanguage(): Flow<String>
+    suspend fun updateAppLanguage(newLanguage: String): Boolean
 }
