@@ -142,12 +142,9 @@ private fun CustomerHomeScreenContent(
                             onCitiesDismissRequest = { action.showCitySheet(false) },
                             onGovernmentSelected = {
                                 action.setBottomSheetSelectedGovernment(it)
-                                action.showGovernmentSheet(false)
-                                action.showCitySheet(true)
                             },
                             onCitiesSelected = {
                                 action.setBottomSheetSelectedCity(it)
-                                action.showCitySheet(false)
                             },
                             government = state.bottomSheetUiState.bottomSheetSelectedGovernment,
                             city = state.bottomSheetUiState.bottomSheetSelectedCity,

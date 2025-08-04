@@ -29,6 +29,7 @@ class CustomerHomeViewModel(
         loadUserData()
         loadMostRequestedServices()
         loadServices()
+        getGovernments()
     }
 
     override fun initBottomSheet(serviceTitle: String, serviceId: String, iconRes: Int) {
@@ -159,17 +160,20 @@ class CustomerHomeViewModel(
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                    bottomSheetSelectedGovernment = government
+                    bottomSheetSelectedGovernment = government,
+                    isGovernmentSheetVisible = false
                 )
             )
         )
+        getCities(government)
     }
 
     override fun setBottomSheetSelectedCity(city: String) {
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                    bottomSheetSelectedCity = city
+                    bottomSheetSelectedCity = city,
+                    isCitySheetVisible = false
                 )
             )
         )
@@ -258,40 +262,81 @@ class CustomerHomeViewModel(
     }
 
     private fun getGovernments() {
-        viewModelScope.launch {
-            val governments = getLocationInfoUseCase.getGovernments(countryName = "Egypt")
-            val firstGov = governments.names.firstOrNull() ?: ""
-
-            updateState(
-                screenState.value.copy(
-                    customerUiState = screenState.value.customerUiState.copy(
-                        locationUiState = screenState.value.customerUiState.locationUiState.copy(
-                            government = firstGov
+        tryToExecute(
+            execute = { getLocationInfoUseCase.getGovernments(countryName = "Egypt") },
+            onSuccess = { governments ->
+                updateState(
+                    screenState.value.copy(
+                        bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                            bottomSheetGovernments = governments.names,
+                            bottomSheetSelectedGovernment = governments.names.firstOrNull() ?: ""
                         ),
-                        government = firstGov
+                        customerUiState = screenState.value.customerUiState.copy(
+                            locationUiState = screenState.value.customerUiState.locationUiState.copy(
+                                government = governments.names.firstOrNull() ?: ""
+                            ),
+                        ),
                     )
                 )
-            )
-        }
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = errorMessage.message,
+                        isLoading = false
+                    )
+                )
+            },
+        )
     }
 
     private fun getCities(stateName: String) {
-        viewModelScope.launch {
-            val cities = getLocationInfoUseCase.getCities(
-                countryName = "Egypt",
-                stateName = stateName
-            )
-
-            updateState(
-                screenState.value.copy(
-                    customerUiState = screenState.value.customerUiState.copy(
-                        locationUiState = screenState.value.customerUiState.locationUiState.copy(
-                            cities = cities.names
-                        )
+        tryToExecute(
+            execute = { getLocationInfoUseCase.getCities(countryName = "Egypt", stateName = stateName) },
+            onSuccess = { cities ->
+                updateState(
+                    screenState.value.copy(
+                        bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                            bottomSheetCities = cities.names,
+                            bottomSheetSelectedCity = cities.names.firstOrNull() ?: "",
+                            isCitySheetVisible = true
+                        ),
+                        customerUiState = screenState.value.customerUiState.copy(
+                            locationUiState = screenState.value.customerUiState.locationUiState.copy(
+                                city = cities.names.firstOrNull() ?: ""
+                            ),
+                        ),
                     )
                 )
-            )
-        }
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = errorMessage.message,
+                        isLoading = false
+                    )
+                )
+            }
+        )
+//        viewModelScope.launch {
+//            val cities = getLocationInfoUseCase.getCities(
+//                countryName = "Egypt",
+//                stateName = stateName
+//            )
+//
+//            updateState(
+//                screenState.value.copy(
+//                    customerUiState = screenState.value.customerUiState.copy(
+//                        locationUiState = screenState.value.customerUiState.locationUiState.copy(
+//                            cities = cities.names
+//                        ),
+//                    ),
+//                    bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+//                        isCitySheetVisible = true
+//                    )
+//                )
+//            )
+//        }
     }
 
     private fun loadServices() {
