@@ -1,7 +1,6 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
 import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
@@ -12,7 +11,6 @@ import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.launch
 import java.util.Locale
 
 class CustomerHomeViewModel(
@@ -414,7 +412,7 @@ class CustomerHomeViewModel(
     }
 
     override fun onNotificationClick() {
-        navigate(Destinations.Notifications)
+        navigate(Destinations.Notification)
     }
 
     override fun onSearch(query: String) {}
