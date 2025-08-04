@@ -88,7 +88,7 @@ private fun MoreScreenContent(
             phoneNumber = moreScreenState.moreUiState.userUiState.phoneNumber,
             isCraftsman = moreScreenState.moreUiState.userUiState.isCraftsman,
             painter = rememberAsyncImagePainter(moreScreenState.moreUiState.userUiState.imageUrl),
-            onClickEdit = moreInteractionListener::onClickEdit,
+            onClickEdit = moreInteractionListener::onClickEditProfileBottomSheet,
         )
 
         AnimatedVisibility(
@@ -154,7 +154,7 @@ private fun MoreScreenContent(
 fun MoreScreenContentPreview() {
     BasePreview {
         MoreScreenContent(MoreScreenState(), object : MoreInteractionListener {
-            override fun onClickEdit() {
+            override fun onClickEditProfileBottomSheet() {
 
             }
 

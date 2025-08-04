@@ -4,14 +4,17 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.User
+import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.presentation.mapper.toUserUiState
-import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 data class MoreScreenState(
@@ -41,11 +44,13 @@ class MoreViewModel(
     private val setLoginUseCase: SetLoginUseCase,
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase
 ) : BaseViewModel<MoreScreenState>(MoreScreenState()), MoreInteractionListener {
 
     init {
         updatePhoneNumber()
         getUserInformation()
+        getDarkMode()
     }
 
     private fun updatePhoneNumber() {
@@ -62,6 +67,33 @@ class MoreViewModel(
             onSuccess = ::onGetUserInformationSuccess,
             onError = ::onGetUserInformationError
         )
+    }
+
+    private fun getDarkMode(){
+        tryToExecute(
+            execute = {customizeProfileSettingsUseCase.isDarkThemeEnabled()},
+            onSuccess = ::onGetDarkModeSuccess,
+            onError = ::onGetDarkModeError
+        )
+    }
+
+    private fun onGetDarkModeSuccess(isDarkMode: Flow<Boolean>){
+        viewModelScope.launch {
+            isDarkMode.collectLatest {
+                updateState(
+                    screenState.value.copy(
+                        moreUiState = screenState.value.moreUiState.copy(
+                            isDarkMode = it
+                        )
+                    )
+                )
+            }
+        }
+
+    }
+
+    private fun onGetDarkModeError(th: Throwable){
+
     }
 
     private fun onGetUserInformationSuccess(user: User) {
@@ -102,7 +134,7 @@ class MoreViewModel(
         )
     }
 
-    override fun onClickEdit() {
+    override fun onClickEditProfileBottomSheet() {
         updateState(
             screenState.value.copy(
                 showEditProfileBottomSheet = !screenState.value.showEditProfileBottomSheet
@@ -157,7 +189,12 @@ class MoreViewModel(
                 )
             )
         )
+        viewModelScope.launch(Dispatchers.IO) {
+            customizeProfileSettingsUseCase.setAppThemeToDark(isDarkMode)
+        }
     }
+
+
 
     override fun onClickNotification() {
         TODO("Not yet implemented")
