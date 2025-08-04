@@ -5,6 +5,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -17,13 +18,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.paris_2.san3a.presentation.navigation.Navigator
 import com.paris_2.san3a.presentation.navigation.San3aNavGraph
-import com.paris_2.san3a.presentation.screen.account.AccountScreen
+import com.paris_2.san3a.presentation.screen.account.UserType
 import com.paris_2.san3a.presentation.shared.components.AppNavBarItem
 import com.paris_2.san3a.presentation.shared.components.AppNavigationBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+
+val LocalCustomerTypeProvider = compositionLocalOf<UserType> {
+    error("No CustomerTypeProvider provided")
+}
 
 @Composable
 fun San3aScaffold(
