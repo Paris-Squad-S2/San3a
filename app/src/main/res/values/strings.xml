@@ -189,5 +189,11 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="sledgehammer_icon">Sledgehammer icon</string>
     <string name="got_a_skill_start_earning">Got a skill? Start earning</string>
     <string name="become_a_craftsman_icon">Become a Craftsman icon</string>
+    <string name="logout_failed">Logout Failed</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="your_name">Your name</string>
+    <string name="your_profile_photo">Your profile photo</string>
+    <string name="image_person">image person</string>
+    <string name="user_information_not_found">User information not found</string>
 
 </resources>
