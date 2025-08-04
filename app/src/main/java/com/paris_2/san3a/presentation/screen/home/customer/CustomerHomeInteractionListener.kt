@@ -10,4 +10,5 @@ interface CustomerHomeInteractionListener {
     fun updateNumOfRequests(serviceId: String)
     fun initBottomSheet(serviceTitle: String, serviceId: String, iconRes: Int)
     fun updateBottomSheetStep(step: BottomSheetStep)
+    fun nextBottomSheetStep()
 }
