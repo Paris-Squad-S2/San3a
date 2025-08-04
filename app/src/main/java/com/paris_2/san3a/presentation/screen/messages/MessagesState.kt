@@ -24,8 +24,8 @@ data class ChatUI(
 fun MessageContent.toMessageContentUI(): String {
     return when (this) {
         is MessageContent.Text -> this.content
-        is MessageContent.Image -> "\uD83D\uDDBC️" // 🖼️
-        is MessageContent.Audio -> "\uD83C\uDFB5" // 🎵
+        is MessageContent.Image -> "\uD83D\uDDBC️" 
+        is MessageContent.Audio -> "\uD83C\uDFB5" 
     }
 }
 
