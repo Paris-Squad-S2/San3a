@@ -185,5 +185,8 @@ class MoreViewModel(
         )
     }
 
+    override fun onPickImageClick() {
+        TODO("Not yet implemented")
+    }
 
 }

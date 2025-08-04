@@ -141,7 +141,7 @@ private fun MoreScreenContent(
                 onNameChange = moreInteractionListener::onNameValueChange,
                 onDismissRequest = moreInteractionListener::onCloseEditProfileBottomSheet,
                 isVisible = moreScreenState.showEditProfileBottomSheet,
-                onPickImageClick = {}
+                onPickImageClick = moreInteractionListener::onPickImageClick
             )
         }
 
@@ -189,6 +189,10 @@ fun MoreScreenContentPreview() {
             }
 
             override fun onCloseEditProfileBottomSheet() {
+            }
+
+            override fun onPickImageClick() {
+
             }
 
         })
