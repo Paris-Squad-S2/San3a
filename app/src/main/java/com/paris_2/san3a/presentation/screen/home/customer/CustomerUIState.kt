@@ -13,7 +13,8 @@ data class CustomerHomeUiState(
     val bottomSheetServiceTitle: String = "",
     val bottomSheetServiceId: String = "",
     val bottomSheetIconRes: Int = 0,
-    val bottomSheetDescription: String = ""
+    val bottomSheetDescription: String = "",
+    val bottomSheetImages: List<String> = emptyList(),
     )
 
 data class CustomerUiState(
