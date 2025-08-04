@@ -8,4 +8,6 @@ interface MoreInteractionListener {
     fun onClickLocation()
     fun onClickLogout()
     fun onChangeToDarkMode(isDarkMode: Boolean)
+    fun onClickNotification()
+    fun onClickBecomeACraftsman()
 }
