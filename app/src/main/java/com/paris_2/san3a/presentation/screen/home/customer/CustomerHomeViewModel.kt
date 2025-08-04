@@ -79,6 +79,9 @@ class CustomerHomeViewModel(
     override fun setBottomSheetServiceTitle(title: String) {
         updateState(screenState.value.copy(bottomSheetServiceTitle = title))
     }
+    override fun setBottomSheetDescription(description: String) {
+        updateState(screenState.value.copy(bottomSheetDescription = description))
+    }
 
     override fun createRequest(service: RequestServiceUiState , serviceId: String) {
         tryToExecute(
