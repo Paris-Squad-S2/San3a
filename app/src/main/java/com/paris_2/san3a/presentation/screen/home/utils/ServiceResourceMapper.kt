@@ -42,15 +42,3 @@ fun getResourceTint(id: String): Color {
         else -> Theme.colors.additional.secondary.blue
     }
 }
-
-//fun getResourceId(title: String): String {
-//    return when(title){
-//        "Painting" -> "00FoToEQx8OAVK8fprck"
-//        "Electrical Services" -> "0AyHLfbkAS6aFnHeZL6Z"
-//        "Cleaning" -> "N1XbpJwF27ByQxGJzGcW"
-//        "AC Repair" -> "VMuPvjaMBy7xZQB2om6l"
-//        "Landscaping" -> "ig1I47LLgLUHg96d8ZwB"
-//        "Plumping" -> "keLsnqeGp8RKpZwWm7J0"
-//        else -> ""
-//    }
-//}
