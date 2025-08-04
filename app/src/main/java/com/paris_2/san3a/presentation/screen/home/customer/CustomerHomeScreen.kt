@@ -143,6 +143,7 @@ private fun CustomerHomeScreenContent(
                             onGovernmentSelected = {
                                 action.setBottomSheetSelectedGovernment(it)
                                 action.showGovernmentSheet(false)
+                                action.showCitySheet(true)
                             },
                             onCitiesSelected = {
                                 action.setBottomSheetSelectedCity(it)
@@ -152,7 +153,6 @@ private fun CustomerHomeScreenContent(
                             city = state.bottomSheetSelectedCity,
                             onGetLocationClicked = {
                                 action.showGovernmentSheet(true)
-                                action.showCitySheet(true)
                             }
                         )
                     }
