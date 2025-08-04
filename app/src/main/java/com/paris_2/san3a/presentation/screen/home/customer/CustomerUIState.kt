@@ -11,7 +11,9 @@ data class CustomerHomeUiState(
     val bottomSheetState: Boolean = false,
     val bottomSheetStep: BottomSheetStep = BottomSheetStep.SELECT_SERVICE,
     val bottomSheetServiceTitle: String = "",
-    val bottomSheetServiceId: String = ""
+    val bottomSheetServiceId: String = "",
+    val bottomSheetIconRes: Int = 0,
+    val bottomSheetDescription: String = ""
     )
 
 data class CustomerUiState(
