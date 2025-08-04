@@ -19,7 +19,7 @@ data class CustomerHomeUiState(
     val bottomSheetGovernments: List<String> = listOf("Cairo", "Giza", "Alex"),
     val bottomSheetCities: List<String> = listOf("Nasr City", "Dokki", "Smouha"),
     val bottomSheetSelectedGovernment: String = "",
-    val bottomSheetSelectedCity: String = ""
+    val bottomSheetSelectedCity: String = "",
     val bottomSheetAddressDetails: String = "",
     val isGovernmentSheetVisible: Boolean = false,
     val isCitySheetVisible: Boolean = false
@@ -32,9 +32,10 @@ data class CustomerUiState(
     val city: String = "",
     val mostRequestedServices: List<Service> = emptyList(),
     val services: List<Service> = emptyList(),
-    val requestService : RequestServiceUiState? = null,
+    val requestService: RequestServiceUiState? = null,
     val locationUiState: LocationUiState = LocationUiState()
 )
+
 data class LocationUiState(
     val government: String = "",
     val city: String = "",
@@ -48,6 +49,7 @@ fun LocationUiState.toEntity(): Location {
         cityName = this.city,
     )
 }
+
 data class RequestServiceUiState(
     val title: String,
     val serviceType: String,
@@ -69,6 +71,7 @@ fun RequestService.toRequestServiceUiState(): RequestServiceUiState {
         userId = this.userId
     )
 }
+
 fun RequestServiceUiState.toRequestService(): RequestService {
     return RequestService(
         id = "",
