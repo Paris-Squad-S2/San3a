@@ -4,6 +4,7 @@ import com.paris_2.san3a.data.source.local.LocalDataStore
 import com.paris_2.san3a.domain.ProfileException
 import com.paris_2.san3a.domain.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 
 class ProfileRepositoryImpl(
     private val localDataStore: LocalDataStore
@@ -21,9 +22,8 @@ class ProfileRepositoryImpl(
     }
 
     override fun getLatestSelectedAppLanguage(): Flow<String> {
-        return safeCallWithoutSuspend(ProfileException()) {
-            localDataStore.getLatestSelectedAppLanguage()
-        }
+        return localDataStore.getLatestSelectedAppLanguage()
+            .catch { ProfileException() }
     }
 
     override suspend fun updateAppLanguage(newLanguage: String): Boolean {

@@ -16,16 +16,4 @@ open class BaseRepository() {
             throw exception
         }
     }
-
-     fun <T> safeCallWithoutSuspend(exception: San3aException, call:  () -> T): T {
-        return try {
-            call()
-        } catch (e: San3aException) {
-            Log.d("BaseRepository", "safeCall: ${e.message}")
-            throw e
-        } catch (a: Exception) {
-            Log.d("BaseRepository2", "safeCall: ${a.message}")
-            throw exception
-        }
-    }
 }
