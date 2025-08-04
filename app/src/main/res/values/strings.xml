@@ -181,5 +181,9 @@ Request deletion of your data by contacting us at [your support email].\n\n
 7. Policy Updates\n
 We may revise this policy from time to time. You will be notified of significant changes.\n
 </string>
+    <string name="notification_icon">notification icon</string>
+    <string name="setting">Settings</string>
+    <string name="switch_to_craftsman">Switch to Craftsman</string>
+    <string name="version">Version %1$s</string>
 
 </resources>
