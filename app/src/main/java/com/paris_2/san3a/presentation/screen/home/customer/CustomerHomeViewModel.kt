@@ -16,7 +16,9 @@ import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.Locale
 import kotlin.invoke
+import kotlin.text.get
 
 class CustomerHomeViewModel(
     private val getAllServicesUseCase: GetAllServicesUseCase,
@@ -380,7 +382,12 @@ class CustomerHomeViewModel(
 
     override fun onServiceClick(serviceId: String) {
         val selectedService = screenState.value.customerUiState.services.find { it.id == serviceId }
-        val serviceTitle = selectedService?.title?.values?.firstOrNull() ?: ""
+        val isArabic = Locale.getDefault().language == "ar"
+        val serviceTitle = if (isArabic) {
+            selectedService?.title?.get("arabicName")
+        } else {
+            selectedService?.title?.get("englishName")
+        } ?: ""
         val iconRes = getResource(serviceId)
         initBottomSheet(serviceTitle, serviceId, iconRes)
     }
