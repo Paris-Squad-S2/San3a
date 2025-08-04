@@ -12,7 +12,7 @@ interface CustomerHomeInteractionListener {
     fun updateBottomSheetStep(step: BottomSheetStep)
     fun nextBottomSheetStep()
     fun previousBottomSheetStep()
-    fun setBottomSheetServiceTitle(title: String)
+    fun setBottomSheetServiceSubTitle(title: String)
     fun setBottomSheetDescription(description: String)
     fun setBottomSheetSelectedSuggestion(suggestion: String?)
     fun addBottomSheetImages(newImages: List<String>)
