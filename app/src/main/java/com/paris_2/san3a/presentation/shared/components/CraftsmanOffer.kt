@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.shared.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -54,7 +55,8 @@ data class OfferDetailsUIState(
     val amount: String = "50,000 IQD",
     val time: String = "Tomorrow, 2:00 PM",
     val postedTime: String = "1 hour ago",
-    val status: OfferStatus = OfferStatus.PENDING_OFFER
+    val status: OfferStatus = OfferStatus.PENDING_OFFER,
+    val isVerify: Boolean = true
 )
 
 /*todo use this when u want to load image from url firebase
@@ -156,14 +158,32 @@ fun CraftsManOffer(
                             .clip(CircleShape),
                     )
 
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_verified_success),
-                        contentDescription = "",
+                    androidx.compose.animation.AnimatedVisibility(
                         modifier = Modifier
-                            .size(16.dp)
-                            .align(Alignment.BottomCenter)
-                            .offset(y = (8).dp)
-                    )
+                            .align(Alignment.BottomCenter).offset(y=8.dp), visible = offerDetails.isVerify
+                    ) {
+                        Box(
+                            modifier = Modifier.size(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_verified_check_bold),
+                                contentDescription = stringResource(R.string.verified_check),
+                                modifier = Modifier
+                                    .size(16.dp),
+                                tint = Theme.colors.additional.primary.success
+                            )
+
+                            Icon(
+                                painter = painterResource(R.drawable.ic_check),
+                                contentDescription = stringResource(R.string.verified_check),
+                                modifier = Modifier
+                                    .size(8.dp),
+                                tint = Color.White
+                            )
+                        }
+
+                    }
 
                 }
                 Spacer(modifier = Modifier.width(12.dp))
