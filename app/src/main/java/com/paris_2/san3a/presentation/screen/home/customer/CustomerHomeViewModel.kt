@@ -8,6 +8,7 @@ import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
+import com.paris_2.san3a.domain.usecase.SearchServiceUseCase
 import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
@@ -23,6 +24,7 @@ class CustomerHomeViewModel(
     private val updateNumOfRequestsUseCase: UpdateNumOfRequestsUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
+    private val searchServiceUseCase: SearchServiceUseCase
 ) : CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
 
     init {
@@ -56,7 +58,7 @@ class CustomerHomeViewModel(
     override fun updateBottomSheetStep(step: BottomSheetStep) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetStep = step
                 )
             )
@@ -66,7 +68,7 @@ class CustomerHomeViewModel(
     override fun nextBottomSheetStep() {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetStep = when (screenState.value.bottomSheetUiState.bottomSheetStep) {
                         BottomSheetStep.SELECT_SERVICE -> BottomSheetStep.PROBLEM_DESCRIPTION
                         BottomSheetStep.PROBLEM_DESCRIPTION -> BottomSheetStep.SELECT_LOCATION
@@ -81,7 +83,7 @@ class CustomerHomeViewModel(
     override fun previousBottomSheetStep() {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetStep = when (screenState.value.bottomSheetUiState.bottomSheetStep) {
                         BottomSheetStep.IMAGE_UPLOAD -> BottomSheetStep.SELECT_LOCATION
                         BottomSheetStep.SELECT_LOCATION -> BottomSheetStep.PROBLEM_DESCRIPTION
@@ -96,7 +98,7 @@ class CustomerHomeViewModel(
     override fun setBottomSheetServiceSubTitle(title: String) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetSubtitle = title
                 )
             )
@@ -106,7 +108,7 @@ class CustomerHomeViewModel(
     override fun setBottomSheetDescription(description: String) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetDescription = description
                 )
             )
@@ -116,7 +118,7 @@ class CustomerHomeViewModel(
     override fun setBottomSheetSelectedSuggestion(suggestion: String?) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetSelectedSuggestion = suggestion,
                 )
             )
@@ -126,7 +128,7 @@ class CustomerHomeViewModel(
     override fun addBottomSheetImages(newImages: List<String>) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetImages = screenState.value.bottomSheetUiState.bottomSheetImages + newImages
                 )
             )
@@ -138,7 +140,7 @@ class CustomerHomeViewModel(
         if (index in images.indices) images.removeAt(index)
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetImages = images
                 )
             )
@@ -148,7 +150,7 @@ class CustomerHomeViewModel(
     override fun setBottomSheetAddressDetails(address: String) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetAddressDetails = address
                 )
             )
@@ -158,7 +160,7 @@ class CustomerHomeViewModel(
     override fun setBottomSheetSelectedGovernment(government: String) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetSelectedGovernment = government
                 )
             )
@@ -168,7 +170,7 @@ class CustomerHomeViewModel(
     override fun setBottomSheetSelectedCity(city: String) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetSelectedCity = city
                 )
             )
@@ -178,7 +180,7 @@ class CustomerHomeViewModel(
     override fun showGovernmentSheet(show: Boolean) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     isGovernmentSheetVisible = show
                 )
             )
@@ -188,7 +190,7 @@ class CustomerHomeViewModel(
     override fun showCitySheet(show: Boolean) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     isCitySheetVisible = show
                 )
             )
@@ -225,7 +227,7 @@ class CustomerHomeViewModel(
             onSuccess = {
                 updateState(
                     screenState.value.copy(
-                        bottomSheetUiState = BottomSheetUiState(
+                        bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                             bottomSheetState = false
                         )
                     )
@@ -384,7 +386,7 @@ class CustomerHomeViewModel(
     override fun onDismissBottomSheet() {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetState = false
                 )
             )
