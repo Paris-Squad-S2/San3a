@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
@@ -37,13 +38,13 @@ fun Offers(
                 .graphicsLayer { rotationZ = 8f }
                 .offset(y = 20.dp),
             offerDetails = OfferDetailsUIState(
-                name = "Ahmed Al-Rashid",
+                name = stringResource(R.string.ahmed_al_rashid),
                 rate = 4.7f,
                 reviewsNumber = 121,
-                description = "I can fix this today. I have 10+ years experience with kitchen plumbing.",
-                amount = "50,000 IQD",
-                time = "Tomorrow, 2:00 PM",
-                postedTime = "5 hour ago",
+                description = stringResource(R.string.i_can_fix_this_today_i_have_10_years_experience_with_kitchen_plumbing),
+                amount = stringResource(R.string._50_000_iqd),
+                time = stringResource(R.string.tomorrow_2_00_pm),
+                postedTime = stringResource(R.string._5_hour_ago),
             ),
             painter = painterResource(id = R.drawable.img_avatar1),
             addShadow = true
@@ -56,12 +57,13 @@ fun Offers(
                 .graphicsLayer { rotationZ = -8f }
                 .offset(y = 70.dp, x = (-8).dp),
             offerDetails = OfferDetailsUIState(
-                name = "Muhammed Ali",
+                name = stringResource(R.string.muhammed_ali),
                 rate = 4.8f,
                 reviewsNumber = 140,
-                description = "Professional plumber with quick response time. I can come today evening.",
-                amount = "35,000 IQD",
-                time = "Tomorrow, 3:00 PM", postedTime = "7 hour ago",
+                description = stringResource(R.string.professional_plumber_with_quick_response_time_i_can_come_today_evening),
+                amount = stringResource(R.string._35_000_iqd),
+                time = "Tomorrow, 3:00 PM",
+                postedTime = stringResource(R.string._7_hour_ago),
             ),
             painter = painterResource(id = R.drawable.img_avatar2),
             addShadow = true,
@@ -73,13 +75,13 @@ fun Offers(
                 .graphicsLayer { rotationZ = 5f }
                 .offset(y = 165.dp, x = 6.dp),
             offerDetails = OfferDetailsUIState(
-                name = "Ahmed Mosa",
+                name = stringResource(R.string.ahmed_mosa),
                 rate = 4.5f,
                 reviewsNumber = 95,
-                description = "Experienced in residential plumbing. Available for urgent jobs right now.",
-                amount = "45,000 IQD",
-                time = "Tomorrow, 1:00 PM",
-                postedTime = "2 hour ago",
+                description = stringResource(R.string.experienced_in_residential_plumbing_available_for_urgent_jobs_right_now),
+                amount = stringResource(R.string._45_000_iqd),
+                time = stringResource(R.string.tomorrow_1_00_pm),
+                postedTime = stringResource(R.string._2_hour_ago),
             ),
             painter = painterResource(id = R.drawable.img_avatar3),
             addShadow = true,

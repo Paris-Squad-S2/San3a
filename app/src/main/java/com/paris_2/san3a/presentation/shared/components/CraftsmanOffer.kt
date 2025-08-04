@@ -34,7 +34,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
@@ -100,7 +99,7 @@ fun CraftsManOffer(
                         }
                         .shadow(
                             elevation = 69.52.dp,
-                            shape = RoundedCornerShape(16.dp),
+                            shape = RoundedCornerShape(Theme.radius.extraLarge),
                             clip = false,
                             ambientColor = Color.Black.copy(alpha = 0.08f),
                             spotColor = Color.Black.copy(alpha = 0.08f)
@@ -109,7 +108,7 @@ fun CraftsManOffer(
                     it
                 }
             },
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(Theme.radius.extraLarge),
         colors = CardDefaults.cardColors(containerColor = animatedBgColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -131,7 +130,12 @@ fun CraftsManOffer(
                     end = 2.dp,
                     bottom = 2.dp
                 )
-                .clip(RoundedCornerShape(bottomEnd = 16.dp, bottomStart = 16.dp))
+                .clip(
+                    RoundedCornerShape(
+                        bottomEnd = Theme.radius.extraLarge,
+                        bottomStart = Theme.radius.extraLarge
+                    )
+                )
                 .background(Theme.colors.background.card)
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -145,7 +149,7 @@ fun CraftsManOffer(
                 ) {
                     Image(
                         painter = painter,
-                        contentDescription = "User profile picture",
+                        contentDescription = "",
                         contentScale = androidx.compose.ui.layout.ContentScale.Crop,
                         modifier = Modifier
                             .size(40.dp)
@@ -154,7 +158,7 @@ fun CraftsManOffer(
 
                     Image(
                         painter = painterResource(id = R.drawable.ic_verified_success),
-                        contentDescription = "Verified icon",
+                        contentDescription = "",
                         modifier = Modifier
                             .size(16.dp)
                             .align(Alignment.BottomCenter)
@@ -192,7 +196,11 @@ fun CraftsManOffer(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "${offerDetails.rate} (${offerDetails.reviewsNumber} reviews)",
+                            text = stringResource(
+                                R.string.craftsman_reviews,
+                                offerDetails.rate,
+                                offerDetails.reviewsNumber
+                            ),
                             style = Theme.textStyle.body.small.medium,
                             color = Theme.colors.shade.primary
                         )
@@ -239,7 +247,7 @@ fun CraftsManOffer(
                         .padding(end = 4.dp)
                         .size(16.dp),
                     painter = painterResource(id = R.drawable.ic_clock_circle_outline),
-                    contentDescription = "Time icon",
+                    contentDescription = "",
                     tint = Theme.colors.shade.secondary
                 )
                 Text(
@@ -248,8 +256,6 @@ fun CraftsManOffer(
                     style = Theme.textStyle.body.small.medium
                 )
             }
-
-
 
             if (offerDetails.status == OfferStatus.PENDING_OFFER)
                 Row(
