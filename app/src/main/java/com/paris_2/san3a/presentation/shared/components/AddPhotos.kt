@@ -89,7 +89,7 @@ fun PhotoHolder(
                 tint = Theme.colors.shade.primary,
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .clickable{ onClickDelete() }
+                    .clickable { onClickDelete() }
             )
         }
     }

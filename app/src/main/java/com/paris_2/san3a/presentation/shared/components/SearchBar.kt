@@ -84,7 +84,7 @@ fun SearchBar(
                         tint = Theme.colors.shade.tertiary,
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .clickable{ onValueChange("") }
+                            .clickable { onValueChange("") }
                     )
                 }
             }

@@ -90,7 +90,7 @@ fun AdCard(
                     .height(40.dp)
                     .clip(RoundedCornerShape(Theme.radius.full))
                     .background(Theme.colors.button.primary)
-                    .clickable{ onClick() }
+                    .clickable { onClick() }
             ){
                 Row(
                     modifier = Modifier.align(Alignment.Center),

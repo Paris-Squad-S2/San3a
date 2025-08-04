@@ -84,7 +84,7 @@ private fun CustomerHomeScreenContent(
     ) {
         AppBar(
             modifier = Modifier
-                . padding(top = 40.dp),
+                .padding(top = 40.dp),
             onActionIconClick = { action.onNotificationClick() },
             title = stringResource(
                 R.string.good_morning,
@@ -140,7 +140,7 @@ private fun CustomerHomeScreenContent(
                     painter = painterResource(getResource(service.id)),
                     modifier = Modifier
                         .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
-                        .clickable{
+                        .clickable {
                             action.onServiceClick(service.id)
                             title = service.title[if (isArabic) "arabicName" else "englishName"] ?: ""
                             serviceId = service.id

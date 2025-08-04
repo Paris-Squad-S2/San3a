@@ -27,20 +27,20 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 @Composable
 fun RequestCardForCraftsMan(
     modifier: Modifier = Modifier,
-    title : String,
-    type : String,
-    offers : String,
-    description : String,
-    location : String,
-    onClick : () -> Unit
-){
+    title: String,
+    type: String,
+    offers: String,
+    description: String,
+    location: String,
+    onClick: () -> Unit
+) {
     Column(
         modifier = modifier
-        .fillMaxWidth()
-        .clip(RoundedCornerShape(defaultSan3aRadius.extraExtraLarge))
-        .background(Theme.colors.background.card)
-        .padding(16.dp)
-        .clickable{ onClick() },
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(defaultSan3aRadius.extraExtraLarge))
+            .background(Theme.colors.background.card)
+            .padding(16.dp)
+            .clickable { onClick() },
         verticalArrangement = Arrangement.Center
     )
     {
@@ -63,7 +63,7 @@ fun RequestCardForCraftsMan(
             }
             Column(
                 modifier = Modifier
-                .padding(horizontal = 12.dp, vertical = 4.dp)
+                    .padding(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 Text(
                     text = title,
@@ -99,14 +99,6 @@ fun RequestCardForCraftsMan(
 
         }
 
-//        Box(
-//            modifier = Modifier
-//                .padding(vertical = 16.dp)
-//                .fillMaxWidth()
-//                .height(1.dp)
-//                .clip(RoundedCornerShape(Theme.radius.full))
-//                .background(Theme.colors.shade.quaternary)
-//        )
         HorizontalDivider(
             modifier = Modifier
                 .padding(vertical = 16.dp)
@@ -114,7 +106,7 @@ fun RequestCardForCraftsMan(
             color = Theme.colors.shade.quaternary,
             thickness = 1.dp
         )
-        Column{
+        Column {
             Text(
                 text = description,
                 style = Theme.textStyle.body.small.regular,
@@ -146,6 +138,7 @@ fun RequestCardForCraftsMan(
 
     }
 }
+
 @Preview
 @Composable
 fun RequestCardForCraftsManPreview() {
