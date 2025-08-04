@@ -11,11 +11,11 @@ import java.util.Locale
 @Composable
 fun InstallSavedAppLanguage(
     context: Context,
-    userSettingsViewModel: MainViewModel = koinViewModel()
+    mainViewModel: MainViewModel = koinViewModel()
 ){
 
     LaunchedEffect(key1 = Unit){
-        userSettingsViewModel.getLastSelectedAppLanguage().collectLatest {language ->
+        mainViewModel.getLastSelectedAppLanguage().collectLatest {language ->
             updateResources(context = context, localeLanguage = Locale(language))
         }
     }
