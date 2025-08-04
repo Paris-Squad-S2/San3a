@@ -6,7 +6,6 @@ import com.google.firebase.firestore.Query
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
-import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto.Companion.toJson
 import kotlinx.coroutines.flow.Flow
 
 class ServiceRemoteDataSourceImpl(

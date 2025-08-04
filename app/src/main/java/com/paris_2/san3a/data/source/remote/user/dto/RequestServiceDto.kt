@@ -9,7 +9,7 @@ data class RequestServiceDto(
     val description: String,
     val location: String,
     val locationDetails: String,
-    val image : List<String>,
+    val image: List<String>,
     val offers: List<Double>,
     val userId: String,
 ) {
@@ -23,23 +23,24 @@ data class RequestServiceDto(
                 location = data["location"] as? String ?: "",
                 locationDetails = data["locationDetails"] as? String ?: "",
                 image = (data["image"] as? List<*>)?.mapNotNull { it as? String } ?: emptyList(),
-                offers = (data["offers"] as? List<*>)?.mapNotNull { (it as? Number)?.toDouble() } ?: emptyList(),
+                offers = (data["offers"] as? List<*>)?.mapNotNull { (it as? Number)?.toDouble() }
+                    ?: emptyList(),
                 userId = data["userId"] as? String ?: ""
             )
         }
-        fun RequestServiceDto.toJson(): Map<String, Any> {
-            val map = mutableMapOf<String, Any>(
-                "title" to title,
-                "serviceType" to serviceType,
-                "description" to description,
-                "location" to location,
-                "locationDetails" to locationDetails,
-                "image" to image,
-                "offers" to offers,
-                "userId" to userId
-            )
-            return map
-        }
+    }
 
+    fun toJson(): Map<String, Any> {
+        val map = mutableMapOf(
+            "title" to title,
+            "serviceType" to serviceType,
+            "description" to description,
+            "location" to location,
+            "locationDetails" to locationDetails,
+            "image" to image,
+            "offers" to offers,
+            "userId" to userId
+        )
+        return map
     }
 }

@@ -77,7 +77,7 @@ private fun CustomerHomeScreenContent(
                         color = Theme.colors.additional.primary.blue,
                         subTitle = stringResource(R.string.what_do_you_need_help_with),
                         buttonTitle = stringResource(R.string.next),
-                        buttonIsActive = state.bottomSheetUiState.bottomSheetServiceTitle.isNotEmpty(),
+                        buttonIsActive = state.bottomSheetUiState.bottomSheetSubtitle.isNotEmpty(),
                         step = 1,
                         onButtonClick = { action.nextBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() },
