@@ -59,7 +59,7 @@
     <string name="what_s_your_name">ما اسمك؟</string>
     <string name="enter_your_full_name">أدخل اسمك الكامل</string>
     <string name="set_your_profile_photo">قم بتعيين صورة ملفك الشخصي</string>
-    <string name="optional">(اختياري)</string>
+    <string name="optional"> (اختياري)</string>
     <string name="i_need_help_with_a_service">أحتاج إلى مساعدة في خدمة</string>
     <string name="craftsman">حرفي</string>
     <string name="i_offer_services">أُقدّم خدمات</string>

@@ -58,7 +58,7 @@
     <string name="what_s_your_name">What’s Your Name?</string>
     <string name="enter_your_full_name">Enter your full name</string>
     <string name="set_your_profile_photo">Set Your Profile Photo</string>
-    <string name="optional">(Optional)</string>
+    <string name="optional"> (optional)</string>
     <string name="i_need_help_with_a_service">I need help with a service</string>
     <string name="craftsman">Craftsman</string>
     <string name="i_offer_services">I offer services</string>

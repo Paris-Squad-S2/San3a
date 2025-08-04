@@ -164,6 +164,7 @@ private fun CustomerHomeScreenContent(
                         icon = state.bottomSheetUiState.bottomSheetIconRes,
                         color = Theme.colors.additional.primary.blue,
                         subTitle = stringResource(R.string.add_some_photos),
+                        optionalText = stringResource(R.string.optional),
                         buttonTitle = stringResource(R.string.create_request),
                         buttonIsActive = true,
                         step = 4,
