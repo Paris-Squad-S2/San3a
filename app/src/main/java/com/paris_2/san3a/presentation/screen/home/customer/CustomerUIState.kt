@@ -8,8 +8,9 @@ data class CustomerHomeUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val customerUiState: CustomerUiState = CustomerUiState(),
-    val bottomSheetState: Boolean = false
-)
+    val bottomSheetState: Boolean = false,
+    val bottomSheetStep: BottomSheetStep = BottomSheetStep.SELECT_SERVICE,
+    )
 
 data class CustomerUiState(
     val id: String = "",
