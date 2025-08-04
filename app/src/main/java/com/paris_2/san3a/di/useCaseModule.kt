@@ -25,6 +25,7 @@ import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.GetWorkMediaUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.messages.MarkMessagesAsSeenUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -52,4 +53,5 @@ val useCaseModule = module {
     factoryOf(::GetUserUseCase)
     factoryOf(::GetWorkMediaUseCase)
     factoryOf(::UpdateNumOfRequestsUseCase)
+    factoryOf(::MarkMessagesAsSeenUseCase)
 }

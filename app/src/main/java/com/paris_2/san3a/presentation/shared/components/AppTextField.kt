@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
@@ -54,6 +55,8 @@ fun AppTextField(
     label: String? = null,
     forgotPasswordClick: (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    textColor: Color? = null,
+    textStyle: TextStyle? = null
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -80,7 +83,7 @@ fun AppTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Theme.colors.background.card, RoundedCornerShape(Theme.radius.large)),
-            textStyle = Theme.textStyle.body.medium.medium,
+            textStyle = textStyle ?: Theme.textStyle.body.medium.medium,
             placeholder = placeholder?.let {
                 {
                     Text(
@@ -128,6 +131,7 @@ fun AppTextField(
             keyboardActions = keyboardActions,
             shape = RoundedCornerShape(Theme.radius.large),
             colors = OutlinedTextFieldDefaults.colors(
+                unfocusedTextColor = textColor ?: Theme.colors.shade.primary,
                 focusedTextColor = Theme.colors.shade.primary,
                 focusedBorderColor = Theme.colors.brand.primary,
                 unfocusedBorderColor = Theme.colors.stroke.primary,

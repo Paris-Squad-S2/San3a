@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface MessageRepository {
     fun getMessagesByChatId(chatId: String): Flow<List<Message>>
     suspend fun saveMessage(message: Message)
+    suspend fun markMessagesAsSeen(chatId: String, userId: String)
 }

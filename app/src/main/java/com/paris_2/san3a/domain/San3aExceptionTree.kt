@@ -12,6 +12,8 @@ class RegisterException(message: String = "register error") : San3aException(mes
 class SendMessageException(id: String) : San3aException("Message with id $id is not send")
 class ReadMessagesException(id: String) :
     San3aException("Messages with related chat id $id is cant be read")
+class MarkMessagesAsSeenException(chatId: String, userId: String) :
+    San3aException("Messages with chat id $chatId and user id $userId is cant be marked as seen")
 
 class ReadChatException(id: String) : San3aException("Chat with id $id is cant be read")
 class DeleteChatException(id: String) : San3aException("Chat with id $id is cant be deleted")
