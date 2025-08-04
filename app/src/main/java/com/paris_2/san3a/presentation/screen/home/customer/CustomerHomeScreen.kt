@@ -75,8 +75,8 @@ private fun CustomerHomeScreenContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
                         icon = state.bottomSheetUiState.bottomSheetIconRes,
                         color = Theme.colors.additional.primary.blue,
-                        subTitle = "What do you need help with?",
-                        buttonTitle = "Next",
+                        subTitle = stringResource(R.string.what_do_you_need_help_with),
+                        buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetServiceTitle.isNotEmpty(),
                         step = 1,
                         onButtonClick = { action.nextBottomSheetStep() },
@@ -92,7 +92,7 @@ private fun CustomerHomeScreenContent(
                                 action.setBottomSheetServiceSubTitle(it)
                             },
                             modifier = Modifier,
-                            hint = "Select a service"
+                            hint = stringResource(R.string.select_a_service)
                         )
                     }
                 }
@@ -102,10 +102,10 @@ private fun CustomerHomeScreenContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
                         icon = state.bottomSheetUiState.bottomSheetIconRes,
                         color = Theme.colors.additional.primary.blue,
-                        subTitle = "Describe the problem in detail",
+                        subTitle = stringResource(R.string.describe_the_problem_in_detail),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetDescription.isNotEmpty(),
                         onButtonClick = { action.nextBottomSheetStep() },
-                        buttonTitle = "Next",
+                        buttonTitle = stringResource(R.string.next),
                         step = 2,
                         onClickBack = { action.previousBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() }
@@ -113,7 +113,7 @@ private fun CustomerHomeScreenContent(
                         RequestDescriptionContent(
                             value = state.bottomSheetUiState.bottomSheetDescription,
                             onValueChange = { action.setBottomSheetDescription(it) },
-                            hint = "Describe your problem"
+                            hint = stringResource(R.string.describe_your_problem)
                         )
                     }
                 }
@@ -123,8 +123,8 @@ private fun CustomerHomeScreenContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
                         icon = state.bottomSheetUiState.bottomSheetIconRes,
                         color = Theme.colors.additional.primary.blue,
-                        subTitle = "Where are you from?",
-                        buttonTitle = "Next",
+                        subTitle = stringResource(R.string.where_are_you_from),
+                        buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetAddressDetails.isNotEmpty(),
                         step = 3,
                         onButtonClick = { action.nextBottomSheetStep() },
@@ -163,8 +163,8 @@ private fun CustomerHomeScreenContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
                         icon = state.bottomSheetUiState.bottomSheetIconRes,
                         color = Theme.colors.additional.primary.blue,
-                        subTitle = "Add some photos",
-                        buttonTitle = "Create Request",
+                        subTitle = stringResource(R.string.add_some_photos),
+                        buttonTitle = stringResource(R.string.create_request),
                         buttonIsActive = true,
                         step = 4,
                         onButtonClick = {
