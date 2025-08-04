@@ -41,8 +41,6 @@ fun Message(
             onPlayClick = onPlayClick,
             recordWave = recordWave,
             listenRatio = listenRatio,
-            modifier = Modifier
-                .weight(1f)
         )
         if (!isReceived) {
             ProfileImage(profileImageUrl)

@@ -24,9 +24,10 @@ import com.paris_2.san3a.presentation.shared.utils.BasePreview
 fun AppBar(
     modifier: Modifier = Modifier,
     actionIcon: @Composable () -> Unit = {},
-    title: String,
+    title: String? = null,
     onBackClick: (() -> Unit)? = null,
     showBackGround: Boolean = true,
+    leadingIcon: @Composable (() -> Unit)? = null
 ) {
 
     Row(
@@ -46,12 +47,15 @@ fun AppBar(
                 )
             }
         }
-        Text(
-            text = title,
-            modifier = Modifier.weight(1F),
-            style = Theme.textStyle.title.small,
-            color = Theme.colors.shade.primary,
-        )
+        leadingIcon?.invoke()
+        title?.let {
+            Text(
+                text = title,
+                modifier = Modifier.weight(1F),
+                style = Theme.textStyle.title.small,
+                color = Theme.colors.shade.primary,
+            )
+        }
         actionIcon()
     }
 

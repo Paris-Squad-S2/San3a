@@ -13,7 +13,7 @@ data class Message(
     val senderId:String ,
     val receiverId:String ,
     val chatId: String ,
-    val messageContent:MessageContent,
+    val messageContent: MessageContent,
     val seen: Boolean,
 )
 sealed class MessageContent{

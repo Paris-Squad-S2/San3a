@@ -1,5 +1,7 @@
 package com.paris_2.san3a.di
 
+import com.paris_2.san3a.presentation.screen.home.craftsman.CraftsmanHomeViewModel
+import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeViewModel
 import com.paris_2.san3a.presentation.screen.account.AccountViewModel
 import com.paris_2.san3a.presentation.screen.messages.MessagesViewModel
 import com.paris_2.san3a.presentation.screen.messagesDetails.MessagesDetailsViewModel
@@ -14,6 +16,8 @@ val viewModelModule = module {
     viewModelOf(::MessagesViewModel)
     viewModelOf(::MessagesDetailsViewModel)
     viewModelOf(::OnBoardingViewModel)
+    viewModelOf(::CraftsmanHomeViewModel)
+    viewModelOf(::CustomerHomeViewModel)
     viewModelOf(::OTPRegisterViewModel)
     viewModelOf(::RegisterViewModel)
     viewModelOf(::AccountViewModel)

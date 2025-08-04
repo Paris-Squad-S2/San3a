@@ -5,6 +5,7 @@ import com.paris_2.san3a.data.mapper.toImageMessageDto
 import com.paris_2.san3a.data.mapper.toMessageList
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
+import com.paris_2.san3a.domain.MarkMessagesAsSeenException
 import com.paris_2.san3a.domain.ReadMessagesException
 import com.paris_2.san3a.domain.SendMessageException
 import com.paris_2.san3a.domain.entity.Message
@@ -53,6 +54,12 @@ class MessageRepositoryImpl(
                     messagesRemoteDataSource.sendMessage(message.toImageMessageDto())
                 }
             }
+        }
+    }
+
+    override suspend fun markMessagesAsSeen(chatId: String, userId: String) {
+        safeCall(MarkMessagesAsSeenException(chatId, userId)) {
+            messagesRemoteDataSource.markMessagesAsSeen(chatId, userId)
         }
     }
 }

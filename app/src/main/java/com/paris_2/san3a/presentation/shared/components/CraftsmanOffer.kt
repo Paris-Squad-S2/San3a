@@ -76,7 +76,7 @@ fun CraftsManOffer(
     offerDetails: OfferDetailsUIState,
     addShadow: Boolean = false,
     onChatClick: () -> Unit,
-    onAcceptOfferClick: () -> Unit,
+    onAcceptOfferClick: () -> Unit
 ) {
 
     val targetColor = when (offerDetails.status) {
