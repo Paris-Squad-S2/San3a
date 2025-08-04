@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.paris_2.san3a.presentation.San3aScaffold
+import com.paris_2.san3a.presentation.utill.InstallSavedAppLanguage
 
 class MainActivity : ComponentActivity() {
 
@@ -14,6 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            InstallSavedAppLanguage(this)
             San3aScaffold()
         }
     }
