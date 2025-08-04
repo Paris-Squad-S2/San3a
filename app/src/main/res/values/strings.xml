@@ -205,10 +205,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="close">Close</string>
     <string name="logout_confirmation_title">Are you sure you want to logout?</string>
     <string name="logout_confirmation_subtitle">You can always sign back in with your account.</string>
-    <string name="edit_profile">Edit Profile</string>
-    <string name="your_name">Your name</string>
     <string name="set_profile_photo">Set profile photo</string>
-    <string name="your_profile_photo">Your profile photo</string>
     <string name="details_title">Details</string>
     <string name="craftsman_not_chosen">Craftsman Not Chosen</string>
     <string name="offers">Offers</string>

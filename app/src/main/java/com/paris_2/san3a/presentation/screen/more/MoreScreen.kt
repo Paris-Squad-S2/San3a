@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.screen.more.components.BecomeCraftsmanCard
 import com.paris_2.san3a.presentation.screen.more.components.EditProfileBottomSheet
 import com.paris_2.san3a.presentation.screen.more.components.LogoutItem
 import com.paris_2.san3a.presentation.screen.more.components.NotificationIcon
@@ -95,7 +96,7 @@ private fun MoreScreenContent(
             modifier = Modifier.padding(top = 8.dp)
         ) {
 
-            //become a craftsman
+            BecomeCraftsmanCard(moreInteractionListener::onClickBecomeACraftsman)
         }
 
         AppSectionTitle(
@@ -136,9 +137,11 @@ private fun MoreScreenContent(
         AnimatedVisibility(moreScreenState.showEditProfileBottomSheet) {
             EditProfileBottomSheet(
                 name = moreScreenState.moreUiState.userUiState.name,
-                imageUrl = moreScreenState.moreUiState.userUiState.imageUrl,
-                onNameValueChange = moreInteractionListener::onNameValueChange,
-                onClickClose = moreInteractionListener::onCloseEditProfileBottomSheet
+                profileUri = moreScreenState.moreUiState.userUiState.imageUrl,
+                onNameChange = moreInteractionListener::onNameValueChange,
+                onDismissRequest = moreInteractionListener::onCloseEditProfileBottomSheet,
+                isVisible = moreScreenState.showEditProfileBottomSheet,
+                onPickImageClick = {}
             )
         }
 
