@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeInteractionListener
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
@@ -19,7 +21,6 @@ import com.paris_2.san3a.presentation.screen.home.utils.getResourceColors
 import com.paris_2.san3a.presentation.screen.home.utils.getResourceTint
 import com.paris_2.san3a.presentation.shared.components.CategoryItem
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
-import kotlin.text.get
 
 @Composable
 fun MostRequestedServices(
@@ -33,7 +34,7 @@ fun MostRequestedServices(
         modifier = modifier
     ) {
         Text(
-            text = "Most Requested",
+            text = stringResource(R.string.most_requested),
             style = Theme.textStyle.title.small,
             color = Theme.colors.shade.primary,
             modifier = Modifier.padding(start = 16.dp)
