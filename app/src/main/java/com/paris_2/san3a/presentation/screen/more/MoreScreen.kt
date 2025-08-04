@@ -2,33 +2,22 @@ package com.paris_2.san3a.presentation.screen.more
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,16 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.screen.more.components.BecomeCraftsman
+import com.paris_2.san3a.presentation.screen.more.components.EditProfileBottomSheet
 import com.paris_2.san3a.presentation.screen.more.components.LogoutItem
 import com.paris_2.san3a.presentation.screen.more.components.NotificationIcon
 import com.paris_2.san3a.presentation.screen.more.components.SettingItems
 import com.paris_2.san3a.presentation.screen.more.components.UserProfileSection
 import com.paris_2.san3a.presentation.shared.components.AppBar
-import com.paris_2.san3a.presentation.shared.components.AppButton
-import com.paris_2.san3a.presentation.shared.components.AppButtonSize
-import com.paris_2.san3a.presentation.shared.components.AppButtonState
-import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.AppSectionTitle
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
@@ -95,24 +80,22 @@ private fun MoreScreenContent(
         )
         UserProfileSection(
             modifier = Modifier.padding(16.dp),
-            name = moreScreenState.moreUiState.name,
-            rating = moreScreenState.moreUiState.rating,
-            review = moreScreenState.moreUiState.review,
-            isVerify = moreScreenState.moreUiState.isVerify,
-            phoneNumber = moreScreenState.moreUiState.phoneNumber,
-            isCraftsman = moreScreenState.moreUiState.isCraftsman,
-            painter = rememberAsyncImagePainter(moreScreenState.moreUiState.imageUrl),
+            name = moreScreenState.moreUiState.userUiState.name,
+            rating = moreScreenState.moreUiState.userUiState.rating,
+            review = moreScreenState.moreUiState.userUiState.review,
+            isVerify = moreScreenState.moreUiState.userUiState.isVerify,
+            phoneNumber = moreScreenState.moreUiState.userUiState.phoneNumber,
+            isCraftsman = moreScreenState.moreUiState.userUiState.isCraftsman,
+            painter = rememberAsyncImagePainter(moreScreenState.moreUiState.userUiState.imageUrl),
             onClickEdit = moreInteractionListener::onClickEdit,
         )
 
         AnimatedVisibility(
-            visible = moreScreenState.moreUiState.isCraftsman,
+            visible = moreScreenState.moreUiState.userUiState.isCraftsman,
             modifier = Modifier.padding(top = 8.dp)
         ) {
-            BecomeCraftsman(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                onClickButton = moreInteractionListener::onClickBecomeACraftsman
-            )
+
+            //become a craftsman
         }
 
         AppSectionTitle(
@@ -124,7 +107,7 @@ private fun MoreScreenContent(
 
         SettingItems(
             modifier = Modifier.padding(horizontal = 16.dp),
-            isCraftsman = moreScreenState.moreUiState.isCraftsman,
+            isCraftsman = moreScreenState.moreUiState.userUiState.isCraftsman,
             isDarkMode = moreScreenState.moreUiState.isDarkMode,
             moreInteractionListener = moreInteractionListener
         )
@@ -149,6 +132,15 @@ private fun MoreScreenContent(
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
+
+        AnimatedVisibility(moreScreenState.showEditProfileBottomSheet) {
+            EditProfileBottomSheet(
+                name = moreScreenState.moreUiState.userUiState.name,
+                imageUrl = moreScreenState.moreUiState.userUiState.imageUrl,
+                onNameValueChange = moreInteractionListener::onNameValueChange,
+                onClickClose = moreInteractionListener::onCloseEditProfileBottomSheet
+            )
+        }
 
     }
 }
@@ -187,6 +179,13 @@ fun MoreScreenContentPreview() {
 
             override fun onClickBecomeACraftsman() {
 
+            }
+
+            override fun onNameValueChange(name: String) {
+
+            }
+
+            override fun onCloseEditProfileBottomSheet() {
             }
 
         })

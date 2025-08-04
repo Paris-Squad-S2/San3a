@@ -5,6 +5,8 @@ data class User(
     val phone: String,
     val fullName: String,
     val profilePhoto: String,
+    val rating: Double,
+    val review: Int,
     val nationalIdFrontImage: String,
     val nationalIdBackImage: String,
     val workDescription: String,

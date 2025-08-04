@@ -10,4 +10,6 @@ interface MoreInteractionListener {
     fun onChangeToDarkMode(isDarkMode: Boolean)
     fun onClickNotification()
     fun onClickBecomeACraftsman()
+    fun onNameValueChange(name: String)
+    fun onCloseEditProfileBottomSheet()
 }

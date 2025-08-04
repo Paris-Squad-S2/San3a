@@ -128,6 +128,13 @@ private fun SettingItemsPreview() {
                 override fun onClickBecomeACraftsman() {
                 }
 
+                override fun onNameValueChange(name: String) {
+
+                }
+
+                override fun onCloseEditProfileBottomSheet() {
+                }
+
             }
         )
     }
