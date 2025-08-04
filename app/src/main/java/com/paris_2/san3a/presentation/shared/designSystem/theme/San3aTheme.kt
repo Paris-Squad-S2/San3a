@@ -4,7 +4,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.presentation.shared.designSystem.color.LocalSan3aColors
 import com.paris_2.san3a.presentation.shared.designSystem.color.darkThemeColors
 import com.paris_2.san3a.presentation.shared.designSystem.color.lightThemeColors
@@ -13,7 +12,6 @@ import com.paris_2.san3a.presentation.shared.designSystem.radius.defaultSan3aRad
 import com.paris_2.san3a.presentation.shared.designSystem.textStyle.LocalSan3aTextStyle
 import com.paris_2.san3a.presentation.shared.designSystem.textStyle.defaultTextStyle
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 @Composable

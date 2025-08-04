@@ -1,6 +1,7 @@
 package com.paris_2.san3a.di
 
 import com.paris_2.san3a.presentation.screen.account.AccountViewModel
+import com.paris_2.san3a.presentation.screen.main.MainViewModel
 import com.paris_2.san3a.presentation.screen.messages.MessagesViewModel
 import com.paris_2.san3a.presentation.screen.messagesDetails.MessagesDetailsViewModel
 import com.paris_2.san3a.presentation.screen.more.MoreViewModel
@@ -19,4 +20,5 @@ val viewModelModule = module {
     viewModelOf(::RegisterViewModel)
     viewModelOf(::AccountViewModel)
     viewModelOf(::MoreViewModel)
+    viewModelOf(::MainViewModel)
 }

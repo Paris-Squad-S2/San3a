@@ -99,7 +99,7 @@ private fun SettingItemsPreview() {
             isCraftsman = true,
             isDarkMode = false,
             moreInteractionListener = object : MoreInteractionListener {
-                override fun onClickEdit() {
+                override fun onClickEditProfileBottomSheet() {
 
                 }
 
@@ -133,6 +133,9 @@ private fun SettingItemsPreview() {
                 }
 
                 override fun onCloseEditProfileBottomSheet() {
+                }
+
+                override fun onPickImageClick() {
                 }
 
             }

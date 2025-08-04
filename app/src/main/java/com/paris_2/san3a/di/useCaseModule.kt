@@ -1,5 +1,6 @@
 package com.paris_2.san3a.di
 
+import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.domain.usecase.messages.DeleteChatByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
@@ -42,4 +43,5 @@ val useCaseModule = module {
     factoryOf(::GetUserUseCase)
     factoryOf(::GetWorkMediaUseCase)
     factoryOf(::MarkMessagesAsSeenUseCase)
+    factoryOf(::CustomizeProfileSettingsUseCase)
 }

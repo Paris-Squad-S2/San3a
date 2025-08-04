@@ -16,18 +16,14 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.presentation.navigation.Navigator
 import com.paris_2.san3a.presentation.navigation.San3aNavGraph
-import com.paris_2.san3a.presentation.screen.account.AccountScreen
 import com.paris_2.san3a.presentation.screen.main.MainViewModel
 import com.paris_2.san3a.presentation.shared.components.AppNavBarItem
 import com.paris_2.san3a.presentation.shared.components.AppNavigationBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
