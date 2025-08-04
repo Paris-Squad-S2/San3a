@@ -38,6 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.presentation.LocalUserType
 import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
@@ -163,7 +165,7 @@ sealed class AppNavBarItem(
         selectedIcon = R.drawable.ic_clipboard_bold,
         unSelectedIcon = R.drawable.ic_clipboard_outline,
         destination = Destinations.MyRequest,
-        label = R.string.my_request
+        label = if (LocalUserType.value == AccountType.CUSTOMER) R.string.my_request else R.string.my_jobs
     )
 
     data object Messages : AppNavBarItem(
