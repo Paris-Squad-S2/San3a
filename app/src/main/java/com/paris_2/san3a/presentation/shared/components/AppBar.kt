@@ -1,12 +1,10 @@
 package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -21,23 +19,22 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
-    onActionIconClick: (() -> Unit)? = null,
     actionIcon: @Composable () -> Unit = {},
-    title: String,
-    location: String? = null,
+    title: String? = null,
     onBackClick: (() -> Unit)? = null,
     showBackGround: Boolean = true,
+    leadingIcon: @Composable (() -> Unit)? = null
 ) {
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .background(color = if (showBackGround) Theme.colors.background.card else Color.Unspecified)
-            .padding(start = 8.dp, end = 16.dp)
-            .padding(vertical = 8.dp),
+            .padding(8.dp),
 
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -50,59 +47,16 @@ fun AppBar(
                 )
             }
         }
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = if (onBackClick == null) 16.dp else 0.dp)
-        ) {
+        leadingIcon?.invoke()
+        title?.let {
             Text(
                 text = title,
+                modifier = Modifier.weight(1F),
                 style = Theme.textStyle.title.small,
                 color = Theme.colors.shade.primary,
             )
-            actionIcon()
-            if (location != null) {
-                Row(
-                    modifier = Modifier
-                        .padding(top = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_location_outline),
-                        contentDescription = "",
-                        tint = Theme.colors.shade.secondary,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .padding(end = 4.dp)
-                    )
-                    Text(
-                        text = location,
-                        style = Theme.textStyle.body.small.medium,
-                        color = Theme.colors.shade.secondary
-                    )
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_alt_arrow_down_outline),
-                        contentDescription = "",
-                        tint = Theme.colors.shade.secondary,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .padding(start = 4.dp)
-                    )
-                }
-            }
-
-
         }
-
-        if (onActionIconClick != null)
-            Icon(
-                painter = painterResource(R.drawable.ic_notification_outline),
-                contentDescription = null,
-                tint = Theme.colors.shade.primary,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { onActionIconClick() }
-            )
+        actionIcon()
     }
 
 }
@@ -114,18 +68,13 @@ private fun AppBarPrev() {
         AppBar(
             title = "Title",
             onBackClick = {},
-        )
-    }
-}
-
-@PreviewLightDark
-@Composable
-private fun AppBarPrev2() {
-    BasePreview {
-        AppBar(
-            title = "Title",
-            onBackClick = null,
-            location = "Location",
+            actionIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_notification_outline),
+                    contentDescription = null,
+                    tint = Theme.colors.shade.primary
+                )
+            }
         )
     }
 }

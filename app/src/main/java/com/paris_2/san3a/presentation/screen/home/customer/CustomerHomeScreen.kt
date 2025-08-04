@@ -5,14 +5,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -214,12 +218,61 @@ private fun CustomerHomeScreenContent(
         AppBar(
             modifier = Modifier
                 .padding(top = 40.dp),
-            onActionIconClick = { action.onNotificationClick() },
-            title = stringResource(
-                R.string.good_morning,
-                state.customerUiState.currentUserName
-            ),
-            location = "${state.customerUiState.government}, ${state.customerUiState.city}",
+            actionIcon = {
+                Icon(
+                    modifier = Modifier
+                        .clickable(onClick = {
+                            action.onNotificationClick()
+                        }),
+                    painter = painterResource(R.drawable.ic_notification_outline),
+                    contentDescription = null,
+                    tint = Theme.colors.shade.primary
+                )
+            },
+            leadingIcon = {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string.good_morning,
+                            state.customerUiState.currentUserName
+                        ),
+
+                        style = Theme.textStyle.title.small,
+                        color = Theme.colors.shade.primary,
+                    )
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_location_outline),
+                            contentDescription = "",
+                            tint = Theme.colors.shade.secondary,
+                            modifier = Modifier
+                                .size(16.dp)
+                                .padding(end = 4.dp)
+                        )
+                        Text(
+                            text = "${state.customerUiState.government}, ${state.customerUiState.city}",
+                            style = Theme.textStyle.body.small.medium,
+                            color = Theme.colors.shade.secondary
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_alt_arrow_down_outline),
+                            contentDescription = "",
+                            tint = Theme.colors.shade.secondary,
+                            modifier = Modifier
+                                .size(16.dp)
+                                .padding(start = 4.dp)
+                        )
+                    }
+                }
+            },
         )
         LazyColumn(
             modifier = Modifier
