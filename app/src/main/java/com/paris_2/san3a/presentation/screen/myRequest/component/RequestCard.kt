@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -110,6 +111,7 @@ fun RequestCard(
             Spacer(modifier = Modifier.height(12.dp))
             Divider(
                 modifier = Modifier
+                    .height(1.dp)
                     .background(Theme.colors.shade.quaternary)
             )
             Spacer(modifier = Modifier.height(12.dp))
@@ -149,6 +151,7 @@ fun RequestCard(
             Divider(
                 modifier = Modifier
                     .background(Theme.colors.shade.quaternary)
+                    .height(1.dp)
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -225,13 +228,41 @@ private fun CraftsmanSection(
 ) {
     if (!imageUri.isNullOrEmpty() && !name.isNullOrEmpty()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            AsyncImage(
-                model = imageUri,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(36.dp)
-                    .clip(CircleShape)
-            )
+            Box(modifier = Modifier.size(36.dp)) {
+                AsyncImage(
+                    model = imageUri,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clip(CircleShape)
+                )
+
+                if (isVerified) {
+                    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+                    Box(
+                        modifier = Modifier
+                            .size(14.dp)
+                            .align(Alignment.Center)
+                            .offset(
+                                x = if (isRtl) (-11).dp else 11.dp,
+                                y = 11.dp
+                            )
+                            .background(
+                                color = Theme.colors.background.card,
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_verified_check_bold),
+                            contentDescription = null,
+                            tint = Theme.colors.additional.primary.success,
+                            modifier = Modifier.size(10.dp)
+                        )
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.width(8.dp))
             Column {
                 Text(
@@ -332,7 +363,9 @@ private fun CraftsmanSection(
                             painter = painterResource(id = R.drawable.ic_clipboard_outline),
                             contentDescription = null,
                             tint = Theme.colors.brand.primary,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier
+                                .size(16.dp)
+                                .align(Alignment.CenterVertically)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
@@ -364,6 +397,7 @@ fun RequestCardPreview() {
         actionButtonText = stringResource(R.string.cancel),
         onActionClick = {},
         showOffersLink = true,
+        isVerified = true
     )
 }
 
@@ -399,7 +433,7 @@ fun RequestCardNoCraftsmanWithOffersPreview() {
         actionButtonText = "View Offers",
         onActionClick = {},
         showOffersLink = true,
-        buttonIconPosition = IconPosition.End
+        buttonIconPosition = IconPosition.End,
     )
 }
 
