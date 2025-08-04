@@ -221,4 +221,5 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="my_jobs">My Jobs</string>
     <string name="search">Search...</string>
     <string name="most_requested">Most Requested</string>
+    <string name="notifications">Notifications</string>
 </resources>

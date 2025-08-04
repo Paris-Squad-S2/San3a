@@ -12,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.notification.components.NotificationCard
 import com.paris_2.san3a.presentation.screen.notification.components.NotificationEmptyScreen
 import com.paris_2.san3a.presentation.shared.components.AppBar
@@ -31,7 +33,7 @@ fun NotificationScreen(
     AppScaffold(
         topBar = {
             AppBar(
-                title = "Notifications",
+                title = stringResource(R.string.notifications),
                 onBackClick = { viewModel.onBackClick() },
 
                 )
