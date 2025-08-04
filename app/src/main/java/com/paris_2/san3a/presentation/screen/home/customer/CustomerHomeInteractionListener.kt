@@ -22,5 +22,6 @@ interface CustomerHomeInteractionListener {
     fun setBottomSheetSelectedCity(city: String)
     fun showGovernmentSheet(show: Boolean)
     fun showCitySheet(show: Boolean)
+    fun resetBottomSheetState()
 
 }
