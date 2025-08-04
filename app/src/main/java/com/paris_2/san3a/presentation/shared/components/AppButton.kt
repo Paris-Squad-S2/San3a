@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -42,6 +43,11 @@ enum class AppButtonSize {
     Large
 }
 
+enum class IconPosition {
+    Start, End
+}
+
+
 sealed class AppButtonType {
     object Primary : AppButtonType()
     object Secondary : AppButtonType()
@@ -64,6 +70,7 @@ fun AppButton(
     enableSecondaryBackgroundColor: Color = Theme.colors.button.secondary,
     loadingIcon: @Composable (() -> Unit)? = null,
     icon: ImageVector? = null,
+    iconPosition: IconPosition? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isLoading = (state == AppButtonState.Loading)
@@ -98,16 +105,34 @@ fun AppButton(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            if (icon != null && iconPosition == IconPosition.Start && !isLoading) {
+                Icon(
+                    modifier = modifier.size(20.dp),
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = buttonContentColor,
+
+                    )
+                if (!text.isNullOrEmpty()) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+            }
+
             text?.let {
                 Text(
                     text = it,
-                    style = if (size == AppButtonSize.Large) Theme.textStyle.body.medium.medium else Theme.textStyle.body.small.regular,
+                    style = if (size == AppButtonSize.Large)
+                        Theme.textStyle.body.medium.medium
+                    else
+                        Theme.textStyle.body.small.regular,
                     color = buttonContentColor
                 )
             }
 
-            if (icon != null && !isLoading) {
-                Spacer(modifier = Modifier.padding(8.dp))
+            if (icon != null && iconPosition == IconPosition.End && !isLoading) {
+                if (!text.isNullOrEmpty()) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
@@ -116,11 +141,11 @@ fun AppButton(
             }
 
             AnimatedVisibility(visible = isLoading, enter = fadeIn()) {
-                loadingIcon?.let {
-                    it()
-                }
+                loadingIcon?.invoke()
             }
         }
+
+
     }
 }
 

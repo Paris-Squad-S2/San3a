@@ -28,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
-import coil3.Uri
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppTextField
@@ -38,7 +37,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun EditProfileBottomSheetContent(
     name: String,
     onNameChange: (String) -> Unit,
-    profilePhotoUri: Uri?,
+    profilePhotoUri: String?,
     onPickImageClick: () -> Unit,
 ) {
     Column(

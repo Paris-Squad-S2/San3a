@@ -195,5 +195,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="your_name">Your name</string>
     <string name="set_profile_photo">Set profile photo</string>
     <string name="your_profile_photo">Your profile photo</string>
-
+    <string name="details_title">Details</string>
+    <string name="craftsman_not_chosen">Craftsman Not Chosen</string>
+    <string name="offers">Offers</string>
 </resources>

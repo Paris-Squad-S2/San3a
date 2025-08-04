@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil3.Uri
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.BottomSheet
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -21,7 +20,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun EditProfileBottomSheet(
     name: String,
     onNameChange: (String) -> Unit,
-    profileUri: Uri?,
+    profileUri: String?,
     onPickImageClick: () -> Unit,
     isVisible: Boolean,
     onDismissRequest: () -> Unit,
