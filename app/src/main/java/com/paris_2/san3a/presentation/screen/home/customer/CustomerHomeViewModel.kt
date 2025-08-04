@@ -10,6 +10,7 @@ import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
 import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
+import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -29,6 +30,26 @@ class CustomerHomeViewModel(
         loadMostRequestedServices()
         loadServices()
     }
+    override fun initBottomSheet(serviceTitle: String, serviceId: String, iconRes: Int) {
+        updateState(
+            screenState.value.copy(
+                bottomSheetState = true,
+                bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
+                bottomSheetServiceTitle = serviceTitle,
+                bottomSheetServiceId = serviceId,
+                bottomSheetIconRes = iconRes,
+                bottomSheetDescription = "",
+                bottomSheetImages = emptyList(),
+                bottomSheetSelectedSuggestion = null,
+                bottomSheetSelectedGovernment = "",
+                bottomSheetSelectedCity = "",
+                bottomSheetAddressDetails = "",
+                isGovernmentSheetVisible = false,
+                isCitySheetVisible = false
+            )
+        )
+    }
+
 
     override fun createRequest(service: RequestServiceUiState , serviceId: String) {
         tryToExecute(
@@ -182,11 +203,9 @@ class CustomerHomeViewModel(
     override fun onSearch(query: String) {}
 
     override fun onServiceClick(serviceId: String) {
-        updateState(
-            screenState.value.copy(
-                bottomSheetState = true
-            )
-        )
+        val selectedService = screenState.value.customerUiState.services.find { it.id == serviceId }
+        val serviceTitle = selectedService?.title?.values?.firstOrNull() ?: ""
+        val iconRes = getResource(serviceId)
     }
 
     override fun onBecomeCraftsmanClick() {
@@ -200,5 +219,4 @@ class CustomerHomeViewModel(
             )
         )
     }
-
 }
