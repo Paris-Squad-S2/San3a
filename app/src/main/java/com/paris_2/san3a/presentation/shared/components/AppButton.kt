@@ -59,7 +59,8 @@ fun AppButton(
     enablePrimaryBackgroundColor: Color = Theme.colors.button.primary,
     enableSecondaryBackgroundColor: Color = Theme.colors.button.secondary,
     loadingIcon: @Composable (() -> Unit)? = null,
-) {
+    trailingIcon: @Composable (() -> Unit)? = null,
+    ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isLoading = (state == AppButtonState.Loading)
     val isLarge = (size == AppButtonSize.Large)
@@ -100,6 +101,7 @@ fun AppButton(
                     color = buttonContentColor
                 )
             }
+            trailingIcon?.invoke()
 
             AnimatedVisibility(visible = isLoading, enter = fadeIn()) {
                 loadingIcon?.let {
