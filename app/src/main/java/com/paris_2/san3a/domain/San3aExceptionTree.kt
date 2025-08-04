@@ -1,5 +1,7 @@
 package com.paris_2.san3a.domain
 
+import com.paris_2.san3a.domain.entity.RequestService
+
 abstract class San3aException(message: String) : Exception(message)
 
 class NoInternetConnectionException(message: String = "No internet connection") :
@@ -33,6 +35,7 @@ class UploadNationalIdImagesException : San3aException("Couldn't upload national
 class GetStatsException : San3aException("Couldn't get user stats")
 class GetRecentRelatedJobsException : San3aException("Couldn't get recent related jobs")
 class SearchServicesException : San3aException("Couldn't search services")
+class RequestServiceException(requestedService: RequestService): San3aException("Couldn't request service $requestedService")
 class GetMostRequestedServicesException : San3aException("Couldn't get most requested services")
 class GetAvailableJobsException : San3aException("Couldn't get available jobs")
 class NoGovernmentsFoundException : San3aException("No Governments Found")

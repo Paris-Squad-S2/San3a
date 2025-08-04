@@ -8,6 +8,7 @@ import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.domain.GetAllServicesException
 import com.paris_2.san3a.domain.GetAvailableJobsException
 import com.paris_2.san3a.domain.GetMostRequestedServicesException
+import com.paris_2.san3a.domain.RequestServiceException
 import com.paris_2.san3a.domain.SearchServicesException
 import com.paris_2.san3a.domain.UpdateNumOfRequestsException
 import com.paris_2.san3a.domain.entity.RequestService
@@ -35,7 +36,7 @@ class HomeRepositoryImpl(
     }
 
     override suspend fun requestService(requestedService: RequestService) {
-        try {
+        safeCall(RequestServiceException(requestedService)){
             val imageUris = requestedService.image
             val imageUrls = if (imageUris.isNotEmpty()) {
                 val paths = imageUris.map { uri ->
@@ -53,8 +54,6 @@ class HomeRepositoryImpl(
             }
 
             serviceRemoteDataSource.requestService(requestedService.toDto(imageUrls))
-        } catch (e: Exception) {
-            throw e
         }
     }
 
