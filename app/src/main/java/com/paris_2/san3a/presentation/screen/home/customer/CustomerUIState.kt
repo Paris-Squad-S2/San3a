@@ -20,7 +20,10 @@ data class CustomerHomeUiState(
     val bottomSheetCities: List<String> = listOf("Nasr City", "Dokki", "Smouha"),
     val bottomSheetSelectedGovernment: String = "",
     val bottomSheetSelectedCity: String = ""
-    )
+    val bottomSheetAddressDetails: String = "",
+    val isGovernmentSheetVisible: Boolean = false,
+    val isCitySheetVisible: Boolean = false
+)
 
 data class CustomerUiState(
     val id: String = "",
