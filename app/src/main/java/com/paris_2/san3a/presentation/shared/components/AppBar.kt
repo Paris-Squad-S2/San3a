@@ -25,6 +25,7 @@ import com.paris_2.san3a.presentation.shared.utils.BasePreview
 fun AppBar(
     modifier: Modifier = Modifier,
     onActionIconClick: (() -> Unit)? = null,
+    actionIcon: @Composable () -> Unit = {},
     title: String,
     location: String? = null,
     onBackClick: (() -> Unit)? = null,
@@ -59,6 +60,7 @@ fun AppBar(
                 style = Theme.textStyle.title.small,
                 color = Theme.colors.shade.primary,
             )
+            actionIcon()
             if (location != null) {
                 Row(
                     modifier = Modifier
