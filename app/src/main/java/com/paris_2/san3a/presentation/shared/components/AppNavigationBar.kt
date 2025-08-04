@@ -39,7 +39,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.AccountType
-import com.paris_2.san3a.presentation.LocalUserType
+import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
@@ -50,7 +50,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun AppNavigationBar(
     selectedItem: AppNavBarItem,
     modifier: Modifier = Modifier,
-    destinations: List<AppNavBarItem> = AppNavBarItem.destinations,
+    destinations: List<AppNavBarItem> = AppNavBarItem.destinations(),
     onItemClick: (Destination) -> Unit = {}
 ) {
     val strokeColor = Theme.colors.stroke.primary
@@ -161,11 +161,11 @@ sealed class AppNavBarItem(
         label = R.string.home
     )
 
-    data object MyRequest : AppNavBarItem(
+    data class MyRequest(val accountType: AccountType) : AppNavBarItem(
         selectedIcon = R.drawable.ic_clipboard_bold,
         unSelectedIcon = R.drawable.ic_clipboard_outline,
         destination = Destinations.MyRequest,
-        label = if (LocalUserType.value == AccountType.CUSTOMER) R.string.my_request else R.string.my_jobs
+        label = if (accountType == AccountType.CUSTOMER) R.string.my_request else R.string.my_jobs
     )
 
     data object Messages : AppNavBarItem(
@@ -183,20 +183,27 @@ sealed class AppNavBarItem(
     )
 
     companion object {
-        val destinations = listOf(Home, MyRequest, Messages, More)
+        fun destinations(accountType: AccountType = LocalAccountType.value): List<AppNavBarItem> {
+            return listOf(
+                Home,
+                MyRequest(accountType),
+                Messages,
+                More
+            )
+        }
     }
 }
 
 @Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun AppNavigationHomeSelectedBarPreview() {
-    var selectedItem by remember { mutableStateOf(AppNavBarItem.destinations[0]) }
+    var selectedItem by remember { mutableStateOf(AppNavBarItem.destinations()[0]) }
 
     San3aTheme {
         AppNavigationBar(
             selectedItem = selectedItem,
             onItemClick = { },
-            destinations = AppNavBarItem.destinations
+            destinations = AppNavBarItem.destinations()
         )
     }
 }
@@ -204,13 +211,13 @@ private fun AppNavigationHomeSelectedBarPreview() {
 @Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun AppNavigationMyRequestSelectedBarPreview() {
-    var selectedItem by remember { mutableStateOf(AppNavBarItem.destinations[1]) }
+    var selectedItem by remember { mutableStateOf(AppNavBarItem.destinations()[1]) }
 
     San3aTheme {
         AppNavigationBar(
             selectedItem = selectedItem,
             onItemClick = { },
-            destinations = AppNavBarItem.destinations
+            destinations = AppNavBarItem.destinations()
         )
     }
 }
@@ -218,13 +225,13 @@ private fun AppNavigationMyRequestSelectedBarPreview() {
 @Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun AppNavigationMessagesSelectedBarPreview() {
-    var selectedItem by remember { mutableStateOf(AppNavBarItem.destinations[2]) }
+    var selectedItem by remember { mutableStateOf(AppNavBarItem.destinations()[2]) }
 
     San3aTheme {
         AppNavigationBar(
             selectedItem = selectedItem,
             onItemClick = { },
-            destinations = AppNavBarItem.destinations
+            destinations = AppNavBarItem.destinations()
         )
     }
 }
@@ -234,13 +241,13 @@ private fun AppNavigationMessagesSelectedBarPreview() {
 @Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun AppNavigationMoreSelectedBarPreview() {
-    var selectedItem by remember { mutableStateOf(AppNavBarItem.destinations[3]) }
+    var selectedItem by remember { mutableStateOf(AppNavBarItem.destinations()[3]) }
 
     San3aTheme {
         AppNavigationBar(
             selectedItem = selectedItem,
             onItemClick = { },
-            destinations = AppNavBarItem.destinations
+            destinations = AppNavBarItem.destinations()
         )
     }
 }

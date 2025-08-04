@@ -26,7 +26,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
-val LocalUserType = mutableStateOf(AccountType.CUSTOMER)
+val LocalAccountType = mutableStateOf(AccountType.CUSTOMER)
 
 @Composable
 fun San3aScaffold(
@@ -38,7 +38,7 @@ fun San3aScaffold(
 
     val selectedDestinationIndex by remember(currentBackStackEntry) {
         derivedStateOf {
-            AppNavBarItem.destinations.indexOfFirst { item ->
+            AppNavBarItem.destinations().indexOfFirst { item ->
                 currentBackStackEntry?.destination?.hasRoute(item.destination::class) == true
             }.coerceAtLeast(0)
         }
@@ -46,7 +46,7 @@ fun San3aScaffold(
 
     val isVisible by remember {
         derivedStateOf {
-            AppNavBarItem.destinations.any {
+            AppNavBarItem.destinations().any {
                 currentBackStackEntry?.destination?.hasRoute(it.destination::class) == true
             }
         }
@@ -66,7 +66,8 @@ fun San3aScaffold(
                     exit = slideOutVertically(targetOffsetY = { it }),
                 ) {
                     AppNavigationBar(
-                        selectedItem = AppNavBarItem.destinations[selectedDestinationIndex],
+                        destinations = AppNavBarItem.destinations(LocalAccountType.value),
+                        selectedItem = AppNavBarItem.destinations(LocalAccountType.value)[selectedDestinationIndex],
                         onItemClick = { destination ->
                             scope.launch {
                                 navigator.navigate(
