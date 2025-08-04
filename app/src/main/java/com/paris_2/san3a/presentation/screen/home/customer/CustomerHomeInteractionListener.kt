@@ -12,5 +12,6 @@ interface CustomerHomeInteractionListener {
     fun updateBottomSheetStep(step: BottomSheetStep)
     fun nextBottomSheetStep()
     fun previousBottomSheetStep()
+    fun setBottomSheetServiceTitle(title: String)
 
 }
