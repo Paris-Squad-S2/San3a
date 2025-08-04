@@ -17,7 +17,7 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 @Composable
 fun NotificationIcon(modifier: Modifier = Modifier) {
     Icon(
-        modifier = modifier.size(40.dp),
+        modifier = modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_notification_outline),
         contentDescription = stringResource(R.string.notification_icon),
         tint = Theme.colors.shade.primary

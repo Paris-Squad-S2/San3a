@@ -68,16 +68,19 @@ fun SettingItems(
             onClickItem = moreInteractionListener::onClickLocation
         )
         AnimatedVisibility(isCraftsman) {
-            SettingItem(
-                icon = R.drawable.ic_sledgehammer_outline,
-                label = R.string.my_services,
-                onClickItem = moreInteractionListener::onClickSwitchAccountToCraftsman
-            )
-            SettingItem(
-                icon = R.drawable.ic_verified_check_outline,
-                label = R.string.verification,
-                onClickItem = moreInteractionListener::onClickSwitchAccountToCraftsman
-            )
+            Column {
+                SettingItem(
+                    icon = R.drawable.ic_sledgehammer_outline,
+                    label = R.string.my_services,
+                    onClickItem = moreInteractionListener::onClickSwitchAccountToCraftsman
+                )
+                SettingItem(
+                    icon = R.drawable.ic_verified_check_outline,
+                    label = R.string.verification,
+                    onClickItem = moreInteractionListener::onClickSwitchAccountToCraftsman
+                )
+            }
+
         }
 
 
@@ -114,6 +117,13 @@ private fun SettingItemsPreview() {
                 }
 
                 override fun onChangeToDarkMode(isDarkMode: Boolean) {
+                }
+
+                override fun onClickNotification() {
+
+                }
+
+                override fun onClickBecomeACraftsman() {
                 }
 
             }
