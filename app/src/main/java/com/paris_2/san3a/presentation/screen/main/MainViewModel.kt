@@ -19,4 +19,7 @@ class MainViewModel (
         }
     }
 
+    fun getLastSelectedAppLanguage() =
+        customizeProfileSettings.getLatestSelectedAppLanguage()
+
 }
