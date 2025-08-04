@@ -9,5 +9,5 @@ interface CustomerHomeInteractionListener {
     fun createRequest(service: RequestServiceUiState , serviceId: String)
     fun updateNumOfRequests(serviceId: String)
     fun initBottomSheet(serviceTitle: String, serviceId: String, iconRes: Int)
-
+    fun updateBottomSheetStep(step: BottomSheetStep)
 }
