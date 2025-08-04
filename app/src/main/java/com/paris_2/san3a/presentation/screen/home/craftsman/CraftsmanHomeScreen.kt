@@ -32,14 +32,14 @@ fun CraftsmanHomeScreen(
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
     CraftsmanHomeContent(
-        craftsmanInteractionListener = viewModel,
+        action = viewModel,
         state = state
     )
 }
 
 @Composable
 fun CraftsmanHomeContent(
-    craftsmanInteractionListener: CraftsmanInteractionListener,
+    action: CraftsmanInteractionListener,
     modifier: Modifier = Modifier,
     state: CraftsmanHomeState,
 ) {
@@ -48,7 +48,7 @@ fun CraftsmanHomeContent(
             .background(Theme.colors.background.screen)
     ) {
         AppBar(
-            onActionIconClick = { craftsmanInteractionListener::onNotificationClick },
+            onActionIconClick = { action.onNotificationClick() },
             title = stringResource(
                 R.string.good_morning,
                 state.craftsmanHomeUiState.currentUserName
@@ -101,7 +101,7 @@ fun CraftsmanHomeContent(
                             offers = it.offers.size.toString(),
                             description = it.description,
                             location = it.location,
-                            onClick = { craftsmanInteractionListener.onJobClick(it.id) }
+                            onClick = { action.onJobClick(it.id) }
                         )
                     }
                 }
@@ -124,7 +124,7 @@ fun CraftsmanHomeContent(
                     description = it.description,
                     location = it.location,
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    onClick = { craftsmanInteractionListener.onJobClick(it.id) }
+                    onClick = { action.onJobClick(it.id) }
                 )
             }
         }
@@ -223,7 +223,7 @@ private fun Preview() {
             )
         ),
 
-        craftsmanInteractionListener = object : CraftsmanInteractionListener {
+        action = object : CraftsmanInteractionListener {
             override fun onNotificationClick() {}
             override fun onSearch(query: String) {}
             override fun onJobClick(serviceId: String) {}
