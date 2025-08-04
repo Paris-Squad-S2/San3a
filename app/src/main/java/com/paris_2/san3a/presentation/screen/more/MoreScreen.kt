@@ -73,7 +73,7 @@ private fun MoreScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Red)
+            .background(Theme.colors.background.screen)
             .verticalScroll(scroll)
             .statusBarsPadding()
             .navigationBarsPadding(),

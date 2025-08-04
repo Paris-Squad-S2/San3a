@@ -85,7 +85,6 @@ class MoreViewModel(
             screenState.value.copy(
                 screenState.value.moreUiState.copy(
                     isDarkMode = isDarkMode,
-                    isCraftsman = isDarkMode
                 )
             )
         )
