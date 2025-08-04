@@ -2,24 +2,38 @@ package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import com.paris_2.san3a.R
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.shared.utils.BasePreview
+import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 
 @Composable
 fun CraftsManOffer(
@@ -33,7 +47,7 @@ fun CraftsManOffer(
     time: String,
     addShadow: Boolean = false,
     onChatClick: () -> Unit,
-    postedTime: String ,
+    postedTime: String,
     onAcceptOfferClick: () -> Unit
 ) {
     Card(
@@ -41,7 +55,8 @@ fun CraftsManOffer(
             .fillMaxWidth()
             .let {
                 if (addShadow) {
-                    it.graphicsLayer {
+                    it
+                        .graphicsLayer {
                             shadowElevation = 0.dp.toPx()
                             translationY = (-3.48).dp.toPx()
                         }
@@ -197,21 +212,23 @@ fun CraftsManOffer(
 }
 
 
-@Preview(showBackground = true)
+@PreviewMultiDevices
 @Composable
 fun CardsPreview() {
-    CraftsManOffer(
-        painter = painterResource(id = R.drawable.img_avatar1),
-        name = "Muhammed Ali",
-        rate = 4.7f,
-        reviewsNumber = 121,
-        description = "I can fix this today. I have 10+ years experience with kitchen plumbing.",
-        amount = "50,000 IQD",
-        time = "Tomorrow, 2:00 PM",
-        addShadow = true,
-        postedTime = "1 hour ago",
-        onChatClick = {},
-        onAcceptOfferClick = {}
-    )
+    BasePreview {
+        CraftsManOffer(
+            painter = painterResource(id = R.drawable.img_avatar1),
+            name = "Muhammed Ali",
+            rate = 4.7f,
+            reviewsNumber = 121,
+            description = "I can fix this today. I have 10+ years experience with kitchen plumbing.",
+            amount = "50,000 IQD",
+            time = "Tomorrow, 2:00 PM",
+            addShadow = true,
+            postedTime = "1 hour ago",
+            onChatClick = {},
+            onAcceptOfferClick = {}
+        )
+    }
 }
 

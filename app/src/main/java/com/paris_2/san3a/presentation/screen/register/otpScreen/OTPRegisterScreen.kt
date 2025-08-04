@@ -51,7 +51,7 @@ fun OTPRegisterScreen(viewModel: OTPRegisterViewModel = koinViewModel()) {
 private fun OTPRegisterScreenContent(
     otpRegisterScreenState: OTPRegisterScreenState,
     otpRegisterListenerInteraction: OTPRegisterListenerInteraction,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         Modifier
@@ -61,7 +61,7 @@ private fun OTPRegisterScreenContent(
             .statusBarsPadding()
     ) {
         when {
-            otpRegisterScreenState.isNoInternet  -> {
+            otpRegisterScreenState.isNoInternet -> {
                 LostConnectionScreen(
                     onRetry = otpRegisterListenerInteraction::onClickRetry,
                     modifier = Modifier
@@ -132,7 +132,7 @@ private fun VerificationCodeContent(
     onOtpTextChange: (String) -> Unit,
     onClickVerify: () -> Unit,
     onClickResendCode: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
 
     Column(
@@ -186,11 +186,12 @@ private fun VerificationCodeContent(
             state = if (otp.count() < 5) AppButtonState.Disabled else AppButtonState.Enable,
             onClick = { onClickVerify() },
             text = stringResource(R.string.verify),
-        ) {
-            AnimatedVisibility(isLoading) {
-                ProgressIndicator()
+            loadingIcon = {
+                AnimatedVisibility(isLoading) {
+                    ProgressIndicator()
+                }
             }
-        }
+        )
 
         Text(
             text = stringResource(R.string.didn_t_receive_the_code),
@@ -259,9 +260,9 @@ private fun OTPRegisterScreenContentPreview() {
 
             }
 
-             override fun onHideBottomSheet() {
+            override fun onHideBottomSheet() {
 
-             }
+            }
         }
     )
 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
@@ -25,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -67,18 +67,6 @@ fun MessageDetails(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Theme.colors.background.screen)
-            )
-        }
-
-        state.messages.isEmpty() -> {
-            PlaceHolderScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.screen)
-                    .padding(horizontal = 60.dp),
-                image = R.drawable.img_message,
-                title = R.string.no_messages_yet,
-                description = R.string.once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here,
             )
         }
 
@@ -136,14 +124,26 @@ fun MessageDetailsContent(
                     .background(Theme.colors.background.screen)
                     .statusBarsPadding(),
             ) {
-                MessageList(
-                    messages = state.messages,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 100.dp)
-                        .align(Alignment.Center)
-                )
+                if (state.messages.isEmpty()) {
+                    PlaceHolderScreen(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen)
+                            .padding(horizontal = 60.dp),
+                        image = R.drawable.img_message,
+                        title = R.string.no_messages_yet,
+                        description = R.string.once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here,
+                    )
+                } else {
+                    MessageList(
+                        messages = state.messages,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp)
+                            .padding(bottom = 100.dp)
+                            .align(Alignment.Center)
+                    )
+                }
                 MessageTextField(
                     value = state.textMessage,
                     onValueChange = viewModel::onMessageChange,
@@ -198,7 +198,7 @@ fun MessageList(
     modifier: Modifier,
 ) {
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
@@ -213,17 +213,22 @@ fun MessageList(
             )
         }
         items(messages) { item ->
-            Message(
-                images = item.images,
+            Box(
                 modifier = Modifier
-                    .heightIn(22.dp, 300.dp)
-                    .animateItem(),
-                text = item.text,
-                isReceived = item.isReceived,
-                isSeen = item.isSeen,
-                time = item.time,
-                profileImageUrl = item.anotherUserImage,
-            )
+                    .fillMaxWidth()
+            ) {
+                Message(
+                    images = item.images,
+                    modifier = Modifier
+                        .align(if (item.isReceived) Alignment.CenterStart else Alignment.CenterEnd)
+                        .animateItem(),
+                    text = item.text,
+                    isReceived = item.isReceived,
+                    isSeen = item.isSeen,
+                    time = item.time,
+                    profileImageUrl = if (item.isReceived) item.anotherUserImage else null,
+                )
+            }
             Spacer(modifier = Modifier.width(10.dp))
         }
     }
