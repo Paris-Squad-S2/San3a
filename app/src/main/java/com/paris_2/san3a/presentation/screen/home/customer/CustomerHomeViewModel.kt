@@ -52,6 +52,18 @@ class CustomerHomeViewModel(
     override fun updateBottomSheetStep(step: BottomSheetStep) {
         updateState(screenState.value.copy(bottomSheetStep = step))
     }
+    override fun nextBottomSheetStep() {
+        updateState(
+            screenState.value.copy(
+                bottomSheetStep = when (screenState.value.bottomSheetStep) {
+                    BottomSheetStep.SELECT_SERVICE -> BottomSheetStep.PROBLEM_DESCRIPTION
+                    BottomSheetStep.PROBLEM_DESCRIPTION -> BottomSheetStep.SELECT_LOCATION
+                    BottomSheetStep.SELECT_LOCATION -> BottomSheetStep.IMAGE_UPLOAD
+                    BottomSheetStep.IMAGE_UPLOAD -> BottomSheetStep.IMAGE_UPLOAD
+                }
+            )
+        )
+    }
 
     override fun createRequest(service: RequestServiceUiState , serviceId: String) {
         tryToExecute(
