@@ -91,6 +91,13 @@ class CustomerHomeViewModel(
             )
         )
     }
+    override fun addBottomSheetImages(newImages: List<String>) {
+        updateState(
+            screenState.value.copy(
+                bottomSheetImages = screenState.value.bottomSheetImages + newImages
+            )
+        )
+    }
 
     override fun createRequest(service: RequestServiceUiState , serviceId: String) {
         tryToExecute(
