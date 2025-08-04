@@ -1,12 +1,15 @@
 package com.paris_2.san3a.presentation.screen.messagesDetails
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
+import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.DeleteChatByIdUseCase
 import com.paris_2.san3a.domain.usecase.messages.GetMessagesByChatIdUseCase
+import com.paris_2.san3a.domain.usecase.messages.MarkMessagesAsSeenUseCase
 import com.paris_2.san3a.domain.usecase.messages.SendMessageUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
@@ -15,39 +18,74 @@ class MessagesDetailsViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
     private val getMessagesByChatIdUseCase: GetMessagesByChatIdUseCase,
     private val deleteChatByIdUseCase: DeleteChatByIdUseCase,
+    private val getUserUseCase: GetUserUseCase,
+    private val markMessagesAsSeenUseCase: MarkMessagesAsSeenUseCase,
     savedStateHandle: SavedStateHandle,
-) : MessageInteractionListener,BaseViewModel<MessageDetailsUiState>(
+) : MessageInteractionListener, BaseViewModel<MessageDetailsUiState>(
     MessageDetailsUiState()
 ) {
 
     val chatId = savedStateHandle.toRoute<Destinations.MessageDetails>().chatId
+    val otherUserId = savedStateHandle.toRoute<Destinations.MessageDetails>().otherUserId
+    val currentUserId = savedStateHandle.toRoute<Destinations.MessageDetails>().currentUserId
 
     init {
-        loadMessages(chatId)
+        getTheOtherUserData(otherUserId)
+    }
+
+    private fun markMessagesAsSeen() {
+        tryToExecute(
+            execute = {
+                markMessagesAsSeenUseCase(chatId, otherUserId)
+            },
+            onError = {
+                Log.d("TAG", "markMessagesAsSeen: ")
+            }
+        )
+    }
+
+    private fun getTheOtherUserData(otherUserId: String) {
+        tryToExecute(
+            execute = {
+                updateState(screenState.value.copy(isLoading = true))
+                getUserUseCase(otherUserId)
+            },
+            onSuccess = { user ->
+                updateState(
+                    screenState.value.copy(
+                        chatTitle = user.fullName,
+                        profilePhoto = user.profilePhoto,
+                    )
+                )
+                loadMessages(chatId)
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it.message
+                    )
+                )
+            }
+        )
     }
 
     private fun loadMessages(chatId: String) {
         tryToExecute(
             execute = {
-                updateState(
-                    screenState.value.copy(
-                        isLoading = true
-                    )
-                )
+                updateState(screenState.value.copy(isLoading = true))
                 getMessagesByChatIdUseCase(chatId)
             },
             onSuccess = { flowMessages ->
-                // Todo (get image of another user from getUserDetails)
-                // Todo (get User )
-                flowMessages.collect {  messages ->
-                updateState(
-                    screenState.value.copy(
-                        messages =   messages.map { it.toMessageUi(FAKE_IMAGE_URL) },
-                        chatTitle = FAKE_USER_NAME,
-                        isLoading = false
-                    ),
-                )
-            }
+                flowMessages.collect { messages ->
+                    updateState(
+                        screenState.value.copy(
+                            messages = messages.map { it.toMessageUi(screenState.value.profilePhoto, currentUserId) },
+                            chatTitle = screenState.value.chatTitle,
+                            isLoading = false
+                        ),
+                    )
+                    markMessagesAsSeen()
+                }
             },
             onError = {
                 updateState(
@@ -66,9 +104,9 @@ class MessagesDetailsViewModel(
             execute = {
                 sendMessageUseCase(
                     Message(
-                        senderId = "1",
-                        receiverId = "2",
-                        chatId = "8",
+                        senderId = currentUserId,
+                        receiverId = otherUserId,
+                        chatId = chatId,
                         messageContent = MessageContent.Text(
                             content = screenState.value.textMessage
                         ),
@@ -97,9 +135,9 @@ class MessagesDetailsViewModel(
             execute = {
                 sendMessageUseCase(
                     Message(
-                        senderId = "1",
-                        receiverId = "2",
-                        chatId = "8",
+                        senderId = currentUserId,
+                        receiverId = otherUserId,
+                        chatId = chatId,
                         messageContent = MessageContent.Image(
                             uris = uris.map { it.toString() }
                         ),
@@ -189,7 +227,8 @@ class MessagesDetailsViewModel(
 
     companion object {
         const val IMAGE_TYPE = "image/*"
-        const val FAKE_IMAGE_URL =   "https://firebasestorage.googleapis.com/v0/b/cell-monitor21.appspot.com/o/user2%2Fchat8%2F1000179245.jpg?alt=media&token=714e333b-7fc6-4be3-83a6-30d6b7f7fd4e"
+        const val FAKE_IMAGE_URL =
+            "https://firebasestorage.googleapis.com/v0/b/cell-monitor21.appspot.com/o/user2%2Fchat8%2F1000179245.jpg?alt=media&token=714e333b-7fc6-4be3-83a6-30d6b7f7fd4e"
         const val FAKE_USER_NAME = "CraftsMan"
     }
 

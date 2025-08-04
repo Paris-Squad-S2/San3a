@@ -10,7 +10,7 @@ import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 class MessagesViewModel(
     private val getChatsByUserIdUseCase: GetChatsByUserIdUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
-    private val getUserUseCase: GetUserUseCase
+    private val getUserUseCase: GetUserUseCase,
 ) : MessagesInteractionListener,
     BaseViewModel<MessagesState>(MessagesState()) {
 
@@ -96,9 +96,9 @@ class MessagesViewModel(
         getCurrentUserId()
     }
 
-    override fun onChatClick(chatId: String) {
+    override fun onChatClick(chatId: String, otherUserId: String) {
         navigate(
-            Destinations.MessageDetails(chatId),
+            Destinations.MessageDetails(chatId, screenState.value.currentUserId ,  otherUserId),
         )
     }
 

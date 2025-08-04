@@ -111,13 +111,13 @@ fun ChatList(
             chatsMap.keys.elementAt(item).let { chatId ->
                 chatsMap[chatId]?.let { chatUI ->
                     ChatCard(
-                        onChatClick = { messagesInteractionListener.onChatClick(chatUI.chatId) },
+                        onChatClick = { messagesInteractionListener.onChatClick(chatUI.chatId, chatUI.theOtherUserId) },
                         name = chatUI.theOtherUserName ?: "Unknown User",
                         imageUrl = chatUI.theOtherProfilePhoto ?: "https://example.com/default_image.png",
                         lastMessage = chatUI.lastMessage,
                         unreadMessagesCount = chatUI.unreadMessagesCount,
                         dateTime = chatUI.lastMessageTime,
-                        isCurrentUserSendLastMessage = chatUI.lastMessageSenderId != chatUI.theOtherUserId,
+                        isCurrentUserSendLastMessage = chatUI.lastMessageReceiverId == chatUI.theOtherUserId,
                     )
                 }
             }

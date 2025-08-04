@@ -8,11 +8,12 @@ data class MessageDetailsUiState(
     val textMessage: String = "",
     val messages: List<MessageUi> = emptyList(),
     val chatTitle: String = "",
+    val profilePhoto: String = "",
     val showDropMenu: Boolean = false,
     val showDeleteChatBottomSheet: Boolean = false,
     val bottomSheetButtonState: AppButtonState = AppButtonState.Enable,
     val errorMessage: String? = null,
-    val isLoading:Boolean = false,
+    val isLoading: Boolean = false,
 )
 
 data class MessageUi(
@@ -24,12 +25,12 @@ data class MessageUi(
     val isSeen: Boolean = false,
 )
 
-fun Message.toMessageUi(imageUserUrl:String) = MessageUi(
+fun Message.toMessageUi(imageUserUrl: String, currentUserId: String) = MessageUi(
     text = handleTextMessage(messageContent),
     images = handleImagesMessage(messageContent),
     anotherUserImage = imageUserUrl,
     time = this.time.time.toString(),
-    isReceived = this.receiverId == "1",
+    isReceived = this.receiverId == currentUserId,
     isSeen = this.seen,
 )
 

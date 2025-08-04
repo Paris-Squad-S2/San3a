@@ -14,7 +14,7 @@ data class ChatUI(
     val chatId: String,
     val unreadMessagesCount: Int,
     val lastMessageTime: String,
-    val lastMessageSenderId: String,
+    val lastMessageReceiverId: String,
     val lastMessage: String,
     val theOtherUserId: String,
     val theOtherUserName: String? = null,
@@ -34,7 +34,7 @@ fun Chat.toChatUI(userId: String): ChatUI {
         chatId = this.id,
         lastMessage = this.lastMessage?.messageContent?.toMessageContentUI() ?: "",
         lastMessageTime = this.lastMessage?.time?.toString() ?: "",
-        lastMessageSenderId = this.lastMessage?.senderId ?: "",
+        lastMessageReceiverId = this.lastMessage?.receiverId ?: "",
         unreadMessagesCount = this.unreadMessagesCount,
         theOtherUserId = this.usersParticipantIds.firstOrNull { it != userId } ?: "",
     )
