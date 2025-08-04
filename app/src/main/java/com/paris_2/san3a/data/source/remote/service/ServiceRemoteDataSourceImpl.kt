@@ -17,7 +17,6 @@ class ServiceRemoteDataSourceImpl(
         return fireStoreService.streamCollection(
             path = SERVICES_COLLECTION,
             fromJson = ServiceDto::fromJson,
-            limit = null
         )
     }
 
@@ -43,7 +42,6 @@ class ServiceRemoteDataSourceImpl(
         return fireStoreService.streamCollection(
             path = SERVICES_COLLECTION,
             fromJson = ServiceDto::fromJson,
-            limit = null,
             queryBuilder = { collection ->
                 collection
                     .whereGreaterThan(NUMBER_OF_REQUESTS_FIELD, 0)
