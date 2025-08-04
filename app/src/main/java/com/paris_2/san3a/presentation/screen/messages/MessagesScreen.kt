@@ -60,39 +60,44 @@ private fun MessagesScreenContent(
             )
         },
     ) {
-        if (state.error != null) {
-            LostConnectionScreen(
-                onRetry = messagesInteractionListener::onRetryClick,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.screen)
-                    .padding(horizontal = 60.dp)
-            )
-        } else if (state.isLoading) {
-            LoadingScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.screen)
-            )
-        } else if (state.chatsMap.isEmpty()) {
-            PlaceHolderScreen(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.screen)
-                    .padding(horizontal = 60.dp),
-                image = R.drawable.img_message,
-                title = R.string.no_messages_yet,
-                description = R.string.once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here,
-            )
-        } else {
-            ChatList(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.screen)
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                chatsMap = state.chatsMap,
-                messagesInteractionListener = messagesInteractionListener
-            )
+        when {
+            state.error != null -> {
+                LostConnectionScreen(
+                    onRetry = messagesInteractionListener::onRetryClick,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Theme.colors.background.screen)
+                        .padding(horizontal = 60.dp)
+                )
+            }
+            state.isLoading -> {
+                LoadingScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Theme.colors.background.screen)
+                )
+            }
+            state.chatsMap.isEmpty() -> {
+                PlaceHolderScreen(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .background(Theme.colors.background.screen)
+                        .padding(horizontal = 60.dp),
+                    image = R.drawable.img_message,
+                    title = R.string.no_messages_yet,
+                    description = R.string.once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here,
+                )
+            }
+            else -> {
+                ChatList(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Theme.colors.background.screen)
+                        .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                    chatsMap = state.chatsMap,
+                    messagesInteractionListener = messagesInteractionListener
+                )
+            }
         }
     }
 }

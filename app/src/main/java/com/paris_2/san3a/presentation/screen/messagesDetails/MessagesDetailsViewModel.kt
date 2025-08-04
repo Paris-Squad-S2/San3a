@@ -39,7 +39,7 @@ class MessagesDetailsViewModel(
                 markMessagesAsSeenUseCase(chatId, otherUserId)
             },
             onError = {
-                Log.d("TAG", "markMessagesAsSeen: ")
+                Log.d("MessagesDetailsViewModel", "markMessagesAsSeen error: ${it.message}", it)
             }
         )
     }
