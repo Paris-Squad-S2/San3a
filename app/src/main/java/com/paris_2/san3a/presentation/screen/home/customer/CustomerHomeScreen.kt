@@ -83,13 +83,13 @@ private fun CustomerHomeScreenContent(
                         onExitClick = { action.onDismissBottomSheet() },
                     ) {
                         RequestTitleContent(
-                            value = state.bottomSheetServiceTitle,
-                            onValueChange = { action.setBottomSheetServiceTitle(it) },
+                            value = state.bottomSheetSubtitle,
+                            onValueChange = { action.setBottomSheetServiceSubTitle(it) },
                             suggestions = getSuggestions(serviceType = state.bottomSheetServiceTitle),
                             selectedSuggestion = state.bottomSheetSelectedSuggestion,
                             onChipClick = {
                                 action.setBottomSheetSelectedSuggestion(it)
-                                action.setBottomSheetServiceTitle(it)
+                                action.setBottomSheetServiceSubTitle(it)
                             },
                             modifier = Modifier,
                             hint = "Select a service"
