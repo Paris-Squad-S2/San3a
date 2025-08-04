@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 interface ProfileRepository {
     suspend fun setDarkTheme(isDarkTheme: Boolean)
     suspend fun isDarkThemeEnabled(): Flow<Boolean>
-    suspend fun getLatestSelectedAppLanguage(): Flow<String>
+    fun getLatestSelectedAppLanguage(): Flow<String>
     suspend fun updateAppLanguage(newLanguage: String): Boolean
 }

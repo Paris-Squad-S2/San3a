@@ -20,8 +20,8 @@ class ProfileRepositoryImpl(
         }
     }
 
-    override suspend fun getLatestSelectedAppLanguage(): Flow<String> {
-        return safeCall(ProfileException()) {
+    override fun getLatestSelectedAppLanguage(): Flow<String> {
+        return safeCallWithoutSuspend(ProfileException()) {
             localDataStore.getLatestSelectedAppLanguage()
         }
     }
