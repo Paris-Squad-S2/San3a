@@ -39,7 +39,7 @@ fun SettingItem(
     iconLabelColor: Color = Theme.colors.shade.primary,
     labelColor: Color = Theme.colors.shade.primary,
     onCheckedChange: (Boolean) -> Unit = {},
-    onClickItem: () -> Unit
+    onClickItem: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
