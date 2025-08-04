@@ -1,5 +1,7 @@
 package com.paris_2.san3a.domain
 
+import com.paris_2.san3a.domain.entity.RequestService
+
 abstract class San3aException(message: String) : Exception(message)
 
 class NoInternetConnectionException(message: String = "No internet connection") :
@@ -10,6 +12,8 @@ class RegisterException(message: String = "register error") : San3aException(mes
 class SendMessageException(id: String) : San3aException("Message with id $id is not send")
 class ReadMessagesException(id: String) :
     San3aException("Messages with related chat id $id is cant be read")
+class MarkMessagesAsSeenException(chatId: String, userId: String) :
+    San3aException("Messages with chat id $chatId and user id $userId is cant be marked as seen")
 
 class ReadChatException(id: String) : San3aException("Chat with id $id is cant be read")
 class DeleteChatException(id: String) : San3aException("Chat with id $id is cant be deleted")
@@ -30,10 +34,15 @@ class SaveWorkShowcaseException : San3aException("Work showcase couldn't be save
 class GetUserProgressException : San3aException("Couldn't get user progress")
 class CompleteUserSetupException : San3aException("Couldn't complete user setup")
 class UploadNationalIdImagesException : San3aException("Couldn't upload national ID images")
+class GetStatsException : San3aException("Couldn't get user stats")
+class GetRecentRelatedJobsException : San3aException("Couldn't get recent related jobs")
+class SearchServicesException : San3aException("Couldn't search services")
+class RequestServiceException(requestedService: RequestService): San3aException("Couldn't request service $requestedService")
+class GetMostRequestedServicesException : San3aException("Couldn't get most requested services")
+class GetAvailableJobsException : San3aException("Couldn't get available jobs")
 class NoGovernmentsFoundException : San3aException("No Governments Found")
 class NoCitiesFoundException : San3aException("No Cities Found")
-
 class LoginStatusException: San3aException("Failed to check login status")
+class UpdateNumOfRequestsException: San3aException("Failed to update number of requests")
 class GetUserException(message: String = "register error"): San3aException("Failed to get User $message")
-
 class NotificationException(message: String = "Failed to process notification") : San3aException(message)

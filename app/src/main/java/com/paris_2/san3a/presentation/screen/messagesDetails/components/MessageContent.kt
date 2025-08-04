@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.paris_2.san3a.presentation.shared.utils.BasePreview
+import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 
 @Composable
 fun MessageContent(
@@ -37,5 +39,23 @@ fun MessageContent(
                 isReceived = isReceived
             )
         }
+    }
+}
+
+@PreviewMultiDevices
+@Composable
+fun MessageContentPreview() {
+    BasePreview {
+        MessageContent(
+            text = "Hello, this is a sample message to demonstrate the message component in the app. It can be quite long to test text wrapping and alignment properly. Let's see how it looks! This is a test message.",
+            time = "12:34 PM",
+            isReceived = true,
+            isSeen = true,
+            images = listOf("https://example.com/image1.jpg", "https://example.com/image2.jpg"),
+            onPlayClick = null,
+            recordWave = emptyList(),
+            listenRatio = 0f,
+            modifier = Modifier
+        )
     }
 }

@@ -8,7 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.paris_2.san3a.presentation.screen.account.AccountScreen
-import com.paris_2.san3a.presentation.screen.home.HomeScreen
+import com.paris_2.san3a.presentation.screen.home.craftsman.CraftsmanHomeScreen
+import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeScreen
 import com.paris_2.san3a.presentation.screen.messages.MessagesScreen
 import com.paris_2.san3a.presentation.screen.messagesDetails.MessageDetails
 import com.paris_2.san3a.presentation.screen.more.MoreScreen
@@ -47,16 +48,28 @@ fun San3aNavGraph(
 
 fun NavGraphBuilder.buildSan3aNavGraph() {
     navigation<Destinations.MainGraph>(startDestination = Destinations.Splash) {
-        composable<Destinations.Home> { HomeScreen() }
+        composable<Destinations.Splash> { SplashScreen() }
+        composable<Destinations.OnBoarding> { OnBoardingScreen(pages = onboardingPages()) }
+        composable<Destinations.RegisterScreen> { RegisterScreen() }
+        composable<Destinations.OTPRegisterScreen> { OTPRegisterScreen() }
+        composable<Destinations.Account> { AccountScreen() }
+    }
+
+    navigation<Destinations.CustomerGraph>(startDestination = Destinations.Home) {
+        composable<Destinations.Home> { CustomerHomeScreen() }
+        composable<Destinations.Messages> { MessagesScreen() }
+        composable<Destinations.MessageDetails> { MessageDetails() }
+        composable<Destinations.MyRequest> { MyRequestScreen() }
+        composable<Destinations.Notifications> { NotificationsScreen() }
+        composable<Destinations.More> { MoreScreen() }
+    }
+
+    navigation<Destinations.CraftManGraph>(startDestination = Destinations.Home) {
+        composable<Destinations.Home> { CraftsmanHomeScreen() }
         composable<Destinations.Messages> { MessagesScreen() }
         composable<Destinations.MessageDetails> { MessageDetails() }
         composable<Destinations.MyRequest> { MyRequestScreen() }
         composable<Destinations.Notification> { NotificationScreen() }
         composable<Destinations.More> { MoreScreen() }
-        composable<Destinations.Splash> { SplashScreen() }
-        composable<Destinations.OnBoarding> { OnBoardingScreen(pages = onboardingPages()) }
-        composable<Destinations.OTPRegisterScreen> { OTPRegisterScreen() }
-        composable<Destinations.RegisterScreen> { RegisterScreen() }
-        composable<Destinations.Account> { AccountScreen() }
     }
 }

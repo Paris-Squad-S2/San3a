@@ -14,7 +14,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavOptions
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
+import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.navigation.Navigator
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -26,10 +30,36 @@ fun SplashScreen(
     modifier: Modifier = Modifier,
     navigator: Navigator = koinInject(),
     isOnboardingCompletedUseCase: IsOnboardingCompletedUseCase = koinInject(),
+    getPhoneNumberUseCase: GetPhoneNumberUseCase = koinInject(),
+    getUserUseCase: GetUserUseCase = koinInject()
 ) {
     LaunchedEffect(Unit) {
         delay(2000)
-        if (isOnboardingCompletedUseCase()) {
+        val phoneNumber = getPhoneNumberUseCase()
+        if (phoneNumber.isNotBlank()) {
+            getUserUseCase(phoneNumber).also {
+                when(it.accountType){
+                    AccountType.CUSTOMER -> {
+                        LocalAccountType.value = AccountType.CUSTOMER
+                        navigator.navigate(
+                            destination = Destinations.CustomerGraph,
+                            navOptions = NavOptions.Builder()
+                                .setPopUpTo(Destinations.OnBoarding, inclusive = true)
+                                .build()
+                        )
+                    }
+                    AccountType.CRAFTSMAN -> {
+                        LocalAccountType.value = AccountType.CRAFTSMAN
+                        navigator.navigate(
+                            destination = Destinations.CraftManGraph,
+                            navOptions = NavOptions.Builder()
+                                .setPopUpTo(Destinations.OnBoarding, inclusive = true)
+                                .build()
+                        )
+                    }
+                }
+            }
+        } else if (isOnboardingCompletedUseCase()) {
             navigator.navigate(
                 destination = Destinations.RegisterScreen,
                 navOptions = NavOptions.Builder()
