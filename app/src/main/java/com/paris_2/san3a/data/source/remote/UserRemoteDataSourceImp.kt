@@ -138,7 +138,9 @@ class UserRemoteDataSourceImp(
                     government = locationData["government"]?.toString() ?: "",
                     cityName = locationData["cityName"]?.toString() ?: ""
                 )
-            } ?: Location("", "")
+            } ?: Location("", ""),
+            rating = userData["rating"]?.toString()?.toDouble() ?: 0.0,
+            review = userData["review"]?.toString()?.toInt() ?: 0
         )
     }
 
