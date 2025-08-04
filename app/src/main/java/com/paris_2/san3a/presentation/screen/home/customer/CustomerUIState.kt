@@ -69,3 +69,9 @@ fun RequestServiceUiState.toRequestService(): RequestService {
     )
 }
 
+enum class BottomSheetStep {
+    SELECT_SERVICE,
+    PROBLEM_DESCRIPTION,
+    SELECT_LOCATION,
+    IMAGE_UPLOAD
+}
