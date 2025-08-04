@@ -12,7 +12,7 @@ import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
 import com.paris_2.san3a.data.source.local.LocalDataStore
 import com.paris_2.san3a.data.source.local.LocalDataStoreImpl
-import com.paris_2.san3a.data.source.remote.UserRemoteDataSourceImp
+import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSourceImpl
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSourceImpl
 import com.paris_2.san3a.data.source.remote.location.LocationRemoteDataSource
@@ -24,16 +24,16 @@ import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSourceImpl
 import com.paris_2.san3a.data.source.remote.storage.FirebaseStorageDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.domain.repository.HomeRepository
-import com.paris_2.san3a.domain.repository.UserRemoteDataSource
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
 import org.koin.dsl.module
 
 val dataModule = module {
     singleOf(::FireStoreServiceImpl) { bind<FireStoreService>() }
     singleOf(::MessagesRemoteDataSourceImp) { bind<MessagesRemoteDataSource>() }
     singleOf(::FirebaseStorageDataSource) { bind<StorageRemoteDataSource>() }
-    singleOf(::UserRemoteDataSourceImp) { bind<UserRemoteDataSource>() }
+    singleOf(::UserRemoteDataSourceImpl) { bind<UserRemoteDataSource>() }
     singleOf(::ServiceRemoteDataSourceImpl) { bind<ServiceRemoteDataSource>() }
     singleOf(::HomeRepositoryImpl) { bind<HomeRepository>() }
     singleOf(::MessagesRemoteDataSourceImp) { bind<MessagesRemoteDataSource>() }

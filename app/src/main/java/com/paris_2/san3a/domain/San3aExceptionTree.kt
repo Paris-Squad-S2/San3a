@@ -1,5 +1,7 @@
 package com.paris_2.san3a.domain
 
+import com.paris_2.san3a.domain.entity.RequestService
+
 abstract class San3aException(message: String) : Exception(message)
 
 class NoInternetConnectionException(message: String = "No internet connection") :
@@ -34,8 +36,14 @@ class SaveWorkShowcaseException : San3aException("Work showcase couldn't be save
 class GetUserProgressException : San3aException("Couldn't get user progress")
 class CompleteUserSetupException : San3aException("Couldn't complete user setup")
 class UploadNationalIdImagesException : San3aException("Couldn't upload national ID images")
+class GetStatsException : San3aException("Couldn't get user stats")
+class GetRecentRelatedJobsException : San3aException("Couldn't get recent related jobs")
+class SearchServicesException : San3aException("Couldn't search services")
+class RequestServiceException(requestedService: RequestService): San3aException("Couldn't request service $requestedService")
+class GetMostRequestedServicesException : San3aException("Couldn't get most requested services")
+class GetAvailableJobsException : San3aException("Couldn't get available jobs")
 class NoGovernmentsFoundException : San3aException("No Governments Found")
 class NoCitiesFoundException : San3aException("No Cities Found")
-
 class LoginStatusException: San3aException("Failed to check login status")
+class UpdateNumOfRequestsException: San3aException("Failed to update number of requests")
 class GetUserException(message: String = "register error"): San3aException("Failed to get User $message")

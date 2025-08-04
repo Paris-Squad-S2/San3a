@@ -9,12 +9,15 @@
     <string name="otp_image">otp image</string>
     <string name="welcome_to_san3a">Welcome to San3a 👋</string>
     <string name="show_more">Show More</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="button">Button</string>
     <string name="user_image">user image</string>
     <string name="first">first</string>
     <string name="second">second</string>
     <string name="third">third</string>
+    <string name="tap_to_add_photos">Tap to add photos</string>
+    <string name="e_g_kitchen_sink_is_leaking">e.g., Kitchen sink is leaking</string>
+    <string name="category_item">Category item</string>
     <string name="profile_image">profile image</string>
     <string name="seen_icon">Seen Icon</string>
     <string name="play_icon">Play Icon</string>
@@ -55,11 +58,10 @@
     <string name="what_s_your_name">What’s Your Name?</string>
     <string name="enter_your_full_name">Enter your full name</string>
     <string name="set_your_profile_photo">Set Your Profile Photo</string>
-    <string name="optional">(Optional)</string>
+    <string name="optional"> (optional)</string>
     <string name="i_need_help_with_a_service">I need help with a service</string>
     <string name="craftsman">Craftsman</string>
     <string name="i_offer_services">I offer services</string>
-    <string name="tap_to_add_photos">Tap to add photos</string>
     <string name="tap_here">Tap here</string>
     <string name="upload_front_of_national_id">Upload Front of National ID</string>
     <string name="upload_back_of_national_id">Upload Back of National ID</string>
@@ -71,6 +73,10 @@
     <string name="no_messages_yet">No Messages Yet</string>
     <string name="once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here">Once you start accepting or posting requests, chats with craftsmen will appear here.</string>
     <string name="loading_icon">Loading Icon</string>
+    <string name="good_morning">Good morning, %1$s!</string>
+    <string name="your_stats">Your Stats</string>
+    <string name="recent_jobs">Recent %1$s Jobs</string>
+    <string name="available_jobs">Available Jobs</string>
     <string name="image_profile">image profile</string>
     <string name="verified_check">verified check</string>
     <string name="icon_start">icon start</string>
@@ -181,13 +187,22 @@ Request deletion of your data by contacting us at [your support email].\n\n
 7. Policy Updates\n
 We may revise this policy from time to time. You will be notified of significant changes.\n
 </string>
+    <string name="find_what_you_need">Find What You Need</string>
+    <string name="got_a_skill_start_earning">Got a skill? Start earning</string>
+    <string name="create_your_craftsman_account_and_get_job_requests">Create your craftsman account and get job requests.</string>
+    <string name="become_a_craftsman">Become a Craftsman</string>
+    <string name="select_a_service">Select a service</string>
+    <string name="describe_the_problem_in_detail">Describe the problem in detail</string>
+    <string name="describe_your_problem">Describe your problem</string>
+    <string name="where_are_you_from">Where are you from?</string>
+    <string name="add_some_photos">Add some photos</string>
+    <string name="create_request">Create Request</string>
     <string name="notification_icon">notification icon</string>
     <string name="setting">Settings</string>
     <string name="switch_to_craftsman">Switch to Craftsman</string>
     <string name="version">Version %1$s</string>
     <string name="phone_number_not_found">Phone Number not found</string>
     <string name="sledgehammer_icon">Sledgehammer icon</string>
-    <string name="got_a_skill_start_earning">Got a skill? Start earning</string>
     <string name="become_a_craftsman_icon">Become a Craftsman icon</string>
     <string name="logout_failed">Logout Failed</string>
     <string name="edit_profile">Edit Profile</string>
@@ -209,4 +224,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="details_title">Details</string>
     <string name="craftsman_not_chosen">Craftsman Not Chosen</string>
     <string name="offers">Offers</string>
+    <string name="my_jobs">My Jobs</string>
+    <string name="search">Search...</string>
+    <string name="most_requested">Most Requested</string>
 </resources>

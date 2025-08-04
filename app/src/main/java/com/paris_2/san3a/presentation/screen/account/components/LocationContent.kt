@@ -46,22 +46,29 @@ fun LocationContent(
 
         AppTextField(
             value = if (government.isEmpty()) stringResource(R.string.enter_your_location)
-            else "$city, $government", onValueChange = { "address" }, trailingIcon = {
+            else "$city, $government",
+            onValueChange = { "address" },
+            trailingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.ic_alt_arrow_down),
                     contentDescription = null,
                     tint = Theme.colors.shade.tertiary
                 )
-            }, leadingIcon = {
+            },
+            leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.ic_location_pin),
                     contentDescription = null,
                     tint = Theme.colors.shade.tertiary
                 )
-            }, enabled = false, modifier = Modifier.clickable(
-                enabled = true, onClick = {
+            },
+            enabled = false,
+            modifier = Modifier.clickable(
+                onClick = {
                     onGetLocationClicked()
-                }, interactionSource = remember { MutableInteractionSource() }, indication = null
+                },
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
             )
         )
         Spacer(Modifier.height(12.dp))

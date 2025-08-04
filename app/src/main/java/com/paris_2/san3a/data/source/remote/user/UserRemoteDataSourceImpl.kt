@@ -1,17 +1,19 @@
-package com.paris_2.san3a.data.source.remote
+package com.paris_2.san3a.data.source.remote.user
 
 import android.util.Log
 import com.google.firebase.firestore.FieldPath
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
+import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
+import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
-import com.paris_2.san3a.domain.repository.UserRemoteDataSource
+import kotlinx.coroutines.flow.Flow
 
-class UserRemoteDataSourceImp(
+class UserRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
 ) : UserRemoteDataSource {
 
@@ -158,7 +160,27 @@ class UserRemoteDataSourceImp(
         Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
     }
 
+    override suspend fun getStats(userId: String): StatsDto? {
+        return fireStoreService.getDoc(
+            path = "$CRAFTSMAN_COLLECTION/$userId",
+            fromJson = StatsDto::fromJson
+        )
+    }
+
+    override fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestServiceDto>> {
+        return fireStoreService.streamCollection(
+            path = REQUESTED_SERVICES_COLLECTION,
+            fromJson = RequestServiceDto::fromJson,
+            queryBuilder = { query ->
+                query.whereEqualTo("relatedJob", relatedJob)
+            }
+        )
+    }
+
     companion object {
         const val USERS_COLLECTION = "users"
+        const val CRAFTSMAN_COLLECTION = "craftsmen"
+        const val STATS_COLLECTION = "stats"
+        const val REQUESTED_SERVICES_COLLECTION = "requestedServices"
     }
 }

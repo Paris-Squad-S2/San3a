@@ -139,6 +139,12 @@ fun AppTextField(
                 errorTextColor = Theme.colors.shade.primary,
                 cursorColor = Theme.colors.brand.primary,
                 errorCursorColor = Color.Transparent,
+                disabledTextColor = Theme.colors.shade.primary,
+                disabledBorderColor = Theme.colors.stroke.primary,
+                disabledPlaceholderColor = Theme.colors.shade.tertiary,
+                disabledLeadingIconColor = Theme.colors.shade.tertiary,
+                disabledTrailingIconColor = Theme.colors.shade.tertiary,
+                disabledLabelColor = Theme.colors.shade.tertiary,
             )
         )
         AnimatedVisibility(
