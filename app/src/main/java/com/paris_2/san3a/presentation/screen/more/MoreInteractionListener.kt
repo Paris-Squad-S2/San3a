@@ -12,5 +12,7 @@ interface MoreInteractionListener {
     fun onClickBecomeACraftsman()
     fun onNameValueChange(name: String)
     fun onCloseEditProfileBottomSheet()
+    fun onCloseSelectedLanguageBottomSheet()
+    fun onLanguageSelected(language: String)
     fun onPickImageClick()
 }

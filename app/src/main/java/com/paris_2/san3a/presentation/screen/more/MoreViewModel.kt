@@ -20,14 +20,21 @@ import kotlinx.coroutines.launch
 data class MoreScreenState(
     val moreUiState: MoreUiState = MoreUiState(),
     val showEditProfileBottomSheet: Boolean = false,
+    val showLanguageBottomSheet: Boolean = false,
     @StringRes val errorMessage: Int? = null
 )
 
 data class MoreUiState(
     val userUiState: UserUiState = UserUiState(),
     val isDarkMode: Boolean = false,
-    val versionNumber: String = "0.0.0"
+    val versionNumber: String = "0.0.0",
+    val selectedLanguage: String = LanguageUiState.ENGLISH.name
 )
+
+enum class LanguageUiState(name: String) {
+    ENGLISH("en"),
+    ARABIC("ar")
+}
 
 data class UserUiState(
     val imageUrl: String = "",
@@ -48,9 +55,36 @@ class MoreViewModel(
 ) : BaseViewModel<MoreScreenState>(MoreScreenState()), MoreInteractionListener {
 
     init {
+        getDarkMode()
+        getLanguageSelected()
         updatePhoneNumber()
         getUserInformation()
-        getDarkMode()
+    }
+    
+    private fun getLanguageSelected(){
+        tryToExecute(
+            execute = {customizeProfileSettingsUseCase.getLatestSelectedAppLanguage()},
+            onSuccess = ::onGetLanguageSelectedSuccess,
+            onError = ::onGetLanguageSelectedError
+        )
+    }
+    
+    private suspend fun onGetLanguageSelectedSuccess(selectedLanguage: Flow<String>){
+        selectedLanguage.collect { languageSelected ->
+            updateState(screenState.value.copy(
+                moreUiState = screenState.value.moreUiState.copy(
+                    selectedLanguage = languageSelected
+                )
+            ))
+        }
+    }
+    
+    private fun onGetLanguageSelectedError(th: Throwable){
+        updateState(
+            screenState.value.copy(
+                errorMessage = R.string.occrus_error_when_get_languag_selected
+            )
+        )
     }
 
     private fun updatePhoneNumber() {
@@ -61,23 +95,23 @@ class MoreViewModel(
         )
     }
 
-    private fun getUserInformation(){
+    private fun getUserInformation() {
         tryToExecute(
-            execute = {getUserUseCase(screenState.value.moreUiState.userUiState.phoneNumber)},
+            execute = { getUserUseCase(screenState.value.moreUiState.userUiState.phoneNumber) },
             onSuccess = ::onGetUserInformationSuccess,
             onError = ::onGetUserInformationError
         )
     }
 
-    private fun getDarkMode(){
+    private fun getDarkMode() {
         tryToExecute(
-            execute = {customizeProfileSettingsUseCase.isDarkThemeEnabled()},
+            execute = { customizeProfileSettingsUseCase.isDarkThemeEnabled() },
             onSuccess = ::onGetDarkModeSuccess,
             onError = ::onGetDarkModeError
         )
     }
 
-    private fun onGetDarkModeSuccess(isDarkMode: Flow<Boolean>){
+    private fun onGetDarkModeSuccess(isDarkMode: Flow<Boolean>) {
         viewModelScope.launch {
             isDarkMode.collectLatest {
                 updateState(
@@ -92,7 +126,7 @@ class MoreViewModel(
 
     }
 
-    private fun onGetDarkModeError(th: Throwable){
+    private fun onGetDarkModeError(th: Throwable) {
 
     }
 
@@ -151,7 +185,11 @@ class MoreViewModel(
     }
 
     override fun onClickLanguage() {
-        TODO("Not yet implemented")
+        updateState(
+            screenState.value.copy(
+                showLanguageBottomSheet = !screenState.value.showLanguageBottomSheet
+            )
+        )
     }
 
     override fun onClickLocation() {
@@ -195,7 +233,6 @@ class MoreViewModel(
     }
 
 
-
     override fun onClickNotification() {
         TODO("Not yet implemented")
     }
@@ -219,6 +256,41 @@ class MoreViewModel(
     override fun onCloseEditProfileBottomSheet() {
         updateState(
             screenState.value.copy(showEditProfileBottomSheet = false)
+        )
+    }
+
+    override fun onCloseSelectedLanguageBottomSheet() {
+        updateState(
+            screenState.value.copy(showLanguageBottomSheet = false)
+        )
+    }
+
+    override fun onLanguageSelected(language: String) {
+        updateState(
+            screenState.value.copy(
+                moreUiState = screenState.value.moreUiState.copy(
+                    selectedLanguage = language
+                )
+            )
+        )
+
+        tryToExecute(
+            execute = {
+                customizeProfileSettingsUseCase.updateAppLanguage(screenState.value.moreUiState.selectedLanguage)
+            },
+            onError = ::onUppAppLanguageError
+        )
+
+        updateState(
+            screenState.value.copy(showLanguageBottomSheet = false)
+        )
+
+    }
+    
+    
+    private fun onUppAppLanguageError(th: Throwable){
+        updateState(
+            screenState.value.copy(errorMessage = R.string.occruc_error_when_language_app_updated)
         )
     }
 

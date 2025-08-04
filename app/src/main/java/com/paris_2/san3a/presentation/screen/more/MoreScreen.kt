@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.more.components.BecomeCraftsmanCard
+import com.paris_2.san3a.presentation.screen.more.components.ChangeLanguageBottomSheet
 import com.paris_2.san3a.presentation.screen.more.components.EditProfileBottomSheet
 import com.paris_2.san3a.presentation.screen.more.components.LogoutItem
 import com.paris_2.san3a.presentation.screen.more.components.NotificationIcon
@@ -145,6 +146,15 @@ private fun MoreScreenContent(
             )
         }
 
+        AnimatedVisibility(moreScreenState.showLanguageBottomSheet) {
+            ChangeLanguageBottomSheet(
+                isVisible = moreScreenState.showLanguageBottomSheet,
+                onDismissRequest = moreInteractionListener::onCloseSelectedLanguageBottomSheet,
+                selectedLanguage = moreScreenState.moreUiState.selectedLanguage,
+                onLanguageSelected = moreInteractionListener::onLanguageSelected,
+            )
+        }
+
     }
 }
 
@@ -189,6 +199,13 @@ fun MoreScreenContentPreview() {
             }
 
             override fun onCloseEditProfileBottomSheet() {
+            }
+
+            override fun onCloseSelectedLanguageBottomSheet() {
+
+            }
+
+            override fun onLanguageSelected(language: String) {
             }
 
             override fun onPickImageClick() {
