@@ -8,22 +8,7 @@ data class CustomerHomeUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val customerUiState: CustomerUiState = CustomerUiState(),
-    val bottomSheetState: Boolean = false,
-    val bottomSheetStep: BottomSheetStep = BottomSheetStep.SELECT_SERVICE,
-    val bottomSheetServiceTitle: String = "",
-    val bottomSheetSubtitle: String = "",
-    val bottomSheetServiceId: String = "",
-    val bottomSheetIconRes: Int = 0,
-    val bottomSheetDescription: String = "",
-    val bottomSheetImages: List<String> = emptyList(),
-    val bottomSheetSelectedSuggestion: String? = null,
-    val bottomSheetGovernments: List<String> = listOf("Cairo", "Giza", "Alex"),
-    val bottomSheetCities: List<String> = listOf("Nasr City", "Dokki", "Smouha"),
-    val bottomSheetSelectedGovernment: String = "",
-    val bottomSheetSelectedCity: String = "",
-    val bottomSheetAddressDetails: String = "",
-    val isGovernmentSheetVisible: Boolean = false,
-    val isCitySheetVisible: Boolean = false
+    val bottomSheetUiState: BottomSheetUiState = BottomSheetUiState()
 )
 
 data class CustomerUiState(
@@ -42,6 +27,25 @@ data class LocationUiState(
     val city: String = "",
     val addressInDetails: String = "",
     val cities: List<String> = emptyList()
+)
+
+data class BottomSheetUiState(
+    val bottomSheetState: Boolean = false,
+    val bottomSheetStep: BottomSheetStep = BottomSheetStep.SELECT_SERVICE,
+    val bottomSheetServiceTitle: String = "",
+    val bottomSheetSubtitle: String = "",
+    val bottomSheetServiceId: String = "",
+    val bottomSheetIconRes: Int = 0,
+    val bottomSheetDescription: String = "",
+    val bottomSheetImages: List<String> = emptyList(),
+    val bottomSheetSelectedSuggestion: String? = null,
+    val bottomSheetGovernments: List<String> = listOf("Cairo", "Giza", "Alex"),
+    val bottomSheetCities: List<String> = listOf("Nasr City", "Dokki", "Smouha"),
+    val bottomSheetSelectedGovernment: String = "",
+    val bottomSheetSelectedCity: String = "",
+    val bottomSheetAddressDetails: String = "",
+    val isGovernmentSheetVisible: Boolean = false,
+    val isCitySheetVisible: Boolean = false
 )
 
 fun LocationUiState.toEntity(): Location {
