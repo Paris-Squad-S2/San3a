@@ -86,8 +86,6 @@ class CustomerHomeViewModel(
         updateState(
             screenState.value.copy(
                 bottomSheetSelectedSuggestion = suggestion,
-                bottomSheetServiceTitle = suggestion
-                    ?: screenState.value.bottomSheetServiceTitle
             )
         )
     }
