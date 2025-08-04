@@ -13,13 +13,11 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.onboarding.components.Cards
 import com.paris_2.san3a.presentation.screen.onboarding.components.Offers
 
-
 data class Page(
     val item: @Composable () -> Unit,
     val title: String,
     val description: String,
 )
-
 
 @Composable
 fun onboardingPages(): List<Page> {
@@ -32,7 +30,7 @@ fun onboardingPages(): List<Page> {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     contentScale = ContentScale.Fit,
-                    contentDescription = "Onboarding 1"
+                    contentDescription = ""
                 )
             },
             title = stringResource(id = R.string.onboarding1title),
