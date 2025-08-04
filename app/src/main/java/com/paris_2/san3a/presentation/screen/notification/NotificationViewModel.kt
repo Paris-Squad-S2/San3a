@@ -4,6 +4,7 @@ package com.paris_2.san3a.presentation.screen.notification
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.StreamNotificationsUseCase
 import com.paris_2.san3a.presentation.screen.notification.components.NotificationUiState
+import com.paris_2.san3a.presentation.screen.notification.components.toUiModelList
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class NotificationViewModel(
@@ -27,7 +28,7 @@ class NotificationViewModel(
             onEach = { notifications ->
                 updateState(
                     screenState.value.copy(
-                        notifications = notifications,
+                        notifications = notifications.toUiModelList(),
                         isLoading = false,
                         error = null
                     )
