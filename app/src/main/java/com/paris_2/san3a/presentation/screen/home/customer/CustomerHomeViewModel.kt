@@ -192,7 +192,7 @@ class CustomerHomeViewModel(
         }
     }
 
-    fun getCities(stateName: String) {
+    private fun getCities(stateName: String) {
         viewModelScope.launch {
             val cities = getLocationInfoUseCase.getCities(
                 countryName = "Egypt",
@@ -291,6 +291,7 @@ class CustomerHomeViewModel(
         val selectedService = screenState.value.customerUiState.services.find { it.id == serviceId }
         val serviceTitle = selectedService?.title?.values?.firstOrNull() ?: ""
         val iconRes = getResource(serviceId)
+        initBottomSheet(serviceTitle, serviceId, iconRes)
     }
 
     override fun onBecomeCraftsmanClick() {
@@ -303,5 +304,6 @@ class CustomerHomeViewModel(
                 bottomSheetState = false
             )
         )
+        resetBottomSheetState()
     }
 }
