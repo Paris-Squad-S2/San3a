@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavOptions
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.navigation.Navigator
@@ -26,10 +27,18 @@ fun SplashScreen(
     modifier: Modifier = Modifier,
     navigator: Navigator = koinInject(),
     isOnboardingCompletedUseCase: IsOnboardingCompletedUseCase = koinInject(),
+    getPhoneNumberUseCase: GetPhoneNumberUseCase = koinInject()
 ) {
     LaunchedEffect(Unit) {
         delay(2000)
-        if (isOnboardingCompletedUseCase()) {
+        if (getPhoneNumberUseCase().isNotBlank()) {
+            navigator.navigate(
+                destination = Destinations.Home,
+                navOptions = NavOptions.Builder()
+                    .setPopUpTo(Destinations.OnBoarding, inclusive = true)
+                    .build()
+            )
+        } else if (isOnboardingCompletedUseCase()) {
             navigator.navigate(
                 destination = Destinations.RegisterScreen,
                 navOptions = NavOptions.Builder()
