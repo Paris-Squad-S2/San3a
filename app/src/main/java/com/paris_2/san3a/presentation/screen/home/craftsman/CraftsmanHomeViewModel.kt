@@ -11,7 +11,7 @@ class CraftsmanHomeViewModel(
     private val getStatsUseCase: GetStatsUseCase,
     private val getRecentRelatedJobsUseCase: GetRecentRelatedJobsUseCase,
     private val getAvailableJobsUseCase: GetAvailableJobsUseCase
-): CraftsmanInteractionListener, BaseViewModel<CraftsmanHomeState>(CraftsmanHomeState()) {
+) : CraftsmanInteractionListener, BaseViewModel<CraftsmanHomeState>(CraftsmanHomeState()) {
 
     init {
         loadUserData()
@@ -20,8 +20,8 @@ class CraftsmanHomeViewModel(
         loadAvailableJobs()
     }
 
-    private fun loadUserData(){}
-    private fun loadStats(userId: String){
+    private fun loadUserData() {}
+    private fun loadStats(userId: String) {
         tryToExecute(
             execute = { getStatsUseCase(userId) },
             onSuccess = {
@@ -42,7 +42,8 @@ class CraftsmanHomeViewModel(
             }
         )
     }
-    fun loadRecentRelatedJobs(relatedJob: String){
+
+    fun loadRecentRelatedJobs(relatedJob: String) {
         tryToExecute(
             execute = { getRecentRelatedJobsUseCase(relatedJob).first() },
             onSuccess = {
@@ -63,17 +64,20 @@ class CraftsmanHomeViewModel(
             }
         )
     }
-    fun loadAvailableJobs(){
+
+    fun loadAvailableJobs() {
         tryToExecute(
-            execute = { getAvailableJobsUseCase().first() },
-            onSuccess = {
-                updateState(
-                    screenState.value.copy(
-                        craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            availableJobs = it
+            execute = getAvailableJobsUseCase::invoke,
+            onSuccess = { availableJobs ->
+                availableJobs.collect {
+                    updateState(
+                        screenState.value.copy(
+                            craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                                availableJobs = it
+                            )
                         )
                     )
-                )
+                }
             },
             onError = {
                 updateState(
