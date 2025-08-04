@@ -9,7 +9,7 @@ class CustomizeProfileSettingsUseCase (
        profileRepository.updateAppLanguage(newLanguage)
     }
 
-     fun getLatestSelectedAppLanguage() =
+     suspend fun getLatestSelectedAppLanguage() =
         profileRepository.getLatestSelectedAppLanguage()
 
     suspend fun setAppThemeToDark(isDarkTheme: Boolean) {
