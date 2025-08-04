@@ -15,6 +15,7 @@ data class CustomerHomeUiState(
     val bottomSheetIconRes: Int = 0,
     val bottomSheetDescription: String = "",
     val bottomSheetImages: List<String> = emptyList(),
+    val bottomSheetSelectedSuggestion: String? = null
     )
 
 data class CustomerUiState(
