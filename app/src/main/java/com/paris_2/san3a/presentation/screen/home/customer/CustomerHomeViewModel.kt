@@ -121,6 +121,7 @@ class CustomerHomeViewModel(
             screenState.value.copy(
                 bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
                 bottomSheetServiceTitle = "",
+                bottomSheetSubtitle = "",
                 bottomSheetServiceId = "",
                 bottomSheetIconRes = 0,
                 bottomSheetDescription = "",
