@@ -185,5 +185,9 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="setting">Settings</string>
     <string name="switch_to_craftsman">Switch to Craftsman</string>
     <string name="version">Version %1$s</string>
+    <string name="phone_number_not_found">Phone Number not found</string>
+    <string name="sledgehammer_icon">Sledgehammer icon</string>
+    <string name="got_a_skill_start_earning">Got a skill? Start earning</string>
+    <string name="become_a_craftsman_icon">Become a Craftsman icon</string>
 
 </resources>
