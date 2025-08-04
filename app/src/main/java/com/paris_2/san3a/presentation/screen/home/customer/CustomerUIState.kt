@@ -10,6 +10,8 @@ data class CustomerHomeUiState(
     val customerUiState: CustomerUiState = CustomerUiState(),
     val bottomSheetState: Boolean = false,
     val bottomSheetStep: BottomSheetStep = BottomSheetStep.SELECT_SERVICE,
+    val bottomSheetServiceTitle: String = "",
+    val bottomSheetServiceId: String = ""
     )
 
 data class CustomerUiState(
