@@ -14,5 +14,6 @@ interface CustomerHomeInteractionListener {
     fun previousBottomSheetStep()
     fun setBottomSheetServiceTitle(title: String)
     fun setBottomSheetDescription(description: String)
+    fun setBottomSheetSelectedSuggestion(suggestion: String?)
 
 }

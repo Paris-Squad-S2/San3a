@@ -82,6 +82,15 @@ class CustomerHomeViewModel(
     override fun setBottomSheetDescription(description: String) {
         updateState(screenState.value.copy(bottomSheetDescription = description))
     }
+    override fun setBottomSheetSelectedSuggestion(suggestion: String?) {
+        updateState(
+            screenState.value.copy(
+                bottomSheetSelectedSuggestion = suggestion,
+                bottomSheetServiceTitle = suggestion
+                    ?: screenState.value.bottomSheetServiceTitle
+            )
+        )
+    }
 
     override fun createRequest(service: RequestServiceUiState , serviceId: String) {
         tryToExecute(
