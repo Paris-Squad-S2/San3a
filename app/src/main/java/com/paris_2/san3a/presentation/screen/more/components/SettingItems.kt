@@ -69,11 +69,13 @@ fun SettingItems(
         )
         AnimatedVisibility(isCraftsman) {
             Column {
+                SettingHorizontalDivider()
                 SettingItem(
                     icon = R.drawable.ic_sledgehammer_outline,
                     label = R.string.my_services,
                     onClickItem = moreInteractionListener::onClickSwitchAccountToCraftsman
                 )
+                SettingHorizontalDivider()
                 SettingItem(
                     icon = R.drawable.ic_verified_check_outline,
                     label = R.string.verification,
