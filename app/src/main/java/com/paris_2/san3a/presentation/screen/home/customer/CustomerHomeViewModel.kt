@@ -8,17 +8,12 @@ import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
-import com.paris_2.san3a.domain.usecase.SearchServiceUseCase
 import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Locale
-import kotlin.invoke
-import kotlin.text.get
 
 class CustomerHomeViewModel(
     private val getAllServicesUseCase: GetAllServicesUseCase,
@@ -28,7 +23,6 @@ class CustomerHomeViewModel(
     private val updateNumOfRequestsUseCase: UpdateNumOfRequestsUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
-    private val searchServiceUseCase: SearchServiceUseCase
 ) : CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
 
     init {
