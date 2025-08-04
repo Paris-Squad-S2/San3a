@@ -60,8 +60,13 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
         onEach: suspend (T) -> Unit,
         onError: (Throwable) -> Unit = {},
         onStart: () -> Unit = {},
-    ) {
-        viewModelScope.launch {
+        scope: CoroutineScope = viewModelScope,
+    ): Job {
+        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            onError(throwable)
+        }
+
+        return scope.launch(exceptionHandler) {
             flow()
                 .onStart { onStart() }
                 .catch { onError(it) }
