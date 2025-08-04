@@ -8,6 +8,12 @@ sealed interface Destinations : Graph {
     data object MainGraph : Graph
 
     @Serializable
+    data object CustomerGraph : Graph
+
+    @Serializable
+    data object CraftManGraph : Graph
+
+    @Serializable
     data class OTPRegisterScreen(val phoneNumber: String = "") : Destination
 
     @Serializable

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -15,15 +16,17 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.presentation.navigation.Navigator
 import com.paris_2.san3a.presentation.navigation.San3aNavGraph
-import com.paris_2.san3a.presentation.screen.account.AccountScreen
 import com.paris_2.san3a.presentation.shared.components.AppNavBarItem
 import com.paris_2.san3a.presentation.shared.components.AppNavigationBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+
+val LocalAccountType = mutableStateOf(AccountType.CUSTOMER)
 
 @Composable
 fun San3aScaffold(
@@ -35,7 +38,7 @@ fun San3aScaffold(
 
     val selectedDestinationIndex by remember(currentBackStackEntry) {
         derivedStateOf {
-            AppNavBarItem.destinations.indexOfFirst { item ->
+            AppNavBarItem.destinations().indexOfFirst { item ->
                 currentBackStackEntry?.destination?.hasRoute(item.destination::class) == true
             }.coerceAtLeast(0)
         }
@@ -43,7 +46,7 @@ fun San3aScaffold(
 
     val isVisible by remember {
         derivedStateOf {
-            AppNavBarItem.destinations.any {
+            AppNavBarItem.destinations().any {
                 currentBackStackEntry?.destination?.hasRoute(it.destination::class) == true
             }
         }
@@ -63,7 +66,8 @@ fun San3aScaffold(
                     exit = slideOutVertically(targetOffsetY = { it }),
                 ) {
                     AppNavigationBar(
-                        selectedItem = AppNavBarItem.destinations[selectedDestinationIndex],
+                        destinations = AppNavBarItem.destinations(LocalAccountType.value),
+                        selectedItem = AppNavBarItem.destinations(LocalAccountType.value)[selectedDestinationIndex],
                         onItemClick = { destination ->
                             scope.launch {
                                 navigator.navigate(
