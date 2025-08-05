@@ -39,7 +39,7 @@ data class MoreScreenState(
 data class MoreUiState(
     val userUiState: UserUiState = UserUiState(),
     val isDarkMode: Boolean = false,
-    val versionNumber: String = "0.0.0",
+    val versionNumber: String = "1.0.0",
     val selectedLanguage: String = LanguageUiState.ENGLISH.name
 )
 
@@ -186,10 +186,7 @@ class MoreViewModel(
     }
 
     private fun onGetUserInformationError(th: Throwable) {
-        Log.d("th","$th")
-        if (th is NoInternetConnectionException || th is UnknownHostException) {
-            Log.d("t12312312h","$th")
-
+        if (th is NoInternetConnectionException ) {
             updateState(
                 screenState.value.copy(
                     isNoInternet = true,
@@ -277,7 +274,6 @@ class MoreViewModel(
     }
 
     private fun onSaveAccountTypeAsCraftsmanSuccess(unit: Unit){
-        Log.d("12abced1233","221")
 
         updateState(
             screenState.value.copy(
@@ -297,7 +293,6 @@ class MoreViewModel(
     
 
     override fun onClickSwitchAccountToCustomer() {
-        Log.d("12abced1233","21")
 
         updateState(
             screenState.value.copy(
@@ -323,7 +318,6 @@ class MoreViewModel(
     }
 
     private fun onSaveAccountTypeAsCustomerSuccess(unit: Unit){
-        Log.d("12abced1233","14")
 
         updateState(
             screenState.value.copy(
@@ -343,7 +337,6 @@ class MoreViewModel(
     }
 
     private fun onSaveAccountTypeError(throwable: Throwable){
-        Log.d("12abced1233","1")
         updateState(
             screenState.value.copy(
                 isLoadingChangeAccount = false,
