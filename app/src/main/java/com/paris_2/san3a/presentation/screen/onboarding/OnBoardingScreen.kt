@@ -81,7 +81,9 @@ fun OnBoardingScreenContent(
                     page = pages[index]
                 )
             }
-            TextSection(page = pages[pagerState.currentPage])
+            TextSection(
+                page = pages[pagerState.currentPage]
+            )
             BottomSection(
                 onNextClick = {
                     interactionListener.onNextClicked()
@@ -92,7 +94,12 @@ fun OnBoardingScreenContent(
                     }
                 },
                 pages = pages,
-                state = state
+                state = state,
+                buttonText = if (pagerState.currentPage == pages.lastIndex) {
+                    stringResource(R.string.get_started)
+                } else {
+                    stringResource(R.string.next)
+                },
             )
         }
     }

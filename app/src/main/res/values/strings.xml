@@ -237,4 +237,5 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="tomorrow_1_00_pm">Tomorrow, 1:00 PM</string>
     <string name="_2_hour_ago">2 hour ago</string>
     <string name="craftsman_reviews">%1$s (%2$d reviews)</string>
+    <string name="get_started">Get Started</string>
 </resources>
