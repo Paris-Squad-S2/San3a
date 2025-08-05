@@ -73,9 +73,6 @@ class MoreViewModel(
 
 
     private fun fetchData() {
-        updateState(
-            screenState.value.copy(isLoading = false, errorMessage = null, isNoInternet = false)
-        )
         getDarkMode()
         getLanguageSelected()
         updatePhoneNumber()

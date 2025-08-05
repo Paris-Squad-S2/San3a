@@ -82,7 +82,6 @@ private fun MoreScreenContent(
 ) {
     val scroll = rememberScrollState()
 
-
     Box(
         Modifier
             .fillMaxSize()
