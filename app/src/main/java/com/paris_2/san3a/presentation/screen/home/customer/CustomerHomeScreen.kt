@@ -313,10 +313,10 @@ private fun CustomerHomeScreenContent(
                     isLarge = false,
                     painter = painterResource(getResource(service.id)),
                     modifier = Modifier
-                        .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
-                        .clickable {
-                            action.onServiceClick(service.id)
-                        }
+                        .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
+                    onclick = {
+                        action.onServiceClick(service.id)
+                    }
                 )
             }
 

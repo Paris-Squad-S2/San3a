@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.screen.home.customer.component
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -53,13 +52,13 @@ fun MostRequestedServices(
                     iconColor = getResourceColors(service.id),
                     isLarge = true,
                     painter = painterResource(getResource(service.id)),
-                    modifier = Modifier.clickable {
+                    onclick = {
                         action.onServiceClick(service.id)
                         onServiceClick(
                             service.title[if (isArabic) "arabicName" else "englishName"] ?: "",
                             service.id
                         )
-                    }
+                    },
                 )
             }
         }
