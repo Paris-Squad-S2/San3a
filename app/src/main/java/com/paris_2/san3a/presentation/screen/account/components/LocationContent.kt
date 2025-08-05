@@ -37,6 +37,7 @@ fun LocationContent(
     city: String = "",
     addressInDetails: String,
     onAddressDetailsChange: (String) -> Unit = {},
+    locationBottomSheetContentType: LocationBottomSheetContentType
 ) {
 
     Column(
@@ -80,16 +81,14 @@ fun LocationContent(
         )
         GovernmentBottomSheet(
             governments = governments,
+            cities = cities,
             isVisible = isGovernmentSheetShowed,
             onDismissRequest = onGovernmentDismissRequest,
-            onClick = onGovernmentSelected
+            locationBottomSheetType = locationBottomSheetContentType,
+            onGovernmentClick = onGovernmentSelected,
+            onCityClick = onCitiesSelected
         )
-        CitiesBottomSheet(
-            cities = cities,
-            isVisible = isCitiesSheetShowed,
-            onDismissRequest = onCitiesDismissRequest,
-            onClick = onCitiesSelected
-        )
+
     }
 }
 
@@ -100,7 +99,8 @@ private fun LocationContentPreview() {
         LocationContent(
             governments = listOf("Cairo"),
             cities = listOf("Cairo"),
-            addressInDetails = "AddressPreveiw"
+            addressInDetails = "AddressPreveiw",
+            locationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
         )
     }
 }

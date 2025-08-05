@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.screen.account.components.LocationContent
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.RequestBottomSheetContent
 import com.paris_2.san3a.presentation.screen.home.customer.component.MostRequestedServices
@@ -154,7 +155,8 @@ private fun CustomerHomeScreenContent(
                             city = state.bottomSheetUiState.bottomSheetSelectedCity,
                             onGetLocationClicked = {
                                 action.showGovernmentSheet(true)
-                            }
+                            },
+                            locationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
                         )
                     }
                 }

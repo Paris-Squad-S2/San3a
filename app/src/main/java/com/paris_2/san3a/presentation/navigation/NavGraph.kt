@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.presentation.screen.account.AccountScreen
 import com.paris_2.san3a.presentation.screen.home.craftsman.CraftsmanHomeScreen
 import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeScreen
@@ -50,7 +51,7 @@ fun San3aNavGraph(
 }
 
 fun NavGraphBuilder.buildSan3aNavGraph() {
-    navigation<Destinations.MainGraph>(startDestination = Destinations.Splash) {
+    navigation<Destinations.MainGraph>(startDestination = Destinations.Account(AccountSetupStep.ACCOUNT_TYPE)) {
         composable<Destinations.Splash> { SplashScreen() }
         composable<Destinations.OnBoarding> { OnBoardingScreen(pages = onboardingPages()) }
         composable<Destinations.RegisterScreen> { RegisterScreen() }

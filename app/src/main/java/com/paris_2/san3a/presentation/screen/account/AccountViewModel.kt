@@ -22,6 +22,7 @@ import com.paris_2.san3a.presentation.shared.utils.UiText
 import androidx.core.net.toUri
 import androidx.navigation.NavOptions
 import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
+import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import kotlinx.coroutines.delay
 
 class AccountViewModel(
@@ -540,16 +541,7 @@ class AccountViewModel(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
                             cities = cities.names,
-                            isGovernmentBottomSheetShowed = false,
-                            isNextButtonEnabled = true
-                        )
-                    )
-                )
-                delay(1000)
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            isCitiesBottomSheetShowed = true,
+                            locationType = LocationBottomSheetContentType.CITY
                         )
                     )
                 )
@@ -587,8 +579,8 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    isCitiesBottomSheetShowed = false,
                     isGovernmentBottomSheetShowed = false,
+                    isNextButtonEnabled = true,
                     locationUiState = screenState.value.accountUiState.locationUiState.copy(
                         city = city,
                     )
@@ -601,7 +593,8 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    isGovernmentBottomSheetShowed = !screenState.value.accountUiState.isGovernmentBottomSheetShowed
+                    isGovernmentBottomSheetShowed = !screenState.value.accountUiState.isGovernmentBottomSheetShowed,
+                    locationType = LocationBottomSheetContentType.GOVERNMENT
                 )
             )
         )

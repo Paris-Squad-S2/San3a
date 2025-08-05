@@ -189,7 +189,8 @@ fun AccountScreenContent(
                     government = uiState.accountUiState.locationUiState.government,
                     city = uiState.accountUiState.locationUiState.city,
                     addressInDetails = uiState.accountUiState.locationUiState.addressInDetails,
-                    onAddressDetailsChange = interactionListener::onAddressDetailsChanged
+                    onAddressDetailsChange = interactionListener::onAddressDetailsChanged,
+                    locationBottomSheetContentType = uiState.accountUiState.locationType
                 )
 
                 UserType.CRAFTSMAN -> ShowYourWorkContent(

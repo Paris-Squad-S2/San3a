@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.account
 
 import android.net.Uri
 import com.paris_2.san3a.domain.entity.Location
+import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 
 data class AccountScreenUiState(
     val accountUiState: AccountUiState = AccountUiState(),
@@ -26,6 +27,7 @@ data class AccountUiState(
     val workImagesUris: List<Uri>? = null,
     val workDescription: String = "",
     val isNextButtonEnabled: Boolean = false,
+    val locationType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
 )
 
 data class ServiceUiState(
