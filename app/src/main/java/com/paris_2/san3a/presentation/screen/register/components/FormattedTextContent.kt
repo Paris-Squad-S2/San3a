@@ -15,7 +15,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun FormattedTextContent(content: String) {
     val paragraphLines = content.split("\n")
     Column(
-        modifier = Modifier.Companion
+        modifier = Modifier
             .fillMaxWidth()
     ) {
         var i = 0
@@ -23,7 +23,7 @@ fun FormattedTextContent(content: String) {
             val line = paragraphLines[i].trim()
 
             if (line.isEmpty()) {
-                Spacer(modifier = Modifier.Companion.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 i++
                 continue
             }
@@ -38,7 +38,7 @@ fun FormattedTextContent(content: String) {
                     Theme.textStyle.body.medium.medium
                 },
                 color = Theme.colors.shade.primary,
-                modifier = Modifier.Companion.padding(bottom = if (i < paragraphLines.size - 1) 8.dp else 0.dp)
+                modifier = Modifier.padding(bottom = if (i < paragraphLines.size - 1) 8.dp else 0.dp)
             )
             i++
         }
