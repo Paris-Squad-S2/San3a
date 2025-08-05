@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.navigation
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import kotlinx.serialization.Serializable
 
+@Serializable
 sealed interface Destinations : Graph {
 
     @Serializable

@@ -20,6 +20,7 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
 import androidx.core.net.toUri
+import androidx.navigation.NavOptions
 
 class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
@@ -76,8 +77,8 @@ class AccountViewModel(
     }
 
     private fun getUserSelectedServices() {
-        tryToExecuteFlow(
-            flow = { getUserServicesUseCase(phoneNumber = screenState.value.accountUiState.phoneNumber, isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN) },
+        tryToObserve(
+            observe = { getUserServicesUseCase(phoneNumber = screenState.value.accountUiState.phoneNumber, isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN) },
             onEach = { services ->
                 val serviceUiStates = mapServiceToUiState(services)
                 updateState(
@@ -369,7 +370,10 @@ class AccountViewModel(
                                     location = screenState.value.accountUiState.locationUiState.toEntity()
                                 )
                                 navigate(
-                                    Destinations.Home
+                                    Destinations.CustomerGraph,
+                                    navOptions = NavOptions.Builder()
+                                        .setPopUpTo(Destinations.Account(accountSetupStep), inclusive = true)
+                                        .build()
                                 )
                             }
                         }
@@ -381,7 +385,13 @@ class AccountViewModel(
                                     screenState.value.accountUiState.frontOfNationalIdUri,
                                     screenState.value.accountUiState.backOfNationalIdUri
                                 )
-                                navigate(Destinations.Home)
+
+                                navigate(
+                                    Destinations.CraftManGraph,
+                                    navOptions = NavOptions.Builder()
+                                        .setPopUpTo(Destinations.Account(accountSetupStep), inclusive = true)
+                                        .build()
+                                )
                             }
                         }
                     }

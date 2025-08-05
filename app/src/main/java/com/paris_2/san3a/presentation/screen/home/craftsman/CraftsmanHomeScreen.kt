@@ -100,14 +100,6 @@ fun CraftsmanHomeContent(
                             style = Theme.textStyle.body.small.medium,
                             color = Theme.colors.shade.secondary
                         )
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_alt_arrow_down_outline),
-                            contentDescription = "",
-                            tint = Theme.colors.shade.secondary,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .padding(start = 4.dp)
-                        )
                     }
                 }
             },
@@ -115,9 +107,8 @@ fun CraftsmanHomeContent(
 
         LazyColumn(
             modifier = Modifier
-                .weight(1f)
-                .padding(bottom = 16.dp),
-            contentPadding = PaddingValues(top = 16.dp),
+                .weight(1f),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
@@ -137,55 +128,56 @@ fun CraftsmanHomeContent(
                 )
             }
 
-            item {
-                Text(
-                    text = stringResource(
-                        R.string.recent_jobs,
-                        state.craftsmanHomeUiState.relatedJob
-                    ),
-                    style = Theme.textStyle.title.medium,
-                    color = Theme.colors.shade.primary,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-            }
 
             item {
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(state.craftsmanHomeUiState.recentRelatedJobs) {
-                        RequestCardForCraftsMan(
-                            title = it.title,
-                            type = it.serviceType,
-                            offers = it.offers.size.toString(),
-                            description = it.description,
-                            location = it.location,
-                            onClick = { action.onJobClick(it.id) }
-                        )
+                if(state.craftsmanHomeUiState.recentRelatedJobs.isNotEmpty()) {
+                    Text(
+                        text = stringResource(
+                            R.string.recent_jobs,
+                            state.craftsmanHomeUiState.relatedJob
+                        ),
+                        style = Theme.textStyle.title.medium,
+                        color = Theme.colors.shade.primary,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(state.craftsmanHomeUiState.recentRelatedJobs) {
+                            RequestCardForCraftsMan(
+                                title = it.title,
+                                type = it.serviceType,
+                                offers = it.offers.size.toString(),
+                                description = it.description,
+                                location = it.location,
+                                onClick = { action.onJobClick(it.id) }
+                            )
+                        }
                     }
                 }
             }
 
-            item {
-                Text(
-                    text = stringResource(R.string.available_jobs),
-                    style = Theme.textStyle.title.medium,
-                    color = Theme.colors.shade.primary,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-            }
-
-            items(state.craftsmanHomeUiState.availableJobs) {
-                RequestCardForCraftsMan(
-                    title = it.title,
-                    type = it.serviceType,
-                    offers = it.offers.size.toString(),
-                    description = it.description,
-                    location = it.location,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    onClick = { action.onJobClick(it.id) }
-                )
+            if (state.craftsmanHomeUiState.availableJobs.isNotEmpty()) {
+                item {
+                    Text(
+                        text = stringResource(R.string.available_jobs),
+                        style = Theme.textStyle.title.medium,
+                        color = Theme.colors.shade.primary,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
+                items(state.craftsmanHomeUiState.availableJobs) {
+                    RequestCardForCraftsMan(
+                        title = it.title,
+                        type = it.serviceType,
+                        offers = it.offers.size.toString(),
+                        description = it.description,
+                        location = it.location,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        onClick = { action.onJobClick(it.id) }
+                    )
+                }
             }
         }
     }

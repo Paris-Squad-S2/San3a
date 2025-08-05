@@ -97,14 +97,14 @@ class UserRepositoryImpl(
             userRemoteDataSource.completeUserSetup(phone)
         }
 
-    override suspend fun getStats(userId: String): Stats? {
+    override suspend fun getStats(userId: String): Stats {
         return safeCall(GetStatsException()) {
-            userRemoteDataSource.getStats(userId)?.toEntity()
+            userRemoteDataSource.getStats(userId).toEntity()
         }
     }
 
-    override fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestService>> {
-        return userRemoteDataSource.getRecentRelatedJobs(relatedJob)
+    override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestService>> {
+        return userRemoteDataSource.getRecentRelatedJobs(relatedJobs)
             .map { list -> list.map { it.toEntity() } }
             .catch { throw GetRecentRelatedJobsException() }
     }

@@ -5,7 +5,6 @@ import com.google.firebase.firestore.FieldPath
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.SetOperation
 import com.paris_2.san3a.data.service.firestore.WriteOperation
-import com.paris_2.san3a.data.service.firestore.WriteOperationType
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
@@ -196,28 +195,50 @@ class UserRemoteDataSourceImpl(
         Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
     }
 
-    override suspend fun getStats(userId: String): StatsDto? {
-        return fireStoreService.getDoc(
-            path = "$CRAFTSMAN_COLLECTION/$userId",
-            fromJson = StatsDto::fromJson
+    override suspend fun getStats(userId: String): StatsDto {
+        return try {
+            fireStoreService.getDoc(
+                path = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
+                fromJson = StatsDto::fromJson
+            ) ?: StatsDto(userId, 0, 0.0, 0.0)
+        } catch (_: Exception) {
+            addStats(
+                userId,
+                StatsDto(userId, 0, 0.0, 0.0)
+            )
+            StatsDto(userId, 0, 0.0, 0.0)
+        }
+    }
+
+    suspend fun addStats(userId: String, stats: StatsDto) {
+        fireStoreService.setDoc(
+            documentPath = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
+            data = stats.toJson()
         )
     }
 
-    override fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestServiceDto>> {
+    override suspend fun updateStats(userId: String, stats: StatsDto) {
+        fireStoreService.updateDoc(
+            path = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
+            data = stats.toJson()
+        )
+    }
+
+    override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>> {
         return fireStoreService.streamCollection(
-            path = REQUESTED_SERVICES_COLLECTION,
+            path = SERVICE_REQUESTS_COLLECTION,
             fromJson = RequestServiceDto::fromJson,
             queryBuilder = { query ->
-                query.whereEqualTo("relatedJob", relatedJob)
+                query.whereIn("title", relatedJobs)
             }
         )
     }
 
     companion object {
         const val USERS_COLLECTION = "users"
-        const val CRAFTSMAN_COLLECTION = "craftsmen"
+        const val CRAFTSMAN_STATUS_COLLECTION = "craftsmen"
         const val STATS_COLLECTION = "stats"
-        const val REQUESTED_SERVICES_COLLECTION = "requestedServices"
+        const val SERVICE_REQUESTS_COLLECTION = "service_requests"
         const val OFFERED_SERVICES_COLLECTION = "offeredServices"
         const val REQUESTED_SERVICES_PATH = "requestedServices"
         const val SERVICES_COLLECTION = "services"

@@ -23,6 +23,6 @@ interface UserRepository {
     suspend fun completeUserSetup(phone: String)
     suspend fun getUser(phone: String): User
     suspend fun getWorkMedia(phone: String): List<String>
-    suspend fun getStats(userId: String): Stats?
-    fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestService>>
+    suspend fun getStats(userId: String): Stats
+    fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestService>>
 }

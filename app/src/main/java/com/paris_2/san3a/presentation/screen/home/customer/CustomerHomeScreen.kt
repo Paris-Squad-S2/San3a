@@ -262,14 +262,6 @@ private fun CustomerHomeScreenContent(
                             style = Theme.textStyle.body.small.medium,
                             color = Theme.colors.shade.secondary
                         )
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_alt_arrow_down_outline),
-                            contentDescription = "",
-                            tint = Theme.colors.shade.secondary,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .padding(start = 4.dp)
-                        )
                     }
                 }
             },
