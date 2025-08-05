@@ -156,6 +156,13 @@ private fun SettingItemsPreview() {
                 override fun onClickRetry() {
                 }
 
+                override fun onClickLogoutArrow() {
+
+                }
+
+                override fun onDismissLogoutBottomSheet() {
+                }
+
             },
             isLoadingChangeAccount = true,
         )

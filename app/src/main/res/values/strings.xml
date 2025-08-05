@@ -265,4 +265,8 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="location_help_text">Location helps improve accuracy, but don’t worry, you can update it later.</string>
     <string name="choose_governorate">Choose Governorate</string>
     <string name="choose_district">Choose District</string>
+    <string name="success_location_saved">Location saved successfully</string>
+    <string name="error_general">Something went wrong</string>
+    <string name="please_select_location">Please Select Governorate or District </string>
+
 </resources>
