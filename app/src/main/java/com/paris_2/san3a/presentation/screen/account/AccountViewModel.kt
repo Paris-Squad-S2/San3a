@@ -47,8 +47,8 @@ class AccountViewModel(
     val accountSetupStep = savedStateHandle.toRoute<Destinations.Account>().accountSetupStep
 
     init {
-        loadUserAndGoToLastStep()
         getPhoneNumber()
+        loadUserAndGoToLastStep()
         getGovernments()
         getAllServices()
         getUserSelectedServices()
@@ -57,7 +57,7 @@ class AccountViewModel(
 
     private fun getWorkMedia() {
         tryToExecute(
-            execute = { setUpAccountUseCase.getWorkMedia(getPhoneNumberUseCase()) },
+            execute = { setUpAccountUseCase.getWorkMedia(screenState.value.accountUiState.phoneNumber) },
             onSuccess = { workMedia ->
                 updateState(
                     screenState.value.copy(
@@ -79,9 +79,9 @@ class AccountViewModel(
     }
 
     private fun getUserSelectedServices() {
-        tryToExecute(
-            execute = { getUserServicesUseCase(getPhoneNumberUseCase()) },
-            onSuccess = { services ->
+        tryToExecuteFlow(
+            flow = { getUserServicesUseCase(phoneNumber = screenState.value.accountUiState.phoneNumber, isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN) },
+            onEach = { services ->
                 val serviceUiStates = mapServiceToUiState(services)
                 updateState(
                     screenState.value.copy(
@@ -106,13 +106,12 @@ class AccountViewModel(
 
     private fun loadUserAndGoToLastStep() {
         tryToExecute(
-            execute = { getUserUseCase(getPhoneNumberUseCase()) },
+            execute = { getUserUseCase(screenState.value.accountUiState.phoneNumber) },
             onSuccess = { user ->
                 updateState(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
                             userType = UserType.valueOf(user.accountType.name),
-                            phoneNumber = user.phone,
                             locationUiState = user.location.let {
                                 LocationUiState(
                                     government = it.government,
@@ -313,6 +312,16 @@ class AccountViewModel(
                                 phone = screenState.value.accountUiState.phoneNumber,
                                 AccountType.valueOf(userType.name)
                             )
+                            updateState(
+                                screenState.value.copy(
+                                    accountUiState = screenState.value.accountUiState.copy(
+                                        serviceUiState = screenState.value.accountUiState.serviceUiState.map { service ->
+                                            service.copy(isSelected = false)
+                                        }
+                                    )
+                                )
+                            )
+                            getUserSelectedServices()
                         }
 
                         1 -> {

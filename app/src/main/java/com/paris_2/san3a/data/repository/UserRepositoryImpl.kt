@@ -6,9 +6,10 @@ import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
 import com.paris_2.san3a.domain.CompleteUserSetupException
 import com.paris_2.san3a.domain.GetAccountTypeException
-import com.paris_2.san3a.domain.GetUserException
 import com.paris_2.san3a.domain.GetRecentRelatedJobsException
+import com.paris_2.san3a.domain.GetServicesException
 import com.paris_2.san3a.domain.GetStatsException
+import com.paris_2.san3a.domain.GetUserException
 import com.paris_2.san3a.domain.GetUserProgressException
 import com.paris_2.san3a.domain.SaveAccountTypeException
 import com.paris_2.san3a.domain.SaveLocationException
@@ -20,13 +21,13 @@ import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.RequestService
+import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.Stats
+import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import com.paris_2.san3a.domain.entity.Service
-import com.paris_2.san3a.domain.entity.User
 
 class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
@@ -42,14 +43,18 @@ class UserRepositoryImpl(
             userRemoteDataSource.getAccountType(phone)
         }
 
-    override suspend fun saveServices(phone: String, services: List<Service>, isCraftsman: Boolean) =
+    override suspend fun saveServices(
+        phone: String,
+        services: List<Service>,
+        isCraftsman: Boolean
+    ) =
         safeCall(SaveServicesException()) {
             userRemoteDataSource.saveServices(phone, services, isCraftsman)
         }
 
-    override suspend fun getServices(phone: String): List<Service> =
-        safeCall(SaveServicesException()) {
-            userRemoteDataSource.getServices(phone).toEntity()
+    override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<Service>> =
+        userRemoteDataSource.getServices(phone, isCraftsman).map { it.toEntity() }.catch {
+            throw GetServicesException()
         }
 
     override suspend fun saveLocation(phone: String, location: Location) =
@@ -67,7 +72,11 @@ class UserRepositoryImpl(
             userRemoteDataSource.savePersonalInfo(phone, fullName, profileUrl)
         }
 
-    override suspend fun saveWorkShowcase(phone: String, workMedia: List<Uri>?, workDescription: String) =
+    override suspend fun saveWorkShowcase(
+        phone: String,
+        workMedia: List<Uri>?,
+        workDescription: String
+    ) =
         safeCall(SaveWorkShowcaseException()) {
             val mediaUrls = workMedia?.mapIndexedNotNull { index, uri ->
                 val path = "$WORK_SHOWCASE_PATH/$phone/media_$index.jpg"

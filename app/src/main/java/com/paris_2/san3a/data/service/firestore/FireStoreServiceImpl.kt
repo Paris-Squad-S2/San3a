@@ -77,7 +77,7 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
         } catch (e: Exception) {
             when (e) {
                 is FirebaseFirestoreException -> throw handleFirebaseException(e, "batch_write")
-                else -> throw BatchOperationException()
+                else -> throw BatchOperationException(e.message ?: "Unknown error during batch write")
             }
         }
     }
@@ -173,22 +173,6 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
             }
     }
 
-    private fun handleFirebaseException(e: FirebaseFirestoreException, path: String): Exception {
-        return when (e.code) {
-            FirebaseFirestoreException.Code.PERMISSION_DENIED ->
-                PermissionDeniedException(path)
-
-            FirebaseFirestoreException.Code.NOT_FOUND ->
-                DocumentNotFoundException(path)
-
-            FirebaseFirestoreException.Code.UNAVAILABLE ->
-                NetworkException(path)
-
-            else ->
-                FireStoreOperationException(path, e.message)
-        }
-    }
-
     override suspend fun getCountOfCollection(
         path: String,
         queryBuilder: (Query) -> Query
@@ -204,6 +188,38 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
                 is FirebaseFirestoreException -> throw handleFirebaseException(e, path)
                 else -> throw GetDataException(path)
             }
+        }
+    }
+
+    override suspend fun clearCollection(path: String) {
+        try {
+            val batch = firestore.batch()
+            val snapshot = firestore.collection(path).get().await()
+            for (doc in snapshot.documents) {
+                batch.delete(doc.reference)
+            }
+            batch.commit().await()
+        } catch (e: Exception) {
+            when (e) {
+                is FirebaseFirestoreException -> throw handleFirebaseException(e, path)
+                else -> throw ClearCollectionException(path)
+            }
+        }
+    }
+
+    private fun handleFirebaseException(e: FirebaseFirestoreException, path: String): Exception {
+        return when (e.code) {
+            FirebaseFirestoreException.Code.PERMISSION_DENIED ->
+                PermissionDeniedException(path)
+
+            FirebaseFirestoreException.Code.NOT_FOUND ->
+                DocumentNotFoundException(path)
+
+            FirebaseFirestoreException.Code.UNAVAILABLE ->
+                NetworkException(path)
+
+            else ->
+                FireStoreOperationException(path, e.message)
         }
     }
 }

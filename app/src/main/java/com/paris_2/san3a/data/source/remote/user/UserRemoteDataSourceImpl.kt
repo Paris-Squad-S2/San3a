@@ -3,6 +3,9 @@ package com.paris_2.san3a.data.source.remote.user
 import android.util.Log
 import com.google.firebase.firestore.FieldPath
 import com.paris_2.san3a.data.service.firestore.FireStoreService
+import com.paris_2.san3a.data.service.firestore.SetOperation
+import com.paris_2.san3a.data.service.firestore.WriteOperation
+import com.paris_2.san3a.data.service.firestore.WriteOperationType
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
@@ -11,7 +14,9 @@ import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 
 class UserRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
@@ -39,17 +44,44 @@ class UserRemoteDataSourceImpl(
         services: List<Service>,
         isCraftsman: Boolean
     ) {
-        services.forEach { service ->
-            val collectionPath = "$USERS_COLLECTION/$phone/services/${service.id}"
-            fireStoreService.setDoc(documentPath = collectionPath, data = mapOf<String, Any>())
+        val path = if (isCraftsman) {
+            "$USERS_COLLECTION/$phone/$OFFERED_SERVICES_COLLECTION"
+        } else {
+            "$USERS_COLLECTION/$phone/$REQUESTED_SERVICES_PATH"
         }
+        fireStoreService.clearCollection(path = path)
+        val operations = mutableListOf<WriteOperation>()
+        services.forEach { service ->
+            operations.add(
+                SetOperation(
+                    path = "$path/${service.id}",
+                    data = mapOf()
+                )
+            )
+        }
+        fireStoreService.batchWrite(operations)
     }
 
-    override suspend fun getServices(phone: String): List<ServiceDto> {
-        return fireStoreService.getCollection(path = "$USERS_COLLECTION/$phone/services", fromJson = ::getServices).let { docs ->
-            fireStoreService.getCollection(path = "services", fromJson = ServiceDto::fromJson, queryBuilder = { query ->
-                query.whereIn(FieldPath.documentId(), docs)
-            })
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<ServiceDto>> {
+        val path = if (isCraftsman) {
+            "$USERS_COLLECTION/$phone/$OFFERED_SERVICES_COLLECTION"
+        } else {
+            "$USERS_COLLECTION/$phone/$REQUESTED_SERVICES_PATH"
+        }
+        return fireStoreService.streamCollection(
+            path = path,
+            fromJson = ::getServices
+        ).let { docsFlow ->
+            docsFlow.flatMapLatest { docsList ->
+                fireStoreService.streamCollection(
+                    path = SERVICES_COLLECTION,
+                    fromJson = ServiceDto::fromJson,
+                    queryBuilder = { query ->
+                        query.whereIn(FieldPath.documentId(), docsList)
+                    }
+                )
+            }
         }
     }
 
@@ -182,5 +214,8 @@ class UserRemoteDataSourceImpl(
         const val CRAFTSMAN_COLLECTION = "craftsmen"
         const val STATS_COLLECTION = "stats"
         const val REQUESTED_SERVICES_COLLECTION = "requestedServices"
+        const val OFFERED_SERVICES_COLLECTION = "offeredServices"
+        const val REQUESTED_SERVICES_PATH = "requestedServices"
+        const val SERVICES_COLLECTION = "services"
     }
 }

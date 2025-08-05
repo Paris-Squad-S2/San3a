@@ -45,4 +45,8 @@ interface FireStoreService {
         path: String,
         queryBuilder: (Query) -> Query = { it }
     ): Int
+
+    suspend fun clearCollection(
+        path: String
+    )
 }
