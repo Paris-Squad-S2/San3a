@@ -46,4 +46,7 @@ sealed interface Destinations : Graph {
     @Serializable
     data object OnBoarding : Destination
 
+    @Serializable
+    data object Verification : Destination
+
 }

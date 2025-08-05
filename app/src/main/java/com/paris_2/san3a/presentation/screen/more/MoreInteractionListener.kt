@@ -4,6 +4,7 @@ interface MoreInteractionListener {
     fun onClickEditProfileBottomSheet()
     fun onClickSwitchAccountToCraftsman()
     fun onClickSwitchAccountToCustomer()
+    fun onClickVerification()
     fun onClickLanguage()
     fun onClickLocation()
     fun onClickLogout()

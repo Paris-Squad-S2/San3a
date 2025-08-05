@@ -20,6 +20,7 @@ import com.paris_2.san3a.presentation.screen.onboarding.onboardingPages
 import com.paris_2.san3a.presentation.screen.register.otpScreen.OTPRegisterScreen
 import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterScreen
 import com.paris_2.san3a.presentation.screen.splash.SplashScreen
+import com.paris_2.san3a.presentation.screen.verification.VerificationScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -71,5 +72,6 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.MyRequest> { MyRequestScreen() }
         composable<Destinations.Notifications> { NotificationsScreen() }
         composable<Destinations.More> { MoreScreen() }
+        composable<Destinations.Verification> { VerificationScreen() }
     }
 }

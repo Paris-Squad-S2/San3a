@@ -79,7 +79,7 @@ fun SettingItems(
                 SettingItem(
                     icon = R.drawable.ic_verified_check_outline,
                     label = R.string.verification,
-                    onClickItem = moreInteractionListener::onClickSwitchAccountToCraftsman
+                    onClickItem = moreInteractionListener::onClickVerification
                 )
             }
 
@@ -107,6 +107,10 @@ private fun SettingItemsPreview() {
                 }
 
                 override fun onClickSwitchAccountToCustomer() {
+                }
+
+                override fun onClickVerification() {
+                    TODO("Not yet implemented")
                 }
 
                 override fun onClickLanguage() {
