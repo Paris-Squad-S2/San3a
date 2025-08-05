@@ -54,7 +54,9 @@ fun ShowYourWorkContent(
             onValueChange = onDescriptionChanged,
             placeholder = stringResource(R.string.mention_your_years_of_experience),
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            singleLine = false,
+            minLines = 2
         )
     }
 }
