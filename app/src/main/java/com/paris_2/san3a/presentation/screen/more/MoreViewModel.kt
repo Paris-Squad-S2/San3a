@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.more
 
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
@@ -20,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 
 data class MoreScreenState(
     val moreUiState: MoreUiState = MoreUiState(),
@@ -30,7 +32,8 @@ data class MoreScreenState(
     val isNoInternet: Boolean = false,
     val isLoading: Boolean = false,
     val showSnackBarSuccess: Boolean = false,
-    val showSnackBarError: Boolean = false
+    val showSnackBarError: Boolean = false,
+    val isLoadingChangeAccount: Boolean = false,
 )
 
 data class MoreUiState(
@@ -169,6 +172,7 @@ class MoreViewModel(
     }
 
     private fun onGetUserInformationSuccess(user: User) {
+        Log.d("123user","$user")
         updateState(
             screenState.value.copy(
                 isLoading = false,
@@ -183,7 +187,10 @@ class MoreViewModel(
     }
 
     private fun onGetUserInformationError(th: Throwable) {
-        if (th is NoInternetConnectionException) {
+        Log.d("th","$th")
+        if (th is NoInternetConnectionException || th is UnknownHostException) {
+            Log.d("t12312312h","$th")
+
             updateState(
                 screenState.value.copy(
                     isNoInternet = true,
@@ -197,7 +204,8 @@ class MoreViewModel(
                 screenState.value.copy(
                     errorMessage = R.string.user_information_not_found,
                     isNoInternet = false,
-                    isLoading = false
+                    isLoading = false,
+                    showSnackBarError = true
                 )
             )
         }
@@ -245,6 +253,17 @@ class MoreViewModel(
     }
 
     private fun switchToCraftsmanAccount(){
+        updateState(
+            screenState.value.copy(
+                isLoadingChangeAccount = true,
+                isLoading = false,
+                errorMessage = null,
+                showSnackBarError = false,
+                isNoInternet = false,
+                showSnackBarSuccess = false
+
+            )
+        )
         tryToExecute(
             execute = {
                 setUpAccountUseCase.saveAccountType(
@@ -277,6 +296,17 @@ class MoreViewModel(
     
 
     override fun onClickSwitchAccountToCustomer() {
+        updateState(
+            screenState.value.copy(
+                isLoadingChangeAccount = true,
+                isLoading = false,
+                errorMessage = null,
+                showSnackBarError = false,
+                isNoInternet = false,
+                showSnackBarSuccess = false
+
+            )
+        )
         tryToExecute(
             execute = {
                 setUpAccountUseCase.saveAccountType(
@@ -292,6 +322,7 @@ class MoreViewModel(
     private fun onSaveAccountTypeAsCustomerSuccess(unit: Unit){
         updateState(
             screenState.value.copy(
+                isLoadingChangeAccount = false,
                 isLoading = false,
                 errorMessage = null,
                 isNoInternet = false,
@@ -309,6 +340,7 @@ class MoreViewModel(
     private fun onSaveAccountTypeError(throwable: Throwable){
         updateState(
             screenState.value.copy(
+                isLoadingChangeAccount = false,
                 errorMessage = R.string.occur_error_when_save_account_type,
                 showSnackBarError = true,
                 isNoInternet = false,

@@ -20,6 +20,7 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 fun SettingItems(
     isCraftsman: Boolean,
     isDarkMode: Boolean,
+    isLoadingChangeAccount: Boolean,
     moreInteractionListener: MoreInteractionListener,
     modifier: Modifier = Modifier
 ) {
@@ -35,6 +36,7 @@ fun SettingItems(
                 SettingItem(
                     icon = R.drawable.ic_home_outline,
                     label = R.string.switch_to_customer,
+                    isLoading = isLoadingChangeAccount,
                     onClickItem = moreInteractionListener::onClickSwitchAccountToCustomer
                 )
 
@@ -42,6 +44,7 @@ fun SettingItems(
                 SettingItem(
                     icon = R.drawable.ic_sledgehammer_outline,
                     label = R.string.switch_to_craftsman,
+                    isLoading = isLoadingChangeAccount,
                     onClickItem = moreInteractionListener::onClickSwitchAccountToCraftsman
                 )
             }
@@ -153,7 +156,8 @@ private fun SettingItemsPreview() {
                 override fun onClickRetry() {
                 }
 
-            }
+            },
+            isLoadingChangeAccount = true,
         )
     }
 }

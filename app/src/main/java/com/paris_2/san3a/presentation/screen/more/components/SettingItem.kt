@@ -24,6 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppSwitch
+import com.paris_2.san3a.presentation.shared.components.LoadingScreen
+import com.paris_2.san3a.presentation.shared.components.ProgressBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
@@ -36,6 +38,7 @@ fun SettingItem(
     contentDescriptionIcon: String? = null,
     hasSwitchIcon: Boolean = false,
     isCheckSwitch: Boolean = false,
+    isLoading: Boolean = false,
     iconLabelColor: Color = Theme.colors.shade.primary,
     labelColor: Color = Theme.colors.shade.primary,
     onCheckedChange: (Boolean) -> Unit = {},
@@ -71,16 +74,23 @@ fun SettingItem(
                     isEnabled = true
                 )
             } else {
-                Icon(
-                    painter = painterResource(R.drawable.ic_alt_arrow_right_outline),
-                    contentDescription = "navigate icon ",
-                    tint = Theme.colors.shade.primary,
-                    modifier = Modifier.size(20.dp).clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = {onClickItem()}
-                    )
-                )
+                AnimatedContent(isLoading) {
+                    if(it){
+                        LoadingScreen(modifier = Modifier.size(20.dp))
+                    }else {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_alt_arrow_right_outline),
+                            contentDescription = "navigate icon ",
+                            tint = Theme.colors.shade.primary,
+                            modifier = Modifier.size(20.dp).clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = {onClickItem()}
+                            )
+                        )
+                    }
+                }
+
             }
         }
 

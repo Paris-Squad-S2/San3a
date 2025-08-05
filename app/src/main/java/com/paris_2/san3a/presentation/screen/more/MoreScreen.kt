@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -69,7 +70,7 @@ fun MoreScreen(
     MoreScreenContent(
         moreScreenState = uiState.value,
         moreInteractionListener = moreViewModel,
-        onPickImageClick = {profileImagePickerLauncher.launch(arrayOf("image/*"))}
+        onPickImageClick = { profileImagePickerLauncher.launch(arrayOf("image/*")) }
     )
 }
 
@@ -115,6 +116,7 @@ private fun MoreScreenContent(
                 ) {
                     AppBar(
                         modifier = Modifier
+                            .height(56.dp)
                             .background(Theme.colors.background.card)
                             .padding(horizontal = 16.dp),
                         title = stringResource(R.string.more),
@@ -141,7 +143,7 @@ private fun MoreScreenContent(
                     )
 
                     AnimatedVisibility(
-                        visible = moreScreenState.moreUiState.userUiState.isCraftsman,
+                        visible = !moreScreenState.moreUiState.userUiState.isCraftsman,
                         modifier = Modifier.padding(top = 8.dp)
                     ) {
 
@@ -159,7 +161,8 @@ private fun MoreScreenContent(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         isCraftsman = moreScreenState.moreUiState.userUiState.isCraftsman,
                         isDarkMode = moreScreenState.moreUiState.isDarkMode,
-                        moreInteractionListener = moreInteractionListener
+                        moreInteractionListener = moreInteractionListener,
+                        isLoadingChangeAccount = moreScreenState.isLoadingChangeAccount
                     )
                     LogoutItem(
                         modifier = Modifier
@@ -174,7 +177,10 @@ private fun MoreScreenContent(
                     )
 
                     Text(
-                        text = stringResource(R.string.version, moreScreenState.moreUiState.versionNumber),
+                        text = stringResource(
+                            R.string.version,
+                            moreScreenState.moreUiState.versionNumber
+                        ),
                         style = Theme.textStyle.body.small.regular,
                         color = Theme.colors.shade.tertiary,
                         modifier = Modifier
@@ -190,7 +196,7 @@ private fun MoreScreenContent(
                             onNameChange = moreInteractionListener::onNameValueChange,
                             onDismissRequest = moreInteractionListener::onCloseEditProfileBottomSheet,
                             isVisible = moreScreenState.showEditProfileBottomSheet,
-                            onPickImageClick = {onPickImageClick()}
+                            onPickImageClick = { onPickImageClick() }
                         )
                     }
 
