@@ -1,8 +1,10 @@
 package com.paris_2.san3a.presentation.screen.more.locationScreen
 
+import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
@@ -10,10 +12,12 @@ class LocationViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
+    private val getUserUseCase: GetUserUseCase,
 ) : BaseViewModel<LocationScreenState>(LocationScreenState()), LocationInteractionListener {
 
     init {
         fetchGovernorates()
+        fetchUserLocation()
     }
 
     private fun fetchGovernorates() {
@@ -68,7 +72,12 @@ class LocationViewModel(
         val uiState = screenState.value.locationUiState
 
         if (uiState.selectedGovernorate.isEmpty() || uiState.selectedStreet.isEmpty()) {
-            updateState(screenState.value.copy(showSnackBarError = true))
+            updateState(
+                screenState.value.copy(
+                    showSnackBarError = true,
+                    errorMessage = R.string.please_select_location
+                )
+            )
             return
         }
 
@@ -83,11 +92,21 @@ class LocationViewModel(
                 setUpAccountUseCase.saveLocation(phone, location)
             },
             onSuccess = {
-                updateState(screenState.value.copy(showSnackBarSuccess = true))
+                updateState(
+                    screenState.value.copy(
+                        showSnackBarSuccess = true,
+                        successMessageSnackBar = R.string.success_location_saved
+                    )
+                )
                 navigateUp()
             },
             onError = {
-                updateState(screenState.value.copy(showSnackBarError = true))
+                updateState(
+                    screenState.value.copy(
+                        showSnackBarError = true,
+                        errorMessage = R.string.some_error_happened
+                    )
+                )
             }
         )
     }
@@ -156,6 +175,31 @@ class LocationViewModel(
             )
         )
     }
+
+    private fun fetchUserLocation() {
+        tryToExecute(
+            execute = {
+                val phone = getPhoneNumberUseCase()
+                getUserUseCase(phone)
+            },
+            onSuccess = { user ->
+                val location = user.location
+                updateState(
+                    screenState.value.copy(
+                        locationUiState = screenState.value.locationUiState.copy(
+                            selectedGovernorate = location.government,
+                            selectedStreet = location.cityName
+                        )
+                    )
+                )
+            },
+            onError = {
+                updateState(screenState.value.copy(isNoInternet = true))
+            }
+        )
+    }
+
+
 
 
 

@@ -22,6 +22,7 @@ import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
+import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.navigation.Navigator
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -38,25 +39,17 @@ fun SplashScreen(
     setUpAccountUseCase: SetUpAccountUseCase = koinInject(),
 ) {
     LaunchedEffect(Unit) {
-        delay(2000)
+        var destination: Destination = Destinations.OnBoarding
+
         val phoneNumber = getPhoneNumberUseCase()
         if (phoneNumber.isNotBlank()) {
             setUpAccountUseCase.getUserProgress(phoneNumber).also { progress ->
                 when(progress){
                     AccountSetupStep.ACCOUNT_TYPE -> {
-                        if (isOnboardingCompletedUseCase()) {
-                            navigator.navigate(
-                                destination = Destinations.RegisterScreen,
-                                navOptions = NavOptions.Builder()
-                                    .setPopUpTo(Destinations.Splash, inclusive = true)
-                                    .build()
-                            )
+                        destination = if (isOnboardingCompletedUseCase()) {
+                            Destinations.RegisterScreen
                         } else {
-                            navigator.navigate(
-                                Destinations.OnBoarding, NavOptions.Builder()
-                                    .setPopUpTo(Destinations.Splash, true)
-                                    .build()
-                            )
+                            Destinations.OnBoarding
                         }
                     }
                     AccountSetupStep.COMPLETED -> {
@@ -64,53 +57,35 @@ fun SplashScreen(
                             when(user.accountType){
                                 AccountType.CUSTOMER -> {
                                     LocalAccountType.value = AccountType.CUSTOMER
-                                    navigator.navigate(
-                                        destination = Destinations.CustomerGraph,
-                                        navOptions = NavOptions.Builder()
-                                            .setPopUpTo(Destinations.Splash, inclusive = true)
-                                            .build()
-                                    )
+                                    destination = Destinations.CustomerGraph
                                 }
                                 AccountType.CRAFTSMAN -> {
                                     LocalAccountType.value = AccountType.CRAFTSMAN
-                                    navigator.navigate(
-                                        destination = Destinations.CraftManGraph,
-                                        navOptions = NavOptions.Builder()
-                                            .setPopUpTo(Destinations.Splash, inclusive = true)
-                                            .build()
-                                    )
+                                    destination = Destinations.CraftManGraph
                                 }
                             }
                         }
                     }
                     else -> {
                         Log.d("SplashScreen", "User progress: $progress")
-                        navigator.navigate(
-                            destination = Destinations.Account(
-                                progress
-                            ),
-                            navOptions = NavOptions.Builder()
-                                .setPopUpTo(Destinations.Splash, inclusive = true)
-                                .build()
-                        )
+                        destination = Destinations.Account(progress)
                     }
                 }
             }
         } else if (isOnboardingCompletedUseCase()) {
-            navigator.navigate(
-                destination = Destinations.RegisterScreen,
-                navOptions = NavOptions.Builder()
-                    .setPopUpTo(Destinations.Splash, inclusive = true)
-                    .build()
-            )
+            destination = Destinations.RegisterScreen
         } else {
-            navigator.navigate(
-                Destinations.OnBoarding, NavOptions.Builder()
-                    .setPopUpTo(Destinations.Splash, true)
-                    .build()
-            )
+            destination = Destinations.OnBoarding
         }
 
+        delay(2000)
+
+        navigator.navigate(
+            destination = destination,
+            navOptions = NavOptions.Builder()
+                .setPopUpTo(Destinations.Splash, inclusive = true)
+                .build()
+        )
     }
     Box(
         modifier = modifier
