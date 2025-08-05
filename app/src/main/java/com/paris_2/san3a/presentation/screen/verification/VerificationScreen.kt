@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -86,8 +87,8 @@ fun VerificationScreenContent(
         Modifier
             .fillMaxSize()
             .background(Theme.colors.background.screen)
-            .statusBarsPadding()
             .verticalScroll(scroll)
+            .statusBarsPadding()
     ) {
         when {
             verificationScreenState.isNoInternet -> {
@@ -118,6 +119,7 @@ fun VerificationScreenContent(
 
                     VerifyIDContent(
                         modifier = Modifier
+                            .height(449.dp)
                             .padding(horizontal = 16.dp),
                         onFrontOfNationalIdUploadClick = { onFrontOfNationalIdUploadClick() },
                         onBackOfNationalIdUploadClick = { onBackOfNationalIdUploadClick() },
@@ -130,7 +132,7 @@ fun VerificationScreenContent(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
                         .padding(bottom = 16.dp)
-                        .weight(1f)
+
 
                     val typeButton = AppButtonType.Primary
 

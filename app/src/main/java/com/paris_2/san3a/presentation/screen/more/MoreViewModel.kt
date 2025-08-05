@@ -64,11 +64,11 @@ class MoreViewModel(
 ) : BaseViewModel<MoreScreenState>(MoreScreenState()), MoreInteractionListener {
 
     init {
-        fatchData()
+        fetchData()
     }
 
 
-    private fun fatchData() {
+    private fun fetchData() {
         updateState(
             screenState.value.copy(isLoading = false, errorMessage = null, isNoInternet = false)
         )
@@ -437,7 +437,20 @@ class MoreViewModel(
             )
         )
 
-        fatchData()
+        fetchData()
+    }
+
+    override fun onClickVerification() {
+        navigate(Destinations.Verification)
+    }
+
+    override fun onClickMyService() {
+        navigate(
+            Destinations.MyService(
+                phoneNumber = screenState.value.moreUiState.userUiState.phoneNumber,
+                isCraftsman = screenState.value.moreUiState.userUiState.isCraftsman
+            )
+        )
     }
 
 }

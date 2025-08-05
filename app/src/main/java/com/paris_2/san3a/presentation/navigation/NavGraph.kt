@@ -14,6 +14,7 @@ import com.paris_2.san3a.presentation.screen.messages.MessagesScreen
 import com.paris_2.san3a.presentation.screen.messagesDetails.MessageDetails
 import com.paris_2.san3a.presentation.screen.more.MoreScreen
 import com.paris_2.san3a.presentation.screen.myRequest.MyRequestScreen
+import com.paris_2.san3a.presentation.screen.myService.MyServiceScreen
 import com.paris_2.san3a.presentation.screen.notifications.NotificationsScreen
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingScreen
 import com.paris_2.san3a.presentation.screen.onboarding.onboardingPages
@@ -73,5 +74,6 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.Notifications> { NotificationsScreen() }
         composable<Destinations.More> { MoreScreen() }
         composable<Destinations.Verification> { VerificationScreen() }
+        composable<Destinations.MyService> { MyServiceScreen() }
     }
 }

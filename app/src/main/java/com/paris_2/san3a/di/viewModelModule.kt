@@ -7,6 +7,7 @@ import com.paris_2.san3a.presentation.screen.main.MainViewModel
 import com.paris_2.san3a.presentation.screen.messages.MessagesViewModel
 import com.paris_2.san3a.presentation.screen.messagesDetails.MessagesDetailsViewModel
 import com.paris_2.san3a.presentation.screen.more.MoreViewModel
+import com.paris_2.san3a.presentation.screen.myService.MyServiceViewModel
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingViewModel
 import org.koin.core.module.dsl.viewModelOf
 import com.paris_2.san3a.presentation.screen.register.otpScreen.OTPRegisterViewModel
@@ -27,4 +28,5 @@ val viewModelModule = module {
     viewModelOf(::MoreViewModel)
     viewModelOf(::MainViewModel)
     viewModelOf(::VerificationViewModel)
+    viewModelOf(::MyServiceViewModel)
 }

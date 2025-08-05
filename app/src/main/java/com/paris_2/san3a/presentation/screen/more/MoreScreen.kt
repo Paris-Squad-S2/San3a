@@ -86,6 +86,7 @@ private fun MoreScreenContent(
         Modifier
             .fillMaxSize()
             .background(Theme.colors.background.screen)
+            .verticalScroll(scroll)
             .navigationBarsPadding()
             .statusBarsPadding()
     ) {
@@ -109,10 +110,7 @@ private fun MoreScreenContent(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Theme.colors.background.screen)
-                        .verticalScroll(scroll)
-                        .statusBarsPadding()
-                        .navigationBarsPadding(),
+                        .background(Theme.colors.background.screen),
                 ) {
                     AppBar(
                         modifier = Modifier
@@ -241,6 +239,14 @@ fun MoreScreenContentPreview() {
             }
 
             override fun onClickSwitchAccountToCustomer() {
+            }
+
+            override fun onClickVerification() {
+
+            }
+
+            override fun onClickMyService() {
+
             }
 
             override fun onClickLanguage() {

@@ -11,6 +11,7 @@ import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
@@ -92,19 +93,6 @@ class AccountViewModel(
                 )
             },
         )
-    }
-
-    private fun mapServiceToUiState(services: List<Service>): List<ServiceUiState> {
-        val currentLocale = "englishName"
-        return services.map {
-            ServiceUiState(
-                id = it.id,
-                serviceTitle = it.title[currentLocale] ?: it.title.values.firstOrNull() ?: "",
-                serviceDescription = it.description[currentLocale]
-                    ?: it.description.values.firstOrNull() ?: "",
-                isSelected = false
-            )
-        }
     }
 
     override fun onToggleServiceClicked(serviceId: String) {

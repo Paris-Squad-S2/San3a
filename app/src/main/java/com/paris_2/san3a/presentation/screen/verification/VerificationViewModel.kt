@@ -74,7 +74,6 @@ class VerificationViewModel(
     }
 
     override fun onClickSave() {
-        Log.d("123a","1e")
         uploadNationalIdImages()
     }
 
@@ -93,11 +92,9 @@ class VerificationViewModel(
     }
 
     private fun uploadNationalIdImages() {
-        Log.d("123a","2e")
         if (screenState.value.verificationUiState.backOfNationalIdUri != null &&
             screenState.value.verificationUiState.frontOfNationalIdUri != null
         ) {
-            Log.d("123a","3e")
             tryToExecute(
                 execute = {
                     setUpAccountUseCase.uploadNationalIdImages(
@@ -113,7 +110,6 @@ class VerificationViewModel(
     }
 
     private fun onUploadNationalIdImagesSuccess(unit: Unit) {
-        Log.d("123a","4e")
         updateState(
             screenState.value.copy(
                 isLoading = false,
@@ -127,7 +123,6 @@ class VerificationViewModel(
     }
 
     private fun onUploadNationalIdImagesError(throwable: Throwable) {
-        Log.d("123a","$throwable")
         if (throwable is NoInternetConnectionException) {
             updateState(
                 screenState.value.copy(

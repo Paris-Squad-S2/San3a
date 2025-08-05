@@ -73,7 +73,7 @@ fun SettingItems(
                 SettingItem(
                     icon = R.drawable.ic_sledgehammer_outline,
                     label = R.string.my_services,
-                    onClickItem = moreInteractionListener::onClickSwitchAccountToCraftsman
+                    onClickItem = moreInteractionListener::onClickMyService
                 )
                 SettingHorizontalDivider()
                 SettingItem(
@@ -111,6 +111,10 @@ private fun SettingItemsPreview() {
 
                 override fun onClickVerification() {
                     TODO("Not yet implemented")
+                }
+
+                override fun onClickMyService() {
+
                 }
 
                 override fun onClickLanguage() {
