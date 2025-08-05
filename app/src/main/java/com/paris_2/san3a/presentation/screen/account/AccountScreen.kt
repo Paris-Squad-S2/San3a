@@ -223,7 +223,7 @@ fun AccountScreenContent(
             onClick = interactionListener::onNextClicked,
             type = AppButtonType.Primary,
             text = textButton,
-            state = AppButtonState.Enable,
+            state = if (uiState.accountUiState.isNextButtonEnabled) AppButtonState.Enable else AppButtonState.Disabled,
             modifier = Modifier.fillMaxWidth()
         )
     }

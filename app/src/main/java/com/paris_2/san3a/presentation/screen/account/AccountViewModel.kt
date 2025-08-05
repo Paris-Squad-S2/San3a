@@ -236,7 +236,8 @@ class AccountViewModel(
     override fun onUserTypeSelected(type: UserType) {
         val updatedUiState = screenState.value.copy(
             accountUiState = screenState.value.accountUiState.copy(
-                userType = type
+                userType = type,
+                isNextButtonEnabled = true
             )
         )
         updateState(updatedUiState)

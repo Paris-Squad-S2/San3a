@@ -46,7 +46,7 @@ fun AccountProgressIndicator(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(12.dp)
+            .height(8.dp)
             .clip(RoundedCornerShape(Theme.radius.full))
             .background(Theme.colors.background.card)
     ) {
