@@ -88,6 +88,9 @@ fun RequestServiceUiState.toRequestService(): RequestService {
         image = this.image,
         userId = this.userId,
         offers = emptyList(),
+        selectedCraftsmanId = "",
+        time = "",
+        state = ""
     )
 }
 

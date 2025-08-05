@@ -220,6 +220,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = "",
+                        state = ""
                     ),
                     RequestService(
                         id = "2",
@@ -231,6 +234,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = "",
+                        state = ""
                     ),
                     RequestService(
                         id = "3",
@@ -242,6 +248,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = "",
+                        state = ""
                     ),
                 ),
                 availableJobs = listOf(
@@ -255,6 +264,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = "",
+                        state = ""
                     ),
                     RequestService(
                         id = "2",
@@ -266,6 +278,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = "",
+                        state = ""
                     ),
                     RequestService(
                         id = "3",
@@ -277,6 +292,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = "",
+                        state = ""
                     ),
                 )
             )
