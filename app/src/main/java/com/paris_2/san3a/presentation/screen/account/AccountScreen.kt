@@ -212,7 +212,8 @@ fun AccountScreenContent(
                     onFrontNationalIdClick,
                     onBackNationalIdClick,
                     uiState.accountUiState.frontOfNationalIdUri,
-                    uiState.accountUiState.backOfNationalIdUri
+                    uiState.accountUiState.backOfNationalIdUri,
+                    interactionListener::onNextClicked
                 )
 
                 else -> {}

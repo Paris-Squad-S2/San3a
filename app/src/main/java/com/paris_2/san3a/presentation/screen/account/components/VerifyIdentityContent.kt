@@ -25,6 +25,7 @@ fun VerifyIdentityContent(
     onBackOfNationalIdUploadClick: () -> Unit,
     frontOfNationalIdUri: Uri? = null,
     backOfNationalIdUri: Uri? = null,
+    onVerifyLaterClick: () -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -57,7 +58,7 @@ fun VerifyIdentityContent(
         )
         AppButton(
             text = stringResource(R.string.i_ll_verify_later),
-            onClick = {},
+            onClick = onVerifyLaterClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp),
@@ -76,7 +77,8 @@ private fun VerifyIdentityContentPreview() {
             onFrontOfNationalIdUploadClick = {},
             onBackOfNationalIdUploadClick = {},
             frontOfNationalIdUri = null,
-            backOfNationalIdUri = null
+            backOfNationalIdUri = null,
+            onVerifyLaterClick = {}
         )
     }
 }
