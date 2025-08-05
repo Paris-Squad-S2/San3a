@@ -172,7 +172,6 @@ class MoreViewModel(
     }
 
     private fun onGetUserInformationSuccess(user: User) {
-        Log.d("123user","$user")
         updateState(
             screenState.value.copy(
                 isLoading = false,
@@ -278,6 +277,8 @@ class MoreViewModel(
     }
 
     private fun onSaveAccountTypeAsCraftsmanSuccess(unit: Unit){
+        Log.d("12abced1233","221")
+
         updateState(
             screenState.value.copy(
                 isLoading = false,
@@ -296,6 +297,8 @@ class MoreViewModel(
     
 
     override fun onClickSwitchAccountToCustomer() {
+        Log.d("12abced1233","21")
+
         updateState(
             screenState.value.copy(
                 isLoadingChangeAccount = true,
@@ -320,6 +323,8 @@ class MoreViewModel(
     }
 
     private fun onSaveAccountTypeAsCustomerSuccess(unit: Unit){
+        Log.d("12abced1233","14")
+
         updateState(
             screenState.value.copy(
                 isLoadingChangeAccount = false,
@@ -338,6 +343,7 @@ class MoreViewModel(
     }
 
     private fun onSaveAccountTypeError(throwable: Throwable){
+        Log.d("12abced1233","1")
         updateState(
             screenState.value.copy(
                 isLoadingChangeAccount = false,
