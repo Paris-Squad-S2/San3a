@@ -140,7 +140,7 @@ class UserRemoteDataSourceImpl(
                     government = locationData["government"]?.toString() ?: "",
                     cityName = locationData["cityName"]?.toString() ?: ""
                 )
-            } ?: Location("", "")
+            } ?: Location("", ""),
         )
     }
 

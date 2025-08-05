@@ -1,5 +1,6 @@
-package com.paris_2.san3a.presentation.screen.more
+package com.paris_2.san3a.presentation.screen.more.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,13 +28,15 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 
 @Composable
 fun UserProfileSection(
+    isCraftsman: Boolean,
     name: String,
     rating: Double,
     review: Int,
     isVerify: Boolean,
     painter: Painter,
     onClickEdit: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    phoneNumber: String = ""
 ) {
     Row(
         modifier = modifier
@@ -59,27 +62,38 @@ fun UserProfileSection(
                 style = Theme.textStyle.body.medium.medium,
                 color = Theme.colors.shade.primary
             )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_star_bold),
-                    contentDescription = stringResource(R.string.icon_start),
-                    tint = Theme.colors.additional.primary.yellow,
-                    modifier = Modifier.size(12.dp)
-                )
-                Text(
-                    text = "$rating ",
-                    style = Theme.textStyle.body.small.medium,
-                    color = Theme.colors.shade.secondary
-                )
-                Text(
-                    text = stringResource(R.string.reviews, review),
-                    style = Theme.textStyle.body.small.medium,
-                    color = Theme.colors.shade.secondary
-                )
+            AnimatedContent(isCraftsman) {
+                if (it) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_star_bold),
+                            contentDescription = stringResource(R.string.icon_start),
+                            tint = Theme.colors.additional.primary.yellow,
+                            modifier = Modifier.size(12.dp)
+                        )
+                        Text(
+                            text = "$rating ",
+                            style = Theme.textStyle.body.small.medium,
+                            color = Theme.colors.shade.secondary
+                        )
+                        Text(
+                            text = stringResource(R.string.reviews, review),
+                            style = Theme.textStyle.body.small.medium,
+                            color = Theme.colors.shade.secondary
+                        )
+                    }
+                } else {
+                    Text(
+                        text = phoneNumber,
+                        style = Theme.textStyle.body.small.medium,
+                        color = Theme.colors.shade.secondary
+                    )
+                }
             }
+
         }
 
         IconButton(onClick = { onClickEdit() }) {
@@ -104,7 +118,9 @@ private fun UserProfileSectionPreview() {
         review = 1127,
         onClickEdit = {},
         isVerify = true,
-        painter = painterResource(R.drawable.person_chat)
+        painter = painterResource(R.drawable.person_chat),
+        isCraftsman = false,
+        phoneNumber = "123456789"
     )
 }
 
@@ -117,6 +133,7 @@ private fun UserProfileSectionWithoutVerifyPreview() {
         review = 1127,
         onClickEdit = {},
         isVerify = false,
-        painter = painterResource(R.drawable.person_chat)
+        painter = painterResource(R.drawable.person_chat),
+        isCraftsman = true,
     )
 }
