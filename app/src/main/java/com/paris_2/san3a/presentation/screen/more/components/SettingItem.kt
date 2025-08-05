@@ -65,21 +65,21 @@ fun SettingItem(
             modifier = Modifier.weight(1f)
         )
 
-        AnimatedContent(hasSwitchIcon) {
-            if (it) {
+        AnimatedContent(targetState = hasSwitchIcon) { showSwitchIcon ->
+            if (showSwitchIcon) {
                 AppSwitch(
                     checked = isCheckSwitch,
-                    onCheckedChange = { onCheckedChange(it) },
+                    onCheckedChange = { isChecked -> onCheckedChange(isChecked) },
                     isEnabled = true
                 )
             } else {
-                AnimatedContent(isLoading) {
-                    if (it) {
+                AnimatedContent(targetState = isLoading) { loading ->
+                    if (loading) {
                         LoadingScreen(modifier = Modifier.size(20.dp))
                     } else {
                         Icon(
                             painter = painterResource(R.drawable.ic_alt_arrow_right_outline),
-                            contentDescription = "navigate icon ",
+                            contentDescription = "navigate icon",
                             tint = Theme.colors.shade.primary,
                             modifier = Modifier
                                 .size(20.dp)
@@ -91,10 +91,8 @@ fun SettingItem(
                         )
                     }
                 }
-
             }
         }
-
 
     }
 }
