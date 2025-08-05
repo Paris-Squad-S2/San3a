@@ -48,4 +48,13 @@ sealed interface Destinations : Graph {
     @Serializable
     data object OnBoarding : Destination
 
+    @Serializable
+    data object Verification : Destination
+
+    @Serializable
+    data class MyService(val phoneNumber: String = "", val isCraftsman: Boolean = false) :
+        Destination
+    @Serializable
+    data object Location : Destination
+
 }

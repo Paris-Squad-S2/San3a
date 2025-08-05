@@ -1,6 +1,6 @@
 package com.paris_2.san3a.presentation.screen.more.components
 
-import androidx.compose.foundation.Image
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -28,7 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppTextField
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -37,7 +37,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun EditProfileBottomSheetContent(
     name: String,
     onNameChange: (String) -> Unit,
-    profilePhotoUri: String?,
+    profilePhotoUri: Uri?,
     onPickImageClick: () -> Unit,
 ) {
     Column(
@@ -86,13 +86,14 @@ fun EditProfileBottomSheetContent(
                     modifier = Modifier.size(96.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(profilePhotoUri),
+
+                    AsyncImage(
+                        model = profilePhotoUri,
                         contentDescription = null,
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(96.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
+                            .clip(CircleShape)
                     )
 
                     Box(

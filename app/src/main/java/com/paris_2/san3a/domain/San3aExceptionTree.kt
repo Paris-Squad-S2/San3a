@@ -9,6 +9,8 @@ class NoInternetConnectionException(message: String = "No internet connection") 
 
 class RegisterException(message: String = "register error") : San3aException(message)
 
+class ProfileException(message: String = "occur error when change to dark mode"): San3aException(message)
+
 class SendMessageException(id: String) : San3aException("Message with id $id is not send")
 class ReadMessagesException(id: String) :
     San3aException("Messages with related chat id $id is cant be read")

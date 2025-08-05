@@ -177,7 +177,7 @@ class UserRemoteDataSourceImpl(
                     cityName = locationData["cityName"]?.toString() ?: "",
                     addressInDetails = locationData["addressInDetails"]?.toString() ?: ""
                 )
-            } ?: Location("", "", "")
+            } ?: Location("", "", ""),
         )
     }
 
