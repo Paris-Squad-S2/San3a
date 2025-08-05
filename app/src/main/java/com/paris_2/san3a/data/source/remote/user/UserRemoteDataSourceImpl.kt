@@ -27,7 +27,7 @@ class UserRemoteDataSourceImpl(
             "currentStep" to AccountSetupStep.SERVICES.name,
             "phone" to phone
         )
-        fireStoreService.updateDoc(path = "$USERS_COLLECTION/$phone", data = data)
+        fireStoreService.setDoc(documentPath = "$USERS_COLLECTION/$phone", data = data)
     }
 
     override suspend fun getAccountType(phone: String): AccountType {
