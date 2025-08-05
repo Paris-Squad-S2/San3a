@@ -34,6 +34,10 @@ class SetUpAccountUseCase(
         userRepository.saveWorkShowcase(phone, workMedia, workDescription)
     }
 
+    suspend fun getWorkMedia(phone: String): List<String> {
+        return userRepository.getWorkMedia(phone)
+    }
+
     suspend fun getUserProgress(phone: String): AccountSetupStep {
         return userRepository.getUserProgress(phone)
     }

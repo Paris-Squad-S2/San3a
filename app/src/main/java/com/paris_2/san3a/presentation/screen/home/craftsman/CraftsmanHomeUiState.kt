@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.home.craftsman
 
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Stats
+import com.paris_2.san3a.presentation.screen.account.UserType
 
 data class CraftsmanHomeState(
     val isLoading: Boolean = false,
@@ -10,7 +11,10 @@ data class CraftsmanHomeState(
 )
 
 data class CraftsmanHomeUiState(
+    val phoneNumber: String = "",
     val currentUserName: String = "",
+    val userType: UserType = UserType.CRAFTSMAN,
+    val userServices: List<String> = emptyList(),
     val relatedJob: String = "",
     val location: String = "",
     val stats: Stats = Stats(

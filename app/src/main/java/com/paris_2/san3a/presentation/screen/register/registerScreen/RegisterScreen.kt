@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -123,8 +122,16 @@ fun RegisterScreenContent(
                     )
 
                     TermsAndConditionsText(
-                        onTermsClick = { registerInteractionListener.changeBottomSheetType(BottomSheetType.Terms) },
-                        onPrivacyClick = { registerInteractionListener.changeBottomSheetType(BottomSheetType.Privacy) }
+                        onTermsClick = {
+                            registerInteractionListener.changeBottomSheetType(
+                                BottomSheetType.Terms
+                            )
+                        },
+                        onPrivacyClick = {
+                            registerInteractionListener.changeBottomSheetType(
+                                BottomSheetType.Privacy
+                            )
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -141,13 +148,12 @@ fun RegisterScreenContent(
                 }
             }
         }
-
         registerUiState.bottomSheetType?.let { type ->
             when (type) {
                 BottomSheetType.Terms -> {
                     RegisterBottomSheet(
                         onCloseClick = { registerInteractionListener.changeBottomSheetType(null) },
-                        headerText = stringResource(R.string.terms_and_conditions),
+                        headerText = stringResource(R.string.terms_and_conditions_with_icon),
                         contentText = stringResource(R.string.terms_and_conditions_content),
                         skipPartiallyExpanded = false
                     )
@@ -156,7 +162,7 @@ fun RegisterScreenContent(
                 BottomSheetType.Privacy -> {
                     RegisterBottomSheet(
                         onCloseClick = { registerInteractionListener.changeBottomSheetType(null) },
-                        headerText = stringResource(R.string.privacy_policy),
+                        headerText = stringResource(R.string.privacy_and_policy_with_icon),
                         contentText = stringResource(R.string.privacy_and_policy_content),
                         skipPartiallyExpanded = false
                     )
@@ -189,7 +195,7 @@ fun TopSection(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_logo_white_background),
-                    contentDescription = "Register Background",
+                    contentDescription = stringResource(R.string.register_background),
                     contentScale = ContentScale.Fit,
                     modifier = Modifier.size(logoSize)
                 )

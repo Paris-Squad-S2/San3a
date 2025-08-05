@@ -48,7 +48,7 @@
     <string name="resend_code">Resend Code</string>
     <string name="otp_code_is_incorrect">OTP code is incorrect</string>
     <string name="occurred_an_error_for_sending_otp">occurred an error for sending otp</string>
-    <string name="enter_your_phone_number_to_continue">Enter your phone number to \ncontinue</string>
+    <string name="enter_your_phone_number_to_continue">Enter your phone number to continue</string>
     <string name="or">Or</string>
     <string name="by_continuing_you_agree_on_our">"By continuing, you agree on our "</string>
     <string name="privacy_policy">PrivacTermsy Policy</string>
@@ -83,7 +83,7 @@
     <string name="edit_icon">edit icon</string>
     <string name="reviews">(%1$s reviews)</string>
     <string name="mohammed_akkad">Mohammed Akkad</string>
-    <string name="write_a_message">Write a message...</string>
+    <string name="write_a_message">Write a message…</string>
     <string name="add_images">Add Images</string>
     <string name="voice_icon">voice icon</string>
     <string name="send_icon">send icon</string>
@@ -125,8 +125,10 @@
     <string name="oops_something_broke">Oops, Something Broke</string>
     <string name="Our_team_is_working_on_a_fix._Please_try_again_later.">Our team is working on a fix. Please try again later.</string>
     <string name="empty" />
-    <string name="privacy_and_policy">🔒 Privacy Policy</string>
-    <string name="terms_and_conditions">📄 Terms and Conditions</string>
+    <string name="privacy_and_policy">Privacy Policy</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="privacy_and_policy_with_icon">🔒 Privacy Policy</string>
+    <string name="terms_and_conditions_with_icon">📄 Terms and Conditions</string>
     <string name="terms_and_conditions_content">Welcome to San3a! By using our mobile application, you agree to the following terms:\n\n
 
 1. Account Eligibility\n
@@ -202,6 +204,19 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="nothing_new_for_now">Nothing New for Now</string>
     <string name="we_ll_keep_you_updated_when_there_s_something_new">We’ll keep you updated when there’s something new.</string>
     <string name="empty_notification_screen">Empty Notification screen</string>
+    <string name="notification_icon">notification icon</string>
+    <string name="setting">Settings</string>
+    <string name="switch_to_craftsman">Switch to Craftsman</string>
+    <string name="version">Version %1$s</string>
+    <string name="phone_number_not_found">Phone Number not found</string>
+    <string name="sledgehammer_icon">Sledgehammer icon</string>
+    <string name="become_a_craftsman_icon">Become a Craftsman icon</string>
+    <string name="logout_failed">Logout Failed</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="your_name">Your name</string>
+    <string name="your_profile_photo">Your profile photo</string>
+    <string name="image_person">image person</string>
+    <string name="user_information_not_found">User information not found</string>
     <string name="craftsman_title">Got a skill? Start earning</string>
     <string name="craftsman_desc">Create your craftsman account and get job requests.</string>
     <string name="craftsman_button">Become a Craftsman</string>
@@ -211,15 +226,12 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="close">Close</string>
     <string name="logout_confirmation_title">Are you sure you want to logout?</string>
     <string name="logout_confirmation_subtitle">You can always sign back in with your account.</string>
-    <string name="edit_profile">Edit Profile</string>
-    <string name="your_name">Your name</string>
     <string name="set_profile_photo">Set profile photo</string>
-    <string name="your_profile_photo">Your profile photo</string>
     <string name="details_title">Details</string>
     <string name="craftsman_not_chosen">Craftsman Not Chosen</string>
     <string name="offers">Offers</string>
     <string name="my_jobs">My Jobs</string>
-    <string name="search">Search...</string>
+    <string name="search">Search…</string>
     <string name="most_requested">Most Requested</string>
     <string name="notifications">Notifications</string>
     <string name="ahmed_al_rashid">Ahmed Al-Rashid</string>
@@ -237,4 +249,28 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="tomorrow_1_00_pm">Tomorrow, 1:00 PM</string>
     <string name="_2_hour_ago">2 hour ago</string>
     <string name="craftsman_reviews">%1$s (%2$d reviews)</string>
+    <string name="get_started">Get Started</string>
+    <string name="register_background">Register Background</string>
+    <string name="occruc_error_when_language_app_updated">occur error when language app updated</string>
+    <string name="occrus_error_when_get_languag_selected">occurs error when get language selected</string>
+    <string name="occrus_error_when_saving_user_information">occurs error when saving user information</string>
+    <string name="occrus_error_when_get_dark_mode">occurs error when get dark mode</string>
+    <string name="occrus_user_information_saved_successfully">occurs user information saved successfully</string>
+    <string name="verify_your_identity">Verify Your Identity</string>
+    <string name="uploading_your_id_helps_build_trust_with_customers_verified_craftsmen_get_more_jobs_and_a_special_badge_on_their_profile">Uploading your ID helps build trust with customers. Verified craftsmen get more jobs and a special badge on their profile.</string>
+    <string name="save">Save</string>
+    <string name="r_string_national_id_images_uploaded_successfully">national id images uploaded successfully</string>
+    <string name="national_id_images_uploaded_failed">national id images uploaded failed</string>
+    <string name="what_do_you_usually_need_help_with">What do you usually need help with?</string>
+    <string name="this_helps_us_personalize_your_experience_you_can_change_it_anytime">This helps us personalize your experience. You can change it anytime.</string>
+    <string name="service_not_found">Service not found</string>
+    <string name="occur_error_when_upload_service">occur error when upload service</string>
+    <string name="occur_error_when_save_account_type">occur error when save account type</string>
+    <string name="location_help_text">Location helps improve accuracy, but don’t worry, you can update it later.</string>
+    <string name="choose_governorate">Choose Governorate</string>
+    <string name="choose_district">Choose District</string>
+    <string name="success_location_saved">Location saved successfully</string>
+    <string name="error_general">Something went wrong</string>
+    <string name="please_select_location">Please Select Governorate or District </string>
+
 </resources>

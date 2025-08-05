@@ -49,7 +49,7 @@ fun OTPInputTextField(
             ) {
                 repeat(otpCount) { index ->
                     val char = otpText.getOrNull(index)?.toString() ?: ""
-                    val isCurrentPosition = index + 1 == otpText.length
+                    val isCurrentPosition = index  == otpText.length
                     val isFilled = char.isNotEmpty()
 
                     val borderColor = when {

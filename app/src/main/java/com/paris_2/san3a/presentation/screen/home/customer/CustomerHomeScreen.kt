@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.screen.account.components.LocationContent
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.RequestBottomSheetContent
 import com.paris_2.san3a.presentation.screen.home.customer.component.MostRequestedServices
@@ -154,7 +155,8 @@ private fun CustomerHomeScreenContent(
                             city = state.bottomSheetUiState.bottomSheetSelectedCity,
                             onGetLocationClicked = {
                                 action.showGovernmentSheet(true)
-                            }
+                            },
+                            locationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
                         )
                     }
                 }
@@ -262,14 +264,6 @@ private fun CustomerHomeScreenContent(
                             style = Theme.textStyle.body.small.medium,
                             color = Theme.colors.shade.secondary
                         )
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_alt_arrow_down_outline),
-                            contentDescription = "",
-                            tint = Theme.colors.shade.secondary,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .padding(start = 4.dp)
-                        )
                     }
                 }
             },
@@ -321,10 +315,10 @@ private fun CustomerHomeScreenContent(
                     isLarge = false,
                     painter = painterResource(getResource(service.id)),
                     modifier = Modifier
-                        .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
-                        .clickable {
-                            action.onServiceClick(service.id)
-                        }
+                        .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
+                    onclick = {
+                        action.onServiceClick(service.id)
+                    }
                 )
             }
 

@@ -12,7 +12,7 @@ open class BaseRepository() {
             Log.d("BaseRepository", "safeCall: ${e.message}")
             throw e
         } catch (a: Exception) {
-            Log.d("BaseRepository2", "safeCall: ${a.message}")
+            Log.e("BaseRepository", "safeCall: ${a.message}")
             throw exception
         }
     }

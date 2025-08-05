@@ -116,6 +116,7 @@ private fun OTPRegisterScreenContent(
                 skipPartiallyExpanded = true,
                 onCloseClick = {
                     otpRegisterListenerInteraction.onHideBottomSheet()
+                    otpRegisterListenerInteraction.onClickBackButton()
                 }
             )
         }

@@ -1,34 +1,111 @@
 package com.paris_2.san3a.presentation.screen.home.craftsman
 
+import android.util.Log
 import com.paris_2.san3a.domain.usecase.GetAvailableJobsUseCase
+import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRecentRelatedJobsUseCase
 import com.paris_2.san3a.domain.usecase.GetStatsUseCase
+import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.flow.first
 
 class CraftsmanHomeViewModel(
     private val getStatsUseCase: GetStatsUseCase,
     private val getRecentRelatedJobsUseCase: GetRecentRelatedJobsUseCase,
-    private val getAvailableJobsUseCase: GetAvailableJobsUseCase
+    private val getAvailableJobsUseCase: GetAvailableJobsUseCase,
+    private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
+    private val getUserServicesUseCase: GetUserServicesUseCase,
+    private val getUserUseCase: GetUserUseCase,
 ) : CraftsmanInteractionListener, BaseViewModel<CraftsmanHomeState>(CraftsmanHomeState()) {
 
     init {
-        loadUserData()
-        loadStats("aIqNtF3KQ84r5x6jc9O1")
-        loadRecentRelatedJobs("Plumbing")
+        loadPhoneNumber()
         loadAvailableJobs()
     }
 
-    private fun loadUserData() {}
-    private fun loadStats(userId: String) {
+    private fun getUserServices() {
+        val currentLocale = "englishName"
+        tryToObserve(
+            observe = { getUserServicesUseCase(screenState.value.craftsmanHomeUiState.phoneNumber, isCraftsman = true) },
+            onEach = { services ->
+                updateState(
+                    screenState.value.copy(
+                        craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                            userServices = services.map { it.title[currentLocale] ?: it.title.values.firstOrNull() ?: "" },
+                        )
+                    )
+                )
+                loadRecentRelatedJobs()
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it.message ?: "Unknown Error"
+                    )
+                )
+            }
+        )
+    }
+
+    private fun loadPhoneNumber() {
         tryToExecute(
-            execute = { getStatsUseCase(userId) },
+            execute = { getPhoneNumberUseCase() },
+            onSuccess = { phoneNumber ->
+                updateState(
+                    screenState.value.copy(
+                        craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                            phoneNumber = phoneNumber,
+                        )
+                    )
+                )
+                loadUserDate()
+                loadStats()
+                getUserServices()
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it.message ?: "Unknown Error"
+                    )
+                )
+            }
+        )
+    }
+
+    private fun loadUserDate() {
+        tryToExecute(
+            execute = { getUserUseCase(screenState.value.craftsmanHomeUiState.phoneNumber) },
+            onSuccess = { user ->
+                updateState(
+                    screenState.value.copy(
+                        craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                            currentUserName = user.fullName,
+                            location = user.location.government + ", " + user.location.cityName
+                        )
+                    )
+                )
+                Log.d("CraftsmanHomeViewModel", "User data loaded successfully: ${user.fullName}")
+            },
+            onError = {
+                Log.e("CraftsmanHomeViewModel", "Error loading user data: ${it.message}")
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it.message ?: "Unknown Error"
+                    )
+                )
+            }
+        )
+    }
+
+    private fun loadStats() {
+        tryToExecute(
+            execute = { getStatsUseCase(screenState.value.craftsmanHomeUiState.phoneNumber) },
             onSuccess = {
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            stats = it ?: throw IllegalStateException("Stats cannot be null")
+                            stats = it
                         )
                     )
                 )
@@ -43,17 +120,19 @@ class CraftsmanHomeViewModel(
         )
     }
 
-    fun loadRecentRelatedJobs(relatedJob: String) {
+    fun loadRecentRelatedJobs() {
         tryToExecute(
-            execute = { getRecentRelatedJobsUseCase(relatedJob).first() },
-            onSuccess = {
-                updateState(
-                    screenState.value.copy(
-                        craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            recentRelatedJobs = it
+            execute = { getRecentRelatedJobsUseCase(screenState.value.craftsmanHomeUiState.userServices) },
+            onSuccess = { relatedJobs ->
+                relatedJobs.collect {
+                    updateState(
+                        screenState.value.copy(
+                            craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                                recentRelatedJobs = it
+                            )
                         )
                     )
-                )
+                }
             },
             onError = {
                 updateState(

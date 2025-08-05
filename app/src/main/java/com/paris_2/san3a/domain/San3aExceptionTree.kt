@@ -9,6 +9,8 @@ class NoInternetConnectionException(message: String = "No internet connection") 
 
 class RegisterException(message: String = "register error") : San3aException(message)
 
+class ProfileException(message: String = "occur error when change to dark mode"): San3aException(message)
+
 class SendMessageException(id: String) : San3aException("Message with id $id is not send")
 class ReadMessagesException(id: String) :
     San3aException("Messages with related chat id $id is cant be read")
@@ -28,6 +30,7 @@ class GetOnboardingCompletedException : San3aException("Failed to get onboarding
 class SaveAccountTypeException : San3aException("Account type couldn't be saved")
 class GetAccountTypeException : San3aException("Account type couldn't be retrieved")
 class SaveServicesException : San3aException("Services couldn't be saved")
+class GetServicesException : San3aException("Services couldn't be retrieved")
 class SaveLocationException : San3aException("Location couldn't be saved")
 class SavePersonalInfoException : San3aException("Personal info couldn't be saved")
 class SaveWorkShowcaseException : San3aException("Work showcase couldn't be saved")
@@ -44,7 +47,8 @@ class NoGovernmentsFoundException : San3aException("No Governments Found")
 class NoCitiesFoundException : San3aException("No Cities Found")
 class LoginStatusException: San3aException("Failed to check login status")
 class UpdateNumOfRequestsException: San3aException("Failed to update number of requests")
-class GetUserException(message: String = "register error"): San3aException("Failed to get User $message")
+class GetUserException(): San3aException("Failed to get User")
+class GetUserWorkMediaException(message: String = "Failed to get user work media") : San3aException(message)
 class NotificationException(message: String = "Failed to process notification") : San3aException(message)
 class GetRequestDetailsException() : San3aException("Failed to get request details")
 class GetAcceptedOffersException() : San3aException("Failed to get accepted offers")

@@ -6,7 +6,9 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 
 class LocalDataStoreImpl(
@@ -42,6 +44,27 @@ class LocalDataStoreImpl(
         }.first()
     }
 
+    override suspend fun setDarkTheme(isDarkTheme: Boolean) {
+        dataStore.setValue(IS_DARK_THEME, isDarkTheme)
+    }
+
+    override fun isDarkThemeEnabled(): Flow<Boolean> {
+        return dataStore.data.map {
+            it[IS_DARK_THEME] ?: false
+        }
+    }
+
+    override suspend fun updateAppLanguage(newLanguage: String): Boolean {
+        dataStore.setValue(LOCAL_LANGUAGE, newLanguage)
+        return true
+    }
+
+    override fun getLatestSelectedAppLanguage(): Flow<String> =
+        dataStore.data.map {
+            it[LOCAL_LANGUAGE] ?: ENGLISH
+        }
+
+
     private suspend fun <T> DataStore<Preferences>.setValue(
         key: Preferences.Key<T>,
         value: T,
@@ -51,9 +74,14 @@ class LocalDataStoreImpl(
         }
     }
 
+
+
     companion object {
         private val KEY_ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
         private val PHONE_NUMBER = stringPreferencesKey("phone_number")
         private val KEY_USER_LOGGED_IN = booleanPreferencesKey("user_logged_in")
+        private val IS_DARK_THEME = booleanPreferencesKey("Is_Dark_Theme")
+        private val LOCAL_LANGUAGE = stringPreferencesKey("LOCAL_LANGUAGE")
+        const val ENGLISH = "en"
     }
 }

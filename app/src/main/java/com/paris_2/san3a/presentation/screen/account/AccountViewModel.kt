@@ -4,22 +4,35 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
+import androidx.core.net.toUri
+import androidx.navigation.NavOptions
+import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
+import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
+import kotlinx.coroutines.delay
 
 class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getAllServicesUseCase: GetAllServicesUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
-    private val getPhoneNumberUseCase: GetPhoneNumberUseCase
+    private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
+    private val getUserUseCase: GetUserUseCase,
+    private val getUserServicesUseCase: GetUserServicesUseCase,
+    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
 
     private val _currentScreen = mutableIntStateOf(0)
@@ -35,10 +48,121 @@ class AccountViewModel(
     val progress: Float
         get() = (_currentScreen.intValue + 1) / stepsCount.toFloat()
 
+    val accountSetupStep = savedStateHandle.toRoute<Destinations.Account>().accountSetupStep
+
     init {
         getPhoneNumber()
         getGovernments()
         getAllServices()
+    }
+
+
+    private fun setButtonToDefault() {
+        updateState(
+            newState = screenState.value.copy(
+                screenState.value.accountUiState.copy(
+                    isNextButtonEnabled = false
+                )
+            )
+        )
+    }
+
+    private fun getWorkMedia() {
+        tryToExecute(
+            execute = { setUpAccountUseCase.getWorkMedia(screenState.value.accountUiState.phoneNumber) },
+            onSuccess = { workMedia ->
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            workImagesUris = workMedia.map { it.toUri() }
+                        )
+                    )
+                )
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMassage = errorMessage.message,
+                        isLoading = false
+                    )
+                )
+            }
+        )
+    }
+
+    private fun getUserSelectedServices() {
+        tryToObserve(
+            observe = {
+                getUserServicesUseCase(
+                    phoneNumber = screenState.value.accountUiState.phoneNumber,
+                    isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN
+                )
+            },
+            onEach = { services ->
+                val serviceUiStates = mapServiceToUiState(services)
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            serviceUiState = screenState.value.accountUiState.serviceUiState.map { service ->
+                                service.copy(isSelected = serviceUiStates.any { service.id == it.id })
+                            }
+                        )
+                    )
+                )
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMassage = errorMessage.message,
+                        isLoading = false
+                    )
+                )
+            }
+        )
+    }
+
+    private fun loadUserAndGoToLastStep() {
+        tryToExecute(
+            execute = { getUserUseCase(screenState.value.accountUiState.phoneNumber) },
+            onSuccess = { user ->
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            userType = UserType.valueOf(user.accountType.name),
+                            locationUiState = user.location.let {
+                                LocationUiState(
+                                    government = it.government,
+                                    city = it.cityName,
+                                    addressInDetails = it.addressInDetails
+                                )
+                            },
+                            customerName = user.fullName,
+                            customerProfilePhotoUri = if (user.profilePhoto.isNotBlank()) user.profilePhoto.toUri() else null,
+                            frontOfNationalIdUri = if (user.nationalIdFrontImage.isNotBlank()) user.nationalIdFrontImage.toUri() else null,
+                            backOfNationalIdUri = if (user.nationalIdBackImage.isNotBlank()) user.nationalIdBackImage.toUri() else null,
+                            workDescription = user.workDescription,
+                        )
+                    )
+                )
+                Log.d("AccountSetup", "accountSetupStep = $accountSetupStep")
+                _currentScreen.intValue = when (accountSetupStep) {
+                    AccountSetupStep.ACCOUNT_TYPE -> 0
+                    AccountSetupStep.SERVICES -> 1
+                    AccountSetupStep.PERSONAL_INFO -> 2
+                    AccountSetupStep.LOCATION, AccountSetupStep.WORK_SHOWCASE -> 3
+                    AccountSetupStep.UPLOAD_NATIONAL_ID -> 4
+                    AccountSetupStep.COMPLETED -> 5
+                }
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMassage = errorMessage.message,
+                        isLoading = false
+                    )
+                )
+            }
+        )
     }
 
     private fun getPhoneNumber() {
@@ -52,6 +176,9 @@ class AccountViewModel(
                         )
                     )
                 )
+                loadUserAndGoToLastStep()
+                getUserSelectedServices()
+                getWorkMedia()
             },
             onError = { errorMessage ->
                 updateState(
@@ -94,22 +221,16 @@ class AccountViewModel(
         )
     }
 
-    private fun mapServiceToUiState(services: List<Service>): List<ServiceUiState> {
-        val currentLocale = "englishName"
-        return services.map {
-            ServiceUiState(
-                id = it.id,
-                serviceTitle = it.title[currentLocale] ?: it.title.values.firstOrNull() ?: "",
-                serviceDescription = it.description[currentLocale]
-                    ?: it.description.values.firstOrNull() ?: "",
-                isSelected = false
-            )
-        }
-    }
-
     override fun onToggleServiceClicked(serviceId: String) {
         val updatedServices = screenState.value.accountUiState.serviceUiState.map {
             if (it.id == serviceId) {
+                updateState(
+                    newState = screenState.value.copy(
+                        screenState.value.accountUiState.copy(
+                            isNextButtonEnabled = !it.isSelected
+                        )
+                    )
+                )
                 it.copy(isSelected = !it.isSelected)
             } else {
                 it
@@ -118,7 +239,8 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    serviceUiState = updatedServices
+                    serviceUiState = updatedServices,
+                    isNextButtonEnabled = true
                 )
             )
         )
@@ -127,7 +249,8 @@ class AccountViewModel(
     override fun onUserTypeSelected(type: UserType) {
         val updatedUiState = screenState.value.copy(
             accountUiState = screenState.value.accountUiState.copy(
-                userType = type
+                userType = type,
+                isNextButtonEnabled = true
             )
         )
         updateState(updatedUiState)
@@ -137,7 +260,8 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    customerName = name
+                    customerName = name,
+                    isNextButtonEnabled = true
                 )
             )
         )
@@ -201,13 +325,26 @@ class AccountViewModel(
                 execute = {
                     when (_currentScreen.intValue) {
                         0 -> {
+                            if (screenState.value.accountUiState.serviceUiState.any { it.isSelected })
+                                setButtonToDefault()
                             setUpAccountUseCase.saveAccountType(
                                 phone = screenState.value.accountUiState.phoneNumber,
                                 AccountType.valueOf(userType.name)
                             )
+                            updateState(
+                                screenState.value.copy(
+                                    accountUiState = screenState.value.accountUiState.copy(
+                                        serviceUiState = screenState.value.accountUiState.serviceUiState.map { service ->
+                                            service.copy(isSelected = false)
+                                        }
+                                    )
+                                )
+                            )
+                            getUserSelectedServices()
                         }
 
                         1 -> {
+                            setButtonToDefault()
                             val currentLocale = "englishName"
                             val selectedServices =
                                 screenState.value.accountUiState.serviceUiState.filter { it.isSelected }
@@ -228,6 +365,7 @@ class AccountViewModel(
                         }
 
                         2 -> {
+                            setButtonToDefault()
                             val fullName = screenState.value.accountUiState.customerName
                             val profilePhotoUri =
                                 screenState.value.accountUiState.customerProfilePhotoUri
@@ -239,6 +377,7 @@ class AccountViewModel(
                         }
 
                         3 -> {
+                            setButtonToDefault()
                             if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
                                 setUpAccountUseCase.saveWorkShowcase(
                                     phone = screenState.value.accountUiState.phoneNumber,
@@ -251,19 +390,35 @@ class AccountViewModel(
                                     location = screenState.value.accountUiState.locationUiState.toEntity()
                                 )
                                 navigate(
-                                    Destinations.Home
+                                    Destinations.CustomerGraph,
+                                    navOptions = NavOptions.Builder()
+                                        .setPopUpTo(
+                                            Destinations.Account(accountSetupStep),
+                                            inclusive = true
+                                        )
+                                        .build()
                                 )
                             }
                         }
 
                         4 -> {
+                            setButtonToDefault()
                             if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
                                 setUpAccountUseCase.uploadNationalIdImages(
                                     phone = screenState.value.accountUiState.phoneNumber,
                                     screenState.value.accountUiState.frontOfNationalIdUri,
                                     screenState.value.accountUiState.backOfNationalIdUri
                                 )
-                                navigate(Destinations.Home)
+
+                                navigate(
+                                    Destinations.CraftManGraph,
+                                    navOptions = NavOptions.Builder()
+                                        .setPopUpTo(
+                                            Destinations.Account(accountSetupStep),
+                                            inclusive = true
+                                        )
+                                        .build()
+                                )
                             }
                         }
                     }
@@ -276,7 +431,10 @@ class AccountViewModel(
                 },
                 onError = { errorMessage ->
                     Log.e("AccountSetup", "Error saving account type: $errorMessage")
-                    Log.e("PhoneNumber", "Phone number: ${screenState.value.accountUiState.phoneNumber}")
+                    Log.e(
+                        "PhoneNumber",
+                        "Phone number: ${screenState.value.accountUiState.phoneNumber}"
+                    )
                 }
             )
         }
@@ -382,8 +540,7 @@ class AccountViewModel(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
                             cities = cities.names,
-                            isCitiesBottomSheetShowed = true,
-                            isGovernmentBottomSheetShowed = false
+                            locationType = LocationBottomSheetContentType.CITY
                         )
                     )
                 )
@@ -421,8 +578,8 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    isCitiesBottomSheetShowed = false,
                     isGovernmentBottomSheetShowed = false,
+                    isNextButtonEnabled = true,
                     locationUiState = screenState.value.accountUiState.locationUiState.copy(
                         city = city,
                     )
@@ -435,7 +592,8 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    isGovernmentBottomSheetShowed = !screenState.value.accountUiState.isGovernmentBottomSheetShowed
+                    isGovernmentBottomSheetShowed = !screenState.value.accountUiState.isGovernmentBottomSheetShowed,
+                    locationType = LocationBottomSheetContentType.GOVERNMENT
                 )
             )
         )
