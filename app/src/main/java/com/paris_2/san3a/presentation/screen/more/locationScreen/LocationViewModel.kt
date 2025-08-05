@@ -15,6 +15,10 @@ class LocationViewModel(
         updateState(screenState.value.copy(isLoading = true))
 
         tryToExecute(
+            execute = {
+                getLocationInfoUseCase.getGovernments("Egypt")
+            },
+
             onSuccess = { result ->
                 updateState(
                     screenState.value.copy(
@@ -28,9 +32,6 @@ class LocationViewModel(
             onError = {
                 updateState(screenState.value.copy(isLoading = false, isNoInternet = true))
             },
-            execute = {
-                getLocationInfoUseCase.getGovernments("Egypt")
-            }
         )
     }
 
@@ -38,6 +39,9 @@ class LocationViewModel(
         updateState(screenState.value.copy(isLoading = true))
 
         tryToExecute(
+            execute = {
+                getLocationInfoUseCase.getCities("Egypt", governorate)
+            },
             onSuccess = { cities ->
                 updateState(
                     screenState.value.copy(
@@ -51,35 +55,8 @@ class LocationViewModel(
             onError = {
                 updateState(screenState.value.copy(isLoading = false, isNoInternet = true))
             },
-            execute = {
-                getLocationInfoUseCase.getCities("Egypt", governorate)
-            }
-        )
-    }
 
-    override fun onAreaSelected(area: String) {
-        updateState(
-            screenState.value.copy(
-                locationUiState = screenState.value.locationUiState.copy(
-                    selectedGovernorate = area,
-                    selectedStreet = "",
-                    streets = emptyList()
-                ),
-                isGovernorateSheetVisible = false
             )
-        )
-        fetchCities(area)
-    }
-
-    override fun onStreetChanged(street: String) {
-        updateState(
-            screenState.value.copy(
-                locationUiState = screenState.value.locationUiState.copy(
-                    selectedStreet = street
-                ),
-                isStreetSheetVisible = false
-            )
-        )
     }
 
     override fun onClickSave() {
@@ -100,20 +77,60 @@ class LocationViewModel(
         navigateUp()
     }
 
+    override fun onAreaSelected(area: String) {
+        updateState(
+            screenState.value.copy(
+                locationUiState = screenState.value.locationUiState.copy(
+                    selectedGovernorate = area,
+                    selectedStreet = "",
+                    streets = emptyList(),
+                    activeBottomSheet = LocationBottomSheetType.STREET
+                )
+            )
+        )
+        fetchCities(area)
+    }
+
+    override fun onStreetChanged(street: String) {
+        updateState(
+            screenState.value.copy(
+                locationUiState = screenState.value.locationUiState.copy(
+                    selectedStreet = street,
+                    activeBottomSheet = LocationBottomSheetType.NONE
+                )
+            )
+        )
+    }
+
     override fun onShowGovernorateBottomSheet() {
-        updateState(screenState.value.copy(isGovernorateSheetVisible = true))
+        updateState(
+            screenState.value.copy(
+                locationUiState = screenState.value.locationUiState.copy(
+                    activeBottomSheet = LocationBottomSheetType.GOVERNORATE
+                )
+            )
+        )
     }
 
     override fun onShowStreetBottomSheet() {
-        updateState(screenState.value.copy(isStreetSheetVisible = true))
+        updateState(
+            screenState.value.copy(
+                locationUiState = screenState.value.locationUiState.copy(
+                    activeBottomSheet = LocationBottomSheetType.STREET
+                )
+            )
+        )
     }
 
     override fun onDismissBottomSheet() {
         updateState(
             screenState.value.copy(
-                isGovernorateSheetVisible = false,
-                isStreetSheetVisible = false
+                locationUiState = screenState.value.locationUiState.copy(
+                    activeBottomSheet = LocationBottomSheetType.NONE
+                )
             )
         )
     }
+
+
 }

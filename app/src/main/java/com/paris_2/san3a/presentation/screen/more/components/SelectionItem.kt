@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
@@ -25,14 +26,15 @@ fun SelectionItem(
     item:SelectionItemData,
     onClick: () -> Unit
 ) {
+    val shape = RoundedCornerShape(12.dp)
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
             .background(
                 color = Theme.colors.background.bottomSheetCard,
-                shape = RoundedCornerShape(12.dp)
             )
+            .clip(shape)
             .clickable { onClick() }
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
