@@ -7,7 +7,10 @@ data class RequestService(
     val description: String,
     val location: String,
     val locationDetails: String,
+    val time: String,
+    val state: String,
     val image : List<String>,
     val offers: List<Double>,
     val userId: String,
+    val selectedCraftsmanId: String
 )
