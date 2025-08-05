@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.splash
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -83,6 +84,7 @@ fun SplashScreen(
                         }
                     }
                     else -> {
+                        Log.d("SplashScreen", "User progress: $progress")
                         navigator.navigate(
                             destination = Destinations.Account(
                                 progress

@@ -11,6 +11,7 @@ import com.paris_2.san3a.domain.GetServicesException
 import com.paris_2.san3a.domain.GetStatsException
 import com.paris_2.san3a.domain.GetUserException
 import com.paris_2.san3a.domain.GetUserProgressException
+import com.paris_2.san3a.domain.GetUserWorkMediaException
 import com.paris_2.san3a.domain.SaveAccountTypeException
 import com.paris_2.san3a.domain.SaveLocationException
 import com.paris_2.san3a.domain.SavePersonalInfoException
@@ -130,7 +131,7 @@ class UserRepositoryImpl(
         }
 
     override suspend fun getWorkMedia(phone: String): List<String> =
-        safeCall(GetUserException()) {
+        safeCall(GetUserWorkMediaException()) {
             userRemoteDataSource.getWorkMedia(phone)
         }
 

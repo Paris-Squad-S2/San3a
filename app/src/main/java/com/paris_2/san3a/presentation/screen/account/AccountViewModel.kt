@@ -48,11 +48,8 @@ class AccountViewModel(
 
     init {
         getPhoneNumber()
-        loadUserAndGoToLastStep()
         getGovernments()
         getAllServices()
-        getUserSelectedServices()
-        getWorkMedia()
     }
 
     private fun getWorkMedia() {
@@ -127,6 +124,7 @@ class AccountViewModel(
                         )
                     )
                 )
+                Log.d("AccountSetup", "accountSetupStep = $accountSetupStep")
                 _currentScreen.intValue = when (accountSetupStep) {
                     AccountSetupStep.ACCOUNT_TYPE -> 0
                     AccountSetupStep.SERVICES -> 1
@@ -159,6 +157,9 @@ class AccountViewModel(
                         )
                     )
                 )
+                loadUserAndGoToLastStep()
+                getUserSelectedServices()
+                getWorkMedia()
             },
             onError = { errorMessage ->
                 updateState(

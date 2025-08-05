@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.shared.utils
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
@@ -51,6 +52,7 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
                 val result = execute()
                 onSuccess?.invoke(result)
             } catch (e: Exception) {
+                Log.e("BaseViewModel", "Error executing operation", e)
                 onError(e)
             }
         }
