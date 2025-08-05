@@ -21,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -29,7 +30,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.more.components.BecomeCraftsmanCard
@@ -88,7 +88,8 @@ private fun MoreScreenContent(
             .background(Theme.colors.background.screen)
             .verticalScroll(scroll)
             .navigationBarsPadding()
-            .statusBarsPadding()
+            .statusBarsPadding(),
+        contentAlignment = Alignment.Center
     ) {
         when {
             moreScreenState.isNoInternet -> {

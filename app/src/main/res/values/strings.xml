@@ -232,4 +232,14 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="occrus_error_when_saving_user_information">occurs error when saving user information</string>
     <string name="occrus_error_when_get_dark_mode">occurs error when get dark mode</string>
     <string name="occrus_user_information_saved_successfully">occurs user information saved successfully</string>
+    <string name="verify_your_identity">Verify Your Identity</string>
+    <string name="uploading_your_id_helps_build_trust_with_customers_verified_craftsmen_get_more_jobs_and_a_special_badge_on_their_profile">Uploading your ID helps build trust with customers. Verified craftsmen get more jobs and a special badge on their profile.</string>
+    <string name="save">Save</string>
+    <string name="r_string_national_id_images_uploaded_successfully">national id images uploaded successfully</string>
+    <string name="national_id_images_uploaded_failed">national id images uploaded failed</string>
+    <string name="what_do_you_usually_need_help_with">What do you usually need help with?</string>
+    <string name="this_helps_us_personalize_your_experience_you_can_change_it_anytime">This helps us personalize your experience. You can change it anytime.</string>
+    <string name="service_not_found">Service not found</string>
+    <string name="occur_error_when_upload_service">occur error when upload service</string>
+    <string name="occur_error_when_save_account_type">occur error when save account type</string>
 </resources>

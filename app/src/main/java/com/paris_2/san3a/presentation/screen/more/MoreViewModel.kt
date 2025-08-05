@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
+import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
@@ -240,12 +241,83 @@ class MoreViewModel(
     }
 
     override fun onClickSwitchAccountToCraftsman() {
-        TODO("Not yet implemented")
+        switchToCraftsmanAccount()
     }
 
-    override fun onClickSwitchAccountToCustomer() {
-        TODO("Not yet implemented")
+    private fun switchToCraftsmanAccount(){
+        tryToExecute(
+            execute = {
+                setUpAccountUseCase.saveAccountType(
+                    phone = screenState.value.moreUiState.userUiState.phoneNumber,
+                    accountType = AccountType.CRAFTSMAN
+                )
+            },
+            onError = ::onSaveAccountTypeError,
+            onSuccess = ::onSaveAccountTypeAsCraftsmanSuccess
+
+        )
     }
+
+    private fun onSaveAccountTypeAsCraftsmanSuccess(unit: Unit){
+        updateState(
+            screenState.value.copy(
+                isLoading = false,
+                errorMessage = null,
+                isNoInternet = false,
+                showSnackBarError = false,
+                showSnackBarSuccess = false,
+                moreUiState = screenState.value.moreUiState.copy(
+                    userUiState = screenState.value.moreUiState.userUiState.copy(
+                        isCraftsman = true
+                    )
+                )
+            )
+        )
+    }
+    
+
+    override fun onClickSwitchAccountToCustomer() {
+        tryToExecute(
+            execute = {
+                setUpAccountUseCase.saveAccountType(
+                    phone = screenState.value.moreUiState.userUiState.phoneNumber,
+                    accountType = AccountType.CUSTOMER
+                )
+            },
+            onError = ::onSaveAccountTypeError,
+            onSuccess = ::onSaveAccountTypeAsCustomerSuccess
+        )
+    }
+
+    private fun onSaveAccountTypeAsCustomerSuccess(unit: Unit){
+        updateState(
+            screenState.value.copy(
+                isLoading = false,
+                errorMessage = null,
+                isNoInternet = false,
+                showSnackBarError = false,
+                showSnackBarSuccess = false,
+                moreUiState = screenState.value.moreUiState.copy(
+                    userUiState = screenState.value.moreUiState.userUiState.copy(
+                        isCraftsman = false
+                    )
+                )
+            )
+        )
+    }
+
+    private fun onSaveAccountTypeError(throwable: Throwable){
+        updateState(
+            screenState.value.copy(
+                errorMessage = R.string.occur_error_when_save_account_type,
+                showSnackBarError = true,
+                isNoInternet = false,
+                isLoading = false,
+                showSnackBarSuccess = false
+            )
+        )
+    }
+
 
     override fun onClickLanguage() {
         updateState(
@@ -301,11 +373,11 @@ class MoreViewModel(
 
 
     override fun onClickNotification() {
-        TODO("Not yet implemented")
+        navigate(Destinations.Notifications)
     }
 
     override fun onClickBecomeACraftsman() {
-        TODO("Not yet implemented")
+        switchToCraftsmanAccount()
     }
 
     override fun onNameValueChange(name: String) {
