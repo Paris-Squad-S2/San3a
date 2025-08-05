@@ -148,10 +148,9 @@ class AccountViewModel(
                     AccountSetupStep.ACCOUNT_TYPE -> 0
                     AccountSetupStep.SERVICES -> 1
                     AccountSetupStep.PERSONAL_INFO -> 2
-                    AccountSetupStep.LOCATION -> 3
-                    AccountSetupStep.WORK_SHOWCASE -> 4
-                    AccountSetupStep.UPLOAD_NATIONAL_ID -> 5
-                    AccountSetupStep.COMPLETED -> 6
+                    AccountSetupStep.LOCATION, AccountSetupStep.WORK_SHOWCASE -> 3
+                    AccountSetupStep.UPLOAD_NATIONAL_ID -> 4
+                    AccountSetupStep.COMPLETED -> 5
                 }
             },
             onError = { errorMessage ->
