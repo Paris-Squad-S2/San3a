@@ -61,7 +61,8 @@ class UserRemoteDataSourceImpl(
         val data = mapOf(
             "location" to mapOf(
                 "cityName" to location.cityName,
-                "government" to location.government
+                "government" to location.government,
+                "addressInDetails" to location.addressInDetails
             ),
             "currentStep" to AccountSetupStep.PERSONAL_INFO.name
         )
@@ -138,9 +139,10 @@ class UserRemoteDataSourceImpl(
             location = (userData["location"] as? Map<*, *>)?.let { locationData ->
                 Location(
                     government = locationData["government"]?.toString() ?: "",
-                    cityName = locationData["cityName"]?.toString() ?: ""
+                    cityName = locationData["cityName"]?.toString() ?: "",
+                    addressInDetails = locationData["addressInDetails"]?.toString() ?: ""
                 )
-            } ?: Location("", "")
+            } ?: Location("", "", "")
         )
     }
 

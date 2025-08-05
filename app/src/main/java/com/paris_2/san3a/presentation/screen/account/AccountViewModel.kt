@@ -4,22 +4,31 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
+import androidx.core.net.toUri
 
 class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getAllServicesUseCase: GetAllServicesUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
-    private val getPhoneNumberUseCase: GetPhoneNumberUseCase
+    private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
+    private val getUserUseCase: GetUserUseCase,
+    private val getUserServicesUseCase: GetUserServicesUseCase,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
 
     private val _currentScreen = mutableIntStateOf(0)
@@ -35,10 +44,109 @@ class AccountViewModel(
     val progress: Float
         get() = (_currentScreen.intValue + 1) / stepsCount.toFloat()
 
+    val accountSetupStep = savedStateHandle.toRoute<Destinations.Account>().accountSetupStep
+
     init {
+        loadUserAndGoToLastStep()
         getPhoneNumber()
         getGovernments()
         getAllServices()
+        getUserSelectedServices()
+        getWorkMedia()
+    }
+
+    private fun getWorkMedia() {
+        tryToExecute(
+            execute = { setUpAccountUseCase.getWorkMedia(getPhoneNumberUseCase()) },
+            onSuccess = { workMedia ->
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            workImagesUris = workMedia.map { it.toUri() }
+                        )
+                    )
+                )
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMassage = errorMessage.message,
+                        isLoading = false
+                    )
+                )
+            }
+        )
+    }
+
+    private fun getUserSelectedServices() {
+        tryToExecute(
+            execute = { getUserServicesUseCase(getPhoneNumberUseCase()) },
+            onSuccess = { services ->
+                val serviceUiStates = mapServiceToUiState(services)
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            serviceUiState = screenState.value.accountUiState.serviceUiState.map { service ->
+                                service.copy(isSelected = serviceUiStates.any { service.id == it.id })
+                            }
+                        )
+                    )
+                )
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMassage = errorMessage.message,
+                        isLoading = false
+                    )
+                )
+            }
+        )
+    }
+
+    private fun loadUserAndGoToLastStep() {
+        tryToExecute(
+            execute = { getUserUseCase(getPhoneNumberUseCase()) },
+            onSuccess = { user ->
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            userType = UserType.valueOf(user.accountType.name),
+                            phoneNumber = user.phone,
+                            locationUiState = user.location.let {
+                                LocationUiState(
+                                    government = it.government,
+                                    city = it.cityName,
+                                    addressInDetails = it.addressInDetails
+                                )
+                            },
+                            customerName = user.fullName,
+                            customerProfilePhotoUri = user.profilePhoto.toUri(),
+                            frontOfNationalIdUri = user.nationalIdFrontImage.toUri(),
+                            backOfNationalIdUri = user.nationalIdBackImage.toUri(),
+                            workDescription = user.workDescription,
+                        )
+                    )
+                )
+                _currentScreen.intValue = when (accountSetupStep) {
+                    AccountSetupStep.ACCOUNT_TYPE -> 0
+                    AccountSetupStep.SERVICES -> 1
+                    AccountSetupStep.PERSONAL_INFO -> 2
+                    AccountSetupStep.LOCATION -> 3
+                    AccountSetupStep.WORK_SHOWCASE -> 4
+                    AccountSetupStep.UPLOAD_NATIONAL_ID -> 5
+                    AccountSetupStep.COMPLETED -> 6
+                }
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMassage = errorMessage.message,
+                        isLoading = false
+                    )
+                )
+            }
+        )
     }
 
     private fun getPhoneNumber() {
@@ -276,7 +384,10 @@ class AccountViewModel(
                 },
                 onError = { errorMessage ->
                     Log.e("AccountSetup", "Error saving account type: $errorMessage")
-                    Log.e("PhoneNumber", "Phone number: ${screenState.value.accountUiState.phoneNumber}")
+                    Log.e(
+                        "PhoneNumber",
+                        "Phone number: ${screenState.value.accountUiState.phoneNumber}"
+                    )
                 }
             )
         }

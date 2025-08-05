@@ -14,10 +14,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavOptions
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
+import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.navigation.Navigator
@@ -31,29 +33,62 @@ fun SplashScreen(
     navigator: Navigator = koinInject(),
     isOnboardingCompletedUseCase: IsOnboardingCompletedUseCase = koinInject(),
     getPhoneNumberUseCase: GetPhoneNumberUseCase = koinInject(),
-    getUserUseCase: GetUserUseCase = koinInject()
+    getUserUseCase: GetUserUseCase = koinInject(),
+    setUpAccountUseCase: SetUpAccountUseCase = koinInject(),
 ) {
     LaunchedEffect(Unit) {
         delay(2000)
         val phoneNumber = getPhoneNumberUseCase()
         if (phoneNumber.isNotBlank()) {
-            getUserUseCase(phoneNumber).also {
-                when(it.accountType){
-                    AccountType.CUSTOMER -> {
-                        LocalAccountType.value = AccountType.CUSTOMER
-                        navigator.navigate(
-                            destination = Destinations.CustomerGraph,
-                            navOptions = NavOptions.Builder()
-                                .setPopUpTo(Destinations.OnBoarding, inclusive = true)
-                                .build()
-                        )
+            setUpAccountUseCase.getUserProgress(phoneNumber).also { progress ->
+                when(progress){
+                    AccountSetupStep.ACCOUNT_TYPE -> {
+                        if (isOnboardingCompletedUseCase()) {
+                            navigator.navigate(
+                                destination = Destinations.RegisterScreen,
+                                navOptions = NavOptions.Builder()
+                                    .setPopUpTo(Destinations.Splash, inclusive = true)
+                                    .build()
+                            )
+                        } else {
+                            navigator.navigate(
+                                Destinations.OnBoarding, NavOptions.Builder()
+                                    .setPopUpTo(Destinations.Splash, true)
+                                    .build()
+                            )
+                        }
                     }
-                    AccountType.CRAFTSMAN -> {
-                        LocalAccountType.value = AccountType.CRAFTSMAN
+                    AccountSetupStep.COMPLETED -> {
+                        getUserUseCase(phoneNumber).also { user ->
+                            when(user.accountType){
+                                AccountType.CUSTOMER -> {
+                                    LocalAccountType.value = AccountType.CUSTOMER
+                                    navigator.navigate(
+                                        destination = Destinations.CustomerGraph,
+                                        navOptions = NavOptions.Builder()
+                                            .setPopUpTo(Destinations.Splash, inclusive = true)
+                                            .build()
+                                    )
+                                }
+                                AccountType.CRAFTSMAN -> {
+                                    LocalAccountType.value = AccountType.CRAFTSMAN
+                                    navigator.navigate(
+                                        destination = Destinations.CraftManGraph,
+                                        navOptions = NavOptions.Builder()
+                                            .setPopUpTo(Destinations.Splash, inclusive = true)
+                                            .build()
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    else -> {
                         navigator.navigate(
-                            destination = Destinations.CraftManGraph,
+                            destination = Destinations.Account(
+                                progress
+                            ),
                             navOptions = NavOptions.Builder()
-                                .setPopUpTo(Destinations.OnBoarding, inclusive = true)
+                                .setPopUpTo(Destinations.Splash, inclusive = true)
                                 .build()
                         )
                     }
@@ -63,7 +98,7 @@ fun SplashScreen(
             navigator.navigate(
                 destination = Destinations.RegisterScreen,
                 navOptions = NavOptions.Builder()
-                    .setPopUpTo(Destinations.OnBoarding, inclusive = true)
+                    .setPopUpTo(Destinations.Splash, inclusive = true)
                     .build()
             )
         } else {
