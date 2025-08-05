@@ -14,7 +14,7 @@ import com.paris_2.san3a.presentation.screen.messages.MessagesScreen
 import com.paris_2.san3a.presentation.screen.messagesDetails.MessageDetails
 import com.paris_2.san3a.presentation.screen.more.MoreScreen
 import com.paris_2.san3a.presentation.screen.myRequest.MyRequestScreen
-import com.paris_2.san3a.presentation.screen.notifications.NotificationsScreen
+import com.paris_2.san3a.presentation.screen.notification.NotificationScreen
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingScreen
 import com.paris_2.san3a.presentation.screen.onboarding.onboardingPages
 import com.paris_2.san3a.presentation.screen.register.otpScreen.OTPRegisterScreen
@@ -60,7 +60,7 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.Messages> { MessagesScreen() }
         composable<Destinations.MessageDetails> { MessageDetails() }
         composable<Destinations.MyRequest> { MyRequestScreen() }
-        composable<Destinations.Notifications> { NotificationsScreen() }
+        composable<Destinations.Notification> { NotificationScreen() }
         composable<Destinations.More> { MoreScreen() }
     }
 
@@ -69,7 +69,7 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.Messages> { MessagesScreen() }
         composable<Destinations.MessageDetails> { MessageDetails() }
         composable<Destinations.MyRequest> { MyRequestScreen() }
-        composable<Destinations.Notifications> { NotificationsScreen() }
+        composable<Destinations.Notification> { NotificationScreen() }
         composable<Destinations.More> { MoreScreen() }
     }
 }

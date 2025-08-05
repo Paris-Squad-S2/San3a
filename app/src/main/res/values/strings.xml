@@ -198,6 +198,10 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="add_some_photos">Add some photos</string>
     <string name="create_request">Create Request</string>
 
+    <string name="filled_notification_icon">filled notification icon</string>
+    <string name="nothing_new_for_now">Nothing New for Now</string>
+    <string name="we_ll_keep_you_updated_when_there_s_something_new">We’ll keep you updated when there’s something new.</string>
+    <string name="empty_notification_screen">Empty Notification screen</string>
     <string name="craftsman_title">Got a skill? Start earning</string>
     <string name="craftsman_desc">Create your craftsman account and get job requests.</string>
     <string name="craftsman_button">Become a Craftsman</string>
@@ -217,6 +221,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="my_jobs">My Jobs</string>
     <string name="search">Search...</string>
     <string name="most_requested">Most Requested</string>
+    <string name="notifications">Notifications</string>
     <string name="ahmed_al_rashid">Ahmed Al-Rashid</string>
     <string name="i_can_fix_this_today_i_have_10_years_experience_with_kitchen_plumbing">I can fix this today. I have 10+ years experience with kitchen plumbing.</string>
     <string name="_50_000_iqd">50,000 IQD</string>
