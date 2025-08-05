@@ -117,9 +117,9 @@ class AccountViewModel(
                                 )
                             },
                             customerName = user.fullName,
-                            customerProfilePhotoUri = user.profilePhoto.toUri(),
-                            frontOfNationalIdUri = user.nationalIdFrontImage.toUri(),
-                            backOfNationalIdUri = user.nationalIdBackImage.toUri(),
+                            customerProfilePhotoUri = if (user.profilePhoto.isNotBlank()) user.profilePhoto.toUri() else null,
+                            frontOfNationalIdUri = if (user.nationalIdFrontImage.isNotBlank()) user.nationalIdFrontImage.toUri() else null,
+                            backOfNationalIdUri = if (user.nationalIdBackImage.isNotBlank()) user.nationalIdBackImage.toUri() else null,
                             workDescription = user.workDescription,
                         )
                     )

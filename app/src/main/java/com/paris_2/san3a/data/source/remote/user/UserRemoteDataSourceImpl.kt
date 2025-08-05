@@ -60,6 +60,10 @@ class UserRemoteDataSourceImpl(
             )
         }
         fireStoreService.batchWrite(operations)
+        val data = mapOf(
+            "currentStep" to if (isCraftsman) AccountSetupStep.PERSONAL_INFO.name else AccountSetupStep.LOCATION.name
+        )
+        updateUserData(phone, data)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
