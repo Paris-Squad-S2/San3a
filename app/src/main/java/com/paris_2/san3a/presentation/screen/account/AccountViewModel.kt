@@ -20,6 +20,7 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
 import androidx.core.net.toUri
+import kotlinx.coroutines.delay
 
 class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
@@ -28,7 +29,7 @@ class AccountViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getUserServicesUseCase: GetUserServicesUseCase,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
 
     private val _currentScreen = mutableIntStateOf(0)
@@ -50,6 +51,17 @@ class AccountViewModel(
         getPhoneNumber()
         getGovernments()
         getAllServices()
+    }
+
+
+    private fun setButtonToDefault(){
+        updateState(
+            newState = screenState.value.copy(
+                screenState.value.accountUiState.copy(
+                    isNextButtonEnabled = false
+                )
+            )
+        )
     }
 
     private fun getWorkMedia() {
@@ -77,7 +89,12 @@ class AccountViewModel(
 
     private fun getUserSelectedServices() {
         tryToExecuteFlow(
-            flow = { getUserServicesUseCase(phoneNumber = screenState.value.accountUiState.phoneNumber, isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN) },
+            flow = {
+                getUserServicesUseCase(
+                    phoneNumber = screenState.value.accountUiState.phoneNumber,
+                    isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN
+                )
+            },
             onEach = { services ->
                 val serviceUiStates = mapServiceToUiState(services)
                 updateState(
@@ -172,8 +189,11 @@ class AccountViewModel(
     }
 
     private fun getAllServices() {
-        updateState(screenState.value.copy(isLoading = true))
-
+        updateState(
+            screenState.value.copy(
+                isLoading = true
+            )
+        )
         tryToExecute(
             execute = { getAllServicesUseCase() },
             onSuccess = { services ->
@@ -182,10 +202,11 @@ class AccountViewModel(
                     updateState(
                         screenState.value.copy(
                             accountUiState = screenState.value.accountUiState.copy(
-                                serviceUiState = serviceUiStates
+                                serviceUiState = serviceUiStates,
                             ),
                             isLoading = false,
-                            errorMassage = null
+                            errorMassage = null,
+
                         )
                     )
                 }
@@ -218,6 +239,13 @@ class AccountViewModel(
     override fun onToggleServiceClicked(serviceId: String) {
         val updatedServices = screenState.value.accountUiState.serviceUiState.map {
             if (it.id == serviceId) {
+                updateState(
+                    newState = screenState.value.copy(
+                        screenState.value.accountUiState.copy(
+                            isNextButtonEnabled = !it.isSelected
+                        )
+                    )
+                )
                 it.copy(isSelected = !it.isSelected)
             } else {
                 it
@@ -226,7 +254,8 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    serviceUiState = updatedServices
+                    serviceUiState = updatedServices,
+                    isNextButtonEnabled = true
                 )
             )
         )
@@ -240,13 +269,15 @@ class AccountViewModel(
             )
         )
         updateState(updatedUiState)
+
     }
 
     override fun onCustomerNameChanged(name: String) {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    customerName = name
+                    customerName = name,
+                    isNextButtonEnabled = true
                 )
             )
         )
@@ -306,10 +337,14 @@ class AccountViewModel(
     override fun onNextClicked() {
         val userType = screenState.value.accountUiState.userType
         if (userType != null) {
+
             tryToExecute(
                 execute = {
                     when (_currentScreen.intValue) {
+
                         0 -> {
+                            if (screenState.value.accountUiState.serviceUiState.any{ it.isSelected })
+                            setButtonToDefault()
                             setUpAccountUseCase.saveAccountType(
                                 phone = screenState.value.accountUiState.phoneNumber,
                                 AccountType.valueOf(userType.name)
@@ -327,6 +362,7 @@ class AccountViewModel(
                         }
 
                         1 -> {
+                            setButtonToDefault()
                             val currentLocale = "englishName"
                             val selectedServices =
                                 screenState.value.accountUiState.serviceUiState.filter { it.isSelected }
@@ -347,6 +383,7 @@ class AccountViewModel(
                         }
 
                         2 -> {
+                            setButtonToDefault()
                             val fullName = screenState.value.accountUiState.customerName
                             val profilePhotoUri =
                                 screenState.value.accountUiState.customerProfilePhotoUri
@@ -358,6 +395,7 @@ class AccountViewModel(
                         }
 
                         3 -> {
+                            setButtonToDefault()
                             if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
                                 setUpAccountUseCase.saveWorkShowcase(
                                     phone = screenState.value.accountUiState.phoneNumber,
@@ -376,6 +414,7 @@ class AccountViewModel(
                         }
 
                         4 -> {
+                            setButtonToDefault()
                             if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
                                 setUpAccountUseCase.uploadNationalIdImages(
                                     phone = screenState.value.accountUiState.phoneNumber,
@@ -504,8 +543,16 @@ class AccountViewModel(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
                             cities = cities.names,
+                            isGovernmentBottomSheetShowed = false,
+                            isNextButtonEnabled = true
+                        )
+                    )
+                )
+                delay(1000)
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
                             isCitiesBottomSheetShowed = true,
-                            isGovernmentBottomSheetShowed = false
                         )
                     )
                 )
