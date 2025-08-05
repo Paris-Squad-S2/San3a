@@ -138,7 +138,7 @@ fun CraftsmanHomeContent(
                         ),
                         style = Theme.textStyle.title.medium,
                         color = Theme.colors.shade.primary,
-                        modifier = Modifier.padding(start = 16.dp)
+                        modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
                     )
                     LazyRow(
                         contentPadding = PaddingValues(horizontal = 16.dp),

@@ -39,8 +39,8 @@ fun StatsContainer(
             .background(Theme.colors.background.card)
     ){
         Row(
-            modifier = Modifier.align(Alignment.Center),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
