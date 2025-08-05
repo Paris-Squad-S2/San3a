@@ -52,6 +52,8 @@ sealed interface Destinations : Graph {
     @Serializable
     data class MyService(val phoneNumber: String = "", val isCraftsman: Boolean = false) :
         Destination
+
+    @Serializable
     data object Location : Destination
 
 }

@@ -22,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -213,6 +214,11 @@ private fun MoreScreenContent(
             moreScreenState.errorMessage?.let {
                 SnackBar(
                     text = moreScreenState.errorMessage,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                        .align(Alignment.TopCenter)
                 )
             }
         }
@@ -221,6 +227,11 @@ private fun MoreScreenContent(
             moreScreenState.successMessageSnackBar?.let {
                 SnackBar(
                     text = moreScreenState.successMessageSnackBar,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                        .align(Alignment.TopCenter)
                 )
             }
         }

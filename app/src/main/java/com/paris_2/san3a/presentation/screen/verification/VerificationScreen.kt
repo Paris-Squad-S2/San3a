@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -168,6 +169,11 @@ fun VerificationScreenContent(
         AnimatedVisibility(verificationScreenState.showSnackBarError) {
             verificationScreenState.errorMessage?.let {
                 SnackBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                        .align(Alignment.TopCenter),
                     text = verificationScreenState.errorMessage,
                 )
             }
@@ -176,6 +182,12 @@ fun VerificationScreenContent(
         AnimatedVisibility(verificationScreenState.showSnackBarSuccess) {
             verificationScreenState.successMessageSnackBar?.let {
                 SnackBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                        .align(Alignment.TopCenter),
+
                     text = verificationScreenState.successMessageSnackBar,
                 )
             }
