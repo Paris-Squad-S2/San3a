@@ -14,5 +14,5 @@ interface MoreInteractionListener {
     fun onCloseEditProfileBottomSheet()
     fun onCloseSelectedLanguageBottomSheet()
     fun onLanguageSelected(language: String)
-    fun onPickImageClick()
+    fun onClickRetry()
 }

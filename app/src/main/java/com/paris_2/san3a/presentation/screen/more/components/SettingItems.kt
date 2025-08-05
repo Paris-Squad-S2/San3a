@@ -135,7 +135,14 @@ private fun SettingItemsPreview() {
                 override fun onCloseEditProfileBottomSheet() {
                 }
 
-                override fun onPickImageClick() {
+                override fun onCloseSelectedLanguageBottomSheet() {
+
+                }
+
+                override fun onLanguageSelected(language: String) {
+                }
+
+                override fun onClickRetry() {
                 }
 
             }
