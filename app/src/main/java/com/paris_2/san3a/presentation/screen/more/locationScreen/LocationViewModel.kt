@@ -1,10 +1,16 @@
 package com.paris_2.san3a.presentation.screen.more.locationScreen
 
+import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
+import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class LocationViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
+    private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
+    private val setUpAccountUseCase: SetUpAccountUseCase,
 ) : BaseViewModel<LocationScreenState>(LocationScreenState()), LocationInteractionListener {
 
     init {
@@ -61,12 +67,31 @@ class LocationViewModel(
 
     override fun onClickSave() {
         val uiState = screenState.value.locationUiState
+
         if (uiState.selectedGovernorate.isEmpty() || uiState.selectedStreet.isEmpty()) {
             updateState(screenState.value.copy(showSnackBarError = true))
-        } else {
-            updateState(screenState.value.copy(showSnackBarSuccess = true))
+            return
         }
+
+        tryToExecute(
+            execute = {
+                val phone = getPhoneNumberUseCase()
+                val location = Location(
+                    government = uiState.selectedGovernorate,
+                    cityName = uiState.selectedStreet
+                )
+                setUpAccountUseCase.saveLocation(phone, location)
+            },
+            onSuccess = {
+                updateState(screenState.value.copy(showSnackBarSuccess = true))
+                navigateUp()
+            },
+            onError = {
+                updateState(screenState.value.copy(showSnackBarError = true))
+            }
+        )
     }
+
 
     override fun onClickRetry() {
         updateState(screenState.value.copy(isNoInternet = false))
@@ -131,6 +156,8 @@ class LocationViewModel(
             )
         )
     }
+
+
 
 
 }
