@@ -1,6 +1,8 @@
 package com.paris_2.san3a.presentation.utill
 
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.paris_2.san3a.presentation.screen.main.MainViewModel
@@ -21,10 +23,12 @@ fun InstallSavedAppLanguage(
     }
 }
 
-private fun updateResources(context: Context, localeLanguage: Locale) {
+fun updateResources(context: Context, localeLanguage: Locale) {
     Locale.setDefault(localeLanguage)
-    val resources = context.resources
-    val config = resources.configuration
+    val resources: Resources = context.resources
+    val config = Configuration(resources.configuration)
     config.setLocale(localeLanguage)
     context.createConfigurationContext(config)
+    @Suppress("DEPRECATION")
+    resources.updateConfiguration(config, resources.displayMetrics)
 }
