@@ -141,8 +141,6 @@ class UserRemoteDataSourceImpl(
                     cityName = locationData["cityName"]?.toString() ?: ""
                 )
             } ?: Location("", ""),
-            rating = userData["rating"]?.toString()?.toDouble() ?: 0.0,
-            review = userData["review"]?.toString()?.toInt() ?: 0
         )
     }
 
