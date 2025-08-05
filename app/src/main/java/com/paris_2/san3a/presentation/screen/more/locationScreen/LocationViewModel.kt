@@ -4,7 +4,6 @@ import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
-import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class LocationViewModel(
@@ -78,7 +77,8 @@ class LocationViewModel(
                 val phone = getPhoneNumberUseCase()
                 val location = Location(
                     government = uiState.selectedGovernorate,
-                    cityName = uiState.selectedStreet
+                    cityName = uiState.selectedStreet,
+                    addressInDetails = "${uiState.selectedGovernorate},${uiState.selectedStreet}"
                 )
                 setUpAccountUseCase.saveLocation(phone, location)
             },

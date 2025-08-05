@@ -21,6 +21,7 @@ import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
 import androidx.core.net.toUri
 import androidx.navigation.NavOptions
+import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import kotlinx.coroutines.delay
 
 class AccountViewModel(
@@ -30,7 +31,7 @@ class AccountViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getUserServicesUseCase: GetUserServicesUseCase,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
 
     private val _currentScreen = mutableIntStateOf(0)
@@ -55,7 +56,7 @@ class AccountViewModel(
     }
 
 
-    private fun setButtonToDefault(){
+    private fun setButtonToDefault() {
         updateState(
             newState = screenState.value.copy(
                 screenState.value.accountUiState.copy(
@@ -90,7 +91,12 @@ class AccountViewModel(
 
     private fun getUserSelectedServices() {
         tryToObserve(
-            observe = { getUserServicesUseCase(phoneNumber = screenState.value.accountUiState.phoneNumber, isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN) },
+            observe = {
+                getUserServicesUseCase(
+                    phoneNumber = screenState.value.accountUiState.phoneNumber,
+                    isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN
+                )
+            },
             onEach = { services ->
                 val serviceUiStates = mapServiceToUiState(services)
                 updateState(
@@ -319,8 +325,8 @@ class AccountViewModel(
                 execute = {
                     when (_currentScreen.intValue) {
                         0 -> {
-                            if (screenState.value.accountUiState.serviceUiState.any{ it.isSelected })
-                            setButtonToDefault()
+                            if (screenState.value.accountUiState.serviceUiState.any { it.isSelected })
+                                setButtonToDefault()
                             setUpAccountUseCase.saveAccountType(
                                 phone = screenState.value.accountUiState.phoneNumber,
                                 AccountType.valueOf(userType.name)
@@ -386,7 +392,10 @@ class AccountViewModel(
                                 navigate(
                                     Destinations.CustomerGraph,
                                     navOptions = NavOptions.Builder()
-                                        .setPopUpTo(Destinations.Account(accountSetupStep), inclusive = true)
+                                        .setPopUpTo(
+                                            Destinations.Account(accountSetupStep),
+                                            inclusive = true
+                                        )
                                         .build()
                                 )
                             }
@@ -404,7 +413,10 @@ class AccountViewModel(
                                 navigate(
                                     Destinations.CraftManGraph,
                                     navOptions = NavOptions.Builder()
-                                        .setPopUpTo(Destinations.Account(accountSetupStep), inclusive = true)
+                                        .setPopUpTo(
+                                            Destinations.Account(accountSetupStep),
+                                            inclusive = true
+                                        )
                                         .build()
                                 )
                             }
