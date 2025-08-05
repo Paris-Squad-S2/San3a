@@ -6,7 +6,8 @@ import com.paris_2.san3a.presentation.screen.account.AccountViewModel
 import com.paris_2.san3a.presentation.screen.main.MainViewModel
 import com.paris_2.san3a.presentation.screen.messages.MessagesViewModel
 import com.paris_2.san3a.presentation.screen.messagesDetails.MessagesDetailsViewModel
-import com.paris_2.san3a.presentation.screen.more.MoreViewModel
+import com.paris_2.san3a.presentation.screen.more.locationScreen.LocationViewModel
+import com.paris_2.san3a.presentation.screen.more.moreScreen.MoreViewModel
 import com.paris_2.san3a.presentation.screen.myService.MyServiceViewModel
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingViewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -29,4 +30,6 @@ val viewModelModule = module {
     viewModelOf(::MainViewModel)
     viewModelOf(::VerificationViewModel)
     viewModelOf(::MyServiceViewModel)
+    viewModelOf(::LocationViewModel)
+
 }

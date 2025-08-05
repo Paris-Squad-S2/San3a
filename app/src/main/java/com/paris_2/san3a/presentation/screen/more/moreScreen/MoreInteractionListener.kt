@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.more
+package com.paris_2.san3a.presentation.screen.more.moreScreen
 
 interface MoreInteractionListener {
     fun onClickEditProfileBottomSheet()

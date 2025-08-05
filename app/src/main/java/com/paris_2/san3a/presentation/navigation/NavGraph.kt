@@ -12,7 +12,8 @@ import com.paris_2.san3a.presentation.screen.home.craftsman.CraftsmanHomeScreen
 import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeScreen
 import com.paris_2.san3a.presentation.screen.messages.MessagesScreen
 import com.paris_2.san3a.presentation.screen.messagesDetails.MessageDetails
-import com.paris_2.san3a.presentation.screen.more.MoreScreen
+import com.paris_2.san3a.presentation.screen.more.locationScreen.LocationScreen
+import com.paris_2.san3a.presentation.screen.more.moreScreen.MoreScreen
 import com.paris_2.san3a.presentation.screen.myRequest.MyRequestScreen
 import com.paris_2.san3a.presentation.screen.myService.MyServiceScreen
 import com.paris_2.san3a.presentation.screen.notifications.NotificationsScreen
@@ -75,5 +76,7 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.More> { MoreScreen() }
         composable<Destinations.Verification> { VerificationScreen() }
         composable<Destinations.MyService> { MyServiceScreen() }
+        composable<Destinations.Location> { LocationScreen() }
+
     }
 }

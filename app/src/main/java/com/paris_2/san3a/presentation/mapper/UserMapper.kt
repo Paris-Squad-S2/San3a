@@ -1,9 +1,8 @@
 package com.paris_2.san3a.presentation.mapper
 
-import android.net.Uri
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.User
-import com.paris_2.san3a.presentation.screen.more.UserUiState
+import com.paris_2.san3a.presentation.screen.more.moreScreen.UserUiState
 import androidx.core.net.toUri
 
 fun User.toUserUiState(): UserUiState {

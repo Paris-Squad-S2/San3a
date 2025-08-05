@@ -210,7 +210,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="your_profile_photo">Your profile photo</string>
     <string name="image_person">image person</string>
     <string name="user_information_not_found">User information not found</string>
-
     <string name="craftsman_title">Got a skill? Start earning</string>
     <string name="craftsman_desc">Create your craftsman account and get job requests.</string>
     <string name="craftsman_button">Become a Craftsman</string>
@@ -242,4 +241,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="service_not_found">Service not found</string>
     <string name="occur_error_when_upload_service">occur error when upload service</string>
     <string name="occur_error_when_save_account_type">occur error when save account type</string>
+    <string name="location_help_text">Location helps improve accuracy, but don’t worry, you can update it later.</string>
+    <string name="choose_governorate">Choose Governorate</string>
+    <string name="choose_district">Choose District</string>
 </resources>

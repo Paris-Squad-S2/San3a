@@ -56,7 +56,8 @@ fun AppTextField(
     forgotPasswordClick: (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     textColor: Color? = null,
-    textStyle: TextStyle? = null
+    textStyle: TextStyle? = null,
+    readOnly:Boolean = false
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -80,6 +81,7 @@ fun AppTextField(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
+            readOnly =readOnly,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Theme.colors.background.card, RoundedCornerShape(Theme.radius.large)),
