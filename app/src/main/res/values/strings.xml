@@ -227,6 +227,9 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="my_jobs">My Jobs</string>
     <string name="search">Search...</string>
     <string name="most_requested">Most Requested</string>
-    <string name="occruc_error_when_language_app_updated">occruc error when language app updated</string>
-    <string name="occrus_error_when_get_languag_selected">occrus error when get languag selected</string>
+    <string name="occruc_error_when_language_app_updated">occur error when language app updated</string>
+    <string name="occrus_error_when_get_languag_selected">occurs error when get language selected</string>
+    <string name="occrus_error_when_saving_user_information">occurs error when saving user information</string>
+    <string name="occrus_error_when_get_dark_mode">occurs error when get dark mode</string>
+    <string name="occrus_user_information_saved_successfully">occurs user information saved successfully</string>
 </resources>
