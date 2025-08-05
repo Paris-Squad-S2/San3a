@@ -48,11 +48,8 @@ class AccountViewModel(
 
     init {
         getPhoneNumber()
-        loadUserAndGoToLastStep()
         getGovernments()
         getAllServices()
-        getUserSelectedServices()
-        getWorkMedia()
     }
 
     private fun getWorkMedia() {
@@ -120,13 +117,14 @@ class AccountViewModel(
                                 )
                             },
                             customerName = user.fullName,
-                            customerProfilePhotoUri = user.profilePhoto.toUri(),
-                            frontOfNationalIdUri = user.nationalIdFrontImage.toUri(),
-                            backOfNationalIdUri = user.nationalIdBackImage.toUri(),
+                            customerProfilePhotoUri = if (user.profilePhoto.isNotBlank()) user.profilePhoto.toUri() else null,
+                            frontOfNationalIdUri = if (user.nationalIdFrontImage.isNotBlank()) user.nationalIdFrontImage.toUri() else null,
+                            backOfNationalIdUri = if (user.nationalIdBackImage.isNotBlank()) user.nationalIdBackImage.toUri() else null,
                             workDescription = user.workDescription,
                         )
                     )
                 )
+                Log.d("AccountSetup", "accountSetupStep = $accountSetupStep")
                 _currentScreen.intValue = when (accountSetupStep) {
                     AccountSetupStep.ACCOUNT_TYPE -> 0
                     AccountSetupStep.SERVICES -> 1
@@ -159,6 +157,9 @@ class AccountViewModel(
                         )
                     )
                 )
+                loadUserAndGoToLastStep()
+                getUserSelectedServices()
+                getWorkMedia()
             },
             onError = { errorMessage ->
                 updateState(

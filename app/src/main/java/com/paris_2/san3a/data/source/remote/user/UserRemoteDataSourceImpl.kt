@@ -28,7 +28,7 @@ class UserRemoteDataSourceImpl(
             "currentStep" to AccountSetupStep.SERVICES.name,
             "phone" to phone
         )
-        fireStoreService.setDoc(documentPath = "$USERS_COLLECTION/$phone", data = data)
+        fireStoreService.updateDoc(path = "$USERS_COLLECTION/$phone", data = data)
     }
 
     override suspend fun getAccountType(phone: String): AccountType {
@@ -60,6 +60,10 @@ class UserRemoteDataSourceImpl(
             )
         }
         fireStoreService.batchWrite(operations)
+        val data = mapOf(
+            "currentStep" to if (isCraftsman) AccountSetupStep.PERSONAL_INFO.name else AccountSetupStep.LOCATION.name
+        )
+        updateUserData(phone, data)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
