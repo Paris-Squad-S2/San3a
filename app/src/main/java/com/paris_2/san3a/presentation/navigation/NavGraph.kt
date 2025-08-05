@@ -51,7 +51,7 @@ fun San3aNavGraph(
 }
 
 fun NavGraphBuilder.buildSan3aNavGraph() {
-    navigation<Destinations.MainGraph>(startDestination = Destinations.Account(AccountSetupStep.ACCOUNT_TYPE)) {
+    navigation<Destinations.MainGraph>(startDestination = Destinations.Splash) {
         composable<Destinations.Splash> { SplashScreen() }
         composable<Destinations.OnBoarding> { OnBoardingScreen(pages = onboardingPages()) }
         composable<Destinations.RegisterScreen> { RegisterScreen() }
