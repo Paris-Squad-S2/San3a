@@ -90,7 +90,7 @@ class CraftsmanHomeViewModel(
     }
 
     override fun onNotificationClick() {
-        navigate(Destinations.Notifications)
+        navigate(Destinations.Notification)
     }
 
     override fun onSearch(query: String) {}

@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import com.paris_2.san3a.presentation.screen.verification.VerificationScreen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,13 +17,12 @@ import com.paris_2.san3a.presentation.screen.more.locationScreen.LocationScreen
 import com.paris_2.san3a.presentation.screen.more.moreScreen.MoreScreen
 import com.paris_2.san3a.presentation.screen.myRequest.MyRequestScreen
 import com.paris_2.san3a.presentation.screen.myService.MyServiceScreen
-import com.paris_2.san3a.presentation.screen.notifications.NotificationsScreen
+import com.paris_2.san3a.presentation.screen.notification.NotificationScreen
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingScreen
 import com.paris_2.san3a.presentation.screen.onboarding.onboardingPages
 import com.paris_2.san3a.presentation.screen.register.otpScreen.OTPRegisterScreen
 import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterScreen
 import com.paris_2.san3a.presentation.screen.splash.SplashScreen
-import com.paris_2.san3a.presentation.screen.verification.VerificationScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -63,7 +63,7 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.Messages> { MessagesScreen() }
         composable<Destinations.MessageDetails> { MessageDetails() }
         composable<Destinations.MyRequest> { MyRequestScreen() }
-        composable<Destinations.Notifications> { NotificationsScreen() }
+        composable<Destinations.Notification> { NotificationScreen() }
         composable<Destinations.More> { MoreScreen() }
     }
 
@@ -72,7 +72,7 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.Messages> { MessagesScreen() }
         composable<Destinations.MessageDetails> { MessageDetails() }
         composable<Destinations.MyRequest> { MyRequestScreen() }
-        composable<Destinations.Notifications> { NotificationsScreen() }
+        composable<Destinations.Notification> { NotificationScreen() }
         composable<Destinations.More> { MoreScreen() }
         composable<Destinations.Verification> { VerificationScreen() }
         composable<Destinations.MyService> { MyServiceScreen() }
