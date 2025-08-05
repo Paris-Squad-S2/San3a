@@ -25,6 +25,7 @@ data class AccountUiState(
     val backOfNationalIdUri: Uri? = null,
     val workImagesUris: List<Uri>? = null,
     val workDescription: String = "",
+    val isNextButtonEnabled: Boolean = false,
 )
 
 data class ServiceUiState(
