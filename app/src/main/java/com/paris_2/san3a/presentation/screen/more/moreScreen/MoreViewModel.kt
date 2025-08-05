@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.more
+package com.paris_2.san3a.presentation.screen.more.moreScreen
 
 import android.net.Uri
 import android.util.Log
@@ -356,7 +356,7 @@ class MoreViewModel(
     }
 
     override fun onClickLocation() {
-        TODO("Not yet implemented")
+        navigate(Destinations.Location)
     }
 
     override fun onClickLogout() {
@@ -401,7 +401,7 @@ class MoreViewModel(
 
 
     override fun onClickNotification() {
-        navigate(Destinations.Notifications)
+        navigate(Destinations.Notification)
     }
 
     override fun onClickBecomeACraftsman() {

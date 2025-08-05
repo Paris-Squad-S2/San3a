@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.screen.more.MoreInteractionListener
+import com.paris_2.san3a.presentation.screen.more.moreScreen.MoreInteractionListener
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices

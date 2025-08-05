@@ -197,6 +197,11 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="where_are_you_from">Where are you from?</string>
     <string name="add_some_photos">Add some photos</string>
     <string name="create_request">Create Request</string>
+
+    <string name="filled_notification_icon">filled notification icon</string>
+    <string name="nothing_new_for_now">Nothing New for Now</string>
+    <string name="we_ll_keep_you_updated_when_there_s_something_new">We’ll keep you updated when there’s something new.</string>
+    <string name="empty_notification_screen">Empty Notification screen</string>
     <string name="notification_icon">notification icon</string>
     <string name="setting">Settings</string>
     <string name="switch_to_craftsman">Switch to Craftsman</string>
@@ -210,7 +215,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="your_profile_photo">Your profile photo</string>
     <string name="image_person">image person</string>
     <string name="user_information_not_found">User information not found</string>
-
     <string name="craftsman_title">Got a skill? Start earning</string>
     <string name="craftsman_desc">Create your craftsman account and get job requests.</string>
     <string name="craftsman_button">Become a Craftsman</string>
@@ -227,6 +231,22 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="my_jobs">My Jobs</string>
     <string name="search">Search...</string>
     <string name="most_requested">Most Requested</string>
+    <string name="notifications">Notifications</string>
+    <string name="ahmed_al_rashid">Ahmed Al-Rashid</string>
+    <string name="i_can_fix_this_today_i_have_10_years_experience_with_kitchen_plumbing">I can fix this today. I have 10+ years experience with kitchen plumbing.</string>
+    <string name="_50_000_iqd">50,000 IQD</string>
+    <string name="tomorrow_2_00_pm">Tomorrow, 2:00 PM</string>
+    <string name="_5_hour_ago">5 hour ago</string>
+    <string name="muhammed_ali">Muhammed Ali</string>
+    <string name="professional_plumber_with_quick_response_time_i_can_come_today_evening">Professional plumber with quick response time. I can come today evening.</string>
+    <string name="_35_000_iqd">35,000 IQD</string>
+    <string name="_7_hour_ago">7 hour ago</string>
+    <string name="ahmed_mosa">Ahmed Mosa</string>
+    <string name="experienced_in_residential_plumbing_available_for_urgent_jobs_right_now">Experienced in residential plumbing. Available for urgent jobs right now.</string>
+    <string name="_45_000_iqd">45,000 IQD</string>
+    <string name="tomorrow_1_00_pm">Tomorrow, 1:00 PM</string>
+    <string name="_2_hour_ago">2 hour ago</string>
+    <string name="craftsman_reviews">%1$s (%2$d reviews)</string>
     <string name="occruc_error_when_language_app_updated">occur error when language app updated</string>
     <string name="occrus_error_when_get_languag_selected">occurs error when get language selected</string>
     <string name="occrus_error_when_saving_user_information">occurs error when saving user information</string>
@@ -242,4 +262,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="service_not_found">Service not found</string>
     <string name="occur_error_when_upload_service">occur error when upload service</string>
     <string name="occur_error_when_save_account_type">occur error when save account type</string>
+    <string name="location_help_text">Location helps improve accuracy, but don’t worry, you can update it later.</string>
+    <string name="choose_governorate">Choose Governorate</string>
+    <string name="choose_district">Choose District</string>
 </resources>

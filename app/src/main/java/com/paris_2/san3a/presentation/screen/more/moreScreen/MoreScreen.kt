@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.more
+package com.paris_2.san3a.presentation.screen.more.moreScreen
 
 import android.content.Intent
 import android.net.Uri
