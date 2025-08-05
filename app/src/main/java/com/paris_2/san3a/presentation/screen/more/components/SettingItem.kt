@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppSwitch
+import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
@@ -36,10 +37,11 @@ fun SettingItem(
     contentDescriptionIcon: String? = null,
     hasSwitchIcon: Boolean = false,
     isCheckSwitch: Boolean = false,
+    isLoading: Boolean = false,
     iconLabelColor: Color = Theme.colors.shade.primary,
     labelColor: Color = Theme.colors.shade.primary,
     onCheckedChange: (Boolean) -> Unit = {},
-    onClickItem: () -> Unit
+    onClickItem: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -63,27 +65,34 @@ fun SettingItem(
             modifier = Modifier.weight(1f)
         )
 
-        AnimatedContent(hasSwitchIcon) {
-            if (it) {
+        AnimatedContent(targetState = hasSwitchIcon) { showSwitchIcon ->
+            if (showSwitchIcon) {
                 AppSwitch(
                     checked = isCheckSwitch,
-                    onCheckedChange = {onCheckedChange(it)},
+                    onCheckedChange = { isChecked -> onCheckedChange(isChecked) },
                     isEnabled = true
                 )
             } else {
-                Icon(
-                    painter = painterResource(R.drawable.ic_alt_arrow_right_outline),
-                    contentDescription = "navigate icon ",
-                    tint = Theme.colors.shade.primary,
-                    modifier = Modifier.size(20.dp).clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = {onClickItem()}
-                    )
-                )
+                AnimatedContent(targetState = isLoading) { loading ->
+                    if (loading) {
+                        LoadingScreen(modifier = Modifier.size(20.dp))
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_alt_arrow_right_outline),
+                            contentDescription = "navigate icon",
+                            tint = Theme.colors.shade.primary,
+                            modifier = Modifier
+                                .size(20.dp)
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = { onClickItem() }
+                                )
+                        )
+                    }
+                }
             }
         }
-
 
     }
 }
@@ -99,7 +108,7 @@ private fun SettingItemPreview() {
             hasSwitchIcon = true,
             isCheckSwitch = true,
             onCheckedChange = {},
-            onClickItem = {}
+            onClickItem = {},
         )
     }
 }

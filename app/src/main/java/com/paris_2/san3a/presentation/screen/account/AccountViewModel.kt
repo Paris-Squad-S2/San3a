@@ -20,6 +20,7 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
 import androidx.core.net.toUri
+import androidx.navigation.NavOptions
 import kotlinx.coroutines.delay
 
 class AccountViewModel(
@@ -29,7 +30,7 @@ class AccountViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getUserServicesUseCase: GetUserServicesUseCase,
-    savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
 
     private val _currentScreen = mutableIntStateOf(0)
@@ -88,13 +89,8 @@ class AccountViewModel(
     }
 
     private fun getUserSelectedServices() {
-        tryToExecuteFlow(
-            flow = {
-                getUserServicesUseCase(
-                    phoneNumber = screenState.value.accountUiState.phoneNumber,
-                    isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN
-                )
-            },
+        tryToObserve(
+            observe = { getUserServicesUseCase(phoneNumber = screenState.value.accountUiState.phoneNumber, isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN) },
             onEach = { services ->
                 val serviceUiStates = mapServiceToUiState(services)
                 updateState(
@@ -189,11 +185,8 @@ class AccountViewModel(
     }
 
     private fun getAllServices() {
-        updateState(
-            screenState.value.copy(
-                isLoading = true
-            )
-        )
+        updateState(screenState.value.copy(isLoading = true))
+
         tryToExecute(
             execute = { getAllServicesUseCase() },
             onSuccess = { services ->
@@ -202,11 +195,10 @@ class AccountViewModel(
                     updateState(
                         screenState.value.copy(
                             accountUiState = screenState.value.accountUiState.copy(
-                                serviceUiState = serviceUiStates,
+                                serviceUiState = serviceUiStates
                             ),
                             isLoading = false,
-                            errorMassage = null,
-
+                            errorMassage = null
                         )
                     )
                 }
@@ -221,19 +213,6 @@ class AccountViewModel(
                 )
             },
         )
-    }
-
-    private fun mapServiceToUiState(services: List<Service>): List<ServiceUiState> {
-        val currentLocale = "englishName"
-        return services.map {
-            ServiceUiState(
-                id = it.id,
-                serviceTitle = it.title[currentLocale] ?: it.title.values.firstOrNull() ?: "",
-                serviceDescription = it.description[currentLocale]
-                    ?: it.description.values.firstOrNull() ?: "",
-                isSelected = false
-            )
-        }
     }
 
     override fun onToggleServiceClicked(serviceId: String) {
@@ -269,7 +248,6 @@ class AccountViewModel(
             )
         )
         updateState(updatedUiState)
-
     }
 
     override fun onCustomerNameChanged(name: String) {
@@ -337,11 +315,9 @@ class AccountViewModel(
     override fun onNextClicked() {
         val userType = screenState.value.accountUiState.userType
         if (userType != null) {
-
             tryToExecute(
                 execute = {
                     when (_currentScreen.intValue) {
-
                         0 -> {
                             if (screenState.value.accountUiState.serviceUiState.any{ it.isSelected })
                             setButtonToDefault()
@@ -408,7 +384,10 @@ class AccountViewModel(
                                     location = screenState.value.accountUiState.locationUiState.toEntity()
                                 )
                                 navigate(
-                                    Destinations.Home
+                                    Destinations.CustomerGraph,
+                                    navOptions = NavOptions.Builder()
+                                        .setPopUpTo(Destinations.Account(accountSetupStep), inclusive = true)
+                                        .build()
                                 )
                             }
                         }
@@ -421,7 +400,13 @@ class AccountViewModel(
                                     screenState.value.accountUiState.frontOfNationalIdUri,
                                     screenState.value.accountUiState.backOfNationalIdUri
                                 )
-                                navigate(Destinations.Home)
+
+                                navigate(
+                                    Destinations.CraftManGraph,
+                                    navOptions = NavOptions.Builder()
+                                        .setPopUpTo(Destinations.Account(accountSetupStep), inclusive = true)
+                                        .build()
+                                )
                             }
                         }
                     }

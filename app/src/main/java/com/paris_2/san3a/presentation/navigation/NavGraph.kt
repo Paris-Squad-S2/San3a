@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import com.paris_2.san3a.presentation.screen.verification.VerificationScreen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,8 +13,10 @@ import com.paris_2.san3a.presentation.screen.home.craftsman.CraftsmanHomeScreen
 import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeScreen
 import com.paris_2.san3a.presentation.screen.messages.MessagesScreen
 import com.paris_2.san3a.presentation.screen.messagesDetails.MessageDetails
-import com.paris_2.san3a.presentation.screen.more.MoreScreen
+import com.paris_2.san3a.presentation.screen.more.locationScreen.LocationScreen
+import com.paris_2.san3a.presentation.screen.more.moreScreen.MoreScreen
 import com.paris_2.san3a.presentation.screen.myRequest.MyRequestScreen
+import com.paris_2.san3a.presentation.screen.myService.MyServiceScreen
 import com.paris_2.san3a.presentation.screen.notification.NotificationScreen
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingScreen
 import com.paris_2.san3a.presentation.screen.onboarding.onboardingPages
@@ -71,5 +74,9 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.MyRequest> { MyRequestScreen() }
         composable<Destinations.Notification> { NotificationScreen() }
         composable<Destinations.More> { MoreScreen() }
+        composable<Destinations.Verification> { VerificationScreen() }
+        composable<Destinations.MyService> { MyServiceScreen() }
+        composable<Destinations.Location> { LocationScreen() }
+
     }
 }

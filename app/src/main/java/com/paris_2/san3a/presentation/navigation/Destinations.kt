@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.navigation
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import kotlinx.serialization.Serializable
 
+@Serializable
 sealed interface Destinations : Graph {
 
     @Serializable
@@ -46,5 +47,14 @@ sealed interface Destinations : Graph {
 
     @Serializable
     data object OnBoarding : Destination
+
+    @Serializable
+    data object Verification : Destination
+
+    @Serializable
+    data class MyService(val phoneNumber: String = "", val isCraftsman: Boolean = false) :
+        Destination
+    @Serializable
+    data object Location : Destination
 
 }

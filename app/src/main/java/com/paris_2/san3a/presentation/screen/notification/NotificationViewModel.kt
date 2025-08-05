@@ -23,8 +23,8 @@ class NotificationViewModel(
     }
 
     private fun observeNotifications(userId: String) {
-        tryToExecuteFlow(
-            flow = { streamNotificationsUseCase(userId) },
+        tryToObserve(
+            observe = { streamNotificationsUseCase(userId) },
             onEach = { notifications ->
                 updateState(
                     screenState.value.copy(

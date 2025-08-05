@@ -157,7 +157,7 @@ class OTPRegisterViewModel(
                     setLoginUseCase(true)
                     navigate(
                         Destinations.Account(accountSetupStep = AccountSetupStep.ACCOUNT_TYPE), navOptions = NavOptions.Builder()
-                            .setPopUpTo(Destinations.Splash, inclusive = true)
+                            .setPopUpTo(Destinations.RegisterScreen, inclusive = true)
                             .build()
                     )
                 }

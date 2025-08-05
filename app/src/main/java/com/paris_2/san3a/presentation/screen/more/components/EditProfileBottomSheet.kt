@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.more.components
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,7 +21,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun EditProfileBottomSheet(
     name: String,
     onNameChange: (String) -> Unit,
-    profileUri: String?,
+    profileUri: Uri?,
     onPickImageClick: () -> Unit,
     isVisible: Boolean,
     onDismissRequest: () -> Unit,
