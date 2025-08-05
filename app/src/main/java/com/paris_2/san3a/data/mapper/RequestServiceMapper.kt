@@ -10,9 +10,12 @@ fun RequestServiceDto.toEntity() = RequestService(
     location = location,
     offers = offers,
     userId = userId,
-    locationDetails = "" ,
+    locationDetails = "",
     image = emptyList(),
     title = title,
+    time = "",
+    state = "",
+    selectedCraftsmanId = "",
 )
 
 fun RequestService.toDto(imageUrls: List<String> = emptyList()) = RequestServiceDto(
@@ -25,4 +28,7 @@ fun RequestService.toDto(imageUrls: List<String> = emptyList()) = RequestService
     locationDetails = locationDetails,
     image = imageUrls,
     title = title,
+    time = time,
+    state = state,
+    selectedCraftsmanId = selectedCraftsmanId,
 )
