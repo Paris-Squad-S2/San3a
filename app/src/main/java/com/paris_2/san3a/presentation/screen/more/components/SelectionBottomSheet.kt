@@ -34,6 +34,7 @@ fun SelectionBottomSheet(
     BottomSheet(
         isVisible = isVisible,
         onDismissRequest = onDismiss,
+        skipPartiallyExpanded = false,
         header = {
             Row(
                 modifier = Modifier
