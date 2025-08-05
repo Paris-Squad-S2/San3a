@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 
 class RequestDetailsRepositoryImpl(
     private val requestDetailsDataSource: RequestDetailsDataSource
-) : RequestDetailsRepository {
+) : RequestDetailsRepository, BaseRepository() {
 
     override suspend fun addOffer(offer: Offer) {
         requestDetailsDataSource.addOffer(offer.toDto())
@@ -26,46 +26,38 @@ class RequestDetailsRepositoryImpl(
     override fun getAcceptedOffers(requestId: String): Flow<List<Offer>> {
         return requestDetailsDataSource.getAcceptedOffers(requestId)
                 .map { list -> list.map { it.toEntity() }}
-                .catch { GetOffersException() }
+                .catch { throw GetOffersException() }
 
     }
 
     override fun getOffers(requestId: String): Flow<List<Offer>> {
         return requestDetailsDataSource.getOffers(requestId)
             .map { list -> list.map { it.toEntity() } }
-            .catch { GetOffersException() }
+            .catch { throw GetOffersException() }
     }
 
     override suspend fun getRequestDetailsById(requestId: String): RequestService {
-        return try {
+        return safeCall(GetRequestDetailsException()){
             requestDetailsDataSource.getRequestDetailsById(requestId)?.toEntity() ?:
                 throw GetRequestDetailsException()
-        }catch (e: Exception) {
-            throw GetRequestDetailsException()
         }
     }
 
     override suspend fun getYourOffer(craftsmanId: String): List<Offer> {
-        return try {
+        return safeCall(GetCraftsmanOffersException()) {
             requestDetailsDataSource.getCraftsmanOffers(craftsmanId).map { it.toEntity() }
-        } catch (e: Exception) {
-            throw GetCraftsmanOffersException()
         }
     }
 
     override suspend fun assignRequestToCraftsman(requestId: String, craftsmanId: String) {
-        try {
+        return safeCall(AssignRequestToCraftsmanException()) {
             requestDetailsDataSource.assignRequestToCraftsman(requestId, craftsmanId)
-        }catch (e: Exception) {
-            throw AssignRequestToCraftsmanException()
         }
     }
 
     override suspend fun acceptOffer(offerId: String) {
-        try {
+        safeCall(AcceptOfferException()) {
             requestDetailsDataSource.acceptOffer(offerId)
-        }catch (e: Exception) {
-            throw AcceptOfferException()
         }
     }
 
