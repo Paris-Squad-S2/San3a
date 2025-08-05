@@ -3,8 +3,11 @@ package com.paris_2.san3a.presentation.screen.register.otpScreen
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavOptions
+import androidx.navigation.navOptions
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.NoInternetConnectionException
+import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
@@ -152,7 +155,11 @@ class OTPRegisterViewModel(
                         )
                     )
                     setLoginUseCase(true)
-                    navigate(Destinations.Account)
+                    navigate(
+                        Destinations.Account(accountSetupStep = AccountSetupStep.ACCOUNT_TYPE), navOptions = NavOptions.Builder()
+                            .setPopUpTo(Destinations.RegisterScreen, inclusive = true)
+                            .build()
+                    )
                 }
             },
             onError = { errorMessage ->

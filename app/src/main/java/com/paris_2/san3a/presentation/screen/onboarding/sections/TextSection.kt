@@ -33,6 +33,7 @@ fun TextSection(
             text = page.description,
             style = Theme.textStyle.body.large.regular,
             color = Theme.colors.shade.secondary,
+            modifier = Modifier.padding(bottom = 50.dp),
             fontSize = 16.sp
         )
     }

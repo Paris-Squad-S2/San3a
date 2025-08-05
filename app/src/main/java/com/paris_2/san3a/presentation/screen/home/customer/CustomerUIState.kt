@@ -52,6 +52,7 @@ fun LocationUiState.toEntity(): Location {
     return Location(
         government = this.government,
         cityName = this.city,
+        addressInDetails = this.addressInDetails
     )
 }
 

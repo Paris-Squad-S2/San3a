@@ -1,7 +1,9 @@
 package com.paris_2.san3a.presentation.navigation
 
+import com.paris_2.san3a.domain.entity.AccountSetupStep
 import kotlinx.serialization.Serializable
 
+@Serializable
 sealed interface Destinations : Graph {
 
     @Serializable
@@ -20,7 +22,7 @@ sealed interface Destinations : Graph {
     data object RegisterScreen : Destination
 
     @Serializable
-    data object Account : Destination
+    data class Account(val accountSetupStep: AccountSetupStep) : Destination
 
     @Serializable
     data object Home : Destination

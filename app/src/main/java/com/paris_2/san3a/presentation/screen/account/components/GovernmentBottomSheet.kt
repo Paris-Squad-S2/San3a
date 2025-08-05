@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.account.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,10 +25,13 @@ import com.paris_2.san3a.presentation.shared.utils.BasePreview
 fun GovernmentBottomSheet(
     modifier: Modifier = Modifier,
     governments: List<String>,
-    onClick: (String) -> Unit = {},
+    cities: List<String>,
+    onGovernmentClick: (String) -> Unit = {},
+    onCityClick:(String) -> Unit = {},
     isVisible: Boolean = false,
     skipPartiallyExpanded: Boolean = false,
     onDismissRequest: () -> Unit = {},
+    locationBottomSheetType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
 ) {
 
     BottomSheet(
@@ -42,12 +46,29 @@ fun GovernmentBottomSheet(
                     .padding(bottom = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Choose Government",
-                    style = Theme.textStyle.title.medium,
-                    modifier = Modifier.weight(1F),
-                    color = Theme.colors.shade.primary
-                )
+                AnimatedContent(
+                    targetState = locationBottomSheetType
+                ) {
+                    when(it){
+                        LocationBottomSheetContentType.GOVERNMENT -> {
+                            Text(
+                                text = "Choose Government",
+                                style = Theme.textStyle.title.medium,
+                                modifier = Modifier.weight(1F),
+                                color = Theme.colors.shade.primary
+                            )
+                        }
+                        LocationBottomSheetContentType.CITY -> {
+                            Text(
+                                text = "Choose City",
+                                style = Theme.textStyle.title.medium,
+                                modifier = Modifier.weight(1F),
+                                color = Theme.colors.shade.primary
+                            )
+                        }
+                    }
+                }
+
                 IconButton(onClick = onDismissRequest) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),
@@ -58,13 +79,32 @@ fun GovernmentBottomSheet(
             }
         },
         content = {
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                items(governments) { government ->
-                    LocationCard(title = government, onClick = onClick)
+            AnimatedContent(
+                targetState = locationBottomSheetType
+            ) {
+                when(it){
+                    LocationBottomSheetContentType.GOVERNMENT -> {
+                        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                            items(governments) { government ->
+                                LocationCard(title = government, onClick = onGovernmentClick)
+                            }
+                        }
+                    }
+                    LocationBottomSheetContentType.CITY -> {
+                        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                            items(cities) { city ->
+                                LocationCard(title = city, onClick = onCityClick)
+                            }
+                        }
+                    }
                 }
 
             }
         })
+}
+
+enum class LocationBottomSheetContentType{
+    GOVERNMENT,CITY
 }
 
 @Preview
@@ -74,6 +114,6 @@ private fun GovernmentBottomSheetPreview() {
         val list = listOf(
             "Giza", "Cairo"
         )
-        GovernmentBottomSheet(governments = list)
+        GovernmentBottomSheet(governments = list, cities = listOf(""))
     }
 }

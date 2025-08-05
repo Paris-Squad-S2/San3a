@@ -48,7 +48,8 @@ fun AppTextField(
     trailingIcon: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     singleLine: Boolean = true,
-    maxLines: Int = 1,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    minLines: Int = 1,
     enabled: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -97,12 +98,13 @@ fun AppTextField(
             },
             singleLine = singleLine,
             maxLines = maxLines,
+            minLines = minLines,
             isError = isError,
             enabled = enabled,
             leadingIcon = leadingIcon,
-            trailingIcon = {
-                when {
-                    isPassword -> {
+            trailingIcon = when {
+                isPassword -> {
+                    {
                         val image =
                             if (passwordVisible) painterResource(R.drawable.eye_opened) else painterResource(
                                 R.drawable.eye_closed
@@ -114,17 +116,18 @@ fun AppTextField(
                             )
                         }
                     }
+                }
 
-                    isError -> {
+                isError -> {
+                    {
                         Icon(
                             painter = painterResource(R.drawable.outline_danger_triangle),
                             contentDescription = stringResource(R.string.error),
                             tint = Theme.colors.additional.primary.red
                         )
                     }
-
-                    else -> trailingIcon?.invoke()
                 }
+                else -> trailingIcon
             },
             visualTransformation = if (isPassword && !passwordVisible)
                 PasswordVisualTransformation()

@@ -23,6 +23,7 @@ fun BottomSection(
     modifier: Modifier = Modifier,
     pages : List<Page>,
     state: OnBoardingUIState,
+    buttonText: String = stringResource(R.string.next)
 ) {
     Row(
         modifier = modifier
@@ -39,7 +40,7 @@ fun BottomSection(
         AppButton(
             type = AppButtonType.Primary,
             onClick = onNextClick,
-            text = stringResource(R.string.next),
+            text = buttonText,
             size = AppButtonSize.Large
         )
     }

@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.shared.utils
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
@@ -51,12 +52,13 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
                 val result = execute()
                 onSuccess?.invoke(result)
             } catch (e: Exception) {
+                Log.e("BaseViewModel", "Error executing operation", e)
                 onError(e)
             }
         }
     }
-    protected fun <T> tryToExecuteFlow(
-        flow: () -> Flow<T>,
+    protected fun <T> tryToObserve(
+        observe: () -> Flow<T>,
         onEach: suspend (T) -> Unit,
         onError: (Throwable) -> Unit = {},
         onStart: () -> Unit = {},
@@ -67,7 +69,7 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
         }
 
         return scope.launch(exceptionHandler) {
-            flow()
+            observe()
                 .onStart { onStart() }
                 .catch { onError(it) }
                 .collect { onEach(it) }

@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +38,7 @@ fun CategoryItem(
     modifier: Modifier = Modifier,
     isLarge: Boolean = true,
     painter: Painter,
+    onclick: () -> Unit
 ){
     if (isLarge){
         CategoryItemLarge(
@@ -45,7 +47,8 @@ fun CategoryItem(
             tint = tint,
             iconColor = iconColor,
             modifier = modifier,
-            painter = painter
+            painter = painter,
+            onclick = onclick
         )
     }else{
         CategoryItemSmall(
@@ -54,7 +57,8 @@ fun CategoryItem(
             tint = tint,
             iconColor = iconColor,
             modifier = modifier,
-            painter = painter
+            painter = painter,
+            onclick = onclick
         )
     }
 }
@@ -92,12 +96,14 @@ fun CategoryItemLarge(
     iconColor: Color,
     modifier: Modifier = Modifier,
     painter: Painter,
+    onclick: () -> Unit
 ){
     Box(
         modifier = modifier
             .width(200.dp)
             .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
             .background(Theme.colors.background.card)
+            .clickable { onclick() }
     ){
         Column(
             modifier = Modifier
@@ -134,6 +140,7 @@ fun CategoryItemSmall(
     iconColor: Color,
     modifier: Modifier = Modifier,
     painter: Painter,
+    onclick: () -> Unit
 ){
     Box(
         modifier = modifier
@@ -141,6 +148,7 @@ fun CategoryItemSmall(
             .height(72.dp)
             .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
             .background(Theme.colors.background.card)
+            .clickable { onclick() }
     ){
         Row(
             modifier = Modifier
@@ -183,7 +191,8 @@ private fun Preview(){
             description = "Description",
             tint = Theme.colors.additional.primary.blue,
             iconColor = Theme.colors.additional.secondary.blue,
-            painter = painterResource(R.drawable.ic_conditioner_bold)
+            painter = painterResource(R.drawable.ic_conditioner_bold),
+            onclick = {}
         )
     }
 }
@@ -199,7 +208,8 @@ private fun PreviewSmall(){
             tint = Theme.colors.additional.primary.blue,
             iconColor = Theme.colors.additional.secondary.blue,
             isLarge = false,
-            painter = painterResource(R.drawable.ic_conditioner_bold)
+            painter = painterResource(R.drawable.ic_conditioner_bold),
+            onclick = {}
         )
     }
 }
@@ -214,7 +224,8 @@ private fun PreviewLargeAC(){
             description = "Description",
             tint = Theme.colors.additional.primary.red,
             iconColor = Theme.colors.additional.secondary.red,
-            painter = painterResource(R.drawable.ic_washing_machine_bold)
+            painter = painterResource(R.drawable.ic_washing_machine_bold),
+            onclick = {}
         )
     }
 }
@@ -230,7 +241,8 @@ private fun PreviewSmallAC(){
             tint = Theme.colors.additional.primary.red,
             iconColor = Theme.colors.additional.secondary.red,
             isLarge = false,
-            painter = painterResource(R.drawable.ic_washing_machine_bold)
+            painter = painterResource(R.drawable.ic_washing_machine_bold),
+            onclick = {}
         )
     }
 }

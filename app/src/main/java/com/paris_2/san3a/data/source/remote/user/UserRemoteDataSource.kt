@@ -21,7 +21,7 @@ interface UserRemoteDataSource {
 
     suspend fun saveServices(phone: String, services: List<Service>, isCraftsman: Boolean)
 
-    suspend fun getServices(phone: String): List<ServiceDto>
+    fun getServices(phone: String, isCraftsman: Boolean): Flow<List<ServiceDto>>
 
     suspend fun saveLocation(phone: String, location: Location)
 
@@ -34,6 +34,7 @@ interface UserRemoteDataSource {
     suspend fun getUser(phone: String): User
 
     suspend fun getWorkMedia(phone: String): List<String>
-    suspend fun getStats(userId: String): StatsDto?
-    fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestServiceDto>>
+    suspend fun getStats(userId: String): StatsDto
+    suspend fun updateStats(userId: String, stats: StatsDto)
+    fun getRecentRelatedJobs(relatedJobsIds: List<String>): Flow<List<RequestServiceDto>>
 }

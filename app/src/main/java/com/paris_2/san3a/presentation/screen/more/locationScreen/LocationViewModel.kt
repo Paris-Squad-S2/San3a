@@ -86,7 +86,8 @@ class LocationViewModel(
                 val phone = getPhoneNumberUseCase()
                 val location = Location(
                     government = uiState.selectedGovernorate,
-                    cityName = uiState.selectedStreet
+                    cityName = uiState.selectedStreet,
+                    addressInDetails = "${uiState.selectedGovernorate},${uiState.selectedStreet}"
                 )
                 setUpAccountUseCase.saveLocation(phone, location)
             },
