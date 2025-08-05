@@ -17,4 +17,7 @@ interface MoreInteractionListener {
     fun onCloseSelectedLanguageBottomSheet()
     fun onLanguageSelected(language: String)
     fun onClickRetry()
+
+    fun onClickLogoutArrow()
+    fun onDismissLogoutBottomSheet()
 }

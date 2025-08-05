@@ -36,6 +36,7 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.more.components.BecomeCraftsmanCard
 import com.paris_2.san3a.presentation.screen.more.components.ChangeLanguageBottomSheet
 import com.paris_2.san3a.presentation.screen.more.components.EditProfileBottomSheet
+import com.paris_2.san3a.presentation.screen.more.components.LogoutBottomSheet
 import com.paris_2.san3a.presentation.screen.more.components.LogoutItem
 import com.paris_2.san3a.presentation.screen.more.components.NotificationIcon
 import com.paris_2.san3a.presentation.screen.more.components.SettingItems
@@ -52,7 +53,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MoreScreen(
-    moreViewModel: MoreViewModel = koinViewModel()
+    moreViewModel: MoreViewModel = koinViewModel(),
 ) {
     val uiState = moreViewModel.screenState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -78,7 +79,7 @@ fun MoreScreen(
 private fun MoreScreenContent(
     moreScreenState: MoreScreenState,
     moreInteractionListener: MoreInteractionListener,
-    onPickImageClick: () -> Unit
+    onPickImageClick: () -> Unit,
 ) {
     val scroll = rememberScrollState()
 
@@ -172,7 +173,7 @@ private fun MoreScreenContent(
                                 RoundedCornerShape(Theme.radius.extraLarge)
                             )
                             .clip(RoundedCornerShape(Theme.radius.extraLarge)),
-                        onClickItem = moreInteractionListener::onClickLogout
+                        onClickItem = moreInteractionListener::onClickLogoutArrow
                     )
 
                     Text(
@@ -228,6 +229,16 @@ private fun MoreScreenContent(
             }
         }
     }
+
+    AnimatedVisibility(moreScreenState.showLogoutBottomSheet) {
+        LogoutBottomSheet(
+            isVisible = moreScreenState.showLogoutBottomSheet,
+            onDismissRequest = moreInteractionListener::onDismissLogoutBottomSheet,
+            onLogout = moreInteractionListener::onClickLogout,
+            onCancel = moreInteractionListener::onDismissLogoutBottomSheet
+        )
+    }
+
 
 }
 
@@ -291,6 +302,13 @@ fun MoreScreenContentPreview() {
 
             override fun onClickRetry() {
 
+            }
+
+            override fun onClickLogoutArrow() {
+
+            }
+
+            override fun onDismissLogoutBottomSheet() {
             }
 
         }, onPickImageClick = {})

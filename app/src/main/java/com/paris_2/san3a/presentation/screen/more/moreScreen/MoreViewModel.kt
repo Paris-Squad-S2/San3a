@@ -1,7 +1,6 @@
 package com.paris_2.san3a.presentation.screen.more.moreScreen
 
 import android.net.Uri
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
@@ -21,7 +20,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.net.UnknownHostException
 
 data class MoreScreenState(
     val moreUiState: MoreUiState = MoreUiState(),
@@ -34,13 +32,14 @@ data class MoreScreenState(
     val showSnackBarSuccess: Boolean = false,
     val showSnackBarError: Boolean = false,
     val isLoadingChangeAccount: Boolean = false,
+    val showLogoutBottomSheet: Boolean = false,
 )
 
 data class MoreUiState(
     val userUiState: UserUiState = UserUiState(),
     val isDarkMode: Boolean = false,
     val versionNumber: String = "1.0.0",
-    val selectedLanguage: String = LanguageUiState.ENGLISH.name
+    val selectedLanguage: String = LanguageUiState.ENGLISH.name,
 )
 
 enum class LanguageUiState(name: String) {
@@ -64,7 +63,7 @@ class MoreViewModel(
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
-    private val setUpAccountUseCase: SetUpAccountUseCase
+    private val setUpAccountUseCase: SetUpAccountUseCase,
 ) : BaseViewModel<MoreScreenState>(MoreScreenState()), MoreInteractionListener {
 
     init {
@@ -183,7 +182,7 @@ class MoreViewModel(
     }
 
     private fun onGetUserInformationError(th: Throwable) {
-        if (th is NoInternetConnectionException ) {
+        if (th is NoInternetConnectionException) {
             updateState(
                 screenState.value.copy(
                     isNoInternet = true,
@@ -245,7 +244,7 @@ class MoreViewModel(
         switchToCraftsmanAccount()
     }
 
-    private fun switchToCraftsmanAccount(){
+    private fun switchToCraftsmanAccount() {
         updateState(
             screenState.value.copy(
                 isLoadingChangeAccount = true,
@@ -270,7 +269,7 @@ class MoreViewModel(
         )
     }
 
-    private fun onSaveAccountTypeAsCraftsmanSuccess(unit: Unit){
+    private fun onSaveAccountTypeAsCraftsmanSuccess(unit: Unit) {
 
         updateState(
             screenState.value.copy(
@@ -287,7 +286,7 @@ class MoreViewModel(
             )
         )
     }
-    
+
 
     override fun onClickSwitchAccountToCustomer() {
 
@@ -314,7 +313,7 @@ class MoreViewModel(
         )
     }
 
-    private fun onSaveAccountTypeAsCustomerSuccess(unit: Unit){
+    private fun onSaveAccountTypeAsCustomerSuccess(unit: Unit) {
 
         updateState(
             screenState.value.copy(
@@ -333,7 +332,7 @@ class MoreViewModel(
         )
     }
 
-    private fun onSaveAccountTypeError(throwable: Throwable){
+    private fun onSaveAccountTypeError(throwable: Throwable) {
         updateState(
             screenState.value.copy(
                 isLoadingChangeAccount = false,
@@ -360,6 +359,7 @@ class MoreViewModel(
     }
 
     override fun onClickLogout() {
+        updateState(screenState.value.copy(showLogoutBottomSheet = false))
         tryToExecute(
             execute = {
                 savePhoneNumberUseCase("")
@@ -369,6 +369,7 @@ class MoreViewModel(
             onError = ::onLogoutError
         )
     }
+
 
     private fun onLogoutSuccess(unit: Unit) {
         navigate(Destinations.RegisterScreen)
@@ -552,5 +553,22 @@ class MoreViewModel(
             )
         )
     }
+
+    override fun onClickLogoutArrow() {
+        updateState(
+            screenState.value.copy(
+                showLogoutBottomSheet = true
+            )
+        )
+    }
+
+    override fun onDismissLogoutBottomSheet() {
+        updateState(
+            screenState.value.copy(
+                showLogoutBottomSheet = false
+            )
+        )
+    }
+
 
 }
