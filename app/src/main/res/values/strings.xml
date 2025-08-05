@@ -48,7 +48,7 @@
     <string name="resend_code">Resend Code</string>
     <string name="otp_code_is_incorrect">OTP code is incorrect</string>
     <string name="occurred_an_error_for_sending_otp">occurred an error for sending otp</string>
-    <string name="enter_your_phone_number_to_continue">Enter your phone number to \ncontinue</string>
+    <string name="enter_your_phone_number_to_continue">Enter your phone number to continue</string>
     <string name="or">Or</string>
     <string name="by_continuing_you_agree_on_our">"By continuing, you agree on our "</string>
     <string name="privacy_policy">PrivacTermsy Policy</string>
@@ -125,8 +125,10 @@
     <string name="oops_something_broke">Oops, Something Broke</string>
     <string name="Our_team_is_working_on_a_fix._Please_try_again_later.">Our team is working on a fix. Please try again later.</string>
     <string name="empty" />
-    <string name="privacy_and_policy">🔒 Privacy Policy</string>
-    <string name="terms_and_conditions">📄 Terms and Conditions</string>
+    <string name="privacy_and_policy">Privacy Policy</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="privacy_and_policy_with_icon">🔒 Privacy Policy</string>
+    <string name="terms_and_conditions_with_icon">📄 Terms and Conditions</string>
     <string name="terms_and_conditions_content">Welcome to San3a! By using our mobile application, you agree to the following terms:\n\n
 
 1. Account Eligibility\n
@@ -238,4 +240,5 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="_2_hour_ago">2 hour ago</string>
     <string name="craftsman_reviews">%1$s (%2$d reviews)</string>
     <string name="get_started">Get Started</string>
+    <string name="register_background">Register Background</string>
 </resources>

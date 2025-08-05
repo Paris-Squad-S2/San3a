@@ -12,9 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -99,10 +97,8 @@ fun RegisterBottomSheet(
                         modifier = Modifier.padding(bottom = 24.dp)
                     )
                 } else {
-                    Text(
-                        text = contentText,
-                        style = Theme.textStyle.body.medium.medium,
-                        color = Theme.colors.shade.primary
+                    FormattedTextContent(
+                        contentText
                     )
                 }
             }
