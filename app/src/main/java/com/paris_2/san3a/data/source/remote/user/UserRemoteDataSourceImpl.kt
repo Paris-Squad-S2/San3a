@@ -99,7 +99,7 @@ class UserRemoteDataSourceImpl(
                 "government" to location.government,
                 "addressInDetails" to location.addressInDetails
             ),
-            "currentStep" to AccountSetupStep.PERSONAL_INFO.name
+            "currentStep" to AccountSetupStep.COMPLETED.name
         )
         updateUserData(phone, data)
     }
