@@ -90,7 +90,6 @@ private fun MoreScreenContent(
             .verticalScroll(scroll)
             .navigationBarsPadding()
             .statusBarsPadding(),
-        contentAlignment = Alignment.Center
     ) {
         when {
             moreScreenState.isNoInternet -> {
@@ -188,7 +187,6 @@ private fun MoreScreenContent(
                             .fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
-
                     AnimatedVisibility(moreScreenState.showEditProfileBottomSheet) {
                         EditProfileBottomSheet(
                             name = moreScreenState.moreUiState.userUiState.name,
@@ -217,6 +215,11 @@ private fun MoreScreenContent(
             moreScreenState.errorMessage?.let {
                 SnackBar(
                     text = moreScreenState.errorMessage,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                        .align(Alignment.TopCenter)
                 )
             }
         }
@@ -225,6 +228,11 @@ private fun MoreScreenContent(
             moreScreenState.successMessageSnackBar?.let {
                 SnackBar(
                     text = moreScreenState.successMessageSnackBar,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                        .align(Alignment.TopCenter)
                 )
             }
         }

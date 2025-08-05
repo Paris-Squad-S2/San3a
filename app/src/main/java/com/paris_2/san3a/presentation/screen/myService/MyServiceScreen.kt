@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -127,6 +128,12 @@ fun MyServiceScreenContent(
         AnimatedVisibility(myServiceScreenState.showSnackBarError) {
             myServiceScreenState.errorMessage?.let {
                 SnackBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                        .align(Alignment.TopCenter),
+
                     text = myServiceScreenState.errorMessage,
                 )
             }
@@ -135,6 +142,12 @@ fun MyServiceScreenContent(
         AnimatedVisibility(myServiceScreenState.showSnackBarSuccess) {
             myServiceScreenState.successMessageSnackBar?.let {
                 SnackBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                        .align(Alignment.TopCenter),
+
                     text = myServiceScreenState.successMessageSnackBar,
                 )
             }
