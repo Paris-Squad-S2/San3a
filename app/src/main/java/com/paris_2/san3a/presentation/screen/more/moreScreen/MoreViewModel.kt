@@ -373,7 +373,7 @@ class MoreViewModel(
 
 
     override fun onClickNotification() {
-        navigate(Destinations.Notifications)
+        navigate(Destinations.Notification)
     }
 
     override fun onClickBecomeACraftsman() {
