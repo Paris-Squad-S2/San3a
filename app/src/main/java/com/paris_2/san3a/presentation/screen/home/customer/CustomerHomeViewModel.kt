@@ -316,25 +316,6 @@ class CustomerHomeViewModel(
                 )
             }
         )
-//        viewModelScope.launch {
-//            val cities = getLocationInfoUseCase.getCities(
-//                countryName = "Egypt",
-//                stateName = stateName
-//            )
-//
-//            updateState(
-//                screenState.value.copy(
-//                    customerUiState = screenState.value.customerUiState.copy(
-//                        locationUiState = screenState.value.customerUiState.locationUiState.copy(
-//                            cities = cities.names
-//                        ),
-//                    ),
-//                    bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-//                        isCitySheetVisible = true
-//                    )
-//                )
-//            )
-//        }
     }
 
     private fun loadServices() {
