@@ -24,6 +24,7 @@ fun ShowYourWorkContent(
     workImages: List<Uri>? = null,
     workDescription: String,
     onDescriptionChanged: (String) -> Unit,
+    onDeleteImage: (Uri) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -31,6 +32,7 @@ fun ShowYourWorkContent(
         AddWorkPhotosComponent(
             images = workImages,
             onAddPhotoClick = onAddWorkImagesClick,
+            onDeletePhotoClick = onDeleteImage,
             modifier = Modifier
                 .height(96.dp)
                 .fillMaxWidth()
@@ -71,7 +73,8 @@ private fun ShowYourWorkContentPreview() {
             onAddWorkImagesClick = {},
             workImages = null,
             workDescription = "",
-            onDescriptionChanged = {}
+            onDescriptionChanged = {},
+            {}
         )
     }
 }
