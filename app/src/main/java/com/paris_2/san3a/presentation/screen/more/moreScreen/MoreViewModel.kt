@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.more.moreScreen
 import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavOptions
 import coil3.toUri
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
@@ -312,6 +313,13 @@ class MoreViewModel(
                 )
             )
         )
+
+        navigate(
+            destination = Destinations.CraftManGraph,
+            navOptions = NavOptions.Builder()
+                .setPopUpTo(Destinations.Splash, inclusive = true)
+                .build()
+        )
     }
 
 
@@ -356,6 +364,13 @@ class MoreViewModel(
                     )
                 )
             )
+        )
+
+        navigate(
+            destination = Destinations.CustomerGraph,
+            navOptions = NavOptions.Builder()
+                .setPopUpTo(Destinations.Splash, inclusive = true)
+                .build()
         )
     }
 
