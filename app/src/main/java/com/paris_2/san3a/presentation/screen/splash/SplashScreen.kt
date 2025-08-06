@@ -81,7 +81,7 @@ fun SplashScreen(
             }
         }
 
-        val delayJob = async { delay(2000) }
+        val delayJob = async { delay(1000) }
 
         decideDestination.await()
         delayJob.await()
