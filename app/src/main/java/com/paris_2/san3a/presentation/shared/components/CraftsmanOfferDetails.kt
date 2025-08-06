@@ -202,19 +202,20 @@ fun CraftsmanOfferDetails(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 AppButton(
-                    type = AppButtonType.Primary,
+                    type = AppButtonType.Secondary,
                     onClick = onChatClick,
                     text = stringResource(R.string.chat),
                     modifier = Modifier.weight(1f),
-                    size = AppButtonSize.Large,
-                    state = AppButtonState.Disabled
+                    size = AppButtonSize.Small,
+                    state = AppButtonState.Enable,
+                    enableSecondaryBackgroundColor = Theme.colors.shade.quaternary
                 )
                 AppButton(
                     type = AppButtonType.Primary,
                     onClick = onAcceptOfferClick,
                     text = stringResource(R.string.accept_offer),
                     modifier = Modifier.weight(1f),
-                    size = AppButtonSize.Large
+                    size = AppButtonSize.Small
                 )
             }
     }

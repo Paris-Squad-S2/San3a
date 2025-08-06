@@ -76,8 +76,9 @@ fun MyJobOfferCard(
                     .fillMaxWidth(),
                 type = AppButtonType.Secondary,
                 onClick = {},
+                enableSecondaryBackgroundColor = Theme.colors.shade.quaternary,
                 text = stringResource(R.string.button),
-                size = AppButtonSize.Large,
+                size = AppButtonSize.Small,
                 state = AppButtonState.Enable
             )
 
