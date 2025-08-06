@@ -32,6 +32,7 @@ import com.paris_2.san3a.presentation.screen.account.components.ShowYourWorkCont
 import com.paris_2.san3a.presentation.screen.account.components.VerifyIdentityContent
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.components.AppButton
+import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -103,7 +104,8 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
         onBackNationalIdClick = { backNationalIdPickerLauncher.launch(arrayOf("image/*")) },
         onWorkImageClick = { workImagePickerLauncher.launch(arrayOf("image/*")) },
         interactionListener = viewModel,
-        uiState = uiState
+        uiState = uiState,
+        modifier = Modifier.padding(horizontal = 16.dp)
     )
 }
 
@@ -224,6 +226,7 @@ fun AccountScreenContent(
             onClick = interactionListener::onNextClicked,
             type = AppButtonType.Primary,
             text = textButton,
+            size = AppButtonSize.Large,
             state = if (uiState.accountUiState.isNextButtonEnabled) AppButtonState.Enable else AppButtonState.Disabled,
             modifier = Modifier.fillMaxWidth()
         )
