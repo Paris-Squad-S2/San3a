@@ -11,9 +11,9 @@ import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import java.util.Locale
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import java.util.Locale
 
 class CustomerHomeViewModel(
     private val getAllServicesUseCase: GetAllServicesUseCase,
@@ -250,10 +250,9 @@ class CustomerHomeViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message ?: "Unknown Error"
+                        errorMessage = it.message ?: UNKNOWN_ERROR
                     )
                 )
-                Log.e("CustomerHomeViewModel", it.message ?: "Unknown Error")
             }
         )
     }
@@ -264,17 +263,16 @@ class CustomerHomeViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message ?: "Unknown Error"
+                        errorMessage = it.message ?: UNKNOWN_ERROR
                     )
                 )
-                Log.e("CustomerHomeViewModel", it.message ?: "Unknown Error")
             }
         )
     }
 
     private fun getGovernments() {
         tryToExecute(
-            execute = { getLocationInfoUseCase.getGovernments(countryName = "Egypt") },
+            execute = { getLocationInfoUseCase.getGovernments(countryName = COUNTRY_NAME) },
             onSuccess = { governments ->
                 updateState(
                     screenState.value.copy(
@@ -303,7 +301,7 @@ class CustomerHomeViewModel(
 
     private fun getCities(stateName: String) {
         tryToExecute(
-            execute = { getLocationInfoUseCase.getCities(countryName = "Egypt", stateName = stateName) },
+            execute = { getLocationInfoUseCase.getCities(countryName = COUNTRY_NAME, stateName = stateName) },
             onSuccess = { cities ->
                 updateState(
                     screenState.value.copy(
@@ -348,7 +346,7 @@ class CustomerHomeViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message ?: "Unknown Error"
+                        errorMessage = it.message ?: UNKNOWN_ERROR
                     )
                 )
             }
@@ -372,7 +370,7 @@ class CustomerHomeViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message ?: "Unknown Error"
+                        errorMessage = it.message ?: UNKNOWN_ERROR
                     )
                 )
             }
@@ -397,10 +395,9 @@ class CustomerHomeViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message ?: "Unknown Error"
+                        errorMessage = it.message ?: UNKNOWN_ERROR
                     )
                 )
-                Log.e("CustomerHomeViewModel", it.message ?: "Unknown Error")
             }
         )
     }
@@ -417,10 +414,10 @@ class CustomerHomeViewModel(
             emptyList()
         } else {
             allServices.filter { service ->
-                val titleEn = service.title["englishName"]?.lowercase() ?: ""
-                val titleAr = service.title["arabicName"]?.lowercase() ?: ""
-                val descEn = service.description["englishDescription"]?.lowercase() ?: ""
-                val descAr = service.description["arabicDescription"]?.lowercase() ?: ""
+                val titleEn = service.title[ENGLISH_NAME]?.lowercase() ?: ""
+                val titleAr = service.title[ARABIC_NAME]?.lowercase() ?: ""
+                val descEn = service.description[ENGLISH_DESCRIPTION]?.lowercase() ?: ""
+                val descAr = service.description[ARABIC_DESCRIPTION]?.lowercase() ?: ""
 
                 titleEn.contains(searchQuery) ||
                         titleAr.contains(searchQuery) ||
@@ -440,11 +437,11 @@ class CustomerHomeViewModel(
 
     override fun onServiceClick(serviceId: String) {
         val selectedService = screenState.value.customerUiState.services.find { it.id == serviceId }
-        val isArabic = Locale.getDefault().language == "ar"
+        val isArabic = Locale.getDefault().language == ARABIC_LANGUAGE
         val serviceTitle = if (isArabic) {
-            selectedService?.title?.get("arabicName")
+            selectedService?.title?.get(ARABIC_NAME)
         } else {
-            selectedService?.title?.get("englishName")
+            selectedService?.title?.get(ENGLISH_NAME)
         } ?: ""
         val iconRes = getResource(serviceId)
         initBottomSheet(serviceTitle, serviceId, iconRes)
@@ -464,4 +461,13 @@ class CustomerHomeViewModel(
         )
         resetBottomSheetState()
     }
+companion object{
+     const val ARABIC_NAME = "arabicName"
+     const val ENGLISH_NAME = "englishName"
+     const val ARABIC_DESCRIPTION = "arabicDescription"
+     const val ENGLISH_DESCRIPTION = "englishDescription"
+     const val ARABIC_LANGUAGE = "ar"
+     const val UNKNOWN_ERROR = "Unknown Error"
+     const val COUNTRY_NAME = "Egypt"
+}
 }
