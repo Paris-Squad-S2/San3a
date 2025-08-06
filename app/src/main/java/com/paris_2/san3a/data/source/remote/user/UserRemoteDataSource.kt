@@ -11,7 +11,12 @@ import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 
 interface UserRemoteDataSource {
-    suspend fun saveWorkShowcase(phone: String, workMedia: List<String>?, workDescription: String)
+
+    suspend fun addUser(phone: String)
+
+    suspend fun updateWorkShowcase(phone: String, workMedia: List<String>?, workDescription: String)
+
+    suspend fun updateUserProgress(phone: String, step: AccountSetupStep)
 
     suspend fun getUserProgress(phone: String): AccountSetupStep
 
@@ -23,18 +28,16 @@ interface UserRemoteDataSource {
 
     fun getServices(phone: String, isCraftsman: Boolean): Flow<List<ServiceDto>>
 
-    suspend fun saveLocation(phone: String, location: Location)
+    suspend fun updateLocation(phone: String, location: Location)
 
-    suspend fun savePersonalInfo(phone: String, fullName: String, profilePhoto: String?)
+    suspend fun updatePersonalInfo(phone: String, fullName: String, profilePhoto: String?)
 
-    suspend fun saveNationalIdImages(phone: String, frontUrl: String?, backUrl: String?)
-
-    suspend fun completeUserSetup(phone: String)
+    suspend fun updateNationalIdImages(phone: String, frontUrl: String?, backUrl: String?)
 
     suspend fun getUser(phone: String): User
 
     suspend fun getWorkMedia(phone: String): List<String>
     suspend fun getStats(userId: String): StatsDto
     suspend fun updateStats(userId: String, stats: StatsDto)
-    fun getRecentRelatedJobs(relatedJobsIds: List<String>): Flow<List<RequestServiceDto>>
+    fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>>
 }

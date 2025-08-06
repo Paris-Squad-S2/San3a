@@ -8,6 +8,7 @@ import com.paris_2.san3a.data.repository.MessageRepositoryImpl
 import com.paris_2.san3a.data.repository.NotificationRepositoryImpl
 import com.paris_2.san3a.data.repository.OnboardingRepositoryImpl
 import com.paris_2.san3a.data.repository.ProfileRepositoryImpl
+import com.paris_2.san3a.data.repository.RequestDetailsRepositoryImpl
 import com.paris_2.san3a.data.repository.UserRepositoryImpl
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
 import com.paris_2.san3a.domain.repository.AuthRepository
@@ -17,6 +18,7 @@ import com.paris_2.san3a.domain.repository.MessageRepository
 import com.paris_2.san3a.domain.repository.NotificationRepository
 import com.paris_2.san3a.domain.repository.OnboardingRepository
 import com.paris_2.san3a.domain.repository.ProfileRepository
+import com.paris_2.san3a.domain.repository.RequestDetailsRepository
 import com.paris_2.san3a.domain.repository.UserRepository
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.bind
@@ -33,5 +35,6 @@ val repositoryModule = module {
     singleOf(::LocationRepositoryImp) { bind<LocationRepository>() }
     singleOf(::NotificationRepositoryImpl) { bind<NotificationRepository>() }
     singleOf(::ProfileRepositoryImpl) { bind<ProfileRepository>() }
+    singleOf(::RequestDetailsRepositoryImpl) { bind<RequestDetailsRepository>() }
 
 }

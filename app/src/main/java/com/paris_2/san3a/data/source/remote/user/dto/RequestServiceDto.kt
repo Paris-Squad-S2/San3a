@@ -9,9 +9,12 @@ data class RequestServiceDto(
     val description: String,
     val location: String,
     val locationDetails: String,
+    val time: String,
+    val state: String,
     val image: List<String>,
     val offers: List<Double>,
     val userId: String,
+    val selectedCraftsmanId: String
 ) {
     companion object {
         fun fromJson(data: Map<String, Any>, id: String): RequestServiceDto {
@@ -22,10 +25,13 @@ data class RequestServiceDto(
                 description = data["description"] as? String ?: "",
                 location = data["location"] as? String ?: "",
                 locationDetails = data["locationDetails"] as? String ?: "",
+                time = data["time"] as? String ?: "",
+                state = data["state"] as? String ?: "",
                 image = (data["image"] as? List<*>)?.mapNotNull { it as? String } ?: emptyList(),
                 offers = (data["offers"] as? List<*>)?.mapNotNull { (it as? Number)?.toDouble() }
                     ?: emptyList(),
-                userId = data["userId"] as? String ?: ""
+                userId = data["userId"] as? String ?: "",
+                selectedCraftsmanId = data["selectedCraftsmanId"] as? String ?: ""
             )
         }
     }
@@ -39,7 +45,10 @@ data class RequestServiceDto(
             "locationDetails" to locationDetails,
             "image" to image,
             "offers" to offers,
-            "userId" to userId
+            "userId" to userId,
+            "selectedCraftsmanId" to selectedCraftsmanId,
+            "time" to time,
+            "state" to state
         )
         return map
     }

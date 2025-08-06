@@ -30,6 +30,7 @@ import com.paris_2.san3a.presentation.screen.home.craftsman.components.StatsCont
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.RequestCardForCraftsMan
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import kotlinx.datetime.LocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -212,6 +213,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = ""
                     ),
                     RequestService(
                         id = "2",
@@ -223,6 +227,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = ""
                     ),
                     RequestService(
                         id = "3",
@@ -234,6 +241,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = ""
                     ),
                 ),
                 availableJobs = listOf(
@@ -247,6 +257,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = ""
                     ),
                     RequestService(
                         id = "2",
@@ -258,6 +271,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = ""
                     ),
                     RequestService(
                         id = "3",
@@ -269,6 +285,9 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = ""
                     ),
                 )
             )

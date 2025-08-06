@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.home.customer
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 
 data class CustomerHomeUiState(
     val isLoading: Boolean = false,
@@ -74,7 +75,7 @@ fun RequestService.toRequestServiceUiState(): RequestServiceUiState {
         location = this.location,
         locationDetails = this.locationDetails,
         image = this.image,
-        userId = this.userId
+        userId = this.userId,
     )
 }
 
@@ -89,6 +90,9 @@ fun RequestServiceUiState.toRequestService(): RequestService {
         image = this.image,
         userId = this.userId,
         offers = emptyList(),
+        selectedCraftsmanId = "",
+        time = getCurrentDateTime(),
+        state = ""
     )
 }
 

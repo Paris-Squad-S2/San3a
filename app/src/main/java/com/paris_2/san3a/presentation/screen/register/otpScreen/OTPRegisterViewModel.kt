@@ -8,11 +8,13 @@ import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.domain.usecase.AddUserUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.Job
@@ -25,6 +27,7 @@ class OTPRegisterViewModel(
     private val setLoginUseCase: SetLoginUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val addUserUseCase: AddUserUseCase,
     saveStateHandle: SavedStateHandle,
 ) : BaseViewModel<OTPRegisterScreenState>(OTPRegisterScreenState()),
     OTPRegisterListenerInteraction {
@@ -177,47 +180,43 @@ class OTPRegisterViewModel(
     private fun navigateToNextScreen() {
         tryToExecute(
             execute = {
-                val phoneNumber = screenState.value.otpRegisterUiState.phoneNumber
-                setUpAccountUseCase.getUserProgress(phoneNumber).also { progress ->
-                    when (progress) {
-                        AccountSetupStep.ACCOUNT_TYPE -> {
-                            navigate(
-                                Destinations.Account(accountSetupStep = progress), navOptions = NavOptions.Builder()
-                                    .setPopUpTo(Destinations.RegisterScreen, inclusive = true)
-                                    .build()
-                            )
-                        }
-                        AccountSetupStep.COMPLETED -> {
-                            val user = getUserUseCase(phoneNumber)
-                            when (user.accountType) {
-                                AccountType.CUSTOMER -> {
-                                    navigate(
-                                        Destinations.CustomerGraph,
-                                        navOptions = NavOptions.Builder()
-                                            .setPopUpTo(Destinations.Splash, inclusive = true)
-                                            .build()
-                                    )
-                                }
-                                AccountType.CRAFTSMAN -> {
-                                    navigate(
-                                        Destinations.CraftManGraph,
-                                        navOptions = NavOptions.Builder()
-                                            .setPopUpTo(Destinations.Splash, inclusive = true)
-                                            .build()
-                                    )
+                var destination: Destination = Destinations.Account(AccountSetupStep.ACCOUNT_TYPE)
+                try {
+                    setUpAccountUseCase.getUserProgress(screenState.value.otpRegisterUiState.phoneNumber).also { progress ->
+                        when (progress) {
+                            AccountSetupStep.ACCOUNT_TYPE -> {
+                                addUserUseCase(screenState.value.otpRegisterUiState.phoneNumber)
+                                destination = Destinations.Account(accountSetupStep = AccountSetupStep.ACCOUNT_TYPE)
+                            }
+                            AccountSetupStep.COMPLETED -> {
+                                val user = getUserUseCase(screenState.value.otpRegisterUiState.phoneNumber)
+                                destination = when (user.accountType) {
+                                    AccountType.CUSTOMER -> {
+                                        Destinations.CustomerGraph
+                                    }
+
+                                    AccountType.CRAFTSMAN -> {
+                                        Destinations.CraftManGraph
+                                    }
                                 }
                             }
-                        }
-                        else -> {
-                            navigate(
-                                Destinations.Account(progress),
-                                navOptions = NavOptions.Builder()
-                                    .setPopUpTo(Destinations.RegisterScreen, inclusive = true)
-                                    .build()
-                            )
+                            else -> {
+                                destination = Destinations.Account(progress)
+                            }
                         }
                     }
+                } catch (_: Exception) {
+                    addUserUseCase(screenState.value.otpRegisterUiState.phoneNumber)
+                    destination = Destinations.Account(AccountSetupStep.ACCOUNT_TYPE)
                 }
+                destination
+            },
+            onSuccess = { destination ->
+                navigate(
+                    destination, navOptions = NavOptions.Builder()
+                        .setPopUpTo(Destinations.RegisterScreen, inclusive = true)
+                        .build()
+                )
             },
             onError = { errorMessage ->
                 updateState(

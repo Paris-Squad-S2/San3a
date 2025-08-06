@@ -11,6 +11,7 @@ import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 
 interface UserRepository {
+    suspend fun addUser(phone: String)
     suspend fun saveAccountType(phone: String, accountType: AccountType)
     suspend fun getAccountType(phone: String) : AccountType
     suspend fun saveServices(phone: String, services:  List<Service>, isCraftsman: Boolean)
@@ -20,7 +21,7 @@ interface UserRepository {
     suspend fun saveWorkShowcase(phone: String, workMedia: List<Uri>?, workDescription: String)
     suspend fun getUserProgress(phone: String): AccountSetupStep
     suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?)
-    suspend fun completeUserSetup(phone: String)
+    suspend fun updateUserProgress(phone: String, step: AccountSetupStep)
     suspend fun getUser(phone: String): User
     suspend fun getWorkMedia(phone: String): List<String>
     suspend fun getStats(userId: String): Stats

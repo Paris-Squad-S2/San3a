@@ -113,15 +113,15 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
         }
     }
 
-    override suspend fun <T : Any> setDoc(documentPath: String, data: T): String {
+    override suspend fun <T : Any> setDoc(path: String, data: T): String {
         return try {
-            firestore.document(documentPath).set(data).await()
-            documentPath
+            firestore.document(path).set(data).await()
+            path
         } catch (e: Exception) {
             Log.e("TAG", "setDoc: $e")
             when (e) {
-                is FirebaseFirestoreException -> throw handleFirebaseException(e, documentPath)
-                else -> throw SetDataException(documentPath)
+                is FirebaseFirestoreException -> throw handleFirebaseException(e, path)
+                else -> throw SetDataException(path)
             }
         }
     }
