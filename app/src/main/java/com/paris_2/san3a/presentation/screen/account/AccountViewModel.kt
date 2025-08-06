@@ -284,7 +284,8 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    frontOfNationalIdUri = uri
+                    frontOfNationalIdUri = uri,
+                    isNextButtonEnabled = true
                 )
             )
         )
@@ -294,7 +295,8 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    backOfNationalIdUri = uri
+                    backOfNationalIdUri = uri,
+                    isNextButtonEnabled = screenState.value.accountUiState.frontOfNationalIdUri != null
                 )
             )
         )
@@ -396,7 +398,6 @@ class AccountViewModel(
                         }
 
                         4 -> {
-                            setButtonToDefault()
                             if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
                                 setUpAccountUseCase.uploadNationalIdImages(
                                     phone = screenState.value.accountUiState.phoneNumber,
