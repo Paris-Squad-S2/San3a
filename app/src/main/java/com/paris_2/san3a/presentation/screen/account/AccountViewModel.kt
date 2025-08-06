@@ -658,6 +658,10 @@ class AccountViewModel(
                 getUserSelectedServices()
             },
             onSuccess = {
+                setUpAccountUseCase.updateUserProgress(
+                    phone = screenState.value.accountUiState.phoneNumber,
+                    step = AccountSetupStep.SERVICES
+                )
                 if (_currentScreen.intValue < stepsCount - 1) {
                     _currentScreen.intValue++
                 }
@@ -707,6 +711,10 @@ class AccountViewModel(
                 )
             },
             onSuccess = {
+                setUpAccountUseCase.updateUserProgress(
+                    phone = screenState.value.accountUiState.phoneNumber,
+                    step = AccountSetupStep.PERSONAL_INFO
+                )
                 if (_currentScreen.intValue < stepsCount - 1) {
                     _currentScreen.intValue++
                 }
@@ -760,6 +768,17 @@ class AccountViewModel(
                 )
             },
             onSuccess = {
+                if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
+                    setUpAccountUseCase.updateUserProgress(
+                        phone = screenState.value.accountUiState.phoneNumber,
+                        step = AccountSetupStep.WORK_SHOWCASE
+                    )
+                } else {
+                    setUpAccountUseCase.updateUserProgress(
+                        phone = screenState.value.accountUiState.phoneNumber,
+                        step = AccountSetupStep.LOCATION
+                    )
+                }
                 if (_currentScreen.intValue < stepsCount - 1) {
                     _currentScreen.intValue++
                 }
@@ -795,6 +814,12 @@ class AccountViewModel(
                     phone = screenState.value.accountUiState.phoneNumber,
                     location = screenState.value.accountUiState.locationUiState.toEntity()
                 )
+            },
+            onSuccess = {
+                setUpAccountUseCase.updateUserProgress(
+                    phone = screenState.value.accountUiState.phoneNumber,
+                    step = AccountSetupStep.COMPLETED
+                )
                 navigate(
                     Destinations.CustomerGraph,
                     navOptions = NavOptions.Builder()
@@ -804,9 +829,6 @@ class AccountViewModel(
                         )
                         .build()
                 )
-
-            },
-            onSuccess = {
                 if (_currentScreen.intValue < stepsCount - 1) {
                     _currentScreen.intValue++
                 }
@@ -845,6 +867,10 @@ class AccountViewModel(
                 )
             },
             onSuccess = {
+                setUpAccountUseCase.updateUserProgress(
+                    phone = screenState.value.accountUiState.phoneNumber,
+                    step = AccountSetupStep.UPLOAD_NATIONAL_ID
+                )
                 if (_currentScreen.intValue < stepsCount - 1) {
                     _currentScreen.intValue++
                 }
@@ -894,6 +920,19 @@ class AccountViewModel(
                 )
             },
             onSuccess = {
+                setUpAccountUseCase.updateUserProgress(
+                    phone = screenState.value.accountUiState.phoneNumber,
+                    step = AccountSetupStep.COMPLETED
+                )
+                navigate(
+                    Destinations.CraftManGraph,
+                    navOptions = NavOptions.Builder()
+                        .setPopUpTo(
+                            Destinations.Account(accountSetupStep),
+                            inclusive = true
+                        )
+                        .build()
+                )
                 if (_currentScreen.intValue < stepsCount - 1) {
                     _currentScreen.intValue++
                 }
