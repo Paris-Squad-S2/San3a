@@ -3,10 +3,13 @@ package com.paris_2.san3a.presentation.screen.more.components
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +37,11 @@ fun SettingItems(
         AnimatedContent(isCraftsman) {
             if (it) {
                 SettingItem(
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = moreInteractionListener::onClickSwitchAccountToCustomer
+                    ),
                     icon = R.drawable.ic_home_outline,
                     label = R.string.switch_to_customer,
                     isLoading = isLoadingChangeAccount,
@@ -42,6 +50,11 @@ fun SettingItems(
 
             } else {
                 SettingItem(
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = moreInteractionListener::onClickSwitchAccountToCraftsman
+                    ),
                     icon = R.drawable.ic_sledgehammer_outline,
                     label = R.string.switch_to_craftsman,
                     isLoading = isLoadingChangeAccount,
@@ -60,12 +73,22 @@ fun SettingItems(
         )
         SettingHorizontalDivider()
         SettingItem(
+            modifier = Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = moreInteractionListener::onClickLanguage
+            ),
             icon = R.drawable.ic_language_circle_outline,
             label = R.string.language,
             onClickItem = moreInteractionListener::onClickLanguage
         )
         SettingHorizontalDivider()
         SettingItem(
+            modifier = Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = moreInteractionListener::onClickLocation
+            ),
             icon = R.drawable.ic_location_outline,
             label = R.string.my_location,
             onClickItem = moreInteractionListener::onClickLocation
@@ -74,12 +97,22 @@ fun SettingItems(
             Column {
                 SettingHorizontalDivider()
                 SettingItem(
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = moreInteractionListener::onClickMyService
+                    ),
                     icon = R.drawable.ic_sledgehammer_outline,
                     label = R.string.my_services,
                     onClickItem = moreInteractionListener::onClickMyService
                 )
                 SettingHorizontalDivider()
                 SettingItem(
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = moreInteractionListener::onClickVerification
+                    ),
                     icon = R.drawable.ic_verified_check_outline,
                     label = R.string.verification,
                     onClickItem = moreInteractionListener::onClickVerification
