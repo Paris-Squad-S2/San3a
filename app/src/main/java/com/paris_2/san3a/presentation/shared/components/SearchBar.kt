@@ -87,6 +87,16 @@ fun SearchBar(
                             .clickable { onValueChange("") }
                     )
                 }
+                if (value.isEmpty()) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_microphone),
+                        contentDescription = "Search",
+                        tint = Theme.colors.shade.primary,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .clickable { onValueChange("") }
+                    )
+                }
             }
         }
     )
