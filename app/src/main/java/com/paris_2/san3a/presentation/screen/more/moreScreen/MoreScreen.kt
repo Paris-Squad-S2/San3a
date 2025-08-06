@@ -10,8 +10,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -128,9 +130,9 @@ private fun MoreScreenContent(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
+                            .background(Theme.colors.background.screen)
                             .verticalScroll(scroll)
                             .navigationBarsPadding()
-                            .background(Theme.colors.background.screen)
                     ) {
                         UserProfileSection(
                             modifier = Modifier.padding(16.dp),
@@ -191,6 +193,7 @@ private fun MoreScreenContent(
                             textAlign = TextAlign.Center
                         )
 
+
                         AnimatedVisibility(moreScreenState.showEditProfileBottomSheet) {
                             EditProfileBottomSheet(
                                 name = moreScreenState.moreUiState.userUiState.name,
@@ -221,7 +224,7 @@ private fun MoreScreenContent(
             }
 
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxWidth()
             ) {
                 AnimatedVisibility(moreScreenState.showSnackBarError) {
                     moreScreenState.errorMessage?.let {
