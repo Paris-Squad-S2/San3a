@@ -17,6 +17,7 @@ data class MyOfferCraftsmanUiState(
 )
 
 data class MyJobOfferUiState(
+    val customerPhone: String="",
     val jobOfferTitle : String = "job Offer Title",
     val serviceType : String = "Service Request",
     val date: String = "2023-10-01",
@@ -35,6 +36,7 @@ data class MyJobOfferUiState(
 
 fun RequestService.toMyJobOfferUiState(): MyJobOfferUiState {
     return MyJobOfferUiState(
+        customerPhone = this.userId,
         jobOfferTitle = this.title,
         serviceType = this.serviceType,
         date = this.time.date.toString(),

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,22 +28,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.shared.utils.BasePreview
+import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 
 @Composable
 fun CraftsmanOfferDetails(
     modifier: Modifier = Modifier,
-    painter: Painter?,
-    isVerified : Boolean = false,
-    name : String?,
-    postedTime : String,
-    description : String,
-    amount : String,
-    rate : Float?,
-    reviewsNumber : Int?,
-    status : OfferStatus = OfferStatus.PENDING_OFFER,
-    time : String,
-    onChatClick: () -> Unit,
-    onAcceptOfferClick: () -> Unit
+    painter: Painter? = null,
+    isVerified: Boolean = false,
+    name: String?,
+    postedTime: String,
+    description: String,
+    amount: String,
+    rate: Float?,
+    reviewsNumber: Int?,
+    status: OfferStatus = OfferStatus.PENDING_OFFER,
+    time: String,
+    stickyFooter: @Composable (OfferStatus) -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -194,29 +194,53 @@ fun CraftsmanOfferDetails(
             )
         }
 
-        if (status == OfferStatus.PENDING_OFFER)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                AppButton(
-                    type = AppButtonType.Secondary,
-                    onClick = onChatClick,
-                    text = stringResource(R.string.chat),
-                    modifier = Modifier.weight(1f),
-                    size = AppButtonSize.Small,
-                    state = AppButtonState.Enable,
-                    enableSecondaryBackgroundColor = Theme.colors.shade.quaternary
-                )
-                AppButton(
-                    type = AppButtonType.Primary,
-                    onClick = onAcceptOfferClick,
-                    text = stringResource(R.string.accept_offer),
-                    modifier = Modifier.weight(1f),
-                    size = AppButtonSize.Small
-                )
-            }
+        stickyFooter(status)
+    }
+}
+
+@PreviewMultiDevices
+@Composable
+fun CraftsmanOfferDetailsPreview() {
+    BasePreview {
+        Column(Modifier.padding(4.dp)) {
+            CraftsmanOfferDetails(
+                isVerified = true,
+                name = "joe",
+                postedTime = "7 H ago",
+                description = "description",
+                amount = "53,000 EGP",
+                rate = 5.0f,
+                reviewsNumber = 100,
+                time = "10:00 AM",
+
+                stickyFooter = {
+                    if (it == OfferStatus.PENDING_OFFER)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 24.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            AppButton(
+                                type = AppButtonType.Secondary,
+                                onClick = { },
+                                text = stringResource(R.string.chat),
+                                modifier = Modifier.weight(1f),
+                                size = AppButtonSize.Small,
+                                state = AppButtonState.Enable,
+                                enableSecondaryBackgroundColor = Theme.colors.shade.quaternary
+                            )
+                            AppButton(
+                                type = AppButtonType.Primary,
+                                onClick = {},
+                                text = stringResource(R.string.accept_offer),
+                                modifier = Modifier.weight(1f),
+                                size = AppButtonSize.Small
+                            )
+                        }
+                },
+            )
+
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.myRequest.craftsman
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,12 +36,13 @@ fun MyJobsScreen(
     viewModel: MyOfferCraftsmanViewModel = koinViewModel()
 ) {
     val state by viewModel.screenState.collectAsState()
-    MyRequestScreenContent(uiState = state)
+    MyRequestScreenContent(uiState = state, myJobCraftsmanInteractionListener = viewModel)
 }
 
 @Composable
 private fun MyRequestScreenContent(
     modifier: Modifier = Modifier,
+    myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener,
     uiState: MyOfferCraftsmanScreenState = MyOfferCraftsmanScreenState()
 ) {
     Column(
@@ -56,6 +58,9 @@ private fun MyRequestScreenContent(
             onBackClick = {},
             actionIcon = {
                 Icon(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable(onClick = myJobCraftsmanInteractionListener::onNotificationClick),
                     painter = painterResource(R.drawable.ic_notification_outline),
                     contentDescription = "Request Icon",
                     tint = Theme.colors.shade.primary,
@@ -74,7 +79,7 @@ private fun MyRequestScreenContent(
                         .fillMaxSize()
                         .padding(30.dp),
                     action = {
-                        //myRequestCustomerInteractionListener.onRetryClick()
+                        myJobCraftsmanInteractionListener.onRetryClick()
                     },
                     actionText = R.string.try_again,
                     image = R.drawable.img_lost_connection,
@@ -115,7 +120,7 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                JobsList(offers = ongoingRequests)
+                                JobsList(offers = ongoingRequests,myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener)
                             }
                         }
 
@@ -131,7 +136,7 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                JobsList(offers = completedRequests)
+                                JobsList(offers = completedRequests,myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener)
                             }
                         }
 
@@ -147,7 +152,10 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                JobsList(offers = canceledRequests)
+                                JobsList(
+                                    offers = canceledRequests,
+                                    myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
+                                )
                             }
                         }
                     }
@@ -159,14 +167,17 @@ private fun MyRequestScreenContent(
 }
 
 @Composable
-private fun JobsList(offers: List<MyJobOfferUiState>) {
+private fun JobsList(
+    offers: List<MyJobOfferUiState>,
+    myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener
+) {
     LazyColumn {
         items(offers) { offer ->
             MyJobOfferCard(
                 offerUiState = offer,
-                onViewDetailsRequest = {},
-                onSendMessage = {},
-                onMarkAsDone = {}
+                onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails("") },
+                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick("+201118295474") },
+                onMarkAsDone = { myJobCraftsmanInteractionListener.onSendAsDone("") }
             )
         }
     }
@@ -176,6 +187,23 @@ private fun JobsList(offers: List<MyJobOfferUiState>) {
 @Composable
 fun MyRequestScreenPreview() {
     BasePreview {
-        MyRequestScreenContent()
+        MyRequestScreenContent(
+            myJobCraftsmanInteractionListener = object : MyJobCraftsmanInteractionListener {
+                override fun onRetryClick() {}
+                override fun onSendAsDone(requestId: String) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onSendMessageClick(phoneNumber: String) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onViewRequestDetails(requestId: String) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onNotificationClick() {}
+            },
+        )
     }
 }
