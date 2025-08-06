@@ -1,12 +1,17 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
+import android.app.Activity
+import android.content.Intent
+import android.speech.RecognizerIntent
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,9 +19,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,6 +44,7 @@ import com.paris_2.san3a.presentation.shared.components.AddPhotosContent
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.BottomSheet
 import com.paris_2.san3a.presentation.shared.components.CategoryItem
+import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
 import com.paris_2.san3a.presentation.shared.components.RequestDescriptionContent
 import com.paris_2.san3a.presentation.shared.components.RequestTitleContent
 import com.paris_2.san3a.presentation.shared.components.SearchBar
@@ -69,6 +77,49 @@ private fun CustomerHomeScreenContent(
             action.addBottomSheetImages(newImages)
         }
     )
+
+    val voiceSearchPrompt = stringResource(R.string.voice_search)
+
+    val voiceLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val spokenText = result.data
+                    ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    ?.firstOrNull()
+                spokenText?.let { action.onSpeechRecognized(it) }
+            }
+        }
+    )
+
+    LaunchedEffect(Unit) {
+        val viewModel = action as? CustomerHomeViewModel
+        if (viewModel == null) {
+            return@LaunchedEffect
+        }
+        viewModel.triggerVoiceSearch.collect {
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                )
+                putExtra(
+                    RecognizerIntent.EXTRA_PROMPT,
+                    voiceSearchPrompt
+                )
+                putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE,
+                    Locale.getDefault()
+                )
+            }
+            voiceLauncher.launch(intent)
+        }
+    }
+
+    val servicesToDisplay = if (state.customerUiState.searchQuery.isNotEmpty())
+        state.customerUiState.searchResults
+    else
+        state.customerUiState.services
 
     if (state.bottomSheetUiState.bottomSheetState) {
         BottomSheet(
@@ -273,18 +324,22 @@ private fun CustomerHomeScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Theme.colors.background.screen),
+            horizontalAlignment = CenterHorizontally,
         ) {
             item {
                 SearchBar(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
+                    value = state.customerUiState.searchQuery,
+                    onValueChange = { action.onSearch(it) },
                     hint = stringResource(R.string.search),
+                    onMicClick = {
+                        action.onMicClick()
+                    },
                     modifier = Modifier
                         .padding(top = 16.dp, bottom = 24.dp)
                 )
             }
 
-            if (state.customerUiState.mostRequestedServices.isNotEmpty()) {
+            if (state.customerUiState.mostRequestedServices.isNotEmpty() && state.customerUiState.searchQuery.isEmpty()) {
                 item {
                     MostRequestedServices(
                         services = state.customerUiState.mostRequestedServices,
@@ -296,42 +351,59 @@ private fun CustomerHomeScreenContent(
                     }
                 }
             }
-            item {
-                Text(
-                    text = stringResource(R.string.find_what_you_need),
-                    style = Theme.textStyle.title.small,
-                    color = Theme.colors.shade.primary,
-                    modifier = Modifier
-                        .padding(start = 16.dp, bottom = 16.dp)
-                )
-            }
 
-            items(state.customerUiState.services) { service ->
-                CategoryItem(
-                    title = service.title[if (isArabic) ARABIC_NAME else ENGLISH_NAME] ?: "",
-                    description = service.description[if (isArabic) ARABIC_DESCRIPTION else ENGLISH_DESCRIPTION]
-                        ?: "",
-                    tint = getResourceTint(service.id),
-                    iconColor = getResourceColors(service.id),
-                    isLarge = false,
-                    painter = painterResource(getResource(service.id)),
-                    modifier = Modifier
-                        .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
-                    onclick = {
-                        action.onServiceClick(service.id)
-                    }
-                )
-            }
 
-            item {
-                AdCard(
-                    title = stringResource(R.string.got_a_skill_start_earning),
-                    caption = stringResource(R.string.create_your_craftsman_account_and_get_job_requests),
-                    buttonTitle = stringResource(R.string.become_a_craftsman),
-                    onClick = { action.onBecomeCraftsmanClick() },
-                    modifier = Modifier
-                        .padding(vertical = 12.dp)
-                )
+            if (state.customerUiState.searchQuery.isNotEmpty() && servicesToDisplay.isEmpty()) {
+                item {
+                    PlaceHolderScreen(
+                        image = R.drawable.img_no_search_result,
+                        title = R.string.no_results_found,
+                        description = R.string.try_a_different_keyword_or_check_your_spelling_some_services_may_be_listed_under_other_names,
+                        modifier = Modifier
+                            .align(CenterHorizontally)
+                            .padding(top = 24.dp)
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+            } else {
+                item {
+                    Text(
+                        text = stringResource(R.string.find_what_you_need),
+                        style = Theme.textStyle.title.small,
+                        color = Theme.colors.shade.primary,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, bottom = 16.dp)
+                    )
+                }
+                items(servicesToDisplay) { service ->
+                    CategoryItem(
+                        title = service.title[if (isArabic) ARABIC_NAME else ENGLISH_NAME] ?: "",
+                        description = service.description[if (isArabic) ARABIC_DESCRIPTION else ENGLISH_DESCRIPTION]
+                            ?: "",
+                        tint = getResourceTint(service.id),
+                        iconColor = getResourceColors(service.id),
+                        isLarge = false,
+                        painter = painterResource(getResource(service.id)),
+                        modifier = Modifier
+                            .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
+                        onclick = {
+                            action.onServiceClick(service.id)
+                        }
+                    )
+                }
+            }
+            if (state.customerUiState.searchQuery.isEmpty()) {
+                item {
+                    AdCard(
+                        title = stringResource(R.string.got_a_skill_start_earning),
+                        caption = stringResource(R.string.create_your_craftsman_account_and_get_job_requests),
+                        buttonTitle = stringResource(R.string.become_a_craftsman),
+                        onClick = { action.onBecomeCraftsmanClick() },
+                        modifier = Modifier
+                            .padding(vertical = 12.dp)
+                    )
+                }
             }
 
         }

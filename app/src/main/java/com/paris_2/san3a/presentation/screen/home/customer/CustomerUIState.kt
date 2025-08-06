@@ -20,7 +20,9 @@ data class CustomerUiState(
     val mostRequestedServices: List<Service> = emptyList(),
     val services: List<Service> = emptyList(),
     val requestService: RequestServiceUiState? = null,
-    val locationUiState: LocationUiState = LocationUiState()
+    val locationUiState: LocationUiState = LocationUiState(),
+    val searchQuery: String = "",
+    val searchResults: List<Service> = emptyList()
 )
 
 data class LocationUiState(

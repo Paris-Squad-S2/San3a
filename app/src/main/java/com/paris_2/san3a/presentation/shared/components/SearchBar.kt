@@ -34,7 +34,8 @@ fun SearchBar(
     value: String,
     onValueChange: (String) -> Unit,
     hint: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onMicClick: () -> Unit
 ){
     BasicTextField(
         value = value,
@@ -80,11 +81,20 @@ fun SearchBar(
                 if (value.isNotEmpty()) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),
-                        contentDescription = "Search",
+                        contentDescription = "Clear search",
                         tint = Theme.colors.shade.tertiary,
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .clickable { onValueChange("") }
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_microphone),
+                        contentDescription = "Voice search",
+                        tint = Theme.colors.shade.primary,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .clickable { onMicClick() }
                     )
                 }
             }
@@ -102,6 +112,7 @@ private fun Preview(){
             value = text,
             onValueChange = { text = it },
             hint = "Search ...",
+            onMicClick = {}
         )
     }
 }
