@@ -193,6 +193,9 @@ class MoreViewModel(
     }
 
     private fun onGetUserInformationSuccess(user: User) {
+        val isVerify = user.nationalIdBackImage.isNotEmpty() &&
+                user.nationalIdFrontImage.isNotEmpty() &&
+                user.accountType == AccountType.CRAFTSMAN
         updateState(
             screenState.value.copy(
                 isLoading = false,
@@ -200,7 +203,8 @@ class MoreViewModel(
                 showSnackBarError = false,
                 isNoInternet = false,
                 moreUiState = screenState.value.moreUiState.copy(
-                    userUiState = user.toUserUiState(),
+                    userUiState = user.toUserUiState()
+                        .copy(isVerify = isVerify),
                 )
             )
         )
