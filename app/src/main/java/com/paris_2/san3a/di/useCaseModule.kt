@@ -1,6 +1,7 @@
 package com.paris_2.san3a.di
 
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.AddUserUseCase
 import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetAvailableJobsUseCase
@@ -54,6 +55,7 @@ val useCaseModule = module {
     factoryOf(::GetLocationInfoUseCase)
     factoryOf(::GetUserServicesUseCase)
     factoryOf(::GetUserUseCase)
+    factoryOf(::AddUserUseCase)
     factoryOf(::GetWorkMediaUseCase)
     factoryOf(::UpdateNumOfRequestsUseCase)
     factoryOf(::MarkMessagesAsSeenUseCase)

@@ -42,7 +42,7 @@ class SetUpAccountUseCase(
         return userRepository.getUserProgress(phone)
     }
 
-    suspend fun completeUserSetup(phone: String) {
-        userRepository.completeUserSetup(phone)
+    suspend fun updateUserProgress(phone: String, step: AccountSetupStep) {
+        userRepository.updateUserProgress(phone, step)
     }
 }
