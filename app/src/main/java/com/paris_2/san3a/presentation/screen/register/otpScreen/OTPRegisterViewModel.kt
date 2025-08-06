@@ -3,11 +3,16 @@ package com.paris_2.san3a.presentation.screen.register.otpScreen
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.NoInternetConnectionException
+import com.paris_2.san3a.domain.entity.AccountSetupStep
+import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
+import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.Job
@@ -18,6 +23,8 @@ class OTPRegisterViewModel(
     private val sendOtpUseCase: SendOtpUseCase,
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
     private val setLoginUseCase: SetLoginUseCase,
+    private val setUpAccountUseCase: SetUpAccountUseCase,
+    private val getUserUseCase: GetUserUseCase,
     saveStateHandle: SavedStateHandle,
 ) : BaseViewModel<OTPRegisterScreenState>(OTPRegisterScreenState()),
     OTPRegisterListenerInteraction {
@@ -91,8 +98,8 @@ class OTPRegisterViewModel(
         }
     }
 
+    var timerJob: Job? = null
     private fun updateSecondLeft() {
-        var timerJob: Job? = null
 
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
@@ -152,7 +159,64 @@ class OTPRegisterViewModel(
                         )
                     )
                     setLoginUseCase(true)
-                    navigate(Destinations.Account)
+                }
+            },
+            onSuccess = {
+                navigateToNextScreen()
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        showBottomSheet = true
+                    )
+                )
+            }
+        )
+    }
+
+    private fun navigateToNextScreen() {
+        tryToExecute(
+            execute = {
+                val phoneNumber = screenState.value.otpRegisterUiState.phoneNumber
+                setUpAccountUseCase.getUserProgress(phoneNumber).also { progress ->
+                    when (progress) {
+                        AccountSetupStep.ACCOUNT_TYPE -> {
+                            navigate(
+                                Destinations.Account(accountSetupStep = progress), navOptions = NavOptions.Builder()
+                                    .setPopUpTo(Destinations.RegisterScreen, inclusive = true)
+                                    .build()
+                            )
+                        }
+                        AccountSetupStep.COMPLETED -> {
+                            val user = getUserUseCase(phoneNumber)
+                            when (user.accountType) {
+                                AccountType.CUSTOMER -> {
+                                    navigate(
+                                        Destinations.CustomerGraph,
+                                        navOptions = NavOptions.Builder()
+                                            .setPopUpTo(Destinations.Splash, inclusive = true)
+                                            .build()
+                                    )
+                                }
+                                AccountType.CRAFTSMAN -> {
+                                    navigate(
+                                        Destinations.CraftManGraph,
+                                        navOptions = NavOptions.Builder()
+                                            .setPopUpTo(Destinations.Splash, inclusive = true)
+                                            .build()
+                                    )
+                                }
+                            }
+                        }
+                        else -> {
+                            navigate(
+                                Destinations.Account(progress),
+                                navOptions = NavOptions.Builder()
+                                    .setPopUpTo(Destinations.RegisterScreen, inclusive = true)
+                                    .build()
+                            )
+                        }
+                    }
                 }
             },
             onError = { errorMessage ->

@@ -1,8 +1,8 @@
 package com.paris_2.san3a.presentation.screen.account
 
 import android.net.Uri
-import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.Location
+import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 
 data class AccountScreenUiState(
     val accountUiState: AccountUiState = AccountUiState(),
@@ -26,6 +26,8 @@ data class AccountUiState(
     val backOfNationalIdUri: Uri? = null,
     val workImagesUris: List<Uri>? = null,
     val workDescription: String = "",
+    val isNextButtonEnabled: Boolean = false,
+    val locationType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
 )
 
 data class ServiceUiState(
@@ -45,10 +47,11 @@ fun LocationUiState.toEntity(): Location {
     return Location(
         government = this.government,
         cityName = this.city,
+        addressInDetails = this.addressInDetails
     )
 }
 
-enum class UserType(val displayActor: Int) {
-    CUSTOMER(R.string.customer),
-    CRAFTSMAN(R.string.craftman)
+enum class UserType() {
+    CUSTOMER,
+    CRAFTSMAN
 }

@@ -42,12 +42,7 @@ fun CitiesBottomSheet(
                     .padding(bottom = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Choose City",
-                    style = Theme.textStyle.title.medium,
-                    modifier = Modifier.weight(1F),
-                    color = Theme.colors.shade.primary
-                )
+
                 IconButton(onClick = onDismissRequest) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),

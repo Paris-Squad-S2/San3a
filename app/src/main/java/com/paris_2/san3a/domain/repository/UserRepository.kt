@@ -14,7 +14,7 @@ interface UserRepository {
     suspend fun saveAccountType(phone: String, accountType: AccountType)
     suspend fun getAccountType(phone: String) : AccountType
     suspend fun saveServices(phone: String, services:  List<Service>, isCraftsman: Boolean)
-    suspend fun getServices(phone: String) : List<Service>
+    fun getServices(phone: String, isCraftsman: Boolean) : Flow<List<Service>>
     suspend fun saveLocation(phone: String, location: Location)
     suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?)
     suspend fun saveWorkShowcase(phone: String, workMedia: List<Uri>?, workDescription: String)
@@ -23,6 +23,6 @@ interface UserRepository {
     suspend fun completeUserSetup(phone: String)
     suspend fun getUser(phone: String): User
     suspend fun getWorkMedia(phone: String): List<String>
-    suspend fun getStats(userId: String): Stats?
-    fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestService>>
+    suspend fun getStats(userId: String): Stats
+    fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestService>>
 }

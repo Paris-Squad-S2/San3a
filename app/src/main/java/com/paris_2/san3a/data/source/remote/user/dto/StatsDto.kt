@@ -16,4 +16,12 @@ data class StatsDto(
             )
         }
     }
+    fun toJson(): Map<String, Any> {
+        return mapOf(
+            "userId" to userId,
+            "jobsDone" to jobsDone,
+            "earnings" to earnings,
+            "rating" to rating
+        )
+    }
 }

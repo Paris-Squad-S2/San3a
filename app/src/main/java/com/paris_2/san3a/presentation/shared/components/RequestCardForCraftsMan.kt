@@ -39,8 +39,8 @@ fun RequestCardForCraftsMan(
             .fillMaxWidth()
             .clip(RoundedCornerShape(defaultSan3aRadius.extraExtraLarge))
             .background(Theme.colors.background.card)
-            .padding(16.dp)
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center
     )
     {

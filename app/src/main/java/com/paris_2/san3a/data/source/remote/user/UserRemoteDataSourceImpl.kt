@@ -3,6 +3,8 @@ package com.paris_2.san3a.data.source.remote.user
 import android.util.Log
 import com.google.firebase.firestore.FieldPath
 import com.paris_2.san3a.data.service.firestore.FireStoreService
+import com.paris_2.san3a.data.service.firestore.SetOperation
+import com.paris_2.san3a.data.service.firestore.WriteOperation
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
@@ -11,7 +13,9 @@ import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 
 class UserRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
@@ -39,17 +43,48 @@ class UserRemoteDataSourceImpl(
         services: List<Service>,
         isCraftsman: Boolean
     ) {
-        services.forEach { service ->
-            val collectionPath = "$USERS_COLLECTION/$phone/services/${service.id}"
-            fireStoreService.setDoc(documentPath = collectionPath, data = mapOf<String, Any>())
+        val path = if (isCraftsman) {
+            "$USERS_COLLECTION/$phone/$OFFERED_SERVICES_COLLECTION"
+        } else {
+            "$USERS_COLLECTION/$phone/$REQUESTED_SERVICES_PATH"
         }
+        fireStoreService.clearCollection(path = path)
+        val operations = mutableListOf<WriteOperation>()
+        services.forEach { service ->
+            operations.add(
+                SetOperation(
+                    path = "$path/${service.id}",
+                    data = mapOf()
+                )
+            )
+        }
+        fireStoreService.batchWrite(operations)
+        val data = mapOf(
+            "currentStep" to if (isCraftsman) AccountSetupStep.PERSONAL_INFO.name else AccountSetupStep.LOCATION.name
+        )
+        updateUserData(phone, data)
     }
 
-    override suspend fun getServices(phone: String): List<ServiceDto> {
-        return fireStoreService.getCollection(path = "$USERS_COLLECTION/$phone/services", fromJson = ::getServices).let { docs ->
-            fireStoreService.getCollection(path = "services", fromJson = ServiceDto::fromJson, queryBuilder = { query ->
-                query.whereIn(FieldPath.documentId(), docs)
-            })
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<ServiceDto>> {
+        val path = if (isCraftsman) {
+            "$USERS_COLLECTION/$phone/$OFFERED_SERVICES_COLLECTION"
+        } else {
+            "$USERS_COLLECTION/$phone/$REQUESTED_SERVICES_PATH"
+        }
+        return fireStoreService.streamCollection(
+            path = path,
+            fromJson = ::getServices
+        ).let { docsFlow ->
+            docsFlow.flatMapLatest { docsList ->
+                fireStoreService.streamCollection(
+                    path = SERVICES_COLLECTION,
+                    fromJson = ServiceDto::fromJson,
+                    queryBuilder = { query ->
+                        query.whereIn(FieldPath.documentId(), docsList)
+                    }
+                )
+            }
         }
     }
 
@@ -61,9 +96,10 @@ class UserRemoteDataSourceImpl(
         val data = mapOf(
             "location" to mapOf(
                 "cityName" to location.cityName,
-                "government" to location.government
+                "government" to location.government,
+                "addressInDetails" to location.addressInDetails
             ),
-            "currentStep" to AccountSetupStep.PERSONAL_INFO.name
+            "currentStep" to AccountSetupStep.COMPLETED.name
         )
         updateUserData(phone, data)
     }
@@ -138,9 +174,10 @@ class UserRemoteDataSourceImpl(
             location = (userData["location"] as? Map<*, *>)?.let { locationData ->
                 Location(
                     government = locationData["government"]?.toString() ?: "",
-                    cityName = locationData["cityName"]?.toString() ?: ""
+                    cityName = locationData["cityName"]?.toString() ?: "",
+                    addressInDetails = locationData["addressInDetails"]?.toString() ?: ""
                 )
-            } ?: Location("", "")
+            } ?: Location("", "", ""),
         )
     }
 
@@ -158,27 +195,52 @@ class UserRemoteDataSourceImpl(
         Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
     }
 
-    override suspend fun getStats(userId: String): StatsDto? {
-        return fireStoreService.getDoc(
-            path = "$CRAFTSMAN_COLLECTION/$userId",
-            fromJson = StatsDto::fromJson
+    override suspend fun getStats(userId: String): StatsDto {
+        return try {
+            fireStoreService.getDoc(
+                path = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
+                fromJson = StatsDto::fromJson
+            ) ?: StatsDto(userId, 0, 0.0, 0.0)
+        } catch (_: Exception) {
+            addStats(
+                userId,
+                StatsDto(userId, 0, 0.0, 0.0)
+            )
+            StatsDto(userId, 0, 0.0, 0.0)
+        }
+    }
+
+    suspend fun addStats(userId: String, stats: StatsDto) {
+        fireStoreService.setDoc(
+            documentPath = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
+            data = stats.toJson()
         )
     }
 
-    override fun getRecentRelatedJobs(relatedJob: String): Flow<List<RequestServiceDto>> {
+    override suspend fun updateStats(userId: String, stats: StatsDto) {
+        fireStoreService.updateDoc(
+            path = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
+            data = stats.toJson()
+        )
+    }
+
+    override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>> {
         return fireStoreService.streamCollection(
-            path = REQUESTED_SERVICES_COLLECTION,
+            path = SERVICE_REQUESTS_COLLECTION,
             fromJson = RequestServiceDto::fromJson,
             queryBuilder = { query ->
-                query.whereEqualTo("relatedJob", relatedJob)
+                query.whereIn("title", relatedJobs)
             }
         )
     }
 
     companion object {
         const val USERS_COLLECTION = "users"
-        const val CRAFTSMAN_COLLECTION = "craftsmen"
+        const val CRAFTSMAN_STATUS_COLLECTION = "craftsmen"
         const val STATS_COLLECTION = "stats"
-        const val REQUESTED_SERVICES_COLLECTION = "requestedServices"
+        const val SERVICE_REQUESTS_COLLECTION = "service_requests"
+        const val OFFERED_SERVICES_COLLECTION = "offeredServices"
+        const val REQUESTED_SERVICES_PATH = "requestedServices"
+        const val SERVICES_COLLECTION = "services"
     }
 }

@@ -128,7 +128,7 @@ fun AccountScreenContent(
             .fillMaxSize()
             .background(Theme.colors.background.screen)
             .safeContentPadding()
-            .padding( top = 16.dp)
+            .padding(top = 16.dp, bottom = 16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -189,7 +189,8 @@ fun AccountScreenContent(
                     government = uiState.accountUiState.locationUiState.government,
                     city = uiState.accountUiState.locationUiState.city,
                     addressInDetails = uiState.accountUiState.locationUiState.addressInDetails,
-                    onAddressDetailsChange = interactionListener::onAddressDetailsChanged
+                    onAddressDetailsChange = interactionListener::onAddressDetailsChanged,
+                    locationBottomSheetContentType = uiState.accountUiState.locationType
                 )
 
                 UserType.CRAFTSMAN -> ShowYourWorkContent(
@@ -212,7 +213,8 @@ fun AccountScreenContent(
                     onFrontNationalIdClick,
                     onBackNationalIdClick,
                     uiState.accountUiState.frontOfNationalIdUri,
-                    uiState.accountUiState.backOfNationalIdUri
+                    uiState.accountUiState.backOfNationalIdUri,
+                    interactionListener::onNextClicked
                 )
 
                 else -> {}
@@ -222,7 +224,7 @@ fun AccountScreenContent(
             onClick = interactionListener::onNextClicked,
             type = AppButtonType.Primary,
             text = textButton,
-            state = AppButtonState.Enable,
+            state = if (uiState.accountUiState.isNextButtonEnabled) AppButtonState.Enable else AppButtonState.Disabled,
             modifier = Modifier.fillMaxWidth()
         )
     }
