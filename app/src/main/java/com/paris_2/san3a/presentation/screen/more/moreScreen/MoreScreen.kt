@@ -192,6 +192,7 @@ private fun MoreScreenContent(
                                 .fillMaxWidth(),
                             textAlign = TextAlign.Center
                         )
+                        Spacer(modifier = Modifier.height(68.dp))
 
 
                         AnimatedVisibility(moreScreenState.showEditProfileBottomSheet) {
