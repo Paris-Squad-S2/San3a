@@ -35,12 +35,11 @@ class MessagesViewModel(
     }
 
     private fun getChatsForCurrentUser() {
-        tryToExecute(
-            execute = {
+        tryToObserve(
+            observe = {
                 getChatsByUserIdUseCase(userId = screenState.value.currentUserId)
             },
-            onSuccess = { chatsFlow ->
-                chatsFlow.collect { chats ->
+            onEach = { chats ->
                     updateState(
                         screenState.value.copy(
                             chatsMap = chats.toChatUIMap(screenState.value.currentUserId),
@@ -49,7 +48,6 @@ class MessagesViewModel(
                         )
                     )
                     getUserChatsInfo(screenState.value.chatsMap)
-                }
             },
             onError = { exception ->
                 updateState(screenState.value.copy(error = exception.message))

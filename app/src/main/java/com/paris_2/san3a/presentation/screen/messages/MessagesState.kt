@@ -36,7 +36,7 @@ fun Chat.toChatUI(userId: String): ChatUI {
         lastMessageTime = this.lastMessage?.time?.toString() ?: "",
         lastMessageReceiverId = this.lastMessage?.receiverId ?: "",
         unreadMessagesCount = this.unreadMessagesCount,
-        theOtherUserId = this.usersParticipantIds.firstOrNull { it != userId } ?: "",
+        theOtherUserId = this.usersParticipantIds.firstOrNull { it != userId } ?: userId,
     )
 }
 
