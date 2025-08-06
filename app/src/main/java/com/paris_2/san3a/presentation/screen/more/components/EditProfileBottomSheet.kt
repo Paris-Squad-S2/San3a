@@ -33,7 +33,7 @@ fun EditProfileBottomSheet(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 20.dp, start = 10.dp, end = 10.dp)
+                    .padding(top = 10.dp, bottom = 10.dp)
             ) {
                 Text(
                     text = stringResource(R.string.edit_profile),
