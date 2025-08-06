@@ -6,9 +6,9 @@ import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import kotlinx.coroutines.flow.Flow
 import kotlin.collections.mapOf
 
-class RequestDetailsDataSourceImpl(
+class RequestDataSourceImpl(
     private val fireStoreService: FireStoreService,
-): RequestDetailsDataSource {
+): RequestDataSource {
 
     override suspend fun addOffer(offer: OfferDto) {
         fireStoreService.addToCollection(

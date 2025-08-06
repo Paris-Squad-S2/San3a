@@ -23,7 +23,6 @@ import androidx.core.net.toUri
 import androidx.navigation.NavOptions
 import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
-import kotlinx.coroutines.delay
 
 class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,

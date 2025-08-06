@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,7 +34,7 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun MyRequestCustomerScreen(
+fun MyRequestScreen(
     viewModel: MyRequestCustomerViewModel = koinViewModel()
 ) {
     val state by viewModel.screenState.collectAsState()
@@ -80,7 +81,7 @@ private fun MyRequestScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Theme.colors.background.card),
+            .background(Theme.colors.background.screen),
     ) {
         Row(
             modifier = Modifier
@@ -125,16 +126,16 @@ private fun MyRequestScreenContent(
                     stringResource(R.string.completed),
                     stringResource(R.string.canceled)
                 )
-                val selectedIndex = remember { mutableStateOf(0) }
+                val selectedIndex = remember { mutableIntStateOf(0) }
                 AppTabBar(
                     tabItems = tabs,
-                    selectedIndex = selectedIndex.value,
+                    selectedIndex = selectedIndex.intValue,
                     onTabSelected = { index ->
-                        selectedIndex.value = index
+                        selectedIndex.intValue = index
                     },
                 )
 
-                when (selectedIndex.value) {
+                when (selectedIndex.intValue) {
                     0 -> {
                         val ongoingRequests = state.ongoing
                         if (ongoingRequests.isEmpty()) {

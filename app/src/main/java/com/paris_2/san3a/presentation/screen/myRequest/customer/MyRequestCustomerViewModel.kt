@@ -3,7 +3,9 @@ package com.paris_2.san3a.presentation.screen.myRequest.customer
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.delay
 
-class MyRequestCustomerViewModel : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState.Loading) {
+class MyRequestCustomerViewModel(
+    
+) : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState.Loading) {
 
     init {
         getRequests()
