@@ -1,10 +1,9 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
-import android.util.Log
-import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
 import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
@@ -16,13 +15,13 @@ import kotlinx.coroutines.flow.SharedFlow
 import java.util.Locale
 
 class CustomerHomeViewModel(
-    private val getAllServicesUseCase: GetAllServicesUseCase,
     private val getMostRequestedServicesUseCase: GetMostRequestedServicesUseCase,
     private val requestServicesUseCase: RequestServiceUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val updateNumOfRequestsUseCase: UpdateNumOfRequestsUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
+    private val getCustomerServiceUseCase: GetUserServicesUseCase,
 ) : CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
 
     private val _triggerVoiceSearch = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -301,7 +300,12 @@ class CustomerHomeViewModel(
 
     private fun getCities(stateName: String) {
         tryToExecute(
-            execute = { getLocationInfoUseCase.getCities(countryName = COUNTRY_NAME, stateName = stateName) },
+            execute = {
+                getLocationInfoUseCase.getCities(
+                    countryName = COUNTRY_NAME,
+                    stateName = stateName
+                )
+            },
             onSuccess = { cities ->
                 updateState(
                     screenState.value.copy(
@@ -331,13 +335,18 @@ class CustomerHomeViewModel(
 
     private fun loadServices() {
         tryToExecute(
-            execute = getAllServicesUseCase::invoke,
+            execute = {
+                getCustomerServiceUseCase(
+                    phoneNumber = getPhoneNumberUseCase(),
+                    isCraftsman = false
+                )
+            },
             onSuccess = { services ->
-                services.collect {
+                services.collect { userServices ->
                     updateState(
                         screenState.value.copy(
                             customerUiState = screenState.value.customerUiState.copy(
-                                services = it
+                                services = userServices
                             )
                         )
                     )
@@ -461,13 +470,14 @@ class CustomerHomeViewModel(
         )
         resetBottomSheetState()
     }
-companion object{
-     const val ARABIC_NAME = "arabicName"
-     const val ENGLISH_NAME = "englishName"
-     const val ARABIC_DESCRIPTION = "arabicDescription"
-     const val ENGLISH_DESCRIPTION = "englishDescription"
-     const val ARABIC_LANGUAGE = "ar"
-     const val UNKNOWN_ERROR = "Unknown Error"
-     const val COUNTRY_NAME = "Egypt"
-}
+
+    companion object {
+        const val ARABIC_NAME = "arabicName"
+        const val ENGLISH_NAME = "englishName"
+        const val ARABIC_DESCRIPTION = "arabicDescription"
+        const val ENGLISH_DESCRIPTION = "englishDescription"
+        const val ARABIC_LANGUAGE = "ar"
+        const val UNKNOWN_ERROR = "Unknown Error"
+        const val COUNTRY_NAME = "Egypt"
+    }
 }
