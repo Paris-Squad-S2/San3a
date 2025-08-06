@@ -32,6 +32,7 @@ import com.paris_2.san3a.presentation.screen.account.components.ShowYourWorkCont
 import com.paris_2.san3a.presentation.screen.account.components.VerifyIdentityContent
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.components.AppButton
+import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.asString
@@ -165,7 +166,9 @@ fun AccountScreenContent(
                     type = AppButtonType.Primary,
                     text = textButton,
                     state = uiState.accountUiState.accountButtonState.userTypeButtonState,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    size = AppButtonSize.Large
+
                 )
             }
 
@@ -180,7 +183,9 @@ fun AccountScreenContent(
                     type = AppButtonType.Primary,
                     text = textButton,
                     state = uiState.accountUiState.accountButtonState.serviceButtonState,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    size = AppButtonSize.Large
+
                 )
             }
 
@@ -197,7 +202,9 @@ fun AccountScreenContent(
                     type = AppButtonType.Primary,
                     text = textButton,
                     state = uiState.accountUiState.accountButtonState.profileButtonState,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    size = AppButtonSize.Large
+
                 )
             }
 
@@ -224,7 +231,8 @@ fun AccountScreenContent(
                         type = AppButtonType.Primary,
                         text = textButton,
                         state = uiState.accountUiState.accountButtonState.locationButtonState,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        size = AppButtonSize.Large
                     )
                 }
 
@@ -241,7 +249,9 @@ fun AccountScreenContent(
                         type = AppButtonType.Primary,
                         text = textButton,
                         state = uiState.accountUiState.accountButtonState.workShowCaseButtonState,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        size = AppButtonSize.Large
+
                     )
                 }
 
@@ -267,7 +277,9 @@ fun AccountScreenContent(
                         type = AppButtonType.Primary,
                         text = textButton,
                         state = uiState.accountUiState.accountButtonState.verifyIdentityButtonState,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        size = AppButtonSize.Large
+
                     )
 
                 }
