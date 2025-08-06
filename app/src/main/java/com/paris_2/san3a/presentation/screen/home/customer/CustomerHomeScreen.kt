@@ -46,6 +46,12 @@ import com.paris_2.san3a.presentation.shared.components.SearchBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
+import android.app.Activity
+import android.content.Intent
+import android.speech.RecognizerIntent
+import androidx.activity.result.ActivityResult
+import androidx.compose.runtime.LaunchedEffect
+import android.util.Log
 
 @Composable
 fun CustomerHomeScreen(
@@ -71,6 +77,56 @@ private fun CustomerHomeScreenContent(
             action.addBottomSheetImages(newImages)
         }
     )
+
+    val voiceSearchPrompt = stringResource(R.string.voice_search)
+
+    val voiceLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { result: ActivityResult ->
+            Log.d("CustomerHomeScreen", "voiceLauncher received result.")
+            if (result.resultCode == Activity.RESULT_OK) {
+                val spokenText = result.data
+                    ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    ?.firstOrNull()
+                Log.d("CustomerHomeScreen", "Recognized text: $spokenText")
+                spokenText?.let { action.onSpeechRecognized(it) }
+            }
+        }
+    )
+
+    LaunchedEffect(Unit) {
+        val viewModel = action as? CustomerHomeViewModel
+        if (viewModel == null) {
+            Log.e(
+                "CustomerHomeScreen",
+                "Mic event: action was not CustomerHomeViewModel, cannot collect triggerVoiceSearch."
+            )
+            return@LaunchedEffect
+        }
+        Log.d("CustomerHomeScreen", "LaunchedEffect started, collecting ViewModel mic events.")
+        viewModel.triggerVoiceSearch.collect {
+            Log.d(
+                "CustomerHomeScreen",
+                "triggerVoiceSearch collect: Launching voice recognizer intent."
+            )
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                )
+                putExtra(
+                    RecognizerIntent.EXTRA_PROMPT,
+                    voiceSearchPrompt
+                )
+                putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE,
+                    Locale.getDefault()
+                )
+            }
+            voiceLauncher.launch(intent)
+        }
+    }
+
     val servicesToDisplay = if (state.customerUiState.searchQuery.isNotEmpty())
         state.customerUiState.searchResults
     else
@@ -286,6 +342,13 @@ private fun CustomerHomeScreenContent(
                     value = state.customerUiState.searchQuery,
                     onValueChange = { action.onSearch(it) },
                     hint = stringResource(R.string.search),
+                    onMicClick = {
+                        Log.d(
+                            "CustomerHomeScreen",
+                            "Mic icon clicked. Calling action.onMicClick()."
+                        )
+                        action.onMicClick()
+                    },
                     modifier = Modifier
                         .padding(top = 16.dp, bottom = 24.dp)
                 )
