@@ -33,8 +33,8 @@ import com.paris_2.san3a.presentation.screen.account.components.VerifyIdentityCo
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
-import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
+import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.asString
 import org.koin.compose.viewmodel.koinViewModel
@@ -140,7 +140,7 @@ fun AccountScreenContent(
             } else {
                 Box(modifier = Modifier.size(48.dp))
             }
-            AccountProgressIndicator(progress = progress, modifier= Modifier.padding(end = 48.dp))
+            AccountProgressIndicator(progress = progress, modifier = Modifier.padding(end = 48.dp))
         }
         Spacer(modifier = Modifier.weight(1f))
         Text(
@@ -155,28 +155,68 @@ fun AccountScreenContent(
             style = Theme.textStyle.body.large.regular,
         )
         when (currentScreen) {
-            0 -> AccountTypeContent(
-                modifier = Modifier.padding(vertical = 32.dp),
-                onUserTypeSelected = interactionListener::onUserTypeSelected,
-                selectedType = uiState.accountUiState.userType
-            )
+            0 -> {
+                AccountTypeContent(
+                    modifier = Modifier.padding(vertical = 32.dp),
+                    onUserTypeSelected = interactionListener::onUserTypeSelected,
+                    selectedType = uiState.accountUiState.userType
+                )
 
-            1 -> ServicesContent(
-                services = uiState.accountUiState.serviceUiState,
-                onChipClick = interactionListener::onToggleServiceClicked,
-                modifier = Modifier.padding(vertical = 32.dp)
-            )
+                AppButton(
+                    onClick = interactionListener::onUserTypeButtonClicked,
+                    type = AppButtonType.Primary,
+                    text = textButton,
+                    state = uiState.accountUiState.accountButtonState.userTypeButtonState,
+                    modifier = Modifier.fillMaxWidth(),
+                    size = AppButtonSize.Large,
+                    loadingIcon = {
+                        LoadingScreen(modifier.size(25.dp))
+                    }
+                )
+            }
 
-            2 -> ProfileContent(
-                modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                name = uiState.accountUiState.customerName,
-                onNameChanged = interactionListener::onCustomerNameChanged,
-                onAddPhotoClick = onCustomerProfilePhotoClick,
-                profilePhotoUri = uiState.accountUiState.customerProfilePhotoUri
-            )
+            1 -> {
+                ServicesContent(
+                    services = uiState.accountUiState.serviceUiState,
+                    onChipClick = interactionListener::onToggleServiceClicked,
+                    modifier = Modifier.padding(vertical = 32.dp)
+                )
+                AppButton(
+                    onClick = interactionListener::onServiceButtonClicked,
+                    type = AppButtonType.Primary,
+                    text = textButton,
+                    state = uiState.accountUiState.accountButtonState.serviceButtonState,
+                    modifier = Modifier.fillMaxWidth(),
+                    size = AppButtonSize.Large,
+                    loadingIcon = {
+                        LoadingScreen(modifier.size(25.dp))
+                    }
+                )
+            }
+
+            2 -> {
+                ProfileContent(
+                    modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+                    name = uiState.accountUiState.customerName,
+                    onNameChanged = interactionListener::onCustomerNameChanged,
+                    onAddPhotoClick = onCustomerProfilePhotoClick,
+                    profilePhotoUri = uiState.accountUiState.customerProfilePhotoUri
+                )
+                AppButton(
+                    onClick = interactionListener::onProfileButtonClicked,
+                    type = AppButtonType.Primary,
+                    text = textButton,
+                    state = uiState.accountUiState.accountButtonState.profileButtonState,
+                    modifier = Modifier.fillMaxWidth(),
+                    size = AppButtonSize.Large,
+                    loadingIcon = {
+                        LoadingScreen(modifier.size(25.dp))
+                    }
+                )
+            }
 
             3 -> when (uiState.accountUiState.userType) {
-                UserType.CUSTOMER -> LocationContent(
+                UserType.CUSTOMER ->{ LocationContent(
                     modifier = Modifier.padding(vertical = 32.dp),
                     onGetLocationClicked = interactionListener::onGovernmentBottomSheetVisibilityToggled,
                     isGovernmentSheetShowed = uiState.accountUiState.isGovernmentBottomSheetShowed,
@@ -193,41 +233,76 @@ fun AccountScreenContent(
                     onAddressDetailsChange = interactionListener::onAddressDetailsChanged,
                     locationBottomSheetContentType = uiState.accountUiState.locationType
                 )
+                    AppButton(
+                        onClick = interactionListener::onLocationButtonClicked,
+                        type = AppButtonType.Primary,
+                        text = textButton,
+                        state = uiState.accountUiState.accountButtonState.locationButtonState,
+                        modifier = Modifier.fillMaxWidth(),
+                        size = AppButtonSize.Large,
+                        loadingIcon = {
+                            LoadingScreen(modifier.size(25.dp))
+                        }
+                    )
+                }
 
-                UserType.CRAFTSMAN -> ShowYourWorkContent(
-                    modifier = Modifier.padding(vertical = 32.dp),
-                    onAddWorkImagesClick = onWorkImageClick,
-                    workImages = uiState.accountUiState.workImagesUris,
-                    workDescription = uiState.accountUiState.workDescription,
-                    onDescriptionChanged = interactionListener::onDescriptionChanged
-                )
+                UserType.CRAFTSMAN -> {
+                    ShowYourWorkContent(
+                        modifier = Modifier.padding(vertical = 32.dp),
+                        onAddWorkImagesClick = onWorkImageClick,
+                        workImages = uiState.accountUiState.workImagesUris,
+                        workDescription = uiState.accountUiState.workDescription,
+                        onDescriptionChanged = interactionListener::onDescriptionChanged
+                    )
+                    AppButton(
+                        onClick = interactionListener::onShowWorkButtonClicked,
+                        type = AppButtonType.Primary,
+                        text = textButton,
+                        state = uiState.accountUiState.accountButtonState.workShowCaseButtonState,
+                        modifier = Modifier.fillMaxWidth(),
+                        size = AppButtonSize.Large,
+                        loadingIcon = {
+                            LoadingScreen(modifier.size(25.dp))
+                        }
+
+                    )
+                }
 
                 else -> {}
             }
 
             4 -> when (uiState.accountUiState.userType) {
-                UserType.CRAFTSMAN -> VerifyIdentityContent(
+                UserType.CRAFTSMAN -> {
+                    VerifyIdentityContent(
 
-                    modifier = Modifier.padding(
-                        top = 32.dp, bottom = 12.dp
-                    ),
-                    onFrontNationalIdClick,
-                    onBackNationalIdClick,
-                    uiState.accountUiState.frontOfNationalIdUri,
-                    uiState.accountUiState.backOfNationalIdUri,
-                    interactionListener::onNextClicked
-                )
+                        modifier = Modifier.padding(
+                            top = 32.dp, bottom = 12.dp
+                        ),
+                        onFrontOfNationalIdUploadClick = onFrontNationalIdClick,
+                        onBackOfNationalIdUploadClick = onBackNationalIdClick,
+                        frontOfNationalIdUri = uiState.accountUiState.frontOfNationalIdUri,
+                        backOfNationalIdUri = uiState.accountUiState.backOfNationalIdUri,
+                        onVerifyLaterClick = interactionListener::onVerifyIdentityButtonClicked
+                    )
 
-                else -> {}
+                    AppButton(
+                        onClick = interactionListener::onVerifyIdentityButtonClicked,
+                        type = AppButtonType.Primary,
+                        text = textButton,
+                        state = uiState.accountUiState.accountButtonState.verifyIdentityButtonState,
+                        modifier = Modifier.fillMaxWidth(),
+                        size = AppButtonSize.Large,
+                        loadingIcon = {
+                            LoadingScreen(modifier.size(25.dp))
+                        }
+
+                    )
+
+                }
+
+                else -> {
+                }
             }
         }
-        AppButton(
-            onClick = interactionListener::onNextClicked,
-            type = AppButtonType.Primary,
-            text = textButton,
-            size = AppButtonSize.Large,
-            state = if (uiState.accountUiState.isNextButtonEnabled) AppButtonState.Enable else AppButtonState.Disabled,
-            modifier = Modifier.fillMaxWidth()
-        )
     }
 }

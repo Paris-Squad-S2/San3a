@@ -140,7 +140,7 @@ fun AppButton(
                 )
             }
 
-            AnimatedVisibility(visible = isLoading, enter = fadeIn()) {
+            AnimatedVisibility(modifier = Modifier.padding(start = 5.dp),visible = isLoading, enter = fadeIn()) {
                 loadingIcon?.invoke()
             }
         }
