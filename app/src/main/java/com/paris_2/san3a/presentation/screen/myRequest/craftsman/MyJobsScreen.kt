@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -50,7 +51,7 @@ private fun MyRequestScreenContent(
 
         AppBar(
             modifier = modifier
-                .fillMaxSize(),
+                .fillMaxWidth(),
             title = stringResource(R.string.my_jobs),
             onBackClick = {},
             actionIcon = {
