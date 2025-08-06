@@ -22,6 +22,8 @@ import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSourceImp
 import com.paris_2.san3a.data.source.remote.notification.NotificationDataSource
 import com.paris_2.san3a.data.source.remote.notification.NotificationDataSourceImpl
+import com.paris_2.san3a.data.source.remote.requestDetails.RequestDataSource
+import com.paris_2.san3a.data.source.remote.requestDetails.RequestDataSourceImpl
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSourceImpl
 import com.paris_2.san3a.data.source.remote.storage.FirebaseStorageDataSource
@@ -51,4 +53,5 @@ val dataModule = module {
         PreferenceDataStoreFactory.create { get<Context>().preferencesDataStoreFile("app_datastore") }
     }
     singleOf(::NotificationDataSourceImpl) { bind<NotificationDataSource>() }
+    singleOf(::RequestDataSourceImpl) { bind<RequestDataSource>() }
 }

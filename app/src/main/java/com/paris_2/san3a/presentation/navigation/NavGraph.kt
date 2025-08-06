@@ -8,15 +8,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.presentation.screen.account.AccountScreen
 import com.paris_2.san3a.presentation.screen.home.craftsman.CraftsmanHomeScreen
 import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeScreen
 import com.paris_2.san3a.presentation.screen.messages.MessagesScreen
 import com.paris_2.san3a.presentation.screen.messagesDetails.MessageDetails
+import com.paris_2.san3a.presentation.screen.myRequest.craftsman.MyJobsScreen
+import com.paris_2.san3a.presentation.screen.myRequest.customer.MyRequestScreen
 import com.paris_2.san3a.presentation.screen.more.locationScreen.LocationScreen
 import com.paris_2.san3a.presentation.screen.more.moreScreen.MoreScreen
-import com.paris_2.san3a.presentation.screen.myRequest.MyRequestScreen
 import com.paris_2.san3a.presentation.screen.myService.MyServiceScreen
 import com.paris_2.san3a.presentation.screen.notification.NotificationScreen
 import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingScreen
@@ -72,7 +72,7 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.Home> { CraftsmanHomeScreen() }
         composable<Destinations.Messages> { MessagesScreen() }
         composable<Destinations.MessageDetails> { MessageDetails() }
-        composable<Destinations.MyRequest> { MyRequestScreen() }
+        composable<Destinations.MyRequest> { MyJobsScreen() }
         composable<Destinations.Notification> { NotificationScreen() }
         composable<Destinations.More> { MoreScreen() }
         composable<Destinations.Verification> { VerificationScreen() }

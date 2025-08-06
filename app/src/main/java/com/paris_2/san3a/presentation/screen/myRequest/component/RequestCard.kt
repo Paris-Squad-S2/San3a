@@ -3,6 +3,8 @@ package com.paris_2.san3a.presentation.screen.myRequest.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,17 +12,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,42 +31,30 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.presentation.screen.myRequest.customer.MyRequestCustomerUi
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.CraftsmanAvatar
-import com.paris_2.san3a.presentation.shared.components.IconPosition
+import com.paris_2.san3a.presentation.shared.components.ServiceTypeCard
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.shared.utils.BasePreview
+import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 
 @Composable
 fun RequestCard(
     modifier: Modifier = Modifier,
-    icon: Painter,
-    type: String,
-    date: String,
-    time: String,
-    craftsmanImageUri: Painter?,
-    craftsmanName: String?,
-    rating: Float?,
-    actionButtonText: String,
+    requestUi: MyRequestCustomerUi = MyRequestCustomerUi(),
     onActionClick: () -> Unit,
-    showOffersLink: Boolean = false,
-    buttonIconPosition: IconPosition? = null,
-    buttonIcon: ImageVector? = null,
-    isVerified: Boolean = false,
 ) {
     Card(
         modifier = modifier
@@ -76,167 +67,130 @@ fun RequestCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
+            ServiceTypeCard(title = requestUi.requestTitle, serviceType = requestUi.serviceType)
+
+            if (requestUi.status == RequestStatus.ONGOING && requestUi.isAcceptedOffer) {
+                HorizontalDivider(
                     modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .background(Theme.colors.additional.secondary.blue),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    thickness = 1.dp,
+                    color = Theme.colors.shade.quaternary
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        painter = icon,
-                        contentDescription = null,
-                        tint = Theme.colors.brand.primary,
-                        modifier = Modifier.size(24.dp)
+                    IconWithText(
+                        icon = ImageVector.vectorResource(R.drawable.ic_calendar_minimalistic_outline),
+                        text = requestUi.date,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)
                     )
-                }
 
-                Spacer(modifier = Modifier.width(8.dp))
+                    VerticalDivider(
+                        modifier = Modifier
+                            .height(16.dp)
+                            .clip(RoundedCornerShape(Theme.radius.full)),
+                        thickness = 1.dp,
+                        color = Theme.colors.shade.quaternary,
 
-                Column {
-                    Text(
-                        text = stringResource(R.string.details_title),
-                        style = Theme.textStyle.body.medium.semibold,
-                        color = Theme.colors.shade.primary,
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = type,
-                        style = Theme.textStyle.body.small.medium,
-                        color = Theme.colors.shade.secondary,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
+                        )
+
+                    IconWithText(
+                        icon = ImageVector.vectorResource(R.drawable.ic_clock_circle_outline),
+                        text = requestUi.time,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier
-                    .height(1.dp)
-                    .background(Theme.colors.shade.quaternary)
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                thickness = 1.dp,
+                color = Theme.colors.shade.quaternary
             )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconWithText(
-                    icon = ImageVector.vectorResource(R.drawable.ic_calendar_minimalistic_outline),
-                    text = date
-                )
-
-                Spacer(
-                    modifier = Modifier
-                        .width(16.dp)
-                )
-
-                Divider(
-                    modifier = Modifier
-                        .height(16.dp)
-                        .width(1.dp)
-                        .background(Theme.colors.shade.quaternary)
-                )
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                IconWithText(
-                    icon = ImageVector.vectorResource(R.drawable.ic_clock_circle_outline),
-                    text = time,
-                )
-            }
-
-
-            Spacer(modifier = Modifier.height(12.dp))
-            Divider(
-                modifier = Modifier
-                    .background(Theme.colors.shade.quaternary)
-                    .height(1.dp)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CraftsmanSection(
-                    imageUri = craftsmanImageUri,
-                    name = craftsmanName,
-                    rating = rating,
-                    showOffersLink = showOffersLink,
-                    isVerified = isVerified
+                    imageUri = requestUi.craftsmanURL,
+                    name = requestUi.craftsmanName,
+                    rating = requestUi.craftsmanRating,
+                    isAcceptedOffer = requestUi.isAcceptedOffer,
+                    isVerified = requestUi.isCraftsmanVerified,
+                    numberOfOffers = requestUi.numberOfOffers
                 )
-                AppButton(
-                    text = actionButtonText,
-                    onClick = onActionClick,
-                    type = AppButtonType.Secondary,
-                    size = AppButtonSize.Small,
-                    iconPosition = buttonIconPosition,
-                    icon = buttonIcon
-                )
+
+                val buttonConfig = getButtonConfig(requestUi)
+
+                if (buttonConfig.text != null) {
+                    AppButton(
+                        text = buttonConfig.text,
+                        onClick = onActionClick,
+                        type = AppButtonType.Secondary,
+                        size = AppButtonSize.Small,
+                        icon = buttonConfig.icon
+                    )
+                }
             }
         }
     }
 }
 
-
 @Composable
-private fun IconWithText(icon: ImageVector, text: String) {
-    val layoutDirection = LocalLayoutDirection.current
-    val isRtl = layoutDirection == LayoutDirection.Rtl
+private fun IconWithText(modifier: Modifier, icon: ImageVector, text: String) {
 
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        if (isRtl) {
-            Text(
-                text = text,
-                style = Theme.textStyle.body.small.medium,
-                color = Theme.colors.shade.secondary
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
-                tint = Theme.colors.shade.secondary
-            )
-        } else {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
-                tint = Theme.colors.shade.secondary
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = text,
-                style = Theme.textStyle.body.small.medium,
-                color = Theme.colors.shade.secondary
-            )
-        }
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(16.dp),
+            tint = Theme.colors.shade.secondary
+        )
+
+        Text(
+            modifier = Modifier.padding(start = 4.dp),
+            text = text,
+            style = Theme.textStyle.body.small.medium,
+            color = Theme.colors.shade.secondary
+        )
     }
 }
 
 
 @Composable
 private fun CraftsmanSection(
-    imageUri: Painter?,
+    imageUri: String?,
     name: String?,
     rating: Float?,
-    showOffersLink: Boolean,
+    isAcceptedOffer: Boolean,
     isVerified: Boolean = false,
+    numberOfOffers: Int = 0
 ) {
+
+
     if (imageUri != null && !name.isNullOrEmpty()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-                AsyncImage(
-                    model = imageUri,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                )
+            AsyncImage(
+                model = imageUri,
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(CircleShape)
+            )
 
             if (isVerified) {
                 CraftsmanAvatar(
@@ -244,7 +198,7 @@ private fun CraftsmanSection(
                     isVerify = true,
                     modifier = Modifier.size(36.dp)
                 )
-            } else if (imageUri != null ) {
+            } else {
                 Image(
                     painter = rememberAsyncImagePainter(model = imageUri),
                     contentDescription = null,
@@ -263,34 +217,21 @@ private fun CraftsmanSection(
                 )
                 rating?.let {
                     Row(
+                        modifier = Modifier.padding(top = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        if (LocalLayoutDirection.current == LayoutDirection.Rtl) {
-                            Text(
-                                "$it",
-                                style = Theme.textStyle.body.small.medium,
-                                color = Theme.colors.shade.secondary
-                            )
-                            Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.ic_star_bold),
-                                contentDescription = null,
-                                tint = Theme.colors.additional.primary.yellow,
-                                modifier = Modifier.size(16.dp)
-                            )
-                        } else {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.ic_star_bold),
-                                contentDescription = null,
-                                tint = Theme.colors.additional.primary.yellow,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Text(
-                                "$it",
-                                style = Theme.textStyle.body.small.medium,
-                                color = Theme.colors.shade.secondary
-                            )
-                        }
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_star_bold),
+                            contentDescription = null,
+                            tint = Theme.colors.additional.primary.yellow,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            "$it",
+                            style = Theme.textStyle.body.small.medium,
+                            color = Theme.colors.shade.secondary
+                        )
                     }
                 }
             }
@@ -341,14 +282,17 @@ private fun CraftsmanSection(
             Column {
                 Text(
                     text = stringResource(R.string.craftsman_not_chosen),
-                    style = Theme.textStyle.body.small.medium
+                    style = Theme.textStyle.body.small.medium,
+                    color = Theme.colors.shade.secondary
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
-                if (showOffersLink) {
+                if (!isAcceptedOffer) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.clickable {}
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .clickable {}
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_clipboard_outline),
@@ -360,7 +304,10 @@ private fun CraftsmanSection(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = stringResource(R.string.offers),
+                            text = stringResource(
+                                R.string.number_of_offers,
+                                numberOfOffers
+                            ),
                             style = Theme.textStyle.body.small.medium,
                             color = Theme.colors.brand.primary
                         )
@@ -371,3 +318,70 @@ private fun CraftsmanSection(
 
     }
 }
+
+@PreviewMultiDevices
+@Composable
+fun RequestCardNoCraftsmanWithOffersPreview() {
+    BasePreview {
+        val scrollState = rememberScrollState()
+        Column(
+            Modifier
+                .padding(4.dp)
+                .scrollable(state = scrollState, orientation = Orientation.Vertical)
+        ) {
+            RequestCard(
+                requestUi = MyRequestCustomerUi(
+                    requestTitle = "request title",
+                    serviceType = "Plumbing",
+                    numberOfOffers = 3,
+                    date = "2025-08-04",
+                    time = "10:30 AM",
+                    craftsmanName = null,
+                    craftsmanURL = null,
+                    craftsmanRating = null,
+                    isAcceptedOffer = false,
+                    isCraftsmanVerified = true
+                ),
+                onActionClick = {},
+
+                )
+            Spacer(Modifier.height(16.dp))
+            RequestCard(
+
+                requestUi = MyRequestCustomerUi(
+                    requestTitle = "request title",
+                    serviceType = "Electrical",
+                    numberOfOffers = 3,
+                    date = "2025-08-05",
+                    time = "2:00 PM",
+                    craftsmanName = "Mohamed Ali",
+                    craftsmanURL = "",
+                    craftsmanRating = 4.5f,
+                    isAcceptedOffer = true,
+                    isCraftsmanVerified = true
+                ),
+                onActionClick = {},
+            )
+            Spacer(Modifier.height(16.dp))
+            RequestCard(
+                requestUi = MyRequestCustomerUi(
+                    requestTitle = "Electrical Work",
+                    serviceType = "Electrical",
+                    numberOfOffers = 3,
+                    date = "2025-08-06",
+                    time = "9:00 AM",
+                    craftsmanName = "Ahmed salah",
+                    craftsmanURL = "",
+                    craftsmanRating = 2.5f,
+                    isAcceptedOffer = true,
+                    isCraftsmanVerified = false,
+                    status = RequestStatus.COMPLETED,
+                    isRated = true
+                ),
+                onActionClick = {},
+            )
+        }
+    }
+}
+
+

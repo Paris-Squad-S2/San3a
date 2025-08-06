@@ -25,11 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.RequestService
+import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.StatsContainer
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.RequestCardForCraftsMan
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import kotlinx.datetime.LocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -212,6 +214,10 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                     RequestService(
                         id = "2",
@@ -223,6 +229,10 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                     RequestService(
                         id = "3",
@@ -234,6 +244,10 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                 ),
                 availableJobs = listOf(
@@ -247,6 +261,10 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                     RequestService(
                         id = "2",
@@ -258,6 +276,10 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                     RequestService(
                         id = "3",
@@ -269,6 +291,10 @@ private fun Preview() {
                         locationDetails = "",
                         image = listOf(),
                         serviceType = "",
+                        selectedCraftsmanId = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                 )
             )

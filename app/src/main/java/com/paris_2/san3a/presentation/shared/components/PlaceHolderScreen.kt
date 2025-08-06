@@ -44,7 +44,8 @@ fun PlaceHolderScreen(
             Text(
                 text = stringResource(title),
                 style = Theme.textStyle.title.small,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
+                color = Theme.colors.shade.primary
             )
         }
         description?.let {
@@ -52,7 +53,8 @@ fun PlaceHolderScreen(
                 text = stringResource(description),
                 style = Theme.textStyle.body.medium.regular,
                 modifier = Modifier.padding(bottom = 24.dp),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Theme.colors.shade.secondary
             )
         }
         action?.let {
