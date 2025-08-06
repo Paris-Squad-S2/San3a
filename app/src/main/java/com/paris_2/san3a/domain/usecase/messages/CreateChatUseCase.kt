@@ -5,7 +5,7 @@ import com.paris_2.san3a.domain.repository.ChatRepository
 class CreateChatUseCase(
     private val chatRepository: ChatRepository
 ) {
-    suspend operator fun invoke(participants: List<String>) {
-        chatRepository.createChat(participants)
+    suspend operator fun invoke(participants: List<String>): String {
+        return chatRepository.createChat(participants)
     }
 }
