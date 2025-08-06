@@ -83,6 +83,16 @@ class RequestDataSourceImpl(
         )
     }
 
+    override fun getCraftsManRequests(userId: String): Flow<List<RequestServiceDto>> {
+        return fireStoreService.streamCollection(
+            path = REQUEST_DETAILS_COLLECTION,
+            fromJson = RequestServiceDto::fromJson,
+            queryBuilder = { query ->
+                query.whereEqualTo("selectedCraftsmanId", userId)
+            }
+        )
+    }
+
 
     companion object{
         const val REQUEST_DETAILS_COLLECTION = "service_requests"

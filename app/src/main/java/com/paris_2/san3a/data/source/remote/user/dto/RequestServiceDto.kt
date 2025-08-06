@@ -14,7 +14,7 @@ data class RequestServiceDto(
     val image: List<String>,
     val offers: List<Double>,
     val userId: String,
-    val selectedCraftsmanId: String,
+    val selectedCraftsmanId: String?,
     val requestStatus: String
 ) {
     companion object {
@@ -32,7 +32,7 @@ data class RequestServiceDto(
                 offers = (data["offers"] as? List<*>)?.mapNotNull { (it as? Number)?.toDouble() }
                     ?: emptyList(),
                 userId = data["userId"] as? String ?: "",
-                selectedCraftsmanId = data["selectedCraftsmanId"] as? String ?: "",
+                selectedCraftsmanId = data["selectedCraftsmanId"] as? String,
                 requestStatus = data["requestStatus"] as? String ?: ""
             )
         }
@@ -48,11 +48,13 @@ data class RequestServiceDto(
             "image" to image,
             "offers" to offers,
             "userId" to userId,
-            "selectedCraftsmanId" to selectedCraftsmanId,
             "time" to time,
             "state" to state,
             "requestStatus" to requestStatus
         )
+        if (selectedCraftsmanId != null) {
+            map["selectedCraftsmanId"] = selectedCraftsmanId
+        }
         return map
     }
 }

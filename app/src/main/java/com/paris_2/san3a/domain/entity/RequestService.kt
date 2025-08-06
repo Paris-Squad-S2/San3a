@@ -15,7 +15,7 @@ data class RequestService(
     val state: String,
     val image : List<String>,
     val offers: List<Double>,
-    val selectedCraftsmanId: String
+    val selectedCraftsmanId: String?
 )
 
 enum class RequestStatus {

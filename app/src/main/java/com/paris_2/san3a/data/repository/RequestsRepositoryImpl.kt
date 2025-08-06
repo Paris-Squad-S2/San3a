@@ -68,5 +68,11 @@ class RequestsRepositoryImpl(
             .catch { throw GetCustomerRequestsException() }
     }
 
+    override fun getCraftsManRequests(userId: String): Flow<List<RequestService>> {
+        return requestDataSource.getCraftsManRequests(userId)
+            .map { list -> list.map { it.toEntity() } }
+            .catch { throw GetCustomerRequestsException() }
+    }
+
 
 }

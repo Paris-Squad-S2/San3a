@@ -13,4 +13,5 @@ interface RequestsRepository {
     suspend fun assignRequestToCraftsman(requestId: String, craftsmanId: String)
     suspend fun acceptOffer(offerId: String)
     fun getCustomerRequests(userId: String): Flow<List<RequestService>>
+    fun getCraftsManRequests(userId: String): Flow<List<RequestService>>
 }
