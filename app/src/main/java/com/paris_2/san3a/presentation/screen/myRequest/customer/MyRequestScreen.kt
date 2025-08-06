@@ -76,7 +76,9 @@ private fun MyRequestScreenContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(30.dp),
-                    action = {},
+                    action = {
+                        myRequestCustomerInteractionListener.onRetryClick()
+                    },
                     actionText = R.string.try_again,
                     image = R.drawable.img_lost_connection,
                     title = R.string.oops_no_internet,
@@ -198,6 +200,10 @@ fun MyRequestScreenPreview() {
                 }
 
                 override fun onNotificationClick() {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onRetryClick() {
                     TODO("Not yet implemented")
                 }
             },

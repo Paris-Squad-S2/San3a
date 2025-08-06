@@ -81,4 +81,8 @@ class MyRequestCustomerViewModel(
     override fun onNotificationClick() {
         navigate(Destinations.Notification)
     }
+
+    override fun onRetryClick() {
+        getCustomerPhone()
+    }
 }
