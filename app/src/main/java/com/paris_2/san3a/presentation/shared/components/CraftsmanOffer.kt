@@ -1,37 +1,27 @@
 package com.paris_2.san3a.presentation.shared.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -144,8 +134,6 @@ fun CraftsManOffer(
                 .padding(16.dp),
             painter = painter,
             isVerified = offerDetails.isVerify,
-            onChatClick = onChatClick,
-            onAcceptOfferClick = onAcceptOfferClick,
             name = offerDetails.name,
             postedTime = offerDetails.postedTime,
             description = offerDetails.description,
@@ -153,8 +141,33 @@ fun CraftsManOffer(
             rate = offerDetails.rate,
             reviewsNumber = offerDetails.reviewsNumber,
             status = offerDetails.status,
-            time = offerDetails.time
-
+            time = offerDetails.time,
+            stickyFooter = {
+                if (it == OfferStatus.PENDING_OFFER)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        AppButton(
+                            type = AppButtonType.Secondary,
+                            onClick = { },
+                            text = stringResource(R.string.chat),
+                            modifier = Modifier.weight(1f),
+                            size = AppButtonSize.Small,
+                            state = AppButtonState.Enable,
+                            enableSecondaryBackgroundColor = Theme.colors.shade.quaternary
+                        )
+                        AppButton(
+                            type = AppButtonType.Primary,
+                            onClick = {},
+                            text = stringResource(R.string.accept_offer),
+                            modifier = Modifier.weight(1f),
+                            size = AppButtonSize.Small
+                        )
+                    }
+            }
         )
     }
 }

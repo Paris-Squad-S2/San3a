@@ -14,7 +14,7 @@ class MyOfferCraftsmanViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getOffersUseCase : GetOffersUseCase,
-) : BaseViewModel<MyOfferCraftsmanScreenState>(MyOfferCraftsmanScreenState()), MyRequestCustomerInteractionListener {
+) : BaseViewModel<MyOfferCraftsmanScreenState>(MyOfferCraftsmanScreenState()), MyJobCraftsmanInteractionListener {
 
     init {
         getCustomerPhone()
@@ -60,7 +60,7 @@ class MyOfferCraftsmanViewModel(
                     MyOfferCraftsmanScreenState(
                         isLoading = false,
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            ongoing = result.filter { it.status == RequestStatus.ONGOING },
+                            ongoing = listOf(MyJobOfferUiState()),
                             completed = result.filter { it.status == RequestStatus.COMPLETED },
                             canceled = result.filter { it.status == RequestStatus.CANCELLED }
                         )
@@ -79,6 +79,14 @@ class MyOfferCraftsmanViewModel(
     }
 
     override fun onRequestClick(requestId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onSendMessageClick(phoneNumber: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onViewRequestDetails(requestId: String) {
         TODO("Not yet implemented")
     }
 
