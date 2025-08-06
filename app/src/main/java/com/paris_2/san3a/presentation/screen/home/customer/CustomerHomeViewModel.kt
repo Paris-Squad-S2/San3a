@@ -396,7 +396,34 @@ class CustomerHomeViewModel(
         navigate(Destinations.Notification)
     }
 
-    override fun onSearch(query: String) {}
+    override fun onSearch(query: String) {
+        val allServices = screenState.value.customerUiState.services
+        val searchQuery = query.trim().lowercase()
+
+        val results = if (searchQuery.isEmpty()) {
+            emptyList()
+        } else {
+            allServices.filter { service ->
+                val titleEn = service.title["englishName"]?.lowercase() ?: ""
+                val titleAr = service.title["arabicName"]?.lowercase() ?: ""
+                val descEn = service.description["englishDescription"]?.lowercase() ?: ""
+                val descAr = service.description["arabicDescription"]?.lowercase() ?: ""
+
+                titleEn.contains(searchQuery) ||
+                        titleAr.contains(searchQuery) ||
+                        descEn.contains(searchQuery) ||
+                        descAr.contains(searchQuery)
+            }
+        }
+        updateState(
+            screenState.value.copy(
+                customerUiState = screenState.value.customerUiState.copy(
+                    searchQuery = query,
+                    searchResults = results
+                )
+            )
+        )
+    }
 
     override fun onServiceClick(serviceId: String) {
         val selectedService = screenState.value.customerUiState.services.find { it.id == serviceId }
