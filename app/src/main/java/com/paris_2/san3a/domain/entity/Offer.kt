@@ -1,12 +1,15 @@
 package com.paris_2.san3a.domain.entity
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
+
 data class Offer(
     val id: String,
     val requestId: String,
     val craftsmanId: String,
     val price: Double,
-    val preferredDate: String,
-    val preferredTime: String,
+    val preferredDate: LocalDate,
+    val preferredTime: LocalTime,
     val messageToCustomer: String,
     val isAccepted: Boolean
 )

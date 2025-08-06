@@ -30,6 +30,7 @@ import com.paris_2.san3a.presentation.screen.home.craftsman.components.StatsCont
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.RequestCardForCraftsMan
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import kotlinx.datetime.LocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -213,7 +214,7 @@ private fun Preview() {
                         image = listOf(),
                         serviceType = "",
                         selectedCraftsmanId = "",
-                        time = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
                         state = ""
                     ),
                     RequestService(
@@ -227,7 +228,7 @@ private fun Preview() {
                         image = listOf(),
                         serviceType = "",
                         selectedCraftsmanId = "",
-                        time = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
                         state = ""
                     ),
                     RequestService(
@@ -241,7 +242,7 @@ private fun Preview() {
                         image = listOf(),
                         serviceType = "",
                         selectedCraftsmanId = "",
-                        time = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
                         state = ""
                     ),
                 ),
@@ -257,7 +258,7 @@ private fun Preview() {
                         image = listOf(),
                         serviceType = "",
                         selectedCraftsmanId = "",
-                        time = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
                         state = ""
                     ),
                     RequestService(
@@ -271,7 +272,7 @@ private fun Preview() {
                         image = listOf(),
                         serviceType = "",
                         selectedCraftsmanId = "",
-                        time = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
                         state = ""
                     ),
                     RequestService(
@@ -285,7 +286,7 @@ private fun Preview() {
                         image = listOf(),
                         serviceType = "",
                         selectedCraftsmanId = "",
-                        time = "",
+                        time = LocalDateTime(2023, 10, 1, 12, 0, 0),
                         state = ""
                     ),
                 )

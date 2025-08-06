@@ -41,6 +41,7 @@ import com.paris_2.san3a.presentation.shared.components.RequestDescriptionConten
 import com.paris_2.san3a.presentation.shared.components.RequestTitleContent
 import com.paris_2.san3a.presentation.shared.components.SearchBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import kotlinx.datetime.LocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
 
@@ -180,7 +181,7 @@ private fun CustomerHomeScreenContent(
                                     location = "${state.bottomSheetUiState.bottomSheetSelectedGovernment}, ${state.bottomSheetUiState.bottomSheetSelectedCity}",
                                     locationDetails = state.bottomSheetUiState.bottomSheetAddressDetails,
                                     image = state.bottomSheetUiState.bottomSheetImages,
-                                    userId = state.customerUiState.id
+                                    userId = state.customerUiState.id,
                                 ),
                                 state.bottomSheetUiState.bottomSheetServiceId
                             )

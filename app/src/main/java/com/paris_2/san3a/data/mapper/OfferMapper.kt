@@ -8,8 +8,8 @@ fun Offer.toDto()  = OfferDto(
     requestId = requestId,
     craftsmanId = craftsmanId,
     price = price,
-    preferredDate = preferredDate,
-    preferredTime = preferredTime,
+    preferredDate = preferredDate.toString(),
+    preferredTime = preferredTime.toString(),
     messageToCustomer = messageToCustomer,
     isAccepted = isAccepted
 )
@@ -19,8 +19,8 @@ fun OfferDto.toEntity() = Offer(
     requestId = requestId,
     craftsmanId = craftsmanId,
     price = price,
-    preferredDate = preferredDate,
-    preferredTime = preferredTime,
+    preferredDate = kotlinx.datetime.LocalDate.parse(preferredDate),
+    preferredTime = kotlinx.datetime.LocalTime.parse(preferredTime),
     messageToCustomer = messageToCustomer,
     isAccepted = isAccepted
 )
