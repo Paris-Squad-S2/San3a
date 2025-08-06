@@ -39,38 +39,7 @@ fun MyRequestScreen(
 ) {
     val state by viewModel.screenState.collectAsState()
 
-    when (state) {
-        is MyRequestCustomerScreenState.Loading -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.card)
-            ) {
-                LoadingScreen(modifier = Modifier.align(Alignment.Center))
-            }
-        }
-
-        is MyRequestCustomerScreenState.Error -> {
-            val error = (state as MyRequestCustomerScreenState.Error).message
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.card)
-            ) {
-                PlaceHolderScreen(
-                    action = {},
-                    actionText = R.string.try_again,
-                    image = R.drawable.img_lost_connection,
-                    title = R.string.oops_no_internet,
-                    description = R.string.please_check_your_connection_and_try_again_we_ll_keep_trying_in_the_background
-                )
-            }
-        }
-
-        is MyRequestCustomerScreenState.Success -> {
-            MyRequestScreenContent(state = state)
-        }
-    }
+    MyRequestScreenContent(state = state)
 }
 
 @Composable

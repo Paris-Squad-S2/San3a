@@ -1,6 +1,8 @@
 package com.paris_2.san3a.presentation.screen.myRequest.craftsman
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 import org.koin.compose.viewmodel.koinViewModel
@@ -9,6 +11,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun MyJobsScreen(
     viewModel: MyRequestCraftsmanViewModel = koinViewModel()
 ) {
+    val state by viewModel.screenState.collectAsState()
     MyRequestScreenContent()
 }
 @Composable
