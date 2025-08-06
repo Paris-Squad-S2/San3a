@@ -82,6 +82,7 @@ private fun MoreScreenContent(
     onPickImageClick: () -> Unit,
 ) {
     val scroll = rememberScrollState()
+    val context = LocalContext.current
 
     Box(
         Modifier
@@ -203,7 +204,13 @@ private fun MoreScreenContent(
                             isVisible = moreScreenState.showLanguageBottomSheet,
                             onDismissRequest = moreInteractionListener::onCloseSelectedLanguageBottomSheet,
                             selectedLanguage = moreScreenState.moreUiState.selectedLanguage,
-                            onLanguageSelected = moreInteractionListener::onLanguageSelected,
+                            onLanguageSelected =
+                                {language ->
+                                    moreInteractionListener.onLanguageSelected(language)
+                                    val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+                                    intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    context.startActivities(arrayOf(intent))
+                                },
                         )
                     }
 
@@ -219,7 +226,9 @@ private fun MoreScreenContent(
                         .fillMaxWidth()
                         .statusBarsPadding()
                         .padding(start = 12.dp, end = 12.dp, top = 16.dp)
-                        .align(Alignment.TopCenter)
+                        .align(Alignment.TopCenter),
+                    onClick = moreInteractionListener::onDismissSnackBar
+
                 )
             }
         }
@@ -232,7 +241,8 @@ private fun MoreScreenContent(
                         .fillMaxWidth()
                         .statusBarsPadding()
                         .padding(start = 12.dp, end = 12.dp, top = 16.dp)
-                        .align(Alignment.TopCenter)
+                        .align(Alignment.TopCenter),
+                    onClick = moreInteractionListener::onDismissSnackBar
                 )
             }
         }
@@ -309,6 +319,10 @@ fun MoreScreenContentPreview() {
             }
 
             override fun onClickRetry() {
+
+            }
+
+            override fun onDismissSnackBar() {
 
             }
 

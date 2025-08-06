@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.more.moreScreen
 import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
+import coil3.toUri
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountType
@@ -54,7 +55,8 @@ data class UserUiState(
     val rating: Double = 0.0,
     val phoneNumber: String = "",
     val isVerify: Boolean = false,
-    val isCraftsman: Boolean = false,
+    val isCraftsman: Boolean = true,
+    val previousImage: Uri? = null,
 )
 
 class MoreViewModel(
@@ -72,10 +74,9 @@ class MoreViewModel(
 
 
     private fun fetchData() {
+        getPhoneNumber()
         getDarkMode()
         getLanguageSelected()
-        updatePhoneNumber()
-        getUserInformation()
     }
 
     private fun getLanguageSelected() {
@@ -90,8 +91,6 @@ class MoreViewModel(
         selectedLanguage.collect { languageSelected ->
             updateState(
                 screenState.value.copy(
-                    isNoInternet = false,
-                    isLoading = false,
                     errorMessage = null,
                     showSnackBarError = false,
                     moreUiState = screenState.value.moreUiState.copy(
@@ -107,13 +106,11 @@ class MoreViewModel(
             screenState.value.copy(
                 errorMessage = R.string.occrus_error_when_get_languag_selected,
                 showSnackBarError = true,
-                isNoInternet = false,
-                isLoading = false,
             )
         )
     }
 
-    private fun updatePhoneNumber() {
+    private fun getPhoneNumber() {
         tryToExecute(
             execute = { getPhoneNumberUseCase() },
             onSuccess = ::onGetPhoneNumberSuccess,
@@ -142,8 +139,6 @@ class MoreViewModel(
             isDarkMode.collectLatest {
                 updateState(
                     screenState.value.copy(
-                        isNoInternet = false,
-                        isLoading = false,
                         errorMessage = null,
                         showSnackBarError = false,
                         moreUiState = screenState.value.moreUiState.copy(
@@ -161,8 +156,6 @@ class MoreViewModel(
             screenState.value.copy(
                 errorMessage = R.string.occrus_error_when_get_dark_mode,
                 showSnackBarError = true,
-                isNoInternet = false,
-                isLoading = false,
             )
         )
     }
@@ -209,8 +202,6 @@ class MoreViewModel(
             screenState.value.copy(
                 errorMessage = null,
                 showSnackBarError = false,
-                isNoInternet = false,
-                isLoading = false,
                 moreUiState = screenState.value.moreUiState.copy(
                     userUiState = screenState.value.moreUiState.userUiState.copy(
                         phoneNumber = phoneNumber
@@ -218,6 +209,7 @@ class MoreViewModel(
                 )
             )
         )
+        getUserInformation()
     }
 
     private fun onGetPhoneNumberError(th: Throwable) {
@@ -225,8 +217,6 @@ class MoreViewModel(
             screenState.value.copy(
                 errorMessage = R.string.phone_number_not_found,
                 showSnackBarError = true,
-                isNoInternet = false,
-                isLoading = false,
                 showSnackBarSuccess = false
             )
         )
@@ -273,6 +263,7 @@ class MoreViewModel(
 
         updateState(
             screenState.value.copy(
+                isLoadingChangeAccount = false,
                 isLoading = false,
                 errorMessage = null,
                 isNoInternet = false,
@@ -426,7 +417,8 @@ class MoreViewModel(
             screenState.value.copy(showEditProfileBottomSheet = false)
         )
         if (screenState.value.moreUiState.userUiState.name.isNotEmpty() ||
-            screenState.value.moreUiState.userUiState.imageUrl != null
+            screenState.value.moreUiState.userUiState.imageUrl != null ||
+            screenState.value.moreUiState.userUiState.imageUrl != screenState.value.moreUiState.userUiState.previousImage
         ) {
             saveUserInformation()
         }
@@ -566,6 +558,17 @@ class MoreViewModel(
         updateState(
             screenState.value.copy(
                 showLogoutBottomSheet = false
+            )
+        )
+    }
+
+    override fun onDismissSnackBar() {
+        updateState(
+            screenState.value.copy(
+                showSnackBarError = false,
+                showSnackBarSuccess = false,
+                errorMessage = null,
+                successMessageSnackBar = null
             )
         )
     }
