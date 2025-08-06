@@ -33,7 +33,7 @@ data class RequestServiceDto(
                     ?: emptyList(),
                 userId = data["userId"] as? String ?: "",
                 selectedCraftsmanId = data["selectedCraftsmanId"] as? String,
-                requestStatus = data["requestStatus"] as? String ?: ""
+                requestStatus = data["requestStatus"] as? String ?: "ONGOING"
             )
         }
     }
