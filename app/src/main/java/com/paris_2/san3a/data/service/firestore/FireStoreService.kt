@@ -25,7 +25,7 @@ interface FireStoreService {
         data: Map<String, Any>
     ): String
 
-    suspend fun <T : Any> setDoc(documentPath: String, data: T): String
+    suspend fun <T : Any> setDoc(path: String, data: T): String
 
     suspend fun <T> getCollection(
         path: String,

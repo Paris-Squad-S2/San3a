@@ -336,7 +336,7 @@ class AccountViewModel(
                                     accountUiState = screenState.value.accountUiState.copy(
                                         serviceUiState = screenState.value.accountUiState.serviceUiState.map { service ->
                                             service.copy(isSelected = false)
-                                        }
+                                        },
                                     )
                                 )
                             )
@@ -389,15 +389,6 @@ class AccountViewModel(
                                     phone = screenState.value.accountUiState.phoneNumber,
                                     location = screenState.value.accountUiState.locationUiState.toEntity()
                                 )
-                                navigate(
-                                    Destinations.CustomerGraph,
-                                    navOptions = NavOptions.Builder()
-                                        .setPopUpTo(
-                                            Destinations.Account(accountSetupStep),
-                                            inclusive = true
-                                        )
-                                        .build()
-                                )
                             }
                         }
 
@@ -409,9 +400,50 @@ class AccountViewModel(
                                     screenState.value.accountUiState.frontOfNationalIdUri,
                                     screenState.value.accountUiState.backOfNationalIdUri
                                 )
-
+                            }
+                        }
+                    }
+                },
+                onSuccess = {
+                    when (_currentScreen.intValue) {
+                        0 -> {
+                            setUpAccountUseCase.updateUserProgress(
+                                phone = screenState.value.accountUiState.phoneNumber,
+                                step = AccountSetupStep.SERVICES
+                            )
+                        }
+                        1 -> {
+                            setUpAccountUseCase.updateUserProgress(
+                                phone = screenState.value.accountUiState.phoneNumber,
+                                step = AccountSetupStep.PERSONAL_INFO
+                            )
+                        }
+                        2 -> {
+                            if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
+                                setUpAccountUseCase.updateUserProgress(
+                                    phone = screenState.value.accountUiState.phoneNumber,
+                                    step = AccountSetupStep.WORK_SHOWCASE
+                                )
+                            } else {
+                                setUpAccountUseCase.updateUserProgress(
+                                    phone = screenState.value.accountUiState.phoneNumber,
+                                    step = AccountSetupStep.LOCATION
+                                )
+                            }
+                        }
+                        3 -> {
+                            if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
+                                setUpAccountUseCase.updateUserProgress(
+                                    phone = screenState.value.accountUiState.phoneNumber,
+                                    step = AccountSetupStep.UPLOAD_NATIONAL_ID
+                                )
+                            } else {
+                                setUpAccountUseCase.updateUserProgress(
+                                    phone = screenState.value.accountUiState.phoneNumber,
+                                    step = AccountSetupStep.COMPLETED
+                                )
                                 navigate(
-                                    Destinations.CraftManGraph,
+                                    Destinations.CustomerGraph,
                                     navOptions = NavOptions.Builder()
                                         .setPopUpTo(
                                             Destinations.Account(accountSetupStep),
@@ -421,13 +453,30 @@ class AccountViewModel(
                                 )
                             }
                         }
+                        4 -> {
+                            setUpAccountUseCase.updateUserProgress(
+                                phone = screenState.value.accountUiState.phoneNumber,
+                                step = AccountSetupStep.COMPLETED
+                            )
+                            navigate(
+                                Destinations.CraftManGraph,
+                                navOptions = NavOptions.Builder()
+                                    .setPopUpTo(
+                                        Destinations.Account(accountSetupStep),
+                                        inclusive = true
+                                    )
+                                    .build()
+                            )
+                        }
                     }
-                },
-                onSuccess = {
-                    Log.d("AccountSetup", "Account type saved successfully")
+                    Log.d("AccountSetup", "Account type saved successfully, the current screen is: ${_currentScreen.intValue}")
                     if (_currentScreen.intValue < stepsCount - 1) {
                         _currentScreen.intValue++
                     }
+                    Log.d(
+                        "AccountSetup",
+                        "Current screen after saving: ${_currentScreen.intValue}"
+                    )
                 },
                 onError = { errorMessage ->
                     Log.e("AccountSetup", "Error saving account type: $errorMessage")
