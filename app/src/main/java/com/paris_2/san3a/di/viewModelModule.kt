@@ -10,6 +10,8 @@ import org.koin.core.module.dsl.viewModelOf
 import com.paris_2.san3a.presentation.screen.register.otpScreen.OTPRegisterViewModel
 import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterViewModel
 import com.paris_2.san3a.presentation.screen.notification.NotificationViewModel
+import com.paris_2.san3a.presentation.screen.myRequest.customer.MyRequestCustomerViewModel
+import com.paris_2.san3a.presentation.screen.myRequest.craftsman.MyRequestCraftsmanViewModel
 import org.koin.dsl.module
 
 
@@ -23,4 +25,6 @@ val viewModelModule = module {
     viewModelOf(::RegisterViewModel)
     viewModelOf(::AccountViewModel)
     viewModelOf(::NotificationViewModel)
+    viewModelOf(::MyRequestCustomerViewModel)
+    viewModelOf(::MyRequestCraftsmanViewModel)
 }

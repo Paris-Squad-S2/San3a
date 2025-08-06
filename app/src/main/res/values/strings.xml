@@ -218,6 +218,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="details_title">Details</string>
     <string name="craftsman_not_chosen">Craftsman Not Chosen</string>
     <string name="offers">Offers</string>
+    <string name="number_of_offers">%1$s Offers</string>
     <string name="my_jobs">My Jobs</string>
     <string name="search">Search...</string>
     <string name="most_requested">Most Requested</string>
@@ -237,4 +238,11 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="tomorrow_1_00_pm">Tomorrow, 1:00 PM</string>
     <string name="_2_hour_ago">2 hour ago</string>
     <string name="craftsman_reviews">%1$s (%2$d reviews)</string>
+    <string name="ongoing">Ongoing</string>
+    <string name="completed">Completed</string>
+    <string name="canceled">Cancel</string>
+    <string name="view_offers">View Offers</string>
+    <string name="rate">Rate</string>
+    <string name="no_service_requests_yet">No Service Requests Yet</string>
+    <string name="start_by_choosing_a_service_and_submitting_your_first_request">Start by choosing a service and submitting your first request.</string>
 </resources>
