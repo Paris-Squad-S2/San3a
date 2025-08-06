@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
@@ -48,6 +49,7 @@ fun AddWorkPhotosComponent(
     modifier: Modifier = Modifier,
     images: List<Uri>? = null,
     onAddPhotoClick: () -> Unit,
+    onDeletePhotoClick:(url:Uri)->Unit={},
 ) {
     if (images == null) {
         Box(
@@ -89,16 +91,42 @@ fun AddWorkPhotosComponent(
                 .padding(8.dp)
         ) {
             items(images) { uri ->
-                AsyncImage(
-                    model = uri,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
+                Box(
+                    Modifier
                         .size(80.dp)
                         .padding(4.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .border(1.dp, Theme.colors.background.bottomSheet)
-                )
+                ) {
+                    AsyncImage(
+                        model = uri,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+
+
+                    Box(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .size(24.dp)
+                            .align(Alignment.TopEnd)
+                            .background(
+                                color = White.copy(alpha = 0.60f),
+                                RoundedCornerShape(Theme.radius.small)
+                            )
+                            .clip(RoundedCornerShape(Theme.radius.small))
+                            .clickable(onClick = {onDeletePhotoClick(uri)}),
+                        contentAlignment = Alignment.Center
+                    ){
+                        Icon(
+                            modifier = Modifier.size(16.dp),
+                            painter = painterResource(R.drawable.ic_x_outline),
+                            tint = Theme.colors.shade.primary,
+                            contentDescription = ""
+                        )
+                    }
+                }
             }
             item {
                 Box(

@@ -252,7 +252,8 @@ fun AccountScreenContent(
                         onAddWorkImagesClick = onWorkImageClick,
                         workImages = uiState.accountUiState.workImagesUris,
                         workDescription = uiState.accountUiState.workDescription,
-                        onDescriptionChanged = interactionListener::onDescriptionChanged
+                        onDescriptionChanged = interactionListener::onDescriptionChanged,
+                        onDeleteImage = interactionListener::onDeleteWorkImageClicked
                     )
                     AppButton(
                         onClick = interactionListener::onShowWorkButtonClicked,

@@ -1,8 +1,9 @@
 package com.paris_2.san3a.presentation.screen.account
 
+import android.net.Uri
+
 interface AccountInteractionListener {
     fun onPreviousClicked()
-
     fun onUserTypeSelected(type: UserType)
     fun onToggleServiceClicked(serviceId: String)
     fun onCustomerNameChanged(name: String)
@@ -19,4 +20,5 @@ interface AccountInteractionListener {
     fun onLocationButtonClicked()
     fun onShowWorkButtonClicked()
     fun onVerifyIdentityButtonClicked()
+    fun onDeleteWorkImageClicked(uri: Uri)
 }
