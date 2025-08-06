@@ -341,9 +341,7 @@ class AccountViewModel(
                 )
             )
         )
-        if (screenState.value.accountUiState.frontOfNationalIdUri.toString().isNotEmpty() &&
-            screenState.value.accountUiState.backOfNationalIdUri.toString().isNotEmpty()
-        )
+        if (screenState.value.accountUiState.backOfNationalIdUri!=null)
             updateState(
                 screenState.value.copy(
                     accountUiState = screenState.value.accountUiState.copy(
@@ -363,9 +361,7 @@ class AccountViewModel(
                 )
             )
         )
-        if (screenState.value.accountUiState.frontOfNationalIdUri.toString().isNotEmpty() &&
-            screenState.value.accountUiState.backOfNationalIdUri.toString().isNotEmpty()
-        )
+        if (screenState.value.accountUiState.frontOfNationalIdUri!=null)
             updateState(
                 screenState.value.copy(
                     accountUiState = screenState.value.accountUiState.copy(
@@ -381,14 +377,44 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    workImagesUris = uris,
-                    accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                        workShowCaseButtonState = AppButtonState.Enable
-                    )
+                    workImagesUris = screenState.value.accountUiState.workImagesUris?.plus(uris),
                 )
             )
         )
 
+        if (!screenState.value.accountUiState.workImagesUris.isNullOrEmpty()) {
+            updateState(
+                screenState.value.copy(
+                    accountUiState = screenState.value.accountUiState.copy(
+                        accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                            workShowCaseButtonState = AppButtonState.Enable
+                        )
+                    )
+                )
+            )
+        }
+
+    }
+
+    override fun onDeleteWorkImageClicked(uri: Uri) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    workImagesUris = screenState.value.accountUiState.workImagesUris?.filter { it != uri },
+                )
+            )
+        )
+        if (screenState.value.accountUiState.workImagesUris.isNullOrEmpty()) {
+            updateState(
+                screenState.value.copy(
+                    accountUiState = screenState.value.accountUiState.copy(
+                        accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                            workShowCaseButtonState = AppButtonState.Disabled
+                        )
+                    )
+                )
+            )
+        }
     }
 
     override fun onPreviousClicked() {
@@ -624,6 +650,7 @@ class AccountViewModel(
         )
     }
 
+
     // Next Button actions
     override fun onUserTypeButtonClicked() {
         tryToExecute(
@@ -769,6 +796,17 @@ class AccountViewModel(
             },
             onSuccess = {
                 if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
+                    if (!screenState.value.accountUiState.workImagesUris.isNullOrEmpty()) {
+                        updateState(
+                            screenState.value.copy(
+                                accountUiState = screenState.value.accountUiState.copy(
+                                    accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                                        workShowCaseButtonState = AppButtonState.Enable
+                                    )
+                                )
+                            )
+                        )
+                    }
                     setUpAccountUseCase.updateUserProgress(
                         phone = screenState.value.accountUiState.phoneNumber,
                         step = AccountSetupStep.WORK_SHOWCASE
