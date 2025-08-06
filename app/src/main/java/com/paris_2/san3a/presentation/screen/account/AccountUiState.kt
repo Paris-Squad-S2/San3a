@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.account
 import android.net.Uri
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 
 data class AccountScreenUiState(
     val accountUiState: AccountUiState = AccountUiState(),
@@ -26,8 +27,17 @@ data class AccountUiState(
     val backOfNationalIdUri: Uri? = null,
     val workImagesUris: List<Uri>? = null,
     val workDescription: String = "",
-    val isNextButtonEnabled: Boolean = false,
-    val locationType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
+    val accountButtonState: AccountButtonState = AccountButtonState(),
+    val locationType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT,
+)
+
+data class AccountButtonState(
+    val userTypeButtonState: AppButtonState = AppButtonState.Disabled,
+    val serviceButtonState: AppButtonState = AppButtonState.Disabled,
+    val profileButtonState: AppButtonState = AppButtonState.Disabled,
+    val locationButtonState: AppButtonState = AppButtonState.Disabled,
+    val workShowCaseButtonState: AppButtonState = AppButtonState.Disabled,
+    val verifyIdentityButtonState: AppButtonState = AppButtonState.Disabled,
 )
 
 data class ServiceUiState(

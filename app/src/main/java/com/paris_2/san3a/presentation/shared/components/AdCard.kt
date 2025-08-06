@@ -104,8 +104,10 @@ fun AdCard(
             size = AppButtonSize.Large,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-            icon = ImageVector.vectorResource(id = R.drawable.ic_arrow_right_outline)
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            ,
+            icon = ImageVector.vectorResource(id = R.drawable.ic_arrow_right_outline),
+            iconPosition = IconPosition.End
         )
     }
 

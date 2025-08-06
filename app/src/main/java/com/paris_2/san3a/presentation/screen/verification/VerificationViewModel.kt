@@ -92,11 +92,16 @@ class VerificationViewModel(
     }
 
     private fun uploadNationalIdImages() {
+        Log.d("12sadas13","1")
         if (screenState.value.verificationUiState.backOfNationalIdUri != null &&
             screenState.value.verificationUiState.frontOfNationalIdUri != null
         ) {
+            Log.d("12sadas13","1123123")
+
             tryToExecute(
                 execute = {
+                    Log.d("12sadas13","asd1321")
+
                     setUpAccountUseCase.uploadNationalIdImages(
                         phone = screenState.value.verificationUiState.phoneNumber,
                         frontUri = screenState.value.verificationUiState.frontOfNationalIdUri,
@@ -110,6 +115,8 @@ class VerificationViewModel(
     }
 
     private fun onUploadNationalIdImagesSuccess(unit: Unit) {
+        Log.d("12sadas13","bdd22")
+
         updateState(
             screenState.value.copy(
                 isLoading = false,
@@ -123,7 +130,11 @@ class VerificationViewModel(
     }
 
     private fun onUploadNationalIdImagesError(throwable: Throwable) {
+        Log.d("12sadas13","bd1111d22")
+
         if (throwable is NoInternetConnectionException) {
+            Log.d("12sadas13","asdf213")
+
             updateState(
                 screenState.value.copy(
                     isNoInternet = true,
@@ -135,6 +146,8 @@ class VerificationViewModel(
                 )
             )
         } else {
+            Log.d("12sadas13","sadf213123")
+
             updateState(
                 screenState.value.copy(
                     errorMessage = R.string.national_id_images_uploaded_failed,
@@ -165,6 +178,17 @@ class VerificationViewModel(
                     backOfNationalIdUri = uri
 
                 )
+            )
+        )
+    }
+
+    override fun onDismissSnackBar() {
+        updateState(
+            screenState.value.copy(
+                showSnackBarError = false,
+                showSnackBarSuccess = false,
+                errorMessage = null,
+                successMessageSnackBar = null
             )
         )
     }

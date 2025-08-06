@@ -9,9 +9,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -88,7 +88,6 @@ fun VerificationScreenContent(
         Modifier
             .fillMaxSize()
             .background(Theme.colors.background.screen)
-            .verticalScroll(scroll)
             .statusBarsPadding()
     ) {
         when {
@@ -111,6 +110,8 @@ fun VerificationScreenContent(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .verticalScroll(scroll)
+
                 ) {
                     AppBar(
                         title = stringResource(R.string.verification),
@@ -120,7 +121,6 @@ fun VerificationScreenContent(
 
                     VerifyIDContent(
                         modifier = Modifier
-                            .height(449.dp)
                             .padding(horizontal = 16.dp),
                         onFrontOfNationalIdUploadClick = { onFrontOfNationalIdUploadClick() },
                         onBackOfNationalIdUploadClick = { onBackOfNationalIdUploadClick() },
@@ -140,23 +140,28 @@ fun VerificationScreenContent(
                     AnimatedContent(
                         targetState = verificationScreenState.verificationUiState.frontOfNationalIdUri != null
                                 && verificationScreenState.verificationUiState.backOfNationalIdUri != null,
+                        modifier = Modifier.weight(1f)
                     ) {
-                        if(it){
-                            AppButton(
-                                text = text,
-                                onClick = verificationInteractionListener::onClickSave,
-                                modifier = buttonModifier,
-                                state = AppButtonState.Enable,
-                                type = typeButton,
-                            )
-                        } else{
-                            AppButton(
-                                text = text,
-                                onClick = {  },
-                                modifier = buttonModifier,
-                                state = AppButtonState.Disabled,
-                                type = typeButton,
-                            )
+                        Column(Modifier.fillMaxSize()) {
+                            Spacer(Modifier.weight(1f))
+                            if(it){
+                                AppButton(
+                                    text = text,
+                                    onClick = verificationInteractionListener::onClickSave,
+                                    modifier = buttonModifier,
+                                    state = AppButtonState.Enable,
+                                    type = typeButton,
+                                )
+                            } else{
+                                AppButton(
+                                    text = text,
+                                    onClick = {  },
+                                    modifier = buttonModifier,
+                                    state = AppButtonState.Disabled,
+                                    type = typeButton,
+                                )
+                            }
+
                         }
 
                     }
@@ -175,6 +180,8 @@ fun VerificationScreenContent(
                         .padding(start = 12.dp, end = 12.dp, top = 16.dp)
                         .align(Alignment.TopCenter),
                     text = verificationScreenState.errorMessage,
+                    onClick = verificationInteractionListener::onDismissSnackBar
+
                 )
             }
         }
@@ -189,6 +196,8 @@ fun VerificationScreenContent(
                         .align(Alignment.TopCenter),
 
                     text = verificationScreenState.successMessageSnackBar,
+                    onClick = verificationInteractionListener::onDismissSnackBar
+
                 )
             }
         }
@@ -207,6 +216,10 @@ private fun VerificationScreenContentPreview() {
             }
 
             override fun onClickRetry() {
+
+            }
+
+            override fun onDismissSnackBar() {
 
             }
         },

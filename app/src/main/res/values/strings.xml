@@ -285,5 +285,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="voice_search">voice search</string>
     <string name="my_requests">My Requests</string>
 
+    <string name="occrus_error_when_get_version_name">occurs error when get version name</string>
+    <string name="error_occurred_while_fetching_services">An error occurred while fetching services</string>
 
 </resources>
