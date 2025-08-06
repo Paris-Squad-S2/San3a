@@ -74,7 +74,7 @@ fun MyJobOfferCard(
                     .padding(top = 16.dp)
                     .fillMaxWidth(),
                 type = AppButtonType.Secondary,
-                onClick = {},
+                onClick = onViewDetailsRequest,
                 enableSecondaryBackgroundColor = Theme.colors.shade.quaternary,
                 text = stringResource(R.string.button),
                 size = AppButtonSize.Small,
@@ -119,12 +119,13 @@ fun MyJobOfferCard(
                             )
                             AppButton(
                                 type = AppButtonType.Primary,
-                                onClick = onSendMessage,
+                                onClick = onMarkAsDone,
                                 text = stringResource(R.string.mark_as_done),
                                 modifier = Modifier.weight(1f),
                                 size = AppButtonSize.Small
                             )
-                        }},
+                        }
+                },
             )
         }
     }

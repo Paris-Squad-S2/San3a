@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.myRequest.craftsman
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetGetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
@@ -14,6 +15,7 @@ class MyOfferCraftsmanViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getOffersUseCase : GetOffersUseCase,
+    private val createChatUseCase : CreateChatUseCase,
 ) : BaseViewModel<MyOfferCraftsmanScreenState>(MyOfferCraftsmanScreenState()), MyJobCraftsmanInteractionListener {
 
     init {
@@ -78,16 +80,32 @@ class MyOfferCraftsmanViewModel(
         )
     }
 
-    override fun onRequestClick(requestId: String) {
-        TODO("Not yet implemented")
+    override fun onSendAsDone(requestId: String) {
+   /*TODO("Not yet implemented")*/
     }
 
     override fun onSendMessageClick(phoneNumber: String) {
-        TODO("Not yet implemented")
+        tryToExecute(
+            execute = {
+                createChatUseCase(
+                    listOf(screenState.value.myOffersCraftsmanUiState.customerPhone,phoneNumber)
+                )
+            },
+            onSuccess = {chatId->
+                navigate(Destinations.MessageDetails(
+                    chatId = chatId,
+                    currentUserId = screenState.value.myOffersCraftsmanUiState.customerPhone,
+                    otherUserId = phoneNumber
+                ))
+            },
+            onError = {
+                //todo show snack bar
+            }
+        )
     }
 
     override fun onViewRequestDetails(requestId: String) {
-        TODO("Not yet implemented")
+        /*TODO("Not yet implemented")*/
     }
 
     override fun onNotificationClick() {

@@ -176,8 +176,8 @@ private fun JobsList(
             MyJobOfferCard(
                 offerUiState = offer,
                 onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails("") },
-                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick("") },
-                onMarkAsDone = { myJobCraftsmanInteractionListener.onViewRequestDetails("") }
+                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick("+201118295474") },
+                onMarkAsDone = { myJobCraftsmanInteractionListener.onSendAsDone("") }
             )
         }
     }
@@ -190,7 +190,7 @@ fun MyRequestScreenPreview() {
         MyRequestScreenContent(
             myJobCraftsmanInteractionListener = object : MyJobCraftsmanInteractionListener {
                 override fun onRetryClick() {}
-                override fun onRequestClick(requestId: String) {
+                override fun onSendAsDone(requestId: String) {
                     TODO("Not yet implemented")
                 }
 
