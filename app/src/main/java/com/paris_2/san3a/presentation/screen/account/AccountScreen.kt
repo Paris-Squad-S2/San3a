@@ -34,6 +34,7 @@ import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
+import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.asString
 import org.koin.compose.viewmodel.koinViewModel
@@ -167,8 +168,10 @@ fun AccountScreenContent(
                     text = textButton,
                     state = uiState.accountUiState.accountButtonState.userTypeButtonState,
                     modifier = Modifier.fillMaxWidth(),
-                    size = AppButtonSize.Large
-
+                    size = AppButtonSize.Large,
+                    loadingIcon = {
+                        LoadingScreen(modifier.size(25.dp))
+                    }
                 )
             }
 
@@ -184,8 +187,10 @@ fun AccountScreenContent(
                     text = textButton,
                     state = uiState.accountUiState.accountButtonState.serviceButtonState,
                     modifier = Modifier.fillMaxWidth(),
-                    size = AppButtonSize.Large
-
+                    size = AppButtonSize.Large,
+                    loadingIcon = {
+                        LoadingScreen(modifier.size(25.dp))
+                    }
                 )
             }
 
@@ -203,8 +208,10 @@ fun AccountScreenContent(
                     text = textButton,
                     state = uiState.accountUiState.accountButtonState.profileButtonState,
                     modifier = Modifier.fillMaxWidth(),
-                    size = AppButtonSize.Large
-
+                    size = AppButtonSize.Large,
+                    loadingIcon = {
+                        LoadingScreen(modifier.size(25.dp))
+                    }
                 )
             }
 
@@ -232,7 +239,10 @@ fun AccountScreenContent(
                         text = textButton,
                         state = uiState.accountUiState.accountButtonState.locationButtonState,
                         modifier = Modifier.fillMaxWidth(),
-                        size = AppButtonSize.Large
+                        size = AppButtonSize.Large,
+                        loadingIcon = {
+                            LoadingScreen(modifier.size(25.dp))
+                        }
                     )
                 }
 
@@ -250,7 +260,10 @@ fun AccountScreenContent(
                         text = textButton,
                         state = uiState.accountUiState.accountButtonState.workShowCaseButtonState,
                         modifier = Modifier.fillMaxWidth(),
-                        size = AppButtonSize.Large
+                        size = AppButtonSize.Large,
+                        loadingIcon = {
+                            LoadingScreen(modifier.size(25.dp))
+                        }
 
                     )
                 }
@@ -278,7 +291,10 @@ fun AccountScreenContent(
                         text = textButton,
                         state = uiState.accountUiState.accountButtonState.verifyIdentityButtonState,
                         modifier = Modifier.fillMaxWidth(),
-                        size = AppButtonSize.Large
+                        size = AppButtonSize.Large,
+                        loadingIcon = {
+                            LoadingScreen(modifier.size(25.dp))
+                        }
 
                     )
 
