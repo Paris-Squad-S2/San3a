@@ -1,40 +1,73 @@
 package com.paris_2.san3a.presentation.screen.myRequest.customer
 
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.delay
 
 class MyRequestCustomerViewModel(
     private val getCustomerRequestsUseCase: GetCustomerRequestsUseCase,
-) : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState.Loading) {
+    private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
+    private val getUserUseCase: GetUserUseCase,
+) : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState()) {
 
     init {
-        getRequests()
+        getCustomerPhone()
+    }
+
+    private fun getCustomerPhone() {
+        tryToExecute(
+            execute = {
+                screenState.value.copy(
+                    isLoading = true,
+                )
+                getPhoneNumberUseCase()
+            },
+            onSuccess = { phoneNumber: String ->
+                updateState(
+                    screenState.value.copy(
+                        myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                            customerPhone = phoneNumber
+                        )
+                    )
+                )
+                getRequests()
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = "Failed to fetch phone number"
+                    )
+                )
+            }
+        )
     }
 
     private fun getRequests() {
-        updateState(MyRequestCustomerScreenState.Loading)
-
-        tryToExecute(
-            onSuccess = { result: List<MyRequestCustomerUi> ->
-                val ongoing = result.filter { it.status == RequestStatus.ONGOING }
-                val completed = result.filter { it.status == RequestStatus.COMPLETED }
-                val canceled = result.filter { it.status == RequestStatus.CANCELLED }
-                updateState(MyRequestCustomerScreenState.Success(ongoing, completed, canceled))
+        tryToObserve(
+            observe = {
+                getCustomerRequestsUseCase(screenState.value.myRequestCustomerUiState.customerPhone)
+            },
+            onEach = { result ->
+                val result = result.toRequestServiceUiStateList()
+                updateState(
+                    MyRequestCustomerScreenState(
+                        isLoading = false,
+                        myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                            ongoing = result.filter { it.status == RequestStatus.ONGOING },
+                            completed = result.filter { it.status == RequestStatus.COMPLETED },
+                            canceled = result.filter { it.status == RequestStatus.CANCELLED }
+                        )
+                    )
+                )
             },
             onError = {
-                updateState(MyRequestCustomerScreenState.Error("Something went wrong"))
-            },
-            execute = {
-                delay(1000)
-                listOf(
-                    MyRequestCustomerUi(isCraftsmanVerified = true,
-                        status = RequestStatus.ONGOING,
-                        craftsmanURL = "",
-                        isAcceptedOffer = true),
-                    MyRequestCustomerUi(status = RequestStatus.ONGOING),
-                    MyRequestCustomerUi(status = RequestStatus.CANCELLED)
+                updateState(
+                    MyRequestCustomerScreenState(
+                        isLoading = false,
+                        errorMessage = it.message
+                    )
                 )
             }
         )

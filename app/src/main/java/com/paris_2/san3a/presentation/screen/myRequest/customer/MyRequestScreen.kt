@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +45,7 @@ fun MyRequestScreen(
 @Composable
 private fun MyRequestScreenContent(
     modifier: Modifier = Modifier,
-    state: MyRequestCustomerScreenState = MyRequestCustomerScreenState.Loading
+    state: MyRequestCustomerScreenState
 ) {
     Column(
         modifier = modifier
@@ -72,12 +71,12 @@ private fun MyRequestScreenContent(
             )
         }
 
-        when (state) {
-            is MyRequestCustomerScreenState.Loading -> {
+        when {
+            state.isLoading -> {
                 LoadingScreen(modifier = Modifier.fillMaxSize())
             }
 
-            is MyRequestCustomerScreenState.Error -> {
+            state.errorMessage != null -> {
                 PlaceHolderScreen(
                     modifier = Modifier
                         .fillMaxSize()
@@ -90,7 +89,7 @@ private fun MyRequestScreenContent(
                 )
             }
 
-            is MyRequestCustomerScreenState.Success -> {
+            else -> {
                 val tabs = listOf(
                     stringResource(R.string.ongoing),
                     stringResource(R.string.completed),
@@ -107,7 +106,7 @@ private fun MyRequestScreenContent(
 
                 when (selectedIndex.intValue) {
                     0 -> {
-                        val ongoingRequests = state.ongoing
+                        val ongoingRequests = state.myRequestCustomerUiState.ongoing
                         if (ongoingRequests.isEmpty()) {
                             Box(Modifier.fillMaxSize()) {
                                 PlaceHolderScreen(
@@ -123,7 +122,7 @@ private fun MyRequestScreenContent(
                     }
 
                     1 -> {
-                        val completedRequests = state.completed
+                        val completedRequests = state.myRequestCustomerUiState.completed
                         if (completedRequests.isEmpty()) {
                             Box(Modifier.fillMaxSize()) {
                                 PlaceHolderScreen(
@@ -139,7 +138,7 @@ private fun MyRequestScreenContent(
                     }
 
                     2 -> {
-                        val canceledRequests = state.canceled
+                        val canceledRequests = state.myRequestCustomerUiState.canceled
                         if (canceledRequests.isEmpty()) {
                             Box(Modifier.fillMaxSize()) {
                                 PlaceHolderScreen(
@@ -177,23 +176,22 @@ fun RequestList(requests: List<MyRequestCustomerUi>) {
 fun MyRequestScreenPreview() {
     BasePreview {
         MyRequestScreenContent(
-            state = MyRequestCustomerScreenState.Success(
-                ongoing = listOf(
-                    MyRequestCustomerUi(
-                        isCraftsmanVerified = true,
-                        status = RequestStatus.ONGOING,
-                        craftsmanURL = "",
-                        isAcceptedOffer = true
+            state = MyRequestCustomerScreenState(
+                myRequestCustomerUiState = MyRequestCustomerUiState(
+                    ongoing = listOf(
+                        MyRequestCustomerUi(
+                            isCraftsmanVerified = true,
+                            status = RequestStatus.ONGOING,
+                            craftsmanURL = "",
+                            isAcceptedOffer = true
+                        ),
+                        MyRequestCustomerUi(),
+                        MyRequestCustomerUi(),
                     ),
-                    MyRequestCustomerUi(),
-                    MyRequestCustomerUi(),
-                ),
-                completed = emptyList(),
-                canceled = emptyList()
+                    completed = emptyList(),
+                    canceled = emptyList()
+                )
             )
-        /*state = MyRequestCustomerScreenState.Error(
-                message = "Something went wrong"
-            )*/
         )
     }
 }

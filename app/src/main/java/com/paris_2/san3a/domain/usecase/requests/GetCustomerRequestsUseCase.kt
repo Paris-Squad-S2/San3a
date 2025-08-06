@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 class GetCustomerRequestsUseCase(
     private val requestsRepository: RequestsRepository
 ) {
-
     operator fun invoke(userId: String): Flow<List<RequestService>> {
         return requestsRepository.getCustomerRequests(userId)
     }
