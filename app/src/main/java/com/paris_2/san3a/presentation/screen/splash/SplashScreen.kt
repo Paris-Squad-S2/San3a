@@ -100,4 +100,4 @@ fun SplashScreen(
             modifier = Modifier.size(100.dp)
         )
     }
-} 
+}
