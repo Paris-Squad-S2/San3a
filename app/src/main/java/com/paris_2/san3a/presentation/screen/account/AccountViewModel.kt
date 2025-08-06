@@ -6,7 +6,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.AccountSetupStep
@@ -24,6 +23,7 @@ import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSh
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
+import androidx.navigation.NavOptions
 
 class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,

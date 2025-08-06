@@ -230,6 +230,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="details_title">Details</string>
     <string name="craftsman_not_chosen">Craftsman Not Chosen</string>
     <string name="offers">Offers</string>
+    <string name="number_of_offers">%1$s Offers</string>
     <string name="my_jobs">My Jobs</string>
     <string name="search">Search…</string>
     <string name="most_requested">Most Requested</string>
@@ -272,9 +273,17 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="success_location_saved">Location saved successfully</string>
     <string name="error_general">Something went wrong</string>
     <string name="please_select_location">Please Select Governorate or District </string>
+    <string name="ongoing">Ongoing</string>
+    <string name="completed">Completed</string>
+    <string name="canceled">Cancel</string>
+    <string name="view_offers">View Offers</string>
+    <string name="rate">Rate</string>
+    <string name="no_service_requests_yet">No Service Requests Yet</string>
+    <string name="start_by_choosing_a_service_and_submitting_your_first_request">Start by choosing a service and submitting your first request.</string>
     <string name="no_results_found">No Results Found</string>
     <string name="try_a_different_keyword_or_check_your_spelling_some_services_may_be_listed_under_other_names">Try a different keyword or check your spelling.\nSome services may be listed under other names.</string>
     <string name="voice_search">voice search</string>
+    <string name="my_requests">My Requests</string>
 
     <string name="occrus_error_when_get_version_name">occurs error when get version name</string>
     <string name="error_occurred_while_fetching_services">An error occurred while fetching services</string>

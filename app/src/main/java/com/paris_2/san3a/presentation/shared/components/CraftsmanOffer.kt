@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -125,7 +126,7 @@ fun CraftsManOffer(
                 style = Theme.textStyle.body.medium.medium,
                 textAlign = TextAlign.Center
             )
-        Column(
+        CraftsmanOfferDetails(
             modifier = Modifier
                 .padding(
                     start = 2.dp,
@@ -141,166 +142,20 @@ fun CraftsManOffer(
                 .background(Theme.colors.background.card)
                 .fillMaxWidth()
                 .padding(16.dp),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Box(
-                    modifier = Modifier.size(40.dp)
-                ) {
-                    Image(
-                        painter = painter,
-                        contentDescription = "",
-                        contentScale = androidx.compose.ui.layout.ContentScale.Crop,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape),
-                    )
+            painter = painter,
+            isVerified = offerDetails.isVerify,
+            onChatClick = onChatClick,
+            onAcceptOfferClick = onAcceptOfferClick,
+            name = offerDetails.name,
+            postedTime = offerDetails.postedTime,
+            description = offerDetails.description,
+            amount = offerDetails.amount,
+            rate = offerDetails.rate,
+            reviewsNumber = offerDetails.reviewsNumber,
+            status = offerDetails.status,
+            time = offerDetails.time
 
-                    androidx.compose.animation.AnimatedVisibility(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter).offset(y=8.dp), visible = offerDetails.isVerify
-                    ) {
-                        Box(
-                            modifier = Modifier.size(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_verified_check_bold),
-                                contentDescription = stringResource(R.string.verified_check),
-                                modifier = Modifier
-                                    .size(16.dp),
-                                tint = Theme.colors.additional.primary.success
-                            )
-
-                            Icon(
-                                painter = painterResource(R.drawable.ic_check),
-                                contentDescription = stringResource(R.string.verified_check),
-                                modifier = Modifier
-                                    .size(8.dp),
-                                tint = Color.White
-                            )
-                        }
-
-                    }
-
-                }
-                Spacer(modifier = Modifier.width(12.dp))
-                Column(modifier = Modifier.weight(1f)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = offerDetails.name,
-                            color = Theme.colors.shade.primary,
-                            style = Theme.textStyle.body.medium.medium
-                        )
-                        Text(
-                            text = offerDetails.postedTime,
-                            style = Theme.textStyle.body.small.regular,
-                            color = Theme.colors.shade.tertiary
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.padding(top = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_star_bold),
-                            contentDescription = "Star icon",
-                            tint = Theme.colors.additional.primary.yellow,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = stringResource(
-                                R.string.craftsman_reviews,
-                                offerDetails.rate,
-                                offerDetails.reviewsNumber
-                            ),
-                            style = Theme.textStyle.body.small.medium,
-                            color = Theme.colors.shade.primary
-                        )
-                    }
-                }
-            }
-
-
-            Text(
-                text = offerDetails.description,
-                style = Theme.textStyle.body.small.medium,
-                color = Theme.colors.shade.primary,
-                modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_wallet_outline),
-                    contentDescription = "Amount icon",
-                    tint = Theme.colors.shade.secondary,
-                    modifier = Modifier
-                        .padding(end = 4.dp)
-                        .size(16.dp)
-                )
-                Text(
-                    text = offerDetails.amount,
-                    color = Theme.colors.shade.secondary,
-                    style = Theme.textStyle.body.small.medium,
-                )
-                Box(
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp)
-                        .size(2.6.dp)
-                        .clip(CircleShape)
-                        .background(Theme.colors.shade.tertiary)
-
-                )
-                Icon(
-                    modifier = Modifier
-                        .padding(end = 4.dp)
-                        .size(16.dp),
-                    painter = painterResource(id = R.drawable.ic_clock_circle_outline),
-                    contentDescription = "",
-                    tint = Theme.colors.shade.secondary
-                )
-                Text(
-                    text = offerDetails.time,
-                    color = Theme.colors.shade.secondary,
-                    style = Theme.textStyle.body.small.medium
-                )
-            }
-
-            if (offerDetails.status == OfferStatus.PENDING_OFFER)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 24.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    AppButton(
-                        type = AppButtonType.Primary,
-                        onClick = onChatClick,
-                        text = stringResource(R.string.chat),
-                        modifier = Modifier.weight(1f),
-                        size = AppButtonSize.Large,
-                        state = AppButtonState.Disabled
-                    )
-                    AppButton(
-                        type = AppButtonType.Primary,
-                        onClick = onAcceptOfferClick,
-                        text = stringResource(R.string.accept_offer),
-                        modifier = Modifier.weight(1f),
-                        size = AppButtonSize.Large
-                    )
-                }
-        }
+        )
     }
 }
 
