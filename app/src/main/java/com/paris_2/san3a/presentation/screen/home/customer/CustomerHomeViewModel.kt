@@ -12,6 +12,8 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import java.util.Locale
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 class CustomerHomeViewModel(
     private val getAllServicesUseCase: GetAllServicesUseCase,
@@ -22,6 +24,9 @@ class CustomerHomeViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
 ) : CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
+
+    private val _triggerVoiceSearch = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val triggerVoiceSearch: SharedFlow<Unit> = _triggerVoiceSearch
 
     init {
         loadUserData()
@@ -217,6 +222,14 @@ class CustomerHomeViewModel(
                 )
             )
         )
+    }
+
+    override fun onMicClick() {
+        _triggerVoiceSearch.tryEmit(Unit)
+    }
+
+    override fun onSpeechRecognized(query: String) {
+        onSearch(query)
     }
 
     override fun createRequest(service: RequestServiceUiState, serviceId: String) {
