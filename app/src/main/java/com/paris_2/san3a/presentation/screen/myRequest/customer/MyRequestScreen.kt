@@ -162,7 +162,7 @@ private fun MyRequestScreenContent(
 }
 
 @Composable
-fun RequestList(requests: List<MyRequestCustomerUi>) {
+private fun RequestList(requests: List<MyRequestCustomerUi>) {
     LazyColumn {
         items(requests) { request ->
             RequestCard(

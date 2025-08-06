@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
@@ -46,6 +45,7 @@ import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.CraftsmanAvatar
+import com.paris_2.san3a.presentation.shared.components.ServiceTypeCard
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
@@ -67,41 +67,7 @@ fun RequestCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .background(Theme.colors.additional.secondary.blue),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        /*todo check on type service and use the correct icon*/
-                        painter = painterResource(id = R.drawable.ic_conditioner_bold),
-                        contentDescription = null,
-                        tint = Theme.colors.brand.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Column {
-                    Text(
-                        text = requestUi.requestTitle,
-                        style = Theme.textStyle.body.medium.semibold,
-                        color = Theme.colors.shade.primary,
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = requestUi.serviceType,
-                        style = Theme.textStyle.body.small.medium,
-                        color = Theme.colors.shade.secondary,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
-                    )
-                }
-            }
+            ServiceTypeCard(title = requestUi.requestTitle, serviceType = requestUi.serviceType)
 
             if (requestUi.status == RequestStatus.ONGOING && requestUi.isAcceptedOffer) {
                 HorizontalDivider(
