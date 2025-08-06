@@ -16,6 +16,7 @@ import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.mapper.toUserUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
@@ -314,11 +315,9 @@ class MoreViewModel(
             )
         )
 
+        LocalAccountType.value = AccountType.CRAFTSMAN
         navigate(
-            destination = Destinations.CraftManGraph,
-            navOptions = NavOptions.Builder()
-                .setPopUpTo(Destinations.Splash, inclusive = true)
-                .build()
+            destination = Destinations.CraftManGraph
         )
     }
 
@@ -366,11 +365,10 @@ class MoreViewModel(
             )
         )
 
+        LocalAccountType.value = AccountType.CUSTOMER
+
         navigate(
             destination = Destinations.CustomerGraph,
-            navOptions = NavOptions.Builder()
-                .setPopUpTo(Destinations.Splash, inclusive = true)
-                .build()
         )
     }
 
