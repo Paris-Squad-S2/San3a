@@ -26,6 +26,7 @@ import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.navigation.Navigator
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
 
@@ -41,44 +42,49 @@ fun SplashScreen(
     LaunchedEffect(Unit) {
         var destination: Destination = Destinations.OnBoarding
 
-        val phoneNumber = getPhoneNumberUseCase()
-        if (phoneNumber.isNotBlank()) {
-            setUpAccountUseCase.getUserProgress(phoneNumber).also { progress ->
-                when(progress){
-                    AccountSetupStep.ACCOUNT_TYPE -> {
-                        destination = if (isOnboardingCompletedUseCase()) {
-                            Destinations.RegisterScreen
-                        } else {
-                            Destinations.OnBoarding
+        val decideDestination = async {
+            val phoneNumber = getPhoneNumberUseCase()
+            if (phoneNumber.isNotBlank()) {
+                setUpAccountUseCase.getUserProgress(phoneNumber).also { progress ->
+                    when (progress) {
+                        AccountSetupStep.ACCOUNT_TYPE -> {
+                            destination = if (isOnboardingCompletedUseCase()) {
+                                Destinations.RegisterScreen
+                            } else {
+                                Destinations.OnBoarding
+                            }
                         }
-                    }
-                    AccountSetupStep.COMPLETED -> {
-                        getUserUseCase(phoneNumber).also { user ->
-                            when(user.accountType){
-                                AccountType.CUSTOMER -> {
-                                    LocalAccountType.value = AccountType.CUSTOMER
-                                    destination = Destinations.CustomerGraph
-                                }
-                                AccountType.CRAFTSMAN -> {
-                                    LocalAccountType.value = AccountType.CRAFTSMAN
-                                    destination = Destinations.CraftManGraph
+                        AccountSetupStep.COMPLETED -> {
+                            getUserUseCase(phoneNumber).also { user ->
+                                when (user.accountType) {
+                                    AccountType.CUSTOMER -> {
+                                        LocalAccountType.value = AccountType.CUSTOMER
+                                        destination = Destinations.CustomerGraph
+                                    }
+                                    AccountType.CRAFTSMAN -> {
+                                        LocalAccountType.value = AccountType.CRAFTSMAN
+                                        destination = Destinations.CraftManGraph
+                                    }
                                 }
                             }
                         }
-                    }
-                    else -> {
-                        Log.d("SplashScreen", "User progress: $progress")
-                        destination = Destinations.Account(progress)
+                        else -> {
+                            Log.d("SplashScreen", "User progress: $progress")
+                            destination = Destinations.Account(progress)
+                        }
                     }
                 }
+            } else if (isOnboardingCompletedUseCase()) {
+                destination = Destinations.RegisterScreen
+            } else {
+                destination = Destinations.OnBoarding
             }
-        } else if (isOnboardingCompletedUseCase()) {
-            destination = Destinations.RegisterScreen
-        } else {
-            destination = Destinations.OnBoarding
         }
 
-        delay(2000)
+        val delayJob = async { delay(2000) }
+
+        decideDestination.await()
+        delayJob.await()
 
         navigator.navigate(
             destination = destination,
