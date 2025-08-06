@@ -11,6 +11,7 @@ import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
@@ -39,7 +40,7 @@ data class MoreScreenState(
 data class MoreUiState(
     val userUiState: UserUiState = UserUiState(),
     val isDarkMode: Boolean = false,
-    val versionNumber: String = "1.0.0",
+    val versionNumber: String = "",
     val selectedLanguage: String = LanguageUiState.ENGLISH.name,
 )
 
@@ -66,6 +67,7 @@ class MoreViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
+    private val getVersionNameUseCase: GetVersionNameUseCase
 ) : BaseViewModel<MoreScreenState>(MoreScreenState()), MoreInteractionListener {
 
     init {
@@ -74,9 +76,39 @@ class MoreViewModel(
 
 
     private fun fetchData() {
+        getVersionName()
         getPhoneNumber()
         getDarkMode()
         getLanguageSelected()
+    }
+
+    private fun getVersionName() {
+        tryToExecute(
+            execute = { getVersionNameUseCase() },
+            onSuccess = ::onGetVersionNameSuccess,
+            onError = ::onGetVersionNameError
+        )
+    }
+    
+    private fun onGetVersionNameSuccess(versionName: String) {
+        updateState(
+            screenState.value.copy(
+                moreUiState = screenState.value.moreUiState.copy(
+                    versionNumber = versionName
+                )
+            )
+        )
+    }
+    
+    private fun onGetVersionNameError(throwable: Throwable){
+        updateState(
+            screenState.value.copy(
+                errorMessage = R.string.occrus_error_when_get_version_name,
+                showSnackBarError = true,
+                isNoInternet = false,
+                isLoading = false
+            )
+        )
     }
 
     private fun getLanguageSelected() {

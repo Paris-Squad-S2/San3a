@@ -156,6 +156,10 @@ private fun SettingItemsPreview() {
                 override fun onClickRetry() {
                 }
 
+                override fun onDismissSnackBar() {
+
+                }
+
                 override fun onClickLogoutArrow() {
 
                 }

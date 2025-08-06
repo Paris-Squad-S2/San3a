@@ -11,6 +11,7 @@ import com.paris_2.san3a.domain.usecase.GetRecentRelatedJobsUseCase
 import com.paris_2.san3a.domain.usecase.GetStatsUseCase
 import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.GetWorkMediaUseCase
 import com.paris_2.san3a.domain.usecase.IsLoggedInUseCase
 import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
@@ -60,4 +61,5 @@ val useCaseModule = module {
     factoryOf(::AddNotificationUseCase)
     factoryOf(::StreamNotificationsUseCase)
     factoryOf(::CustomizeProfileSettingsUseCase)
+    factoryOf(::GetVersionNameUseCase)
 }

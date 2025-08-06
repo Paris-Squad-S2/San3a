@@ -31,4 +31,10 @@ class ProfileRepositoryImpl(
             localDataStore.updateAppLanguage(newLanguage)
         }
     }
+
+    override suspend fun getVersionName(): String {
+        return safeCall(ProfileException()) {
+            localDataStore.getVersionName()
+        }
+    }
 }
