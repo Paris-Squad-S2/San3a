@@ -4,4 +4,5 @@ interface VerificationInteractionListener{
     fun onBackClick()
     fun onClickSave()
     fun onClickRetry()
+    fun onDismissSnackBar()
 }

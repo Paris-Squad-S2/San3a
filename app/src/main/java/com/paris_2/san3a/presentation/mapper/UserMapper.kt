@@ -11,5 +11,6 @@ fun User.toUserUiState(): UserUiState {
         name = this.fullName,
         isCraftsman = this.accountType == AccountType.CRAFTSMAN,
         imageUrl = this.profilePhoto.toUri(),
+        previousImage = this.profilePhoto.toUri()
     )
 }
