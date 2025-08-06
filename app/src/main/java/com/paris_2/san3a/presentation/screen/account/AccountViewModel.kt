@@ -4,7 +4,9 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.AccountSetupStep
@@ -16,14 +18,11 @@ import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
+import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
-import androidx.core.net.toUri
-import androidx.navigation.NavOptions
-import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
-import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
-import kotlinx.coroutines.delay
 
 class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
@@ -224,23 +223,17 @@ class AccountViewModel(
     override fun onToggleServiceClicked(serviceId: String) {
         val updatedServices = screenState.value.accountUiState.serviceUiState.map {
             if (it.id == serviceId) {
-                updateState(
-                    newState = screenState.value.copy(
-                        screenState.value.accountUiState.copy(
-                            isNextButtonEnabled = !it.isSelected
-                        )
-                    )
-                )
                 it.copy(isSelected = !it.isSelected)
             } else {
                 it
             }
         }
+        val isAnyServiceSelected = updatedServices.any { it.isSelected }
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
                     serviceUiState = updatedServices,
-                    isNextButtonEnabled = true
+                    isNextButtonEnabled = isAnyServiceSelected
                 )
             )
         )
