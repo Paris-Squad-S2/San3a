@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.utill
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.paris_2.san3a.presentation.screen.main.MainViewModel
@@ -28,6 +29,11 @@ fun updateResources(context: Context, localeLanguage: Locale) {
     val resources: Resources = context.resources
     val config = Configuration(resources.configuration)
     config.setLocale(localeLanguage)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        config.setLayoutDirection(localeLanguage)
+    }
+
     context.createConfigurationContext(config)
     @Suppress("DEPRECATION")
     resources.updateConfiguration(config, resources.displayMetrics)

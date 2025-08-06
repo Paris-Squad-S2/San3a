@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +32,7 @@ import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
+import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.AppTextField
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -48,123 +52,129 @@ fun LocationScreenContent(
     state: LocationScreenState,
     locationInteractionListener: LocationInteractionListener,
 ) {
-
-    Column(
+    val scroll = rememberScrollState()
+    AppScaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(Theme.colors.background.screen)
-    ) {
-        AppBar(
-            modifier = Modifier.fillMaxWidth(),
-            title = stringResource(R.string.my_location),
-            onBackClick = locationInteractionListener::onNavigateBack
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-        ) {
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = stringResource(R.string.where_are_you_located),
-                style = Theme.textStyle.display.xLarge,
-                color = Theme.colors.shade.primary
+            .background(Theme.colors.background.card)
+            .statusBarsPadding(),
+        topBar = {
+            AppBar(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.my_location),
+                onBackClick = locationInteractionListener::onNavigateBack
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = stringResource(R.string.location_help_text),
-                style = Theme.textStyle.body.large.regular,
-                color = Theme.colors.shade.secondary
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Box(
+        },
+        content = {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(
-                        onClick = {
-                            locationInteractionListener.onShowGovernorateBottomSheet()
-                        },
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    )
+                    .fillMaxSize()
+                    .background(Theme.colors.background.screen)
+                    .verticalScroll(scroll)
+                    .padding(horizontal = 16.dp)
             ) {
-                AppTextField(
-                    value = state.locationUiState.selectedGovernorate,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = null,
-                    enabled = false,
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_location_pin),
-                            contentDescription = null,
-                            tint = Theme.colors.shade.tertiary
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = stringResource(R.string.where_are_you_located),
+                    style = Theme.textStyle.display.xLarge,
+                    color = Theme.colors.shade.primary
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = stringResource(R.string.location_help_text),
+                    style = Theme.textStyle.body.large.regular,
+                    color = Theme.colors.shade.secondary
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(
+                            onClick = {
+                                locationInteractionListener.onShowGovernorateBottomSheet()
+                            },
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
                         )
-                    },
-                    trailingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_alt_arrow_down),
-                            contentDescription = null,
-                            tint = Theme.colors.shade.tertiary
+                ) {
+                    AppTextField(
+                        value = state.locationUiState.selectedGovernorate,
+                        onValueChange = {},
+                        placeholder = stringResource(R.string.choose_governorate),
+                        readOnly = true,
+                        label = null,
+                        enabled = false,
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_location_pin),
+                                contentDescription = null,
+                                tint = Theme.colors.shade.tertiary
+                            )
+                        },
+                        trailingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_alt_arrow_down),
+                                contentDescription = null,
+                                tint = Theme.colors.shade.tertiary
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions.Default,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(
+                            onClick = {
+                                locationInteractionListener.onShowStreetBottomSheet()
+                            },
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
                         )
-                    },
-                    keyboardOptions = KeyboardOptions.Default,
-                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    AppTextField(
+                        value = state.locationUiState.selectedStreet,
+                        onValueChange = {},
+                        placeholder = stringResource(R.string.choose_district),
+                        label = null,
+                        keyboardOptions = KeyboardOptions.Default,
+                        readOnly = true,
+                        enabled = false,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                AppButton(
+                    type = AppButtonType.Primary,
+                    size = AppButtonSize.Large,
+                    text = stringResource(R.string.save),
+                    onClick = locationInteractionListener::onClickSave,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 24.dp)
                 )
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(
-                        onClick = {
-                            locationInteractionListener.onShowStreetBottomSheet()
-                        },
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    )
-            ) {
-                AppTextField(
-                    value = state.locationUiState.selectedStreet,
-                    onValueChange = {},
-                    label = null,
-                    keyboardOptions = KeyboardOptions.Default,
-                    readOnly = true,
-                    enabled = false,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-
-            AppButton(
-                type = AppButtonType.Primary,
-                size = AppButtonSize.Large,
-                text = stringResource(R.string.save),
-                onClick = locationInteractionListener::onClickSave,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 24.dp)
-            )
         }
-    }
+    )
+
     when (state.locationUiState.activeBottomSheet) {
         LocationBottomSheetType.GOVERNORATE -> {
             SelectionBottomSheet(
                 title = stringResource(R.string.choose_governorate),
                 isVisible = true,
                 items = state.locationUiState.governorates.map {
-                    SelectionItemData(
-                        it,
-                        showIcon = true
-                    )
+                    SelectionItemData(it, showIcon = true)
                 },
                 onDismiss = locationInteractionListener::onDismissBottomSheet,
                 onItemClick = { locationInteractionListener.onAreaSelected(it) }
@@ -176,10 +186,7 @@ fun LocationScreenContent(
                 title = stringResource(R.string.choose_district),
                 isVisible = true,
                 items = state.locationUiState.streets.map {
-                    SelectionItemData(
-                        it,
-                        showIcon = false
-                    )
+                    SelectionItemData(it, showIcon = false)
                 },
                 onDismiss = locationInteractionListener::onDismissBottomSheet,
                 onItemClick = { locationInteractionListener.onStreetChanged(it) }

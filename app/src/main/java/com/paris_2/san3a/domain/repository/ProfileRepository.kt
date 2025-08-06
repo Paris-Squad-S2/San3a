@@ -7,4 +7,5 @@ interface ProfileRepository {
     suspend fun isDarkThemeEnabled(): Flow<Boolean>
     fun getLatestSelectedAppLanguage(): Flow<String>
     suspend fun updateAppLanguage(newLanguage: String): Boolean
+    suspend fun getVersionName(): String
 }

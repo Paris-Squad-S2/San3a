@@ -72,7 +72,7 @@ class MyServiceViewModel(
                         screenState.value.copy(
                             isNoInternet = true,
                             isLoading = false,
-                            errorMessage = null,
+                            errorMessage = R.string.error_occurred_while_fetching_services,
                             showSnackBarError = false,
                             showSnackBarSuccess = false,
                             successMessageSnackBar = null
@@ -82,7 +82,8 @@ class MyServiceViewModel(
                     updateState(
                         screenState.value.copy(
                             errorMessage = R.string.service_not_found,
-                            isLoading = false
+                            isLoading = false,
+                            showSnackBarError = true
                         )
                     )
                 }
