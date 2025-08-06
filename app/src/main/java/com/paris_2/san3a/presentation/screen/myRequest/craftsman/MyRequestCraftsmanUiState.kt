@@ -1,5 +1,7 @@
 package com.paris_2.san3a.presentation.screen.myRequest.craftsman
 
+import com.paris_2.san3a.domain.entity.RequestStatus
+
 
 sealed class MyRequestCraftsmanScreenState {
     object Loading : MyRequestCraftsmanScreenState()
@@ -26,8 +28,3 @@ data class MyRequestCraftsmanUi(
     val status: RequestStatus = RequestStatus.ONGOING
 )
 
-enum class RequestStatus {
-    ONGOING,
-    COMPLETED,
-    CANCELLED
-}

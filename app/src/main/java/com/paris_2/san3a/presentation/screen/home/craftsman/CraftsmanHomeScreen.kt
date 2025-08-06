@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.RequestService
+import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.StatsContainer
 import com.paris_2.san3a.presentation.shared.components.AppBar
@@ -215,7 +216,8 @@ private fun Preview() {
                         serviceType = "",
                         selectedCraftsmanId = "",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = ""
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                     RequestService(
                         id = "2",
@@ -229,7 +231,8 @@ private fun Preview() {
                         serviceType = "",
                         selectedCraftsmanId = "",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = ""
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                     RequestService(
                         id = "3",
@@ -243,7 +246,8 @@ private fun Preview() {
                         serviceType = "",
                         selectedCraftsmanId = "",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = ""
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                 ),
                 availableJobs = listOf(
@@ -259,7 +263,8 @@ private fun Preview() {
                         serviceType = "",
                         selectedCraftsmanId = "",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = ""
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                     RequestService(
                         id = "2",
@@ -273,7 +278,8 @@ private fun Preview() {
                         serviceType = "",
                         selectedCraftsmanId = "",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = ""
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                     RequestService(
                         id = "3",
@@ -287,7 +293,8 @@ private fun Preview() {
                         serviceType = "",
                         selectedCraftsmanId = "",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = ""
+                        state = "",
+                        requestStatus = RequestStatus.ONGOING
                     ),
                 )
             )

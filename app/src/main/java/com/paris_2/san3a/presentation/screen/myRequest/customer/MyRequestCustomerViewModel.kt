@@ -1,10 +1,12 @@
 package com.paris_2.san3a.presentation.screen.myRequest.customer
 
+import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.delay
 
 class MyRequestCustomerViewModel(
-    
+    private val getCustomerRequestsUseCase: GetCustomerRequestsUseCase,
 ) : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState.Loading) {
 
     init {

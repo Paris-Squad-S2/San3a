@@ -1,5 +1,7 @@
 package com.paris_2.san3a.presentation.screen.myRequest.customer
 
+import com.paris_2.san3a.domain.entity.RequestStatus
+
 
 sealed class MyRequestCustomerScreenState {
     object Loading : MyRequestCustomerScreenState()
@@ -25,9 +27,3 @@ data class MyRequestCustomerUi(
     val isRated: Boolean = false,
     val status: RequestStatus = RequestStatus.ONGOING
 )
-
-enum class RequestStatus {
-    ONGOING,
-    COMPLETED,
-    CANCELLED
-}
