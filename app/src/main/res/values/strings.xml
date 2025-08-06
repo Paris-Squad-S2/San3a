@@ -272,6 +272,10 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="success_location_saved">Location saved successfully</string>
     <string name="error_general">Something went wrong</string>
     <string name="please_select_location">Please Select Governorate or District </string>
+    <string name="no_results_found">No Results Found</string>
+    <string name="try_a_different_keyword_or_check_your_spelling_some_services_may_be_listed_under_other_names">Try a different keyword or check your spelling.\nSome services may be listed under other names.</string>
+    <string name="voice_search">voice search</string>
+
     <string name="occrus_error_when_get_version_name">occurs error when get version name</string>
     <string name="error_occurred_while_fetching_services">An error occurred while fetching services</string>
 
