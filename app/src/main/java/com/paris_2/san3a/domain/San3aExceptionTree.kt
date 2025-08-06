@@ -27,6 +27,7 @@ class GetAllServicesException : San3aException("Services can't be read")
 class SetOnboardingCompletedException : San3aException("Failed to set onboarding completed")
 class GetOnboardingCompletedException : San3aException("Failed to get onboarding completed status")
 
+class AddUserException : San3aException("User couldn't be added")
 class SaveAccountTypeException : San3aException("Account type couldn't be saved")
 class GetAccountTypeException : San3aException("Account type couldn't be retrieved")
 class SaveServicesException : San3aException("Services couldn't be saved")

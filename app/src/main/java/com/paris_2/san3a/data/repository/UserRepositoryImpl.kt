@@ -4,6 +4,7 @@ import android.net.Uri
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
+import com.paris_2.san3a.domain.AddUserException
 import com.paris_2.san3a.domain.CompleteUserSetupException
 import com.paris_2.san3a.domain.GetAccountTypeException
 import com.paris_2.san3a.domain.GetRecentRelatedJobsException
@@ -34,6 +35,12 @@ class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
     private val storageRemoteDataSource: StorageRemoteDataSource
 ) : UserRepository, BaseRepository() {
+
+    override suspend fun addUser(phone: String) =
+        safeCall(AddUserException()) {
+            userRemoteDataSource.addUser(phone)
+        }
+
     override suspend fun saveAccountType(phone: String, accountType: AccountType) =
         safeCall(SaveAccountTypeException()) {
             userRemoteDataSource.saveAccountType(phone, accountType)
@@ -60,7 +67,7 @@ class UserRepositoryImpl(
 
     override suspend fun saveLocation(phone: String, location: Location) =
         safeCall(SaveLocationException()) {
-            userRemoteDataSource.saveLocation(phone, location)
+            userRemoteDataSource.updateLocation(phone, location)
         }
 
     override suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?) =
@@ -70,7 +77,7 @@ class UserRepositoryImpl(
                 storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
                 storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
             }
-            userRemoteDataSource.savePersonalInfo(phone, fullName, profileUrl)
+            userRemoteDataSource.updatePersonalInfo(phone, fullName, profileUrl)
         }
 
     override suspend fun saveWorkShowcase(
@@ -84,7 +91,7 @@ class UserRepositoryImpl(
                 storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
                 storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
             }
-            userRemoteDataSource.saveWorkShowcase(phone, mediaUrls, workDescription)
+            userRemoteDataSource.updateWorkShowcase(phone, mediaUrls, workDescription)
         }
 
     override suspend fun getUserProgress(phone: String): AccountSetupStep =
@@ -92,9 +99,9 @@ class UserRepositoryImpl(
             userRemoteDataSource.getUserProgress(phone)
         }
 
-    override suspend fun completeUserSetup(phone: String) =
+    override suspend fun updateUserProgress(phone: String, step: AccountSetupStep) =
         safeCall(CompleteUserSetupException()) {
-            userRemoteDataSource.completeUserSetup(phone)
+            userRemoteDataSource.updateUserProgress(phone, step)
         }
 
     override suspend fun getStats(userId: String): Stats {
@@ -122,7 +129,7 @@ class UserRepositoryImpl(
                 storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
                 storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
             }
-            userRemoteDataSource.saveNationalIdImages(phone, frontUrl, backUrl)
+            userRemoteDataSource.updateNationalIdImages(phone, frontUrl, backUrl)
         }
 
     override suspend fun getUser(phone: String): User =
