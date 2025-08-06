@@ -275,8 +275,8 @@ private fun CustomerHomeScreenContent(
         ) {
             item {
                 SearchBar(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
+                    value = state.customerUiState.searchQuery,
+                    onValueChange = { action.onSearch(it) },
                     hint = stringResource(R.string.search),
                     modifier = Modifier
                         .padding(top = 16.dp, bottom = 24.dp)
@@ -305,7 +305,12 @@ private fun CustomerHomeScreenContent(
                 )
             }
 
-            items(state.customerUiState.services) { service ->
+            val servicesToDisplay = if (state.customerUiState.searchQuery.isNotEmpty())
+                state.customerUiState.searchResults
+            else
+                state.customerUiState.services
+
+            items(servicesToDisplay) { service ->
                 CategoryItem(
                     title = service.title[if (isArabic) ARABIC_NAME else ENGLISH_NAME] ?: "",
                     description = service.description[if (isArabic) ARABIC_DESCRIPTION else ENGLISH_DESCRIPTION]
