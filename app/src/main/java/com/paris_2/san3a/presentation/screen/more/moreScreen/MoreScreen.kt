@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -42,6 +43,7 @@ import com.paris_2.san3a.presentation.screen.more.components.NotificationIcon
 import com.paris_2.san3a.presentation.screen.more.components.SettingItems
 import com.paris_2.san3a.presentation.screen.more.components.UserProfileSection
 import com.paris_2.san3a.presentation.shared.components.AppBar
+import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.AppSectionTitle
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
@@ -82,161 +84,178 @@ private fun MoreScreenContent(
     onPickImageClick: () -> Unit,
 ) {
     val scroll = rememberScrollState()
+    val context = LocalContext.current
 
-    Box(
-        Modifier
+    AppScaffold(
+        modifier = Modifier
             .fillMaxSize()
-            .background(Theme.colors.background.screen)
-            .verticalScroll(scroll)
-            .navigationBarsPadding()
+            .background(Theme.colors.background.card)
             .statusBarsPadding(),
-    ) {
-        when {
-            moreScreenState.isNoInternet -> {
-                LostConnectionScreen(
-                    onRetry = moreInteractionListener::onClickRetry,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 60.dp)
-                )
-            }
-
-            moreScreenState.isLoading -> {
-                LoadingScreen(
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            else -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Theme.colors.background.screen),
-                ) {
-                    AppBar(
+        topBar = {
+            AppBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Theme.colors.background.card)
+                    .padding(horizontal = 16.dp),
+                title = stringResource(R.string.more),
+                actionIcon = {
+                    NotificationIcon(
+                        modifier = Modifier.clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = moreInteractionListener::onClickNotification
+                        )
+                    )
+                }
+            )
+        },
+        content = {
+            when {
+                moreScreenState.isNoInternet -> {
+                    LostConnectionScreen(
+                        onRetry = moreInteractionListener::onClickRetry,
                         modifier = Modifier
-                            .height(56.dp)
-                            .background(Theme.colors.background.card)
-                            .padding(horizontal = 16.dp),
-                        title = stringResource(R.string.more),
-                        actionIcon = {
-                            NotificationIcon(
-                                modifier = Modifier.clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null,
-                                    onClick = moreInteractionListener::onClickNotification
+                            .fillMaxSize()
+                            .padding(horizontal = 60.dp)
+                    )
+                }
+
+                moreScreenState.isLoading -> {
+                    LoadingScreen(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                else -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen)
+                            .verticalScroll(scroll)
+                            .navigationBarsPadding()
+                    ) {
+                        UserProfileSection(
+                            modifier = Modifier.padding(16.dp),
+                            name = moreScreenState.moreUiState.userUiState.name,
+                            rating = moreScreenState.moreUiState.userUiState.rating,
+                            review = moreScreenState.moreUiState.userUiState.review,
+                            isVerify = moreScreenState.moreUiState.userUiState.isVerify,
+                            phoneNumber = moreScreenState.moreUiState.userUiState.phoneNumber,
+                            isCraftsman = moreScreenState.moreUiState.userUiState.isCraftsman,
+                            painter = rememberAsyncImagePainter(moreScreenState.moreUiState.userUiState.imageUrl),
+                            onClickEdit = moreInteractionListener::onClickEditProfileBottomSheet,
+                        )
+
+                        AnimatedVisibility(
+                            visible = !moreScreenState.moreUiState.userUiState.isCraftsman,
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) {
+                            BecomeCraftsmanCard(moreInteractionListener::onClickBecomeACraftsman)
+                        }
+
+                        AppSectionTitle(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(top = 24.dp, bottom = 12.dp),
+                            title = stringResource(R.string.setting)
+                        )
+
+                        SettingItems(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            isCraftsman = moreScreenState.moreUiState.userUiState.isCraftsman,
+                            isDarkMode = moreScreenState.moreUiState.isDarkMode,
+                            moreInteractionListener = moreInteractionListener,
+                            isLoadingChangeAccount = moreScreenState.isLoadingChangeAccount
+                        )
+
+                        LogoutItem(
+                            modifier = Modifier
+                                .padding(top = 12.dp)
+                                .padding(horizontal = 16.dp)
+                                .background(
+                                    Theme.colors.background.card,
+                                    RoundedCornerShape(Theme.radius.extraLarge)
                                 )
+                                .clip(RoundedCornerShape(Theme.radius.extraLarge)),
+                            onClickItem = moreInteractionListener::onClickLogoutArrow
+                        )
+
+                        Text(
+                            text = stringResource(
+                                R.string.version,
+                                moreScreenState.moreUiState.versionNumber
+                            ),
+                            style = Theme.textStyle.body.small.regular,
+                            color = Theme.colors.shade.tertiary,
+                            modifier = Modifier
+                                .padding(top = 24.dp)
+                                .fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(68.dp))
+
+
+                        AnimatedVisibility(moreScreenState.showEditProfileBottomSheet) {
+                            EditProfileBottomSheet(
+                                name = moreScreenState.moreUiState.userUiState.name,
+                                profileUri = moreScreenState.moreUiState.userUiState.imageUrl,
+                                onNameChange = moreInteractionListener::onNameValueChange,
+                                onDismissRequest = moreInteractionListener::onCloseEditProfileBottomSheet,
+                                isVisible = moreScreenState.showEditProfileBottomSheet,
+                                onPickImageClick = { onPickImageClick() }
                             )
                         }
-                    )
-                    UserProfileSection(
-                        modifier = Modifier.padding(16.dp),
-                        name = moreScreenState.moreUiState.userUiState.name,
-                        rating = moreScreenState.moreUiState.userUiState.rating,
-                        review = moreScreenState.moreUiState.userUiState.review,
-                        isVerify = moreScreenState.moreUiState.userUiState.isVerify,
-                        phoneNumber = moreScreenState.moreUiState.userUiState.phoneNumber,
-                        isCraftsman = moreScreenState.moreUiState.userUiState.isCraftsman,
-                        painter = rememberAsyncImagePainter(moreScreenState.moreUiState.userUiState.imageUrl),
-                        onClickEdit = moreInteractionListener::onClickEditProfileBottomSheet,
-                    )
 
-                    AnimatedVisibility(
-                        visible = !moreScreenState.moreUiState.userUiState.isCraftsman,
-                        modifier = Modifier.padding(top = 8.dp)
-                    ) {
-
-                        BecomeCraftsmanCard(moreInteractionListener::onClickBecomeACraftsman)
-                    }
-
-                    AppSectionTitle(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .padding(top = 24.dp, bottom = 12.dp),
-                        title = stringResource(R.string.setting)
-                    )
-
-                    SettingItems(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        isCraftsman = moreScreenState.moreUiState.userUiState.isCraftsman,
-                        isDarkMode = moreScreenState.moreUiState.isDarkMode,
-                        moreInteractionListener = moreInteractionListener,
-                        isLoadingChangeAccount = moreScreenState.isLoadingChangeAccount
-                    )
-                    LogoutItem(
-                        modifier = Modifier
-                            .padding(top = 12.dp)
-                            .padding(horizontal = 16.dp)
-                            .background(
-                                Theme.colors.background.card,
-                                RoundedCornerShape(Theme.radius.extraLarge)
+                        AnimatedVisibility(moreScreenState.showLanguageBottomSheet) {
+                            ChangeLanguageBottomSheet(
+                                isVisible = moreScreenState.showLanguageBottomSheet,
+                                onDismissRequest = moreInteractionListener::onCloseSelectedLanguageBottomSheet,
+                                selectedLanguage = moreScreenState.moreUiState.selectedLanguage,
+                                onLanguageSelected = { language ->
+                                    moreInteractionListener.onLanguageSelected(language)
+                                    val intent =
+                                        context.packageManager.getLaunchIntentForPackage(context.packageName)
+                                    intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    context.startActivities(arrayOf(intent))
+                                },
                             )
-                            .clip(RoundedCornerShape(Theme.radius.extraLarge)),
-                        onClickItem = moreInteractionListener::onClickLogoutArrow
-                    )
+                        }
+                    }
+                }
+            }
 
-                    Text(
-                        text = stringResource(
-                            R.string.version,
-                            moreScreenState.moreUiState.versionNumber
-                        ),
-                        style = Theme.textStyle.body.small.regular,
-                        color = Theme.colors.shade.tertiary,
-                        modifier = Modifier
-                            .padding(top = 24.dp)
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
-                    AnimatedVisibility(moreScreenState.showEditProfileBottomSheet) {
-                        EditProfileBottomSheet(
-                            name = moreScreenState.moreUiState.userUiState.name,
-                            profileUri = moreScreenState.moreUiState.userUiState.imageUrl,
-                            onNameChange = moreInteractionListener::onNameValueChange,
-                            onDismissRequest = moreInteractionListener::onCloseEditProfileBottomSheet,
-                            isVisible = moreScreenState.showEditProfileBottomSheet,
-                            onPickImageClick = { onPickImageClick() }
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                AnimatedVisibility(moreScreenState.showSnackBarError) {
+                    moreScreenState.errorMessage?.let {
+                        SnackBar(
+                            text = it,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .statusBarsPadding()
+                                .padding(horizontal = 12.dp, vertical = 16.dp)
+                                .align(Alignment.TopCenter),
+                            onClick = moreInteractionListener::onDismissSnackBar
                         )
                     }
-
-                    AnimatedVisibility(moreScreenState.showLanguageBottomSheet) {
-                        ChangeLanguageBottomSheet(
-                            isVisible = moreScreenState.showLanguageBottomSheet,
-                            onDismissRequest = moreInteractionListener::onCloseSelectedLanguageBottomSheet,
-                            selectedLanguage = moreScreenState.moreUiState.selectedLanguage,
-                            onLanguageSelected = moreInteractionListener::onLanguageSelected,
+                }
+                AnimatedVisibility(moreScreenState.showSnackBarSuccess) {
+                    moreScreenState.successMessageSnackBar?.let {
+                        SnackBar(
+                            text = it,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .statusBarsPadding()
+                                .padding(horizontal = 12.dp, vertical = 16.dp)
+                                .align(Alignment.TopCenter),
+                            onClick = moreInteractionListener::onDismissSnackBar
                         )
                     }
-
                 }
             }
         }
-
-        AnimatedVisibility(moreScreenState.showSnackBarError) {
-            moreScreenState.errorMessage?.let {
-                SnackBar(
-                    text = moreScreenState.errorMessage,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
-                        .align(Alignment.TopCenter)
-                )
-            }
-        }
-
-        AnimatedVisibility(moreScreenState.showSnackBarSuccess) {
-            moreScreenState.successMessageSnackBar?.let {
-                SnackBar(
-                    text = moreScreenState.successMessageSnackBar,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
-                        .align(Alignment.TopCenter)
-                )
-            }
-        }
-    }
+    )
 
     AnimatedVisibility(moreScreenState.showLogoutBottomSheet) {
         LogoutBottomSheet(
@@ -246,8 +265,6 @@ private fun MoreScreenContent(
             onCancel = moreInteractionListener::onDismissLogoutBottomSheet
         )
     }
-
-
 }
 
 @PreviewMultiDevices
@@ -256,69 +273,25 @@ private fun MoreScreenContent(
 fun MoreScreenContentPreview() {
     BasePreview {
         MoreScreenContent(MoreScreenState(), object : MoreInteractionListener {
-            override fun onClickEditProfileBottomSheet() {
-
-            }
-
-            override fun onClickSwitchAccountToCraftsman() {
-            }
-
-            override fun onClickSwitchAccountToCustomer() {
-            }
-
-            override fun onClickVerification() {
-
-            }
-
-            override fun onClickMyService() {
-
-            }
-
-            override fun onClickLanguage() {
-            }
-
-            override fun onClickLocation() {
-            }
-
-            override fun onClickLogout() {
-            }
-
-            override fun onChangeToDarkMode(isDarkMode: Boolean) {
-            }
-
-            override fun onClickNotification() {
-
-            }
-
-            override fun onClickBecomeACraftsman() {
-
-            }
-
-            override fun onNameValueChange(name: String) {
-
-            }
-
-            override fun onCloseEditProfileBottomSheet() {
-            }
-
-            override fun onCloseSelectedLanguageBottomSheet() {
-
-            }
-
-            override fun onLanguageSelected(language: String) {
-            }
-
-            override fun onClickRetry() {
-
-            }
-
-            override fun onClickLogoutArrow() {
-
-            }
-
-            override fun onDismissLogoutBottomSheet() {
-            }
-
+            override fun onClickEditProfileBottomSheet() {}
+            override fun onClickSwitchAccountToCraftsman() {}
+            override fun onClickSwitchAccountToCustomer() {}
+            override fun onClickVerification() {}
+            override fun onClickMyService() {}
+            override fun onClickLanguage() {}
+            override fun onClickLocation() {}
+            override fun onClickLogout() {}
+            override fun onChangeToDarkMode(isDarkMode: Boolean) {}
+            override fun onClickNotification() {}
+            override fun onClickBecomeACraftsman() {}
+            override fun onNameValueChange(name: String) {}
+            override fun onCloseEditProfileBottomSheet() {}
+            override fun onCloseSelectedLanguageBottomSheet() {}
+            override fun onLanguageSelected(language: String) {}
+            override fun onClickRetry() {}
+            override fun onDismissSnackBar() {}
+            override fun onClickLogoutArrow() {}
+            override fun onDismissLogoutBottomSheet() {}
         }, onPickImageClick = {})
     }
 }

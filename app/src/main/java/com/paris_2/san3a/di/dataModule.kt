@@ -10,6 +10,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.paris_2.san3a.data.repository.HomeRepositoryImpl
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
+import com.paris_2.san3a.data.source.local.AppVersionDataSource
 import com.paris_2.san3a.data.source.local.LocalDataStore
 import com.paris_2.san3a.data.source.local.LocalDataStoreImpl
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSourceImpl
@@ -44,6 +45,7 @@ val dataModule = module {
     singleOf(::LocationRemoteDataSourceImp) { bind<LocationRemoteDataSource>() }
     single { FirebaseFirestore.getInstance() }
     single { FirebaseStorage.getInstance() }
+    single { AppVersionDataSource(get()) }
     singleOf(::LocalDataStoreImpl) { bind<LocalDataStore>() }
     single<DataStore<Preferences>> {
         PreferenceDataStoreFactory.create { get<Context>().preferencesDataStoreFile("app_datastore") }

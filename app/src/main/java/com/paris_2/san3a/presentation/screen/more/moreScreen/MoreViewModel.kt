@@ -10,9 +10,11 @@ import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.mapper.toUserUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
@@ -38,7 +40,7 @@ data class MoreScreenState(
 data class MoreUiState(
     val userUiState: UserUiState = UserUiState(),
     val isDarkMode: Boolean = false,
-    val versionNumber: String = "1.0.0",
+    val versionNumber: String = "",
     val selectedLanguage: String = LanguageUiState.ENGLISH.name,
 )
 
@@ -54,7 +56,8 @@ data class UserUiState(
     val rating: Double = 0.0,
     val phoneNumber: String = "",
     val isVerify: Boolean = false,
-    val isCraftsman: Boolean = false,
+    val isCraftsman: Boolean = true,
+    val previousImage: Uri? = null,
 )
 
 class MoreViewModel(
@@ -64,6 +67,7 @@ class MoreViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
+    private val getVersionNameUseCase: GetVersionNameUseCase,
 ) : BaseViewModel<MoreScreenState>(MoreScreenState()), MoreInteractionListener {
 
     init {
@@ -72,10 +76,39 @@ class MoreViewModel(
 
 
     private fun fetchData() {
+        getVersionName()
+        getPhoneNumber()
         getDarkMode()
         getLanguageSelected()
-        updatePhoneNumber()
-        getUserInformation()
+    }
+
+    private fun getVersionName() {
+        tryToExecute(
+            execute = { getVersionNameUseCase() },
+            onSuccess = ::onGetVersionNameSuccess,
+            onError = ::onGetVersionNameError
+        )
+    }
+
+    private fun onGetVersionNameSuccess(versionName: String) {
+        updateState(
+            screenState.value.copy(
+                moreUiState = screenState.value.moreUiState.copy(
+                    versionNumber = versionName
+                )
+            )
+        )
+    }
+
+    private fun onGetVersionNameError(throwable: Throwable) {
+        updateState(
+            screenState.value.copy(
+                errorMessage = R.string.occrus_error_when_get_version_name,
+                showSnackBarError = true,
+                isNoInternet = false,
+                isLoading = false
+            )
+        )
     }
 
     private fun getLanguageSelected() {
@@ -90,8 +123,6 @@ class MoreViewModel(
         selectedLanguage.collect { languageSelected ->
             updateState(
                 screenState.value.copy(
-                    isNoInternet = false,
-                    isLoading = false,
                     errorMessage = null,
                     showSnackBarError = false,
                     moreUiState = screenState.value.moreUiState.copy(
@@ -107,13 +138,11 @@ class MoreViewModel(
             screenState.value.copy(
                 errorMessage = R.string.occrus_error_when_get_languag_selected,
                 showSnackBarError = true,
-                isNoInternet = false,
-                isLoading = false,
             )
         )
     }
 
-    private fun updatePhoneNumber() {
+    private fun getPhoneNumber() {
         tryToExecute(
             execute = { getPhoneNumberUseCase() },
             onSuccess = ::onGetPhoneNumberSuccess,
@@ -142,8 +171,6 @@ class MoreViewModel(
             isDarkMode.collectLatest {
                 updateState(
                     screenState.value.copy(
-                        isNoInternet = false,
-                        isLoading = false,
                         errorMessage = null,
                         showSnackBarError = false,
                         moreUiState = screenState.value.moreUiState.copy(
@@ -161,13 +188,14 @@ class MoreViewModel(
             screenState.value.copy(
                 errorMessage = R.string.occrus_error_when_get_dark_mode,
                 showSnackBarError = true,
-                isNoInternet = false,
-                isLoading = false,
             )
         )
     }
 
     private fun onGetUserInformationSuccess(user: User) {
+        val isVerify = user.nationalIdBackImage.isNotEmpty() &&
+                user.nationalIdFrontImage.isNotEmpty() &&
+                user.accountType == AccountType.CRAFTSMAN
         updateState(
             screenState.value.copy(
                 isLoading = false,
@@ -175,7 +203,8 @@ class MoreViewModel(
                 showSnackBarError = false,
                 isNoInternet = false,
                 moreUiState = screenState.value.moreUiState.copy(
-                    userUiState = user.toUserUiState(),
+                    userUiState = user.toUserUiState()
+                        .copy(isVerify = isVerify),
                 )
             )
         )
@@ -209,8 +238,6 @@ class MoreViewModel(
             screenState.value.copy(
                 errorMessage = null,
                 showSnackBarError = false,
-                isNoInternet = false,
-                isLoading = false,
                 moreUiState = screenState.value.moreUiState.copy(
                     userUiState = screenState.value.moreUiState.userUiState.copy(
                         phoneNumber = phoneNumber
@@ -218,6 +245,7 @@ class MoreViewModel(
                 )
             )
         )
+        getUserInformation()
     }
 
     private fun onGetPhoneNumberError(th: Throwable) {
@@ -225,8 +253,6 @@ class MoreViewModel(
             screenState.value.copy(
                 errorMessage = R.string.phone_number_not_found,
                 showSnackBarError = true,
-                isNoInternet = false,
-                isLoading = false,
                 showSnackBarSuccess = false
             )
         )
@@ -273,6 +299,7 @@ class MoreViewModel(
 
         updateState(
             screenState.value.copy(
+                isLoadingChangeAccount = false,
                 isLoading = false,
                 errorMessage = null,
                 isNoInternet = false,
@@ -284,6 +311,11 @@ class MoreViewModel(
                     )
                 )
             )
+        )
+
+        LocalAccountType.value = AccountType.CRAFTSMAN
+        navigate(
+            destination = Destinations.CraftManGraph
         )
     }
 
@@ -329,6 +361,12 @@ class MoreViewModel(
                     )
                 )
             )
+        )
+
+        LocalAccountType.value = AccountType.CUSTOMER
+
+        navigate(
+            destination = Destinations.CustomerGraph,
         )
     }
 
@@ -426,13 +464,19 @@ class MoreViewModel(
             screenState.value.copy(showEditProfileBottomSheet = false)
         )
         if (screenState.value.moreUiState.userUiState.name.isNotEmpty() ||
-            screenState.value.moreUiState.userUiState.imageUrl != null
+            screenState.value.moreUiState.userUiState.imageUrl != null ||
+            screenState.value.moreUiState.userUiState.imageUrl != screenState.value.moreUiState.userUiState.previousImage
         ) {
             saveUserInformation()
         }
     }
 
     private fun saveUserInformation() {
+        updateState(
+            screenState.value.copy(
+                isLoading = true,
+            )
+        )
         tryToExecute(
             execute = {
                 setUpAccountUseCase.savePersonalInfo(
@@ -566,6 +610,17 @@ class MoreViewModel(
         updateState(
             screenState.value.copy(
                 showLogoutBottomSheet = false
+            )
+        )
+    }
+
+    override fun onDismissSnackBar() {
+        updateState(
+            screenState.value.copy(
+                showSnackBarError = false,
+                showSnackBarSuccess = false,
+                errorMessage = null,
+                successMessageSnackBar = null
             )
         )
     }

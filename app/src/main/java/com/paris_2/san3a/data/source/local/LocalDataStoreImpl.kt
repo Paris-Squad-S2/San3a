@@ -12,7 +12,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 
 class LocalDataStoreImpl(
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val appVersionDataSource: AppVersionDataSource
 ): LocalDataStore {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -59,6 +60,18 @@ class LocalDataStoreImpl(
         return true
     }
 
+    override suspend fun getVersionName(): String {
+        saveVersionName()
+        return dataStore.data.map {
+            it[APP_VERSION_NAME] ?: DEFAULT_VERSION_NAME
+        }.first()
+    }
+
+    private suspend fun saveVersionName() {
+        val versionName = appVersionDataSource.getVersionName()
+        dataStore.setValue(APP_VERSION_NAME,versionName)
+    }
+
     override fun getLatestSelectedAppLanguage(): Flow<String> =
         dataStore.data.map {
             it[LOCAL_LANGUAGE] ?: ENGLISH
@@ -82,6 +95,8 @@ class LocalDataStoreImpl(
         private val KEY_USER_LOGGED_IN = booleanPreferencesKey("user_logged_in")
         private val IS_DARK_THEME = booleanPreferencesKey("Is_Dark_Theme")
         private val LOCAL_LANGUAGE = stringPreferencesKey("LOCAL_LANGUAGE")
+        private val APP_VERSION_NAME = stringPreferencesKey("APP_VERSION_NAME")
         const val ENGLISH = "en"
+        const val DEFAULT_VERSION_NAME = "1.0.0"
     }
 }
