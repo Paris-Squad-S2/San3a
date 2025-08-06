@@ -31,10 +31,11 @@ fun ProfileContent(
     ) {
         AppTextField(
             label = stringResource(R.string.what_s_your_name),
+            labelColor = Theme.colors.shade.primary,
             value = name,
             onValueChange = onNameChanged,
             placeholder = stringResource(R.string.enter_your_full_name),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(top = 32.dp)
         )
         Row(
             modifier = modifier,

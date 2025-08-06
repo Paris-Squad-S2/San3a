@@ -54,6 +54,7 @@ fun AppTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     label: String? = null,
+    labelColor: Color = Theme.colors.shade.secondary,
     forgotPasswordClick: (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     textColor: Color? = null,
@@ -74,7 +75,7 @@ fun AppTextField(
                 Text(
                     text = label,
                     style = Theme.textStyle.body.medium.regular,
-                    color = Theme.colors.shade.secondary,
+                    color = labelColor,
                     modifier = Modifier
                 )
             }

@@ -105,7 +105,6 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
         onWorkImageClick = { workImagePickerLauncher.launch(arrayOf("image/*")) },
         interactionListener = viewModel,
         uiState = uiState,
-        modifier = Modifier.padding(horizontal = 16.dp)
     )
 }
 
@@ -131,6 +130,7 @@ fun AccountScreenContent(
             .background(Theme.colors.background.screen)
             .safeContentPadding()
             .padding(top = 16.dp, bottom = 16.dp)
+            .padding(horizontal = 16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -169,7 +169,6 @@ fun AccountScreenContent(
             )
 
             2 -> ProfileContent(
-                modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
                 name = uiState.accountUiState.customerName,
                 onNameChanged = interactionListener::onCustomerNameChanged,
                 onAddPhotoClick = onCustomerProfilePhotoClick,

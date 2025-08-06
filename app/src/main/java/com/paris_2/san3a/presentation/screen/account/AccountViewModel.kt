@@ -304,7 +304,8 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    workImagesUris = uris
+                    workImagesUris = uris,
+                    isNextButtonEnabled = true
                 )
             )
         )
@@ -370,8 +371,8 @@ class AccountViewModel(
                         }
 
                         3 -> {
-                            setButtonToDefault()
                             if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
+
                                 setUpAccountUseCase.saveWorkShowcase(
                                     phone = screenState.value.accountUiState.phoneNumber,
                                     workMedia = screenState.value.accountUiState.workImagesUris,
