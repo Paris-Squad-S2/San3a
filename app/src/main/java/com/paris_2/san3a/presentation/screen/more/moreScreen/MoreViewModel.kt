@@ -3,8 +3,6 @@ package com.paris_2.san3a.presentation.screen.more.moreScreen
 import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavOptions
-import coil3.toUri
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountType
@@ -69,7 +67,7 @@ class MoreViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
-    private val getVersionNameUseCase: GetVersionNameUseCase
+    private val getVersionNameUseCase: GetVersionNameUseCase,
 ) : BaseViewModel<MoreScreenState>(MoreScreenState()), MoreInteractionListener {
 
     init {
@@ -91,7 +89,7 @@ class MoreViewModel(
             onError = ::onGetVersionNameError
         )
     }
-    
+
     private fun onGetVersionNameSuccess(versionName: String) {
         updateState(
             screenState.value.copy(
@@ -101,8 +99,8 @@ class MoreViewModel(
             )
         )
     }
-    
-    private fun onGetVersionNameError(throwable: Throwable){
+
+    private fun onGetVersionNameError(throwable: Throwable) {
         updateState(
             screenState.value.copy(
                 errorMessage = R.string.occrus_error_when_get_version_name,
@@ -474,6 +472,11 @@ class MoreViewModel(
     }
 
     private fun saveUserInformation() {
+        updateState(
+            screenState.value.copy(
+                isLoading = true,
+            )
+        )
         tryToExecute(
             execute = {
                 setUpAccountUseCase.savePersonalInfo(
