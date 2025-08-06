@@ -97,6 +97,7 @@ fun LocationScreenContent(
                 AppTextField(
                     value = state.locationUiState.selectedGovernorate,
                     onValueChange = {},
+                    placeholder = stringResource(R.string.choose_governorate),
                     readOnly = true,
                     label = null,
                     enabled = false,
@@ -135,6 +136,7 @@ fun LocationScreenContent(
                 AppTextField(
                     value = state.locationUiState.selectedStreet,
                     onValueChange = {},
+                    placeholder = stringResource(R.string.choose_district),
                     label = null,
                     keyboardOptions = KeyboardOptions.Default,
                     readOnly = true,
