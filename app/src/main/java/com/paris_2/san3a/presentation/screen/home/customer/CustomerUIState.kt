@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.home.customer
 
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.RequestService
+import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 
@@ -67,6 +68,7 @@ data class RequestServiceUiState(
     val locationDetails: String,
     val image: List<String>,
     val userId: String = "",
+    val requestStatus: RequestStatus = RequestStatus.ONGOING
 )
 
 fun RequestService.toRequestServiceUiState(): RequestServiceUiState {
@@ -94,7 +96,8 @@ fun RequestServiceUiState.toRequestService(): RequestService {
         offers = emptyList(),
         selectedCraftsmanId = "",
         time = getCurrentDateTime(),
-        state = ""
+        state = "",
+        requestStatus = this.requestStatus
     )
 }
 

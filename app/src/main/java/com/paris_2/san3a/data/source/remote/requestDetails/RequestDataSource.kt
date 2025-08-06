@@ -12,4 +12,5 @@ interface RequestDataSource {
     suspend fun assignRequestToCraftsman(requestId: String, craftsmanId: String)
     fun getOffers(requestId: String): Flow<List<OfferDto>>
     suspend fun acceptOffer(offerId: String)
+    fun getCustomerRequests(userId: String): Flow<List<RequestServiceDto>>
 }

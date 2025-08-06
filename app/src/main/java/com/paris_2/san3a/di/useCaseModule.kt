@@ -29,6 +29,7 @@ import com.paris_2.san3a.domain.usecase.messages.GetChatsByUserIdUseCase
 import com.paris_2.san3a.domain.usecase.messages.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.messages.MarkMessagesAsSeenUseCase
 import com.paris_2.san3a.domain.usecase.messages.SendMessageUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -62,4 +63,5 @@ val useCaseModule = module {
     factoryOf(::AddNotificationUseCase)
     factoryOf(::StreamNotificationsUseCase)
     factoryOf(::CustomizeProfileSettingsUseCase)
+    factoryOf(::GetCustomerRequestsUseCase)
 }

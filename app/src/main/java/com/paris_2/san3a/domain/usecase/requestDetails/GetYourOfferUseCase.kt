@@ -1,11 +1,11 @@
 package com.paris_2.san3a.domain.usecase.requestDetails
 
-import com.paris_2.san3a.domain.repository.RequestDetailsRepository
+import com.paris_2.san3a.domain.repository.RequestsRepository
 
 class GetYourOfferUseCase(
-    private val requestDetailsRepository: RequestDetailsRepository
+    private val requestsRepository: RequestsRepository
 
 ) {
     suspend operator fun invoke(craftsmanId: String) =
-        requestDetailsRepository.getYourOffer(craftsmanId)
+        requestsRepository.getYourOffer(craftsmanId)
 }

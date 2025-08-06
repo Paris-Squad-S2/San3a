@@ -5,8 +5,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.presentation.screen.myRequest.customer.MyRequestCustomerUi
-import com.paris_2.san3a.presentation.screen.myRequest.customer.RequestStatus
 
 data class ButtonConfig(
     val text: String?,

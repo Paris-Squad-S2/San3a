@@ -2,6 +2,7 @@ package com.paris_2.san3a.data.mapper
 
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import com.paris_2.san3a.domain.entity.RequestService
+import com.paris_2.san3a.domain.entity.RequestStatus
 import kotlinx.datetime.LocalDateTime
 
 fun RequestServiceDto.toEntity() = RequestService(
@@ -17,6 +18,7 @@ fun RequestServiceDto.toEntity() = RequestService(
     time = LocalDateTime.parse(time),
     state = state,
     selectedCraftsmanId = selectedCraftsmanId,
+    requestStatus = RequestStatus.valueOf(requestStatus)
 )
 
 fun RequestService.toDto(imageUrls: List<String> = emptyList()) = RequestServiceDto(
@@ -32,4 +34,5 @@ fun RequestService.toDto(imageUrls: List<String> = emptyList()) = RequestService
     time = time.toString(),
     state = state,
     selectedCraftsmanId = selectedCraftsmanId,
+    requestStatus = requestStatus.name
 )
