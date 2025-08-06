@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,6 +52,7 @@ fun LocationScreenContent(
     state: LocationScreenState,
     locationInteractionListener: LocationInteractionListener,
 ) {
+    val scroll = rememberScrollState()
     AppScaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -67,6 +70,7 @@ fun LocationScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Theme.colors.background.screen)
+                    .verticalScroll(scroll)
                     .padding(horizontal = 16.dp)
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
