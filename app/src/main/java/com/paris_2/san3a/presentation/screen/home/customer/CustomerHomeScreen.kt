@@ -83,12 +83,10 @@ private fun CustomerHomeScreenContent(
     val voiceLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { result: ActivityResult ->
-            Log.d("CustomerHomeScreen", "voiceLauncher received result.")
             if (result.resultCode == Activity.RESULT_OK) {
                 val spokenText = result.data
                     ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                     ?.firstOrNull()
-                Log.d("CustomerHomeScreen", "Recognized text: $spokenText")
                 spokenText?.let { action.onSpeechRecognized(it) }
             }
         }
@@ -97,18 +95,9 @@ private fun CustomerHomeScreenContent(
     LaunchedEffect(Unit) {
         val viewModel = action as? CustomerHomeViewModel
         if (viewModel == null) {
-            Log.e(
-                "CustomerHomeScreen",
-                "Mic event: action was not CustomerHomeViewModel, cannot collect triggerVoiceSearch."
-            )
             return@LaunchedEffect
         }
-        Log.d("CustomerHomeScreen", "LaunchedEffect started, collecting ViewModel mic events.")
         viewModel.triggerVoiceSearch.collect {
-            Log.d(
-                "CustomerHomeScreen",
-                "triggerVoiceSearch collect: Launching voice recognizer intent."
-            )
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                 putExtra(
                     RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -343,10 +332,6 @@ private fun CustomerHomeScreenContent(
                     onValueChange = { action.onSearch(it) },
                     hint = stringResource(R.string.search),
                     onMicClick = {
-                        Log.d(
-                            "CustomerHomeScreen",
-                            "Mic icon clicked. Calling action.onMicClick()."
-                        )
                         action.onMicClick()
                     },
                     modifier = Modifier
