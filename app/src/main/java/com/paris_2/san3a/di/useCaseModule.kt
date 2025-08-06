@@ -30,6 +30,12 @@ import com.paris_2.san3a.domain.usecase.messages.GetChatsByUserIdUseCase
 import com.paris_2.san3a.domain.usecase.messages.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.messages.MarkMessagesAsSeenUseCase
 import com.paris_2.san3a.domain.usecase.messages.SendMessageUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.GetAcceptedOffersUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.GetYourOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
@@ -66,4 +72,11 @@ val useCaseModule = module {
     factoryOf(::CustomizeProfileSettingsUseCase)
     factoryOf(::GetCustomerRequestsUseCase)
     factoryOf(::GetVersionNameUseCase)
+    factoryOf(::GetRequestDetailsByIdUseCase)
+    factoryOf(::AcceptOfferUseCase)
+    factoryOf(::GetOffersUseCase)
+    factoryOf(::GetRequestDetailsByIdUseCase)
+    factoryOf(::AddOfferUseCase)
+    factoryOf(::GetYourOfferUseCase)
+    factoryOf(::GetAcceptedOffersUseCase)
 }

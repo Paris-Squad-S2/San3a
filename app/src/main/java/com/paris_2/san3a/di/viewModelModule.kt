@@ -18,7 +18,7 @@ import org.koin.core.module.dsl.viewModelOf
 import com.paris_2.san3a.presentation.screen.myRequest.customer.MyRequestCustomerViewModel
 import com.paris_2.san3a.presentation.screen.myRequest.craftsman.MyRequestCraftsmanViewModel
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.CraftsmanRequestDetailsViewModel
-import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.CustomerRequestDetailsViewModel
+import com.paris_2.san3a.presentation.screen.requestDetails.customer.CustomerRequestDetailsViewModel
 import org.koin.dsl.module
 
 
