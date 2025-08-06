@@ -23,3 +23,11 @@ enum class RequestStatus {
     COMPLETED,
     CANCELLED
 }
+
+enum class RequestDetailsStatus {
+    SUBMITTED,
+    RECEIVING_OFFERS,
+    CRAFTSMAN_SELECTED,
+    IN_PROGRESS,
+    DONE
+}
