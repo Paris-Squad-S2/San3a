@@ -283,6 +283,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="no_results_found">No Results Found</string>
     <string name="try_a_different_keyword_or_check_your_spelling_some_services_may_be_listed_under_other_names">Try a different keyword or check your spelling.\nSome services may be listed under other names.</string>
     <string name="voice_search">voice search</string>
+    <string name="my_requests">My Requests</string>
 
 
 </resources>

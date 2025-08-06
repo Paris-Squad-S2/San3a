@@ -4,13 +4,14 @@ import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
+import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class MyRequestCustomerViewModel(
     private val getCustomerRequestsUseCase: GetCustomerRequestsUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
-) : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState()) {
+) : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState()), MyRequestCustomerInteractionListener {
 
     init {
         getCustomerPhone()
@@ -71,5 +72,13 @@ class MyRequestCustomerViewModel(
                 )
             }
         )
+    }
+
+    override fun onRequestClick(requestId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onNotificationClick() {
+        navigate(Destinations.Notification)
     }
 }
