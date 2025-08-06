@@ -273,7 +273,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="success_location_saved">Location saved successfully</string>
     <string name="error_general">Something went wrong</string>
     <string name="please_select_location">Please Select Governorate or District </string>
-
     <string name="ongoing">Ongoing</string>
     <string name="completed">Completed</string>
     <string name="canceled">Cancel</string>
