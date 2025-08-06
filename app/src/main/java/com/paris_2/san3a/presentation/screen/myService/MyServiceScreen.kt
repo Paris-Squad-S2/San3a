@@ -25,8 +25,6 @@ import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
-import com.paris_2.san3a.presentation.shared.components.LoadingScreen
-import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
@@ -45,85 +43,63 @@ fun MyServiceScreen(myServiceViewModel: MyServiceViewModel = koinViewModel()) {
 @Composable
 fun MyServiceScreenContent(
     myServiceScreenState: MyServiceScreenState,
-    myServiceInteractionListener: MyServiceInteractionListener
+    myServiceInteractionListener: MyServiceInteractionListener,
 ) {
-
-    val scroll = rememberScrollState()
-
+    val scrollState = rememberScrollState()
 
     Box(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(Theme.colors.background.screen)
-            .verticalScroll(scroll)
-            .statusBarsPadding()
     ) {
-        when {
-            myServiceScreenState.isNoInternet -> {
-                LostConnectionScreen(
-                    onRetry = myServiceInteractionListener::onClickRetry,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 60.dp)
-                )
-            }
+        Column(
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .fillMaxWidth()
+                .padding(bottom = 96.dp)
+        ) {
+            AppBar(
+                title = stringResource(R.string.my_services),
+                onBackClick = myServiceInteractionListener::onBackClick
+            )
 
-            myServiceScreenState.isLoading -> {
-                LoadingScreen(
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
 
-            else -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    AppBar(
-                        title = stringResource(R.string.my_services),
-                        modifier = Modifier.fillMaxWidth(),
-                        onBackClick = myServiceInteractionListener::onBackClick
-                    )
+            Text(
+                text = stringResource(R.string.what_do_you_usually_need_help_with),
+                style = Theme.textStyle.display.xLarge,
+                color = Theme.colors.shade.primary,
+                modifier = Modifier.padding(16.dp)
+            )
 
-                    Text(
-                        text = stringResource(R.string.what_do_you_usually_need_help_with),
-                        style = Theme.textStyle.display.xLarge,
-                        color = Theme.colors.shade.primary,
-                        modifier = Modifier.padding(16.dp)
-                    )
+            Text(
+                text = stringResource(R.string.this_helps_us_personalize_your_experience_you_can_change_it_anytime),
+                style = Theme.textStyle.body.large.regular,
+                color = Theme.colors.shade.secondary,
+                modifier = Modifier
+                    .padding(bottom = 24.dp)
+                    .padding(horizontal = 16.dp)
+            )
 
-                    Text(
-                        text = stringResource(R.string.this_helps_us_personalize_your_experience_you_can_change_it_anytime),
-                        style = Theme.textStyle.body.large.regular,
-                        color = Theme.colors.shade.secondary,
-                        modifier = Modifier
-                            .padding(bottom = 24.dp)
-                            .padding(horizontal = 16.dp)
-                    )
-
-                    ServicesContent(
-                        services = myServiceScreenState.myServiceUiState,
-                        onChipClick = myServiceInteractionListener::onClickService,
-                        modifier = Modifier
-                            .height(434.dp)
-                            .padding(horizontal = 16.dp)
-                            .padding(vertical = 32.dp)
-                    )
-
-                    AppButton(
-                        text = stringResource(R.string.save),
-                        onClick = myServiceInteractionListener::onClickSave,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .padding(bottom = 16.dp),
-                        state = AppButtonState.Enable,
-                        type = AppButtonType.Primary,
-                    )
-
-                }
-            }
+            ServicesContent(
+                services = myServiceScreenState.myServiceUiState,
+                onChipClick = myServiceInteractionListener::onClickService,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 32.dp)
+                    .height(434.dp)
+            )
         }
+
+        AppButton(
+            text = stringResource(R.string.save),
+            onClick = myServiceInteractionListener::onClickSave,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+            state = AppButtonState.Enable,
+            type = AppButtonType.Primary,
+        )
 
         AnimatedVisibility(myServiceScreenState.showSnackBarError) {
             myServiceScreenState.errorMessage?.let {
@@ -131,10 +107,9 @@ fun MyServiceScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .statusBarsPadding()
-                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                        .padding(horizontal = 12.dp, vertical = 16.dp)
                         .align(Alignment.TopCenter),
-
-                    text = myServiceScreenState.errorMessage,
+                    text = it,
                 )
             }
         }
@@ -145,15 +120,13 @@ fun MyServiceScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .statusBarsPadding()
-                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                        .padding(horizontal = 12.dp, vertical = 16.dp)
                         .align(Alignment.TopCenter),
-
-                    text = myServiceScreenState.successMessageSnackBar,
+                    text = it,
                 )
             }
         }
     }
-
 }
 
 @Preview
@@ -163,18 +136,9 @@ private fun MyServiceScreenContentPreview() {
         myServiceScreenState = MyServiceScreenState(),
         myServiceInteractionListener = object : MyServiceInteractionListener {
             override fun onBackClick() {}
-            override fun onClickSave() {
-            }
-
-            override fun onClickRetry() {
-
-            }
-
-            override fun onClickService(service: String) {
-
-            }
+            override fun onClickSave() {}
+            override fun onClickRetry() {}
+            override fun onClickService(service: String) {}
         },
-
         )
-
 }
