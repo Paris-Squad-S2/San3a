@@ -156,6 +156,7 @@ class MyServiceViewModel(
                 errorMessage = null
             )
         )
+        navigateUp()
     }
 
     private fun onUploadServiceError(throwable: Throwable) {
