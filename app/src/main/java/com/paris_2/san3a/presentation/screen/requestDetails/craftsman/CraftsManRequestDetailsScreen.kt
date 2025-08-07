@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppButton
@@ -188,11 +189,13 @@ fun CraftsmanRequestDetailsContent(
                             offerDetails = state.acceptedOffer.toOfferDetailsUIState(
                                 yourOfferAccepted = state.yourOffers.contains(state.acceptedOffer)
                             ),
-                            painter = painterResource(id = R.drawable.img_avatar2),
+                            painter = rememberAsyncImagePainter(model = state.acceptedOffer.craftsmanImageUrl),
                             onChatClick = {
-
+                                interactionListener.onChatWithPosterClick(state.customer.id)
                             },
-                            onAcceptOfferClick = {},
+                            onAcceptOfferClick = {
+                                interactionListener.onAcceptOfferClick(state.acceptedOffer.id)
+                            },
                         )
                     }
                 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
@@ -15,6 +16,7 @@ class CraftsmanRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
     private val addOfferUseCase: AddOfferUseCase,
     private val getOffersUseCase: GetOffersUseCase,
+    private val acceptedOffersUseCase: AcceptOfferUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val createChatUseCase: CreateChatUseCase,
     savedStateHandle: SavedStateHandle
@@ -128,10 +130,14 @@ class CraftsmanRequestDetailsViewModel(
 
     override fun onSendOfferClick() {
         tryToExecute(
-            execute = { addOfferUseCase(screenState.value.uiState.offerToAdd.toOffer(
-                craftsManId = phoneNumber,
-                requestId = requestId
-            )) },
+            execute = {
+                addOfferUseCase(
+                    screenState.value.uiState.offerToAdd.toOffer(
+                        craftsManId = phoneNumber,
+                        requestId = requestId
+                    )
+                )
+            },
             onSuccess = {
                 Log.d("CraftsmanRequestDetailsVM", "Offer added successfully")
                 updateState(
@@ -176,7 +182,18 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onAcceptOfferClick(offerId: String) {
-        //TODO("Not yet implemented")
+        tryToExecute(
+            execute = {
+                acceptedOffersUseCase(offerId)
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while accepting offer",
+                    )
+                )
+            }
+        )
     }
 
     override fun onClickFavorite() {
@@ -188,7 +205,8 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onRetryClick() {
-//        TODO("Not yet implemented")
+        loadRequestDetails(requestId)
+        loadOffers(requestId)
     }
 
     fun loadYourOffers() {
