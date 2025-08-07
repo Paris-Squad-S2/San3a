@@ -1,7 +1,6 @@
 package com.paris_2.san3a.presentation.screen.verification
 
 import android.net.Uri
-import android.util.Log
 import androidx.annotation.StringRes
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
@@ -16,7 +15,8 @@ data class VerificationScreenState(
     @StringRes val errorMessage: Int? = null,
     val showSnackBarSuccess: Boolean = false,
     val showSnackBarError: Boolean = false,
-    val isNoInternet: Boolean = false
+    val isNoInternet: Boolean = false,
+    val isLoadingButton: Boolean = false
 )
 
 data class VerificationUiState(
@@ -92,15 +92,17 @@ class VerificationViewModel(
     }
 
     private fun uploadNationalIdImages() {
-        Log.d("12sadas13","1")
         if (screenState.value.verificationUiState.backOfNationalIdUri != null &&
             screenState.value.verificationUiState.frontOfNationalIdUri != null
         ) {
-            Log.d("12sadas13","1123123")
 
+            updateState(
+                screenState.value.copy(
+                    isLoadingButton = true
+                )
+            )
             tryToExecute(
                 execute = {
-                    Log.d("12sadas13","asd1321")
 
                     setUpAccountUseCase.uploadNationalIdImages(
                         phone = screenState.value.verificationUiState.phoneNumber,
@@ -115,7 +117,6 @@ class VerificationViewModel(
     }
 
     private fun onUploadNationalIdImagesSuccess(unit: Unit) {
-        Log.d("12sadas13","bdd22")
 
         updateState(
             screenState.value.copy(
@@ -124,16 +125,16 @@ class VerificationViewModel(
                 errorMessage = null,
                 showSnackBarSuccess = true,
                 showSnackBarError = false,
+                isLoadingButton = false,
                 successMessageSnackBar = R.string.r_string_national_id_images_uploaded_successfully
             )
         )
+        navigateUp()
     }
 
     private fun onUploadNationalIdImagesError(throwable: Throwable) {
-        Log.d("12sadas13","bd1111d22")
 
         if (throwable is NoInternetConnectionException) {
-            Log.d("12sadas13","asdf213")
 
             updateState(
                 screenState.value.copy(
@@ -142,12 +143,11 @@ class VerificationViewModel(
                     errorMessage = null,
                     showSnackBarError = false,
                     showSnackBarSuccess = false,
-                    successMessageSnackBar = null
+                    successMessageSnackBar = null,
+                    isLoadingButton = false
                 )
             )
         } else {
-            Log.d("12sadas13","sadf213123")
-
             updateState(
                 screenState.value.copy(
                     errorMessage = R.string.national_id_images_uploaded_failed,
@@ -155,7 +155,8 @@ class VerificationViewModel(
                     isLoading = false,
                     showSnackBarError = true,
                     showSnackBarSuccess = false,
-                    successMessageSnackBar = null
+                    successMessageSnackBar = null,
+                    isLoadingButton = false
                 )
             )
         }
