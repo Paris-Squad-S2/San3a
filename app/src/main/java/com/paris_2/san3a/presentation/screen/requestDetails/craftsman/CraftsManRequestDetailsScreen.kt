@@ -151,7 +151,7 @@ fun CraftsmanRequestDetailsContent(
                 Column(
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(bottom = 24.dp)
+                        .padding(bottom = 24.dp, start = 16.dp, end = 16.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.chat_with_the_poster),
@@ -169,6 +169,7 @@ fun CraftsmanRequestDetailsContent(
             }
 
         }
+
         item {
 
             AnimatedVisibility(
@@ -178,7 +179,7 @@ fun CraftsmanRequestDetailsContent(
                 Column(
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(bottom = 24.dp)
+                        .padding(bottom = 24.dp, start = 16.dp, end = 16.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.selected_offer),
