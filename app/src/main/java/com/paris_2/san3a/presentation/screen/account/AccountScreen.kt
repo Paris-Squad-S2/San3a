@@ -123,6 +123,8 @@ fun AccountScreenContent(
     uiState: AccountScreenUiState,
     modifier: Modifier = Modifier,
 ) {
+
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -170,7 +172,10 @@ fun AccountScreenContent(
                     modifier = Modifier.fillMaxWidth(),
                     size = AppButtonSize.Large,
                     loadingIcon = {
-                        LoadingScreen(modifier.size(25.dp))
+                        LoadingScreen(
+                            modifier = modifier.size(25.dp),
+                            background = Theme.colors.button.primary
+                        )
                     }
                 )
             }
@@ -189,7 +194,10 @@ fun AccountScreenContent(
                     modifier = Modifier.fillMaxWidth(),
                     size = AppButtonSize.Large,
                     loadingIcon = {
-                        LoadingScreen(modifier.size(25.dp))
+                        LoadingScreen(
+                            modifier = modifier.size(25.dp),
+                            background = Theme.colors.button.primary
+                        )
                     }
                 )
             }
@@ -210,29 +218,33 @@ fun AccountScreenContent(
                     modifier = Modifier.fillMaxWidth(),
                     size = AppButtonSize.Large,
                     loadingIcon = {
-                        LoadingScreen(modifier.size(25.dp))
+                        LoadingScreen(
+                            modifier = modifier.size(25.dp),
+                            background = Theme.colors.button.primary
+                        )
                     }
                 )
             }
 
             3 -> when (uiState.accountUiState.userType) {
-                UserType.CUSTOMER ->{ LocationContent(
-                    modifier = Modifier.padding(vertical = 32.dp),
-                    onGetLocationClicked = interactionListener::onGovernmentBottomSheetVisibilityToggled,
-                    isGovernmentSheetShowed = uiState.accountUiState.isGovernmentBottomSheetShowed,
-                    onGovernmentDismissRequest = interactionListener::onGovernmentBottomSheetDismissed,
-                    governments = uiState.accountUiState.governments,
-                    onGovernmentSelected = interactionListener::onGovernmentSelected,
-                    isCitiesSheetShowed = uiState.accountUiState.isCitiesBottomSheetShowed,
-                    onCitiesDismissRequest = interactionListener::onCitiesBottomSheetDismissed,
-                    onCitiesSelected = interactionListener::onCitiesSelected,
-                    cities = uiState.accountUiState.cities,
-                    government = uiState.accountUiState.locationUiState.government,
-                    city = uiState.accountUiState.locationUiState.city,
-                    addressInDetails = uiState.accountUiState.locationUiState.addressInDetails,
-                    onAddressDetailsChange = interactionListener::onAddressDetailsChanged,
-                    locationBottomSheetContentType = uiState.accountUiState.locationType
-                )
+                UserType.CUSTOMER -> {
+                    LocationContent(
+                        modifier = Modifier.padding(vertical = 32.dp),
+                        onGetLocationClicked = interactionListener::onGovernmentBottomSheetVisibilityToggled,
+                        isGovernmentSheetShowed = uiState.accountUiState.isGovernmentBottomSheetShowed,
+                        onGovernmentDismissRequest = interactionListener::onGovernmentBottomSheetDismissed,
+                        governments = uiState.accountUiState.governments,
+                        onGovernmentSelected = interactionListener::onGovernmentSelected,
+                        isCitiesSheetShowed = uiState.accountUiState.isCitiesBottomSheetShowed,
+                        onCitiesDismissRequest = interactionListener::onCitiesBottomSheetDismissed,
+                        onCitiesSelected = interactionListener::onCitiesSelected,
+                        cities = uiState.accountUiState.cities,
+                        government = uiState.accountUiState.locationUiState.government,
+                        city = uiState.accountUiState.locationUiState.city,
+                        addressInDetails = uiState.accountUiState.locationUiState.addressInDetails,
+                        onAddressDetailsChange = interactionListener::onAddressDetailsChanged,
+                        locationBottomSheetContentType = uiState.accountUiState.locationType
+                    )
                     AppButton(
                         onClick = interactionListener::onLocationButtonClicked,
                         type = AppButtonType.Primary,
@@ -241,7 +253,10 @@ fun AccountScreenContent(
                         modifier = Modifier.fillMaxWidth(),
                         size = AppButtonSize.Large,
                         loadingIcon = {
-                            LoadingScreen(modifier.size(25.dp))
+                            LoadingScreen(
+                                modifier = modifier.size(25.dp),
+                                background = Theme.colors.button.primary
+                            )
                         }
                     )
                 }
@@ -263,7 +278,10 @@ fun AccountScreenContent(
                         modifier = Modifier.fillMaxWidth(),
                         size = AppButtonSize.Large,
                         loadingIcon = {
-                            LoadingScreen(modifier.size(25.dp))
+                            LoadingScreen(
+                                modifier = modifier.size(25.dp),
+                                background = Theme.colors.button.primary
+                            )
                         }
 
                     )
@@ -294,7 +312,10 @@ fun AccountScreenContent(
                         modifier = Modifier.fillMaxWidth(),
                         size = AppButtonSize.Large,
                         loadingIcon = {
-                            LoadingScreen(modifier.size(25.dp))
+                            LoadingScreen(
+                                modifier.size(25.dp),
+                                background = Theme.colors.button.primary
+                            )
                         }
 
                     )

@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -34,6 +36,7 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.AppTextField
+import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
@@ -57,6 +60,7 @@ fun LocationScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.colors.background.card)
+            .navigationBarsPadding()
             .statusBarsPadding(),
         topBar = {
             AppBar(
@@ -162,7 +166,11 @@ fun LocationScreenContent(
                     onClick = locationInteractionListener::onClickSave,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 24.dp)
+                        .padding(vertical = 24.dp),
+                    state =state.locationButtonState ,
+                    loadingIcon = {
+                        LoadingScreen(Modifier.size(16.dp), background = Theme.colors.brand.primary)
+                    }
                 )
             }
         }

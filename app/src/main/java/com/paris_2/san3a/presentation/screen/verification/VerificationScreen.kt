@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -78,9 +80,9 @@ fun VerificationScreenContent(
     verificationScreenState: VerificationScreenState,
     verificationInteractionListener: VerificationInteractionListener,
     onFrontOfNationalIdUploadClick: () -> Unit,
-    onBackOfNationalIdUploadClick: () -> Unit
+    onBackOfNationalIdUploadClick: () -> Unit,
 
-) {
+    ) {
 
     val scroll = rememberScrollState()
 
@@ -89,11 +91,13 @@ fun VerificationScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.colors.background.card)
+            .navigationBarsPadding()
             .statusBarsPadding(),
         topBar = {
             AppBar(
                 title = stringResource(R.string.verification),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .background(Theme.colors.background.card),
                 onBackClick = verificationInteractionListener::onBackClick
             )
@@ -154,18 +158,24 @@ fun VerificationScreenContent(
                             ) {
                                 Column(Modifier.fillMaxSize()) {
                                     Spacer(Modifier.weight(1f))
-                                    if(it){
+                                    if (it) {
                                         AppButton(
                                             text = text,
                                             onClick = verificationInteractionListener::onClickSave,
                                             modifier = buttonModifier,
-                                            state = AppButtonState.Enable,
+                                            state = verificationScreenState.verificationButtonState,
                                             type = typeButton,
+                                            loadingIcon = {
+                                                LoadingScreen(
+                                                    Modifier.size(16.dp),
+                                                    background = Theme.colors.brand.primary
+                                                )
+                                            }
                                         )
-                                    } else{
+                                    } else {
                                         AppButton(
                                             text = text,
-                                            onClick = {  },
+                                            onClick = { },
                                             modifier = buttonModifier,
                                             state = AppButtonState.Disabled,
                                             type = typeButton,
@@ -214,7 +224,6 @@ fun VerificationScreenContent(
             }
         }
     )
-
 
 
 }
