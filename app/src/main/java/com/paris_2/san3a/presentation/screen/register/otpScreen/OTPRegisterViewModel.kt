@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
+import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
@@ -101,8 +102,8 @@ class OTPRegisterViewModel(
         }
     }
 
-    var timerJob: Job? = null
     private fun updateSecondLeft() {
+        var timerJob: Job? = null
 
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
@@ -165,12 +166,37 @@ class OTPRegisterViewModel(
                 }
             },
             onSuccess = {
-                navigateToNextScreen()
+                updateState(
+                    screenState.value.copy(
+                        showBottomSheet = false,
+                        errorMessage = null,
+                        showSnackBarError = false,
+                        isLoading = false
+
+                    )
+                )
+                if (screenState.value.otpRegisterUiState.otp == screenState.value.otpRegisterUiState.verificationId) {
+                    navigateToNextScreen()
+                } else{
+                    updateState(
+                        screenState.value.copy(
+                            showBottomSheet = false,
+                            errorMessage = R.string.otp_code_is_wrong,
+                            showSnackBarError = true,
+                            isLoading = false
+
+                        )
+                    )
+                }
             },
             onError = { errorMessage ->
                 updateState(
                     screenState.value.copy(
-                        showBottomSheet = true
+                        showBottomSheet = true,
+                        errorMessage = null,
+                        showSnackBarError = false,
+                        isLoading = false
+
                     )
                 )
             }
@@ -255,6 +281,14 @@ class OTPRegisterViewModel(
         updateState(
             screenState.value.copy(
                 showBottomSheet = false
+            )
+        )
+    }
+
+    override fun onDismissSnackBar() {
+        updateState(
+            screenState.value.copy(
+                showSnackBarError = false
             )
         )
     }

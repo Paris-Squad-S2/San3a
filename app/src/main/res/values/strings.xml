@@ -289,5 +289,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="error_occurred_while_fetching_services">An error occurred while fetching services</string>
     <string name="send_message">Send Message</string>
     <string name="mark_as_done">Mark as Done</string>
+    <string name="otp_code_is_wrong">otp code is wrong</string>
 
 </resources>
