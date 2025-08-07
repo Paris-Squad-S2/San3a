@@ -5,4 +5,5 @@ interface MyServiceInteractionListener{
     fun onClickSave()
     fun onClickRetry()
     fun onClickService(serviceId: String)
+    fun onDismissSnack()
 }
