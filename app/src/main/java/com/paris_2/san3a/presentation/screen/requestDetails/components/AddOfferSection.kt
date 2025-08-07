@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -102,6 +103,9 @@ fun AddOfferForm(
                 label = stringResource(R.string.preferred_date),
                 placeholder = stringResource(R.string.select_date),
                 readOnly = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onShowDatePickerChange(true) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.ic_calendar_minimalistic_outline),
@@ -126,6 +130,9 @@ fun AddOfferForm(
                 label = stringResource(R.string.preferred_time),
                 placeholder = stringResource(R.string.select_time),
                 readOnly = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onShowTimePickerChange(true) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.ic_clock_circle_outline),
@@ -137,7 +144,8 @@ fun AddOfferForm(
                     IconButton(onClick = { onShowTimePickerChange(true) }) {
                         Icon(
                             painter = painterResource(R.drawable.ic_alt_arrow_down),
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Theme.colors.shade.secondary
                         )
                     }
                 }
