@@ -140,6 +140,7 @@ fun AppButton(
             }
 
             Spacer(Modifier.width(8.dp))
+
             AnimatedVisibility(
                 visible = state == AppButtonState.Loading
             ) {
