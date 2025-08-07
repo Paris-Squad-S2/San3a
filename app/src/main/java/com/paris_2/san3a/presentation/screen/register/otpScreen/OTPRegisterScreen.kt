@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,6 +37,7 @@ import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.OTPInputTextField
 import com.paris_2.san3a.presentation.shared.components.ProgressIndicator
+import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -110,6 +112,24 @@ private fun OTPRegisterScreenContent(
             }
         }
 
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            AnimatedVisibility(otpRegisterScreenState.showSnackBarError) {
+                otpRegisterScreenState.errorMessage?.let {
+                    SnackBar(
+                        text = it,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding()
+                            .padding(horizontal = 12.dp, vertical = 16.dp)
+                            .align(Alignment.TopCenter),
+                        onClick = otpRegisterListenerInteraction::onDismissSnackBar
+                    )
+                }
+            }
+        }
         if (otpRegisterScreenState.showBottomSheet) {
             RegisterBottomSheet(
                 isErrorMessage = true,
@@ -262,6 +282,10 @@ private fun OTPRegisterScreenContentPreview() {
             }
 
             override fun onHideBottomSheet() {
+
+            }
+
+            override fun onDismissSnackBar() {
 
             }
         }
