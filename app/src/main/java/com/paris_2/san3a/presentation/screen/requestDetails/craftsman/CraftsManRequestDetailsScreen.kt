@@ -208,28 +208,23 @@ fun CraftsmanRequestDetailsContent(
 
         if (state.offers.isNotEmpty()) {
             item {
-                AnimatedVisibility(
-//            visible = state.offers.isNotEmpty()
-                    visible = true
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = stringResource(R.string.offers_from_craftsmen),
-                            style = Theme.textStyle.title.small,
-                            color = Theme.colors.shade.primary,
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(
-                            text = stringResource(R.string.offers_count, state.offers.size),
-                            style = Theme.textStyle.body.small.regular,
-                            color = Theme.colors.shade.tertiary,
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.offers_from_craftsmen),
+                        style = Theme.textStyle.title.small,
+                        color = Theme.colors.shade.primary,
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = stringResource(R.string.offers_count, state.offers.size),
+                        style = Theme.textStyle.body.small.regular,
+                        color = Theme.colors.shade.tertiary,
+                    )
                 }
             }
 
