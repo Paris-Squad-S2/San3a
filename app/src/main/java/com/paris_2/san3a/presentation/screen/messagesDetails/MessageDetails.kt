@@ -18,12 +18,14 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -103,13 +105,15 @@ fun MessageDetailsContent(
         AppScaffold(
             topBar = {
                 AppBar(
+                    modifier = Modifier,
                     title = state.chatTitle,
                     actionIcon = {
                         Icon(
                             modifier = Modifier
                                 .clickable(onClick = {
                                     messageInteractionListener.onDropMenuClick()
-                                }),
+                                })
+                                .padding(end = 16.dp),
                             painter = painterResource(R.drawable.ic_menu_dots_outline),
                             contentDescription = null,
                             tint = Theme.colors.shade.primary
@@ -202,7 +206,16 @@ fun MessageList(
     messages: List<MessageUi>,
     modifier: Modifier,
 ) {
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(messages.size) {
+        if (messages.isNotEmpty()) {
+            listState.animateScrollToItem(messages.lastIndex)
+        }
+    }
+
     LazyColumn(
+        state = listState,
         modifier = modifier.fillMaxWidth(),
         contentPadding = PaddingValues(bottom = 80.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),

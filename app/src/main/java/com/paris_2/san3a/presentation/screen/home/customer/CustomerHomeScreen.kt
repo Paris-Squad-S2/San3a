@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.home.customer
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.speech.RecognizerIntent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
@@ -26,9 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
@@ -68,7 +71,7 @@ fun CustomerHomeScreen(
 @Composable
 private fun CustomerHomeScreenContent(
     state: CustomerHomeUiState,
-    action: CustomerHomeInteractionListener
+    action: CustomerHomeInteractionListener,
 ) {
     val isArabic = remember { Locale.getDefault().language == "ar" }
     val imagePicker = rememberLauncherForActivityResult(
@@ -78,6 +81,18 @@ private fun CustomerHomeScreenContent(
             action.addBottomSheetImages(newImages)
         }
     )
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            action.onMicClick()
+        } else {
+            // Show permission denied message or dialog
+        }
+    }
+
+    val context = LocalContext.current
 
     val voiceSearchPrompt = stringResource(R.string.voice_search)
 
@@ -115,6 +130,7 @@ private fun CustomerHomeScreenContent(
             }
             voiceLauncher.launch(intent)
         }
+
     }
 
     val servicesToDisplay = if (state.customerUiState.searchQuery.isNotEmpty())
@@ -209,7 +225,11 @@ private fun CustomerHomeScreenContent(
                             onGetLocationClicked = {
                                 action.showGovernmentSheet(true)
                             },
-                            locationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
+                            locationBottomSheetContentType = if (state.bottomSheetUiState.bottomSheetSelectedGovernment.isNotEmpty()) {
+                                LocationBottomSheetContentType.CITY
+                            } else {
+                                LocationBottomSheetContentType.GOVERNMENT
+                            }
                         )
                     }
                 }
@@ -337,7 +357,16 @@ private fun CustomerHomeScreenContent(
                         onValueChange = { action.onSearch(it) },
                         hint = stringResource(R.string.search),
                         onMicClick = {
-                            action.onMicClick()
+
+
+                            if (ContextCompat.checkSelfPermission(
+                                    context,
+                                    android.Manifest.permission.RECORD_AUDIO
+                                ) == PackageManager.PERMISSION_GRANTED) {
+                                action.onMicClick()
+                            } else {
+                                permissionLauncher.launch(android.Manifest.permission.RECORD_AUDIO)
+                            }
                         },
                         modifier = Modifier
                             .padding(top = 16.dp, bottom = 24.dp)
@@ -382,7 +411,8 @@ private fun CustomerHomeScreenContent(
                     }
                     items(servicesToDisplay) { service ->
                         CategoryItem(
-                            title = service.title[if (isArabic) ARABIC_NAME else ENGLISH_NAME] ?: "",
+                            title = service.title[if (isArabic) ARABIC_NAME else ENGLISH_NAME]
+                                ?: "",
                             description = service.description[if (isArabic) ARABIC_DESCRIPTION else ENGLISH_DESCRIPTION]
                                 ?: "",
                             tint = getResourceTint(service.id),

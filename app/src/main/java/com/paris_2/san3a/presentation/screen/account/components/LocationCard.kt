@@ -20,7 +20,12 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
-fun LocationCard(modifier: Modifier = Modifier, title: String, onClick: (String) -> Unit = {}) {
+fun LocationCard(
+    modifier: Modifier = Modifier,
+    title: String,
+    onClick: (String) -> Unit = {},
+    showTrailingIcon: Boolean = false,
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -43,12 +48,13 @@ fun LocationCard(modifier: Modifier = Modifier, title: String, onClick: (String)
                 modifier = Modifier.weight(1F),
                 color = Theme.colors.shade.primary
             )
-            Icon(
-                painter = painterResource(
-                    R.drawable.ic_alt_arrow_right_outline
-                ), contentDescription = null,
-                tint = Theme.colors.shade.tertiary
-            )
+            if (showTrailingIcon) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_alt_arrow_right_outline),
+                    contentDescription = null,
+                    tint = Theme.colors.shade.tertiary
+                )
+            }
         }
     }
 }
