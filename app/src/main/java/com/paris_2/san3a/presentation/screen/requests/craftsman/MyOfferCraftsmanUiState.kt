@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.myRequest.craftsman
+package com.paris_2.san3a.presentation.screen.requests.craftsman
 
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus

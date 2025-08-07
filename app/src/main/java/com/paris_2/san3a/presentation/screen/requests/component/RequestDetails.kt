@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.myRequest.component
+package com.paris_2.san3a.presentation.screen.requests.component
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState

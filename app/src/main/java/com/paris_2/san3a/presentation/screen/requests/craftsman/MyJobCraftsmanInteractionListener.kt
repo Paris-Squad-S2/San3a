@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.myRequest.craftsman
+package com.paris_2.san3a.presentation.screen.requests.craftsman
 
 interface MyJobCraftsmanInteractionListener {
     fun onSendAsDone(requestId: String)

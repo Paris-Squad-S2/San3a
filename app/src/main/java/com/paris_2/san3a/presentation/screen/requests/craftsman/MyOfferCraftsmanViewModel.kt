@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.myRequest.craftsman
+package com.paris_2.san3a.presentation.screen.requests.craftsman
 
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
@@ -7,7 +7,6 @@ import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetGetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
-import com.paris_2.san3a.presentation.screen.myRequest.customer.MyRequestCustomerInteractionListener
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class MyOfferCraftsmanViewModel(

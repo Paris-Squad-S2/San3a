@@ -13,8 +13,8 @@ import com.paris_2.san3a.presentation.screen.home.craftsman.CraftsmanHomeScreen
 import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeScreen
 import com.paris_2.san3a.presentation.screen.messages.MessagesScreen
 import com.paris_2.san3a.presentation.screen.messagesDetails.MessageDetails
-import com.paris_2.san3a.presentation.screen.myRequest.craftsman.MyJobsScreen
-import com.paris_2.san3a.presentation.screen.myRequest.customer.MyRequestScreen
+import com.paris_2.san3a.presentation.screen.requests.craftsman.MyJobsScreen
+import com.paris_2.san3a.presentation.screen.requests.customer.MyRequestScreen
 import com.paris_2.san3a.presentation.screen.more.locationScreen.LocationScreen
 import com.paris_2.san3a.presentation.screen.more.moreScreen.MoreScreen
 import com.paris_2.san3a.presentation.screen.myService.MyServiceScreen

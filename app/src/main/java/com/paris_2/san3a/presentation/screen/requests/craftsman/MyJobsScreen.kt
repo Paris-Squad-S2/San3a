@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.myRequest.craftsman
+package com.paris_2.san3a.presentation.screen.requests.craftsman
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.screen.myRequest.component.MyJobOfferCard
+import com.paris_2.san3a.presentation.screen.requests.component.MyJobOfferCard
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppTabBar
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen

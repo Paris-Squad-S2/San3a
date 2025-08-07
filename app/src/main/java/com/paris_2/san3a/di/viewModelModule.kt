@@ -15,8 +15,8 @@ import com.paris_2.san3a.presentation.screen.register.otpScreen.OTPRegisterViewM
 import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterViewModel
 import com.paris_2.san3a.presentation.screen.verification.VerificationViewModel
 import org.koin.core.module.dsl.viewModelOf
-import com.paris_2.san3a.presentation.screen.myRequest.customer.MyRequestCustomerViewModel
-import com.paris_2.san3a.presentation.screen.myRequest.craftsman.MyOfferCraftsmanViewModel
+import com.paris_2.san3a.presentation.screen.requests.customer.MyRequestCustomerViewModel
+import com.paris_2.san3a.presentation.screen.requests.craftsman.MyOfferCraftsmanViewModel
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.CraftsmanRequestDetailsViewModel
 import com.paris_2.san3a.presentation.screen.requestDetails.customer.CustomerRequestDetailsViewModel
 import org.koin.dsl.module

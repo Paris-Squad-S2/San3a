@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.myRequest.customer
+package com.paris_2.san3a.presentation.screen.requests.customer
 
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase

@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.myRequest.customer
+package com.paris_2.san3a.presentation.screen.requests.customer
 
 interface MyRequestCustomerInteractionListener {
     fun onRequestClick(requestId: String)
