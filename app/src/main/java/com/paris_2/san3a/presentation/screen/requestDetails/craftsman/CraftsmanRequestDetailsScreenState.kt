@@ -29,19 +29,17 @@ data class CraftsmanRequestDetailsUiState(
 
 data class OfferToAddUiState(
     val id: String = "",
-    val craftsmanId: String = "",
-    val requestId: String = "",
     val price: String = "0.0",
     val preferredDate: LocalDate = LocalDate(1970, 1, 1),
     val preferredTime: LocalTime = LocalTime(0, 0),
     val messageToCustomer: String = "",
 )
 
-fun OfferToAddUiState.toOffer(): Offer {
+fun OfferToAddUiState.toOffer(craftsManId: String, requestId: String): Offer {
     return Offer(
         id = this.id,
-        craftsmanId = this.craftsmanId,
-        requestId = this.requestId,
+        craftsmanId = craftsManId,
+        requestId = requestId,
         price = this.price.toDoubleOrNull() ?: 0.0,
         preferredDate = this.preferredDate,
         preferredTime = this.preferredTime,

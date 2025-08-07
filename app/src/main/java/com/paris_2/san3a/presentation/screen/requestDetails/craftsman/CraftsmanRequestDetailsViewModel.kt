@@ -103,19 +103,6 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    override fun onClickAddOffer(offer: OfferUiState) {
-        tryToExecute(
-            execute = { addOfferUseCase(offer.toEntity()) },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        error = it.message ?: "An error occurred while adding offer",
-                    )
-                )
-            }
-        )
-    }
-
     override fun onClickSendMessage(customerId: String) {
         tryToExecute(
             execute = { createChatUseCase(listOf(phoneNumber, customerId)) },
@@ -141,7 +128,10 @@ class CraftsmanRequestDetailsViewModel(
 
     override fun onSendOfferClick() {
         tryToExecute(
-            execute = { addOfferUseCase(screenState.value.uiState.offerToAdd.toOffer()) },
+            execute = { addOfferUseCase(screenState.value.uiState.offerToAdd.toOffer(
+                craftsManId = phoneNumber,
+                requestId = requestId
+            )) },
             onSuccess = {
                 Log.d("CraftsmanRequestDetailsVM", "Offer added successfully")
                 updateState(

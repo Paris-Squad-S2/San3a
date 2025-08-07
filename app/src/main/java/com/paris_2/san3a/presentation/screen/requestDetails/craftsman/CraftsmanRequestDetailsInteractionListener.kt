@@ -5,7 +5,6 @@ interface CraftsmanRequestDetailsInteractionListener {
     fun onClickFavorite()
     fun onClickBack()
     fun onRetryClick()
-    fun onClickAddOffer(offer: OfferUiState)
     fun onClickSendMessage(customerId: String)
     fun onSendOfferClick()
     fun onChatWithPosterClick(customerId: String)
