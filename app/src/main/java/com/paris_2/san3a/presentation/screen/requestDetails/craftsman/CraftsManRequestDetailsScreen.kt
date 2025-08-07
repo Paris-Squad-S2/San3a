@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,8 +41,11 @@ import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
+import com.paris_2.san3a.presentation.shared.components.CraftsManOffer
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
+import com.paris_2.san3a.presentation.shared.components.OfferDetailsUIState
+import com.paris_2.san3a.presentation.shared.components.OfferStatus
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -119,25 +124,32 @@ fun CraftsmanRequestDetailsContent(
     state: CraftsmanRequestDetailsUiState,
     interactionListener: CraftsmanRequestDetailsInteractionListener
 ) {
-    Column(
+    LazyColumn(
         modifier = modifier
+            .navigationBarsPadding()
     ) {
-        RequestInfoSection(
-            request = state.request,
-        )
-        AddYourOfferSection(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 24.dp),
-            interactionListener = interactionListener
-        )
-        OffersFromCraftsmenSection(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            state = state,
-            interactionListener = interactionListener
-        )
+        item {
+            RequestInfoSection(
+                request = state.request,
+            )
+        }
+        item {
+            AddYourOfferSection(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 24.dp),
+                interactionListener = interactionListener
+            )
+        }
+        item {
+            OffersFromCraftsmenSection(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                state = state,
+                interactionListener = interactionListener
+            )
+        }
     }
 }
 
@@ -152,11 +164,11 @@ fun OffersFromCraftsmenSection(
 //            visible = state.yourOffers.contains(state.acceptedOffer)
             visible = true
         ) {
-            Column (
+            Column(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp)
-            ){
+            ) {
                 Text(
                     text = stringResource(R.string.chat_with_the_poster),
                     style = Theme.textStyle.title.small,
@@ -165,10 +177,39 @@ fun OffersFromCraftsmenSection(
                 )
                 ChatWithPosterCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 24.dp),
+                        .fillMaxWidth(),
                     state = state,
                     interactionListener = interactionListener
+                )
+            }
+        }
+        AnimatedVisibility(
+//            visible = state.acceptedOffer != null
+            visible = true
+        ) {
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.selected_offer),
+                    style = Theme.textStyle.title.small,
+                    color = Theme.colors.shade.primary,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                CraftsManOffer(
+                    addShadow = true,
+                    offerDetails = OfferDetailsUIState(
+                        status =
+                            if (state.yourOffers.contains(state.acceptedOffer))
+                                OfferStatus.YOUR_ACCEPTED_OFFER
+                            else
+                                OfferStatus.OFFER_ACCEPTED
+                    ),
+                    painter = painterResource(id = R.drawable.img_avatar2),
+                    onChatClick = {},
+                    onAcceptOfferClick = {},
                 )
             }
         }
