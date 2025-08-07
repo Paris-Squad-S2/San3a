@@ -103,13 +103,15 @@ fun MessageDetailsContent(
         AppScaffold(
             topBar = {
                 AppBar(
+                    modifier = Modifier,
                     title = state.chatTitle,
                     actionIcon = {
                         Icon(
                             modifier = Modifier
                                 .clickable(onClick = {
                                     messageInteractionListener.onDropMenuClick()
-                                }),
+                                })
+                                .padding(end = 16.dp),
                             painter = painterResource(R.drawable.ic_menu_dots_outline),
                             contentDescription = null,
                             tint = Theme.colors.shade.primary
@@ -142,7 +144,7 @@ fun MessageDetailsContent(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 16.dp)
-                            .padding(bottom = 100.dp)
+                            .padding(bottom = 140.dp)
                             .align(Alignment.Center)
                     )
                 }
@@ -154,7 +156,10 @@ fun MessageDetailsContent(
                     sendIcon = painterResource(R.drawable.ic_send),
                     onImageClick = { imagePickerLauncher.launch(MessagesDetailsViewModel.IMAGE_TYPE) },
                     onSendClick = viewModel::sendMessage,
-                    modifier = Modifier.align(Alignment.BottomCenter).imePadding()
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .imePadding()
+
                 )
 
                 DropdownMenu(
