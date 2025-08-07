@@ -435,6 +435,30 @@ class AccountViewModel(
                     )
             }
 
+            2 ->{
+                if (screenState.value.accountUiState.customerName.isBlank()){
+                    updateState(
+                        screenState.value.copy(
+                            accountUiState = screenState.value.accountUiState.copy(
+                                accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                                    profileButtonState = AppButtonState.Disabled
+                                )
+                            )
+                        )
+                    )
+                }else{
+                    updateState(
+                        screenState.value.copy(
+                            accountUiState = screenState.value.accountUiState.copy(
+                                accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                                    profileButtonState = AppButtonState.Enable
+                                )
+                            )
+                        )
+                    )
+                }
+            }
+
             3 -> {
                 if (!screenState.value.accountUiState.workImagesUris.isNullOrEmpty()){
                     updateState(
