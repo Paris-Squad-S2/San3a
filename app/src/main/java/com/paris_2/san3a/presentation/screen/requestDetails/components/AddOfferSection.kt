@@ -1,7 +1,9 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +16,6 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
@@ -97,59 +98,77 @@ fun AddOfferForm(
                 }
             )
 
-            AppTextField(
-                value = selectedDate?.toString() ?: "",
-                onValueChange = {},
-                label = stringResource(R.string.preferred_date),
-                placeholder = stringResource(R.string.select_date),
-                readOnly = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onShowDatePickerChange(true) },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_calendar_minimalistic_outline),
-                        contentDescription = null,
-                        tint = Theme.colors.shade.tertiary
-                    )
-                },
-                trailingIcon = {
-                    IconButton(onClick = { onShowDatePickerChange(true) }) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                AppTextField(
+                    value = selectedDate?.toString() ?: "",
+                    onValueChange = {},
+                    label = stringResource(R.string.preferred_date),
+                    placeholder = stringResource(R.string.select_date),
+                    readOnly = true,
+                    enabled = false,
+                    modifier = Modifier.fillMaxWidth(),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_calendar_minimalistic_outline),
+                            contentDescription = null,
+                            tint = Theme.colors.shade.tertiary
+                        )
+                    },
+                    trailingIcon = {
                         Icon(
                             painter = painterResource(R.drawable.ic_alt_arrow_down),
                             contentDescription = null,
                             tint = Theme.colors.shade.secondary
                         )
                     }
-                }
-            )
+                )
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            onShowDatePickerChange(true)
+                        }
+                )
+            }
 
-            AppTextField(
-                value = selectedTime?.toString() ?: "",
-                onValueChange = {},
-                label = stringResource(R.string.preferred_time),
-                placeholder = stringResource(R.string.select_time),
-                readOnly = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onShowTimePickerChange(true) },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_clock_circle_outline),
-                        contentDescription = null,
-                        tint = Theme.colors.shade.tertiary
-                    )
-                },
-                trailingIcon = {
-                    IconButton(onClick = { onShowTimePickerChange(true) }) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                AppTextField(
+                    value = selectedTime?.toString() ?: "",
+                    onValueChange = {},
+                    label = stringResource(R.string.preferred_time),
+                    placeholder = stringResource(R.string.select_time),
+                    readOnly = true,
+                    enabled = false,
+                    modifier = Modifier.fillMaxWidth(),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_clock_circle_outline),
+                            contentDescription = null,
+                            tint = Theme.colors.shade.tertiary
+                        )
+                    },
+                    trailingIcon = {
                         Icon(
                             painter = painterResource(R.drawable.ic_alt_arrow_down),
                             contentDescription = null,
                             tint = Theme.colors.shade.secondary
                         )
                     }
-                }
-            )
+                )
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            onShowTimePickerChange(true)
+                        }
+                )
+            }
 
             AppTextField(
                 value = message,
