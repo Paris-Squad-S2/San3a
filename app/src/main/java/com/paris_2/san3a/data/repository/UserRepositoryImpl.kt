@@ -60,21 +60,36 @@ class UserRepositoryImpl(
         phone: String,
         services: List<Service>,
         isCraftsman: Boolean
-    ) =
+    ) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
         safeCall(SaveServicesException()) {
             userRemoteDataSource.saveServices(phone, services, isCraftsman)
         }
+    }
 
-    override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<Service>> =
+    override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<Service>> {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
         userRemoteDataSource.getServices(phone, isCraftsman).map { it.toEntity() }.catch {
             Log.e("UserRepositoryImpl", "Error fetching services: ${it.message}")
             throw GetServicesException()
         }
+    }
 
-    override suspend fun saveLocation(phone: String, location: Location) =
+    override suspend fun saveLocation(phone: String, location: Location) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
         safeCall(SaveLocationException()) {
             userRemoteDataSource.updateLocation(phone, location)
         }
+    }
 
     override suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?) {
         if (networkConnectionChecker.isConnected.value.not()) {
@@ -127,7 +142,10 @@ class UserRepositoryImpl(
             .catch { throw GetRecentRelatedJobsException() }
     }
 
-    override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) =
+    override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
         safeCall(UploadNationalIdImagesException()) {
             val frontUrl = frontUri?.let { uri ->
                 val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
@@ -142,6 +160,7 @@ class UserRepositoryImpl(
             }
             userRemoteDataSource.updateNationalIdImages(phone, frontUrl, backUrl)
         }
+    }
 
     override suspend fun getUser(phone: String): User =
         safeCall(GetUserException()) {
