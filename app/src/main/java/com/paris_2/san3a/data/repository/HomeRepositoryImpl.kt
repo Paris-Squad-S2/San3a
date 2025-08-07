@@ -1,5 +1,6 @@
 package com.paris_2.san3a.data.repository
 
+import android.util.Log
 import androidx.core.net.toUri
 import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
@@ -67,7 +68,10 @@ class HomeRepositoryImpl(
     override fun getAvailableJobs(): Flow<List<RequestService>> {
         return serviceRemoteDataSource.getAvailableJobs()
             .map { dto -> dto.map { it.toEntity() } }
-            .catch { throw GetAvailableJobsException() }
+            .catch {
+                Log.d("HomeRepositoryImpl", "Error fetching available jobs: ${it.message}")
+                throw GetAvailableJobsException()
+            }
     }
 
     override suspend fun updateNumOfRequestService(serviceId: String) {

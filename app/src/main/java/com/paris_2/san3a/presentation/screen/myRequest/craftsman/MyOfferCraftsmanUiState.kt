@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.myRequest.craftsman
 
+import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 
 data class MyOfferCraftsmanScreenState(
@@ -16,6 +17,7 @@ data class MyOfferCraftsmanUiState(
 )
 
 data class MyJobOfferUiState(
+    val customerPhone: String="",
     val jobOfferTitle : String = "job Offer Title",
     val serviceType : String = "Service Request",
     val date: String = "2023-10-01",
@@ -31,4 +33,19 @@ data class MyJobOfferUiState(
     val craftsmanOfferPrice : Double = 53_000.0,
     val status: RequestStatus = RequestStatus.ONGOING
 )
+
+fun RequestService.toMyJobOfferUiState(): MyJobOfferUiState {
+    return MyJobOfferUiState(
+        customerPhone = this.userId,
+        jobOfferTitle = this.title,
+        serviceType = this.serviceType,
+        date = this.time.date.toString(),
+        acceptedTime = this.time.time.toString(),
+        craftsmanOfferPrice = this.offers.firstOrNull() ?: 0.0,
+    )
+}
+
+fun List<RequestService>.toMyJobOfferUiStateList(): List<MyJobOfferUiState> {
+    return this.map { it.toMyJobOfferUiState() }
+}
 

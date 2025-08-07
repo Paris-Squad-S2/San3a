@@ -112,7 +112,7 @@ fun AddWorkPhotosComponent(
                             .size(24.dp)
                             .align(Alignment.TopEnd)
                             .background(
-                                color = White.copy(alpha = 0.60f),
+                                color = Theme.colors.background.card.copy(alpha = 0.60f),
                                 RoundedCornerShape(Theme.radius.small)
                             )
                             .clip(RoundedCornerShape(Theme.radius.small))
