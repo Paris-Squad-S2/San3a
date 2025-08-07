@@ -4,6 +4,7 @@ import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 
 data class CustomerHomeUiState(
@@ -43,13 +44,15 @@ data class BottomSheetUiState(
     val bottomSheetDescription: String = "",
     val bottomSheetImages: List<String> = emptyList(),
     val bottomSheetSelectedSuggestion: String? = null,
-    val bottomSheetGovernments: List<String> = listOf("Cairo", "Giza", "Alex"),
-    val bottomSheetCities: List<String> = listOf("Nasr City", "Dokki", "Smouha"),
+    val bottomSheetGovernments: List<String> = emptyList(),
+    val bottomSheetCities: List<String> = emptyList(),
     val bottomSheetSelectedGovernment: String = "",
     val bottomSheetSelectedCity: String = "",
     val bottomSheetAddressDetails: String = "",
     val isGovernmentSheetVisible: Boolean = false,
-    val isCitySheetVisible: Boolean = false
+    val isCitySheetVisible: Boolean = false,
+    val locationBottomSheetType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
+
 )
 
 fun LocationUiState.toEntity(): Location {
