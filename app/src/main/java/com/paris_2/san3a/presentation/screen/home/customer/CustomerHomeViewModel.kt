@@ -204,7 +204,7 @@ class CustomerHomeViewModel(
     override fun resetBottomSheetState() {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
                     bottomSheetServiceTitle = "",
                     bottomSheetSubtitle = "",
@@ -468,7 +468,6 @@ class CustomerHomeViewModel(
                 )
             )
         )
-        resetBottomSheetState()
     }
 
     companion object {
