@@ -64,9 +64,7 @@ fun AddOfferForm(
         colors = CardDefaults.cardColors(
             containerColor = Theme.colors.background.card
         ),
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
