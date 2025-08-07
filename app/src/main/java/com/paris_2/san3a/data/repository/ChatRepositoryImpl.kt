@@ -23,8 +23,8 @@ class ChatRepositoryImpl(
         }
     }
 
-    override suspend fun createChat(participants: List<String>) {
-        safeCall(CreateChatException(participants)) {
+    override suspend fun createChat(participants: List<String>): String {
+        return safeCall(CreateChatException(participants)) {
             messagesRemoteDataSource.addChat(participants)
         }
     }

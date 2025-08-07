@@ -8,12 +8,11 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.ServiceUiState
-import com.paris_2.san3a.presentation.screen.account.UserType
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 data class MyServiceScreenState(
@@ -32,13 +31,14 @@ data class MyServiceScreenState(
 class MyServiceViewModel(
     private val getAllServicesUseCase: GetAllServicesUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
+    private val getUserServicesUseCase: GetUserServicesUseCase,
     saveStateHandle: SavedStateHandle,
 ) : BaseViewModel<MyServiceScreenState>(MyServiceScreenState()),
     MyServiceInteractionListener {
 
+    val phoneNumber = saveStateHandle.toRoute<Destinations.MyService>().phoneNumber
+    val isCraftsman = saveStateHandle.toRoute<Destinations.MyService>().isCraftsman
     init {
-        val phoneNumber = saveStateHandle.toRoute<Destinations.MyService>().phoneNumber
-        val isCraftsman = saveStateHandle.toRoute<Destinations.MyService>().isCraftsman
         updateState(
             screenState.value.copy(
                 phoneNumber = phoneNumber,
@@ -46,6 +46,35 @@ class MyServiceViewModel(
             )
         )
         getAllServices()
+    }
+
+    private fun getUserSelectedServices() {
+        tryToObserve(
+            observe = {
+                getUserServicesUseCase(
+                    phoneNumber = phoneNumber,
+                    isCraftsman = isCraftsman
+                )
+            },
+            onEach = { services ->
+                val serviceUiStates = mapServiceToUiState(services)
+                updateState(
+                    screenState.value.copy(
+                        myServiceUiState = screenState.value.myServiceUiState.map { service ->
+                            service.copy(isSelected = serviceUiStates.any { service.id == it.id })
+                        },
+                    )
+                )
+            },
+            onError = { errorMessage ->
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = R.string.error_occurred_while_fetching_services,
+                        isLoading = false,
+                    )
+                )
+            }
+        )
     }
 
     private fun getAllServices() {
@@ -63,8 +92,9 @@ class MyServiceViewModel(
                             errorMessage = null
                         )
                     )
+                Log.d("MyServiceViewModel", "getAllServices: $services")
+                getUserSelectedServices()
                 }
-
             },
             onError = { throwable ->
                 if (throwable is NoInternetConnectionException) {

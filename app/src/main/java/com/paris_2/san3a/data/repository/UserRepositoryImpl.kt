@@ -1,6 +1,7 @@
 package com.paris_2.san3a.data.repository
 
 import android.net.Uri
+import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
@@ -62,6 +63,7 @@ class UserRepositoryImpl(
 
     override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<Service>> =
         userRemoteDataSource.getServices(phone, isCraftsman).map { it.toEntity() }.catch {
+            Log.e("UserRepositoryImpl", "Error fetching services: ${it.message}")
             throw GetServicesException()
         }
 

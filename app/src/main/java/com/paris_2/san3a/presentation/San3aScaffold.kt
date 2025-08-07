@@ -1,17 +1,22 @@
 package com.paris_2.san3a.presentation
 
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavOptions
@@ -38,8 +43,22 @@ fun San3aScaffold(
 ) {
     val uiState = mainViewModel.screenState.collectAsStateWithLifecycle()
     val navController = rememberNavController()
-
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
+
+    val context = LocalContext.current
+    val view = LocalView.current
+    val activity = context as? ComponentActivity
+
+    LaunchedEffect(Unit) {
+        uiState.value.isDark.collect {
+            activity?.window?.also { window ->
+                WindowInsetsControllerCompat(window, view).apply {
+                    isAppearanceLightStatusBars = !it
+                    isAppearanceLightNavigationBars = !it
+                }
+            }
+        }
+    }
 
     val selectedDestinationIndex by remember(currentBackStackEntry) {
         derivedStateOf {

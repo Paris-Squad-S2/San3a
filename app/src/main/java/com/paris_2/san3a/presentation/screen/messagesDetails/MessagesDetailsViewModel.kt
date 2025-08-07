@@ -36,7 +36,7 @@ class MessagesDetailsViewModel(
     private fun markMessagesAsSeen() {
         tryToExecute(
             execute = {
-                markMessagesAsSeenUseCase(chatId, otherUserId)
+                markMessagesAsSeenUseCase(chatId, currentUserId)
             },
             onError = {
                 Log.d("MessagesDetailsViewModel", "markMessagesAsSeen error: ${it.message}", it)
