@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.myRequest.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +14,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -25,7 +25,6 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.CraftsmanOfferDetails
-import com.paris_2.san3a.presentation.shared.components.OfferDetailsUIState
 import com.paris_2.san3a.presentation.shared.components.OfferStatus
 import com.paris_2.san3a.presentation.shared.components.ServiceTypeCard
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -75,9 +74,10 @@ fun MyJobOfferCard(
                     .padding(top = 16.dp)
                     .fillMaxWidth(),
                 type = AppButtonType.Secondary,
-                onClick = {},
+                onClick = onViewDetailsRequest,
+                enableSecondaryBackgroundColor = Theme.colors.shade.quaternary,
                 text = stringResource(R.string.button),
-                size = AppButtonSize.Large,
+                size = AppButtonSize.Small,
                 state = AppButtonState.Enable
             )
 
@@ -92,8 +92,6 @@ fun MyJobOfferCard(
                     .fillMaxWidth(),
                 painter = painter,
                 isVerified = offerUiState.isCraftsmanVerified,
-                onChatClick = onSendMessage,
-                onAcceptOfferClick = onMarkAsDone,
                 name = offerUiState.craftsmanName,
                 postedTime = offerUiState.acceptedTime,
                 description = offerUiState.craftsmanMessages,
@@ -101,7 +99,33 @@ fun MyJobOfferCard(
                 rate = offerUiState.craftsmanRating,
                 reviewsNumber = offerUiState.reviewsNumber,
                 status = OfferStatus.PENDING_OFFER,
-                time = offerUiState.acceptedTime
+                time = offerUiState.acceptedTime,
+                stickyFooter = {
+                    if (it == OfferStatus.PENDING_OFFER)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 24.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            AppButton(
+                                type = AppButtonType.Secondary,
+                                onClick = onSendMessage,
+                                text = stringResource(R.string.send_message),
+                                modifier = Modifier.weight(1f),
+                                size = AppButtonSize.Small,
+                                state = AppButtonState.Enable,
+                                enableSecondaryBackgroundColor = Theme.colors.shade.quaternary
+                            )
+                            AppButton(
+                                type = AppButtonType.Primary,
+                                onClick = onMarkAsDone,
+                                text = stringResource(R.string.mark_as_done),
+                                modifier = Modifier.weight(1f),
+                                size = AppButtonSize.Small
+                            )
+                        }
+                },
             )
         }
     }

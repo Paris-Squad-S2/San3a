@@ -25,7 +25,7 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 fun LoadingScreen(
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+    Box(modifier = modifier.background(Theme.colors.background.card), contentAlignment = Alignment.Center) {
         rememberInfiniteTransition().apply {
             val rotation by animateFloat(
                 initialValue = 0f,
