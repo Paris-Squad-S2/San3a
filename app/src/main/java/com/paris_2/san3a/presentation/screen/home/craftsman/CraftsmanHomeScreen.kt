@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -29,6 +31,7 @@ import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.StatsContainer
 import com.paris_2.san3a.presentation.shared.components.AppBar
+import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.RequestCardForCraftsMan
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.datetime.LocalDateTime
@@ -52,137 +55,143 @@ fun CraftsmanHomeContent(
     modifier: Modifier = Modifier,
     state: CraftsmanHomeState,
 ) {
-    Column(
+    AppScaffold(
         modifier = modifier
-            .background(Theme.colors.background.screen)
-            .statusBarsPadding()
-    ) {
-        AppBar(
-            actionIcon = {
-                Icon(
-                    modifier = Modifier
-                        .clickable(onClick = {
-                            action.onNotificationClick()
-                        }),
-                    painter = painterResource(R.drawable.ic_notification_outline),
-                    contentDescription = null,
-                    tint = Theme.colors.shade.primary
-                )
-            },
-            leadingIcon = {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 16.dp)
-                ) {
-                    Text(
-                        text = stringResource(
-                            R.string.good_morning,
-                            state.craftsmanHomeUiState.currentUserName
-                        ),
-
-                        style = Theme.textStyle.title.small,
-                        color = Theme.colors.shade.primary,
-                    )
-                    Row(
+            .background(Theme.colors.background.card)
+            .statusBarsPadding(),
+        topBar = {
+            AppBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Theme.colors.background.card),
+                actionIcon = {
+                    Icon(
                         modifier = Modifier
-                            .padding(top = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_location_outline),
-                            contentDescription = "",
-                            tint = Theme.colors.shade.secondary,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .padding(end = 4.dp)
-                        )
-                        Text(
-                            text = state.craftsmanHomeUiState.location,
-                            style = Theme.textStyle.body.small.medium,
-                            color = Theme.colors.shade.secondary
-                        )
-                    }
-                }
-            },
-        )
-
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f),
-            contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            item {
-                Text(
-                    text = stringResource(R.string.your_stats),
-                    style = Theme.textStyle.title.medium,
-                    color = Theme.colors.shade.primary,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-            }
-
-            item {
-                StatsContainer(
-                    jobsDone = state.craftsmanHomeUiState.stats.jobsDone,
-                    earnings = state.craftsmanHomeUiState.stats.earnings,
-                    rating = state.craftsmanHomeUiState.stats.rating
-                )
-            }
-
-
-            item {
-                if(state.craftsmanHomeUiState.recentRelatedJobs.isNotEmpty()) {
-                    Text(
-                        text = stringResource(
-                            R.string.recent_jobs,
-                            state.craftsmanHomeUiState.relatedJob
-                        ),
-                        style = Theme.textStyle.title.medium,
-                        color = Theme.colors.shade.primary,
-                        modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
+                            .clickable(onClick = {
+                                action.onNotificationClick()
+                            }),
+                        painter = painterResource(R.drawable.ic_notification_outline),
+                        contentDescription = null,
+                        tint = Theme.colors.shade.primary
                     )
-                    LazyRow(
-                        contentPadding = PaddingValues(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                },
+                leadingIcon = {
+                    Column(
+                        modifier = Modifier
+                            .padding(start = 16.dp)
                     ) {
-                        items(state.craftsmanHomeUiState.recentRelatedJobs) {
-                            RequestCardForCraftsMan(
-                                title = it.title,
-                                type = it.serviceType,
-                                offers = it.offers.size.toString(),
-                                description = it.description,
-                                location = it.location,
-                                onClick = { action.onJobClick(it.id) }
+                        Text(
+                            text = stringResource(
+                                R.string.good_morning,
+                                state.craftsmanHomeUiState.currentUserName
+                            ),
+
+                            style = Theme.textStyle.title.small,
+                            color = Theme.colors.shade.primary,
+                        )
+                        Row(
+                            modifier = Modifier
+                                .padding(top = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_location_outline),
+                                contentDescription = "",
+                                tint = Theme.colors.shade.secondary,
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .padding(end = 4.dp)
+                            )
+                            Text(
+                                text = state.craftsmanHomeUiState.location,
+                                style = Theme.textStyle.body.small.medium,
+                                color = Theme.colors.shade.secondary
                             )
                         }
                     }
-                }
-            }
-
-            if (state.craftsmanHomeUiState.availableJobs.isNotEmpty()) {
+                },
+            )
+        },
+        content = {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Theme.colors.background.screen),
+                contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
                 item {
                     Text(
-                        text = stringResource(R.string.available_jobs),
+                        text = stringResource(R.string.your_stats),
                         style = Theme.textStyle.title.medium,
                         color = Theme.colors.shade.primary,
                         modifier = Modifier.padding(start = 16.dp)
                     )
                 }
-                items(state.craftsmanHomeUiState.availableJobs) {
-                    RequestCardForCraftsMan(
-                        title = it.title,
-                        type = it.serviceType,
-                        offers = it.offers.size.toString(),
-                        description = it.description,
-                        location = it.location,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        onClick = { action.onJobClick(it.id) }
+
+                item {
+                    StatsContainer(
+                        jobsDone = state.craftsmanHomeUiState.stats.jobsDone,
+                        earnings = state.craftsmanHomeUiState.stats.earnings,
+                        rating = state.craftsmanHomeUiState.stats.rating
                     )
+                }
+
+
+                item {
+                    if(state.craftsmanHomeUiState.recentRelatedJobs.isNotEmpty()) {
+                        Text(
+                            text = stringResource(
+                                R.string.recent_jobs,
+                                state.craftsmanHomeUiState.relatedJob
+                            ),
+                            style = Theme.textStyle.title.medium,
+                            color = Theme.colors.shade.primary,
+                            modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
+                        )
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(state.craftsmanHomeUiState.recentRelatedJobs) {
+                                RequestCardForCraftsMan(
+                                    title = it.title,
+                                    type = it.serviceType,
+                                    offers = it.offers.size.toString(),
+                                    description = it.description,
+                                    location = it.location,
+                                    onClick = { action.onJobClick(it.id) }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                if (state.craftsmanHomeUiState.availableJobs.isNotEmpty()) {
+                    item {
+                        Text(
+                            text = stringResource(R.string.available_jobs),
+                            style = Theme.textStyle.title.medium,
+                            color = Theme.colors.shade.primary,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                    items(state.craftsmanHomeUiState.availableJobs) {
+                        RequestCardForCraftsMan(
+                            title = it.title,
+                            type = it.serviceType,
+                            offers = it.offers.size.toString(),
+                            description = it.description,
+                            location = it.location,
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            onClick = { action.onJobClick(it.id) }
+                        )
+                    }
                 }
             }
         }
-    }
+    )
+
 }
 
 

@@ -30,6 +30,7 @@ import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
+import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.SnackBar
@@ -84,124 +85,137 @@ fun VerificationScreenContent(
     val scroll = rememberScrollState()
 
 
-    Box(
-        Modifier
+    AppScaffold(
+        modifier = Modifier
             .fillMaxSize()
-            .background(Theme.colors.background.screen)
-            .statusBarsPadding()
-    ) {
-        when {
-            verificationScreenState.isNoInternet -> {
-                LostConnectionScreen(
-                    onRetry = verificationInteractionListener::onClickRetry,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 60.dp)
-                )
-            }
+            .background(Theme.colors.background.card)
+            .statusBarsPadding(),
+        topBar = {
+            AppBar(
+                title = stringResource(R.string.verification),
+                modifier = Modifier.fillMaxWidth()
+                    .background(Theme.colors.background.card),
+                onBackClick = verificationInteractionListener::onBackClick
+            )
 
-            verificationScreenState.isLoading -> {
-                LoadingScreen(
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            else -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(scroll)
-
-                ) {
-                    AppBar(
-                        title = stringResource(R.string.verification),
-                        modifier = Modifier.fillMaxWidth(),
-                        onBackClick = verificationInteractionListener::onBackClick
-                    )
-
-                    VerifyIDContent(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp),
-                        onFrontOfNationalIdUploadClick = { onFrontOfNationalIdUploadClick() },
-                        onBackOfNationalIdUploadClick = { onBackOfNationalIdUploadClick() },
-                        frontOfNationalIdUri = verificationScreenState.verificationUiState.frontOfNationalIdUri,
-                        backOfNationalIdUri = verificationScreenState.verificationUiState.backOfNationalIdUri
-                    )
-
-                    val text = stringResource(R.string.save)
-                    val buttonModifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 16.dp)
-
-
-                    val typeButton = AppButtonType.Primary
-
-                    AnimatedContent(
-                        targetState = verificationScreenState.verificationUiState.frontOfNationalIdUri != null
-                                && verificationScreenState.verificationUiState.backOfNationalIdUri != null,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Column(Modifier.fillMaxSize()) {
-                            Spacer(Modifier.weight(1f))
-                            if(it){
-                                AppButton(
-                                    text = text,
-                                    onClick = verificationInteractionListener::onClickSave,
-                                    modifier = buttonModifier,
-                                    state = AppButtonState.Enable,
-                                    type = typeButton,
-                                )
-                            } else{
-                                AppButton(
-                                    text = text,
-                                    onClick = {  },
-                                    modifier = buttonModifier,
-                                    state = AppButtonState.Disabled,
-                                    type = typeButton,
-                                )
-                            }
-
-                        }
-
+        },
+        content = {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(Theme.colors.background.screen)
+                    .statusBarsPadding()
+            ) {
+                when {
+                    verificationScreenState.isNoInternet -> {
+                        LostConnectionScreen(
+                            onRetry = verificationInteractionListener::onClickRetry,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 60.dp)
+                        )
                     }
 
+                    verificationScreenState.isLoading -> {
+                        LoadingScreen(
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
 
+                    else -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(scroll)
+
+                        ) {
+                            VerifyIDContent(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp),
+                                onFrontOfNationalIdUploadClick = { onFrontOfNationalIdUploadClick() },
+                                onBackOfNationalIdUploadClick = { onBackOfNationalIdUploadClick() },
+                                frontOfNationalIdUri = verificationScreenState.verificationUiState.frontOfNationalIdUri,
+                                backOfNationalIdUri = verificationScreenState.verificationUiState.backOfNationalIdUri
+                            )
+
+                            val text = stringResource(R.string.save)
+                            val buttonModifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 16.dp)
+
+
+                            val typeButton = AppButtonType.Primary
+
+                            AnimatedContent(
+                                targetState = verificationScreenState.verificationUiState.frontOfNationalIdUri != null
+                                        && verificationScreenState.verificationUiState.backOfNationalIdUri != null,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Column(Modifier.fillMaxSize()) {
+                                    Spacer(Modifier.weight(1f))
+                                    if(it){
+                                        AppButton(
+                                            text = text,
+                                            onClick = verificationInteractionListener::onClickSave,
+                                            modifier = buttonModifier,
+                                            state = AppButtonState.Enable,
+                                            type = typeButton,
+                                        )
+                                    } else{
+                                        AppButton(
+                                            text = text,
+                                            onClick = {  },
+                                            modifier = buttonModifier,
+                                            state = AppButtonState.Disabled,
+                                            type = typeButton,
+                                        )
+                                    }
+
+                                }
+
+                            }
+
+
+                        }
+                    }
+                }
+
+                AnimatedVisibility(verificationScreenState.showSnackBarError) {
+                    verificationScreenState.errorMessage?.let {
+                        SnackBar(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .statusBarsPadding()
+                                .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                                .align(Alignment.TopCenter),
+                            text = verificationScreenState.errorMessage,
+                            onClick = verificationInteractionListener::onDismissSnackBar
+
+                        )
+                    }
+                }
+
+                AnimatedVisibility(verificationScreenState.showSnackBarSuccess) {
+                    verificationScreenState.successMessageSnackBar?.let {
+                        SnackBar(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .statusBarsPadding()
+                                .padding(start = 12.dp, end = 12.dp, top = 16.dp)
+                                .align(Alignment.TopCenter),
+
+                            text = verificationScreenState.successMessageSnackBar,
+                            onClick = verificationInteractionListener::onDismissSnackBar
+
+                        )
+                    }
                 }
             }
         }
+    )
 
-        AnimatedVisibility(verificationScreenState.showSnackBarError) {
-            verificationScreenState.errorMessage?.let {
-                SnackBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
-                        .align(Alignment.TopCenter),
-                    text = verificationScreenState.errorMessage,
-                    onClick = verificationInteractionListener::onDismissSnackBar
 
-                )
-            }
-        }
-
-        AnimatedVisibility(verificationScreenState.showSnackBarSuccess) {
-            verificationScreenState.successMessageSnackBar?.let {
-                SnackBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .padding(start = 12.dp, end = 12.dp, top = 16.dp)
-                        .align(Alignment.TopCenter),
-
-                    text = verificationScreenState.successMessageSnackBar,
-                    onClick = verificationInteractionListener::onDismissSnackBar
-
-                )
-            }
-        }
-    }
 
 }
 
