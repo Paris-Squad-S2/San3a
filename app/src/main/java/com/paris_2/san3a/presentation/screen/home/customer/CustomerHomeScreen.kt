@@ -273,7 +273,8 @@ private fun CustomerHomeScreenContent(
         topBar = {
             AppBar(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .background(Theme.colors.background.card),
                 actionIcon = {
                     Icon(
                         modifier = Modifier
@@ -289,7 +290,6 @@ private fun CustomerHomeScreenContent(
                 leadingIcon = {
                     Column(
                         modifier = Modifier
-//                            .weight(1f)
                             .padding(start = 16.dp)
                     ) {
                         Text(
