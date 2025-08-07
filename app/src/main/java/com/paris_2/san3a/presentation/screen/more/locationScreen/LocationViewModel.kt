@@ -6,6 +6,7 @@ import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class LocationViewModel(
@@ -83,7 +84,7 @@ class LocationViewModel(
 
         updateState(
             screenState.value.copy(
-                isLoadingSaveButton = true
+                locationButtonState = AppButtonState.Loading
             )
         )
 
@@ -101,7 +102,7 @@ class LocationViewModel(
                 updateState(
                     screenState.value.copy(
                         showSnackBarSuccess = true,
-                        isLoadingSaveButton = false,
+                        locationButtonState = AppButtonState.Enable,
                         successMessageSnackBar = R.string.success_location_saved
                     )
                 )
@@ -111,7 +112,7 @@ class LocationViewModel(
                 updateState(
                     screenState.value.copy(
                         showSnackBarError = true,
-                        isLoadingSaveButton = false,
+                        locationButtonState = AppButtonState.Enable,
                         errorMessage = R.string.some_error_happened
                     )
                 )
@@ -136,8 +137,9 @@ class LocationViewModel(
                     selectedGovernorate = area,
                     selectedStreet = "",
                     streets = emptyList(),
-                    activeBottomSheet = LocationBottomSheetType.STREET
-                )
+                    activeBottomSheet = LocationBottomSheetType.STREET,
+                ),
+                locationButtonState = AppButtonState.Enable,
             )
         )
         fetchCities(area)
@@ -149,8 +151,9 @@ class LocationViewModel(
                 locationUiState = screenState.value.locationUiState.copy(
                     selectedStreet = street,
                     activeBottomSheet = LocationBottomSheetType.NONE
+                ),
+                locationButtonState = AppButtonState.Enable,
                 )
-            )
         )
     }
 
@@ -206,10 +209,6 @@ class LocationViewModel(
             }
         )
     }
-
-
-
-
 
 
 }

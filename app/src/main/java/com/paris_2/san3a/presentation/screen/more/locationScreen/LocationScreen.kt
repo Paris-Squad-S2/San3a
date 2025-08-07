@@ -1,7 +1,6 @@
 package com.paris_2.san3a.presentation.screen.more.locationScreen
 
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -168,10 +167,9 @@ fun LocationScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 24.dp),
+                    state =state.locationButtonState ,
                     loadingIcon = {
-                        AnimatedVisibility(state.isLoadingSaveButton) {
-                            LoadingScreen(Modifier.size(16.dp), background = Theme.colors.brand.primary)
-                        }
+                        LoadingScreen(Modifier.size(16.dp), background = Theme.colors.brand.primary)
                     }
                 )
             }

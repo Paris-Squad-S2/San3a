@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.more.locationScreen
 import androidx.annotation.StringRes
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 
 data class LocationScreenState(
     val locationUiState: LocationUiState = LocationUiState(),
@@ -11,7 +12,7 @@ data class LocationScreenState(
     val isStreetSheetVisible: Boolean = false,
     @StringRes val errorMessage: Int? = null,
     @StringRes val successMessageSnackBar: Int? = null,
-    val isLoadingSaveButton: Boolean = false,
+    val locationButtonState: AppButtonState = AppButtonState.Enable
 )
 
 data class LocationUiState(
