@@ -6,9 +6,11 @@ import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
+import com.paris_2.san3a.data.utils.NetworkConnectionChecker
 import com.paris_2.san3a.domain.GetAllServicesException
 import com.paris_2.san3a.domain.GetAvailableJobsException
 import com.paris_2.san3a.domain.GetMostRequestedServicesException
+import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.RequestServiceException
 import com.paris_2.san3a.domain.SearchServicesException
 import com.paris_2.san3a.domain.UpdateNumOfRequestsException
@@ -21,10 +23,16 @@ import kotlinx.coroutines.flow.map
 
 class HomeRepositoryImpl(
     private val serviceRemoteDataSource: ServiceRemoteDataSource,
-    private val firebaseStorageRemoteDataSource: StorageRemoteDataSource
+    private val firebaseStorageRemoteDataSource: StorageRemoteDataSource,
+    private val networkConnectionChecker: NetworkConnectionChecker
 ) : HomeRepository, BaseRepository() {
 
     override fun getAllServices(): Flow<List<Service>> {
+
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
         return serviceRemoteDataSource.getAllServices()
             .map { dtoList -> dtoList.map { it.toEntity() } }
             .catch { throw GetAllServicesException() }
