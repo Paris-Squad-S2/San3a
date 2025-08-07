@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
@@ -89,6 +90,13 @@ fun RequestInfoSection(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
             color = Theme.colors.brand.primary
         )
+
+        RequestInfoIconTextRow(
+            painter = painterResource(id = R.drawable.ic_image),
+            text = stringResource(R.string.attached_images),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
+        )
+
 
         if (request.images.isNotEmpty()) {
             LazyRow(
