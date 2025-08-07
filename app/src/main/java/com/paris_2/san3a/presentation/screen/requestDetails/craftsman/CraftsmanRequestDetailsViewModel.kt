@@ -11,6 +11,8 @@ import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 class CraftsmanRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
@@ -196,8 +198,19 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
+    override fun onPriceChanged(price: String) {
+    }
+
+    override fun onDateChanged(date: LocalDate) {
+    }
+
+    override fun onTimeChanged(time: LocalTime) {
+    }
+
+    override fun onMessageChanged(message: String) {
+    }
+
     override fun onClickFavorite() {
-//        TODO("Not yet implemented")
     }
 
     override fun onClickBack() {
