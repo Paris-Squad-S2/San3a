@@ -295,5 +295,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="price_placeholder">e.g., 25,000</string>
     <string name="send_offer">Send Offer</string>
     <string name="be_competitive_but_fair_consider_materials_and_time">Be competitive but fair. Consider materials and time.</string>
+    <string name="chat_with_the_poster">Chat with the Poster</string>
+    <string name="request_poster">Request Poster</string>
 
 </resources>

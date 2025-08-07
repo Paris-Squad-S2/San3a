@@ -24,7 +24,7 @@ data class CraftsmanRequestDetailsUiState(
     val yourOffers: List<Offer> = emptyList(),
     val craftsmanRequestDetails: CraftsmanRequestDetails? = null,
     val acceptedOffer: Offer? = null,
-    val customer: Customer? = null,
+    val customer: Customer = Customer(),
 )
 
 data class RequestServiceUIState(

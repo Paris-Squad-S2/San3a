@@ -3,13 +3,11 @@ package com.paris_2.san3a.presentation.screen.requestDetails.craftsman
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetAcceptedOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetYourOfferUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
@@ -18,6 +16,7 @@ class CraftsmanRequestDetailsViewModel(
     private val addOfferUseCase: AddOfferUseCase,
     private val getOffersUseCase: GetOffersUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val createChatUseCase: CreateChatUseCase,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<CraftsmanRequestDetailsScreenState>(CraftsmanRequestDetailsScreenState()),
     CraftsmanRequestDetailsInteractionListener {
@@ -97,6 +96,29 @@ class CraftsmanRequestDetailsViewModel(
 
     override fun onSendOfferClick() {
         // TODO("Not yet implemented")
+    }
+
+    override fun onChatWithPosterClick(customerId: String) {
+        tryToExecute(
+            execute = { createChatUseCase(listOf(phoneNumber, customerId)) },
+            onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Chat created successfully")
+                navigate(
+                    Destinations.MessageDetails(
+                        chatId = it,
+                        currentUserId = phoneNumber,
+                        otherUserId = customerId
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while creating chat",
+                    )
+                )
+            }
+        )
     }
 
     override fun onClickFavorite() {

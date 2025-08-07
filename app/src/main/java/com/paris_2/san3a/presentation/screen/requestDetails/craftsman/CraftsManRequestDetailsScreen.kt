@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.craftsman
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,12 +8,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -31,6 +35,9 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppBar
+import com.paris_2.san3a.presentation.shared.components.AppButton
+import com.paris_2.san3a.presentation.shared.components.AppButtonSize
+import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
@@ -124,6 +131,103 @@ fun CraftsmanRequestDetailsContent(
                 .padding(horizontal = 16.dp, vertical = 24.dp),
             interactionListener = interactionListener
         )
+        OffersFromCraftsmenSection(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            state = state,
+            interactionListener = interactionListener
+        )
+    }
+}
+
+@Composable
+fun OffersFromCraftsmenSection(
+    modifier: Modifier,
+    state: CraftsmanRequestDetailsUiState,
+    interactionListener: CraftsmanRequestDetailsInteractionListener
+) {
+    Column {
+        AnimatedVisibility(
+//            visible = state.yourOffers.contains(state.acceptedOffer)
+            visible = true
+        ) {
+            Column (
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp)
+            ){
+                Text(
+                    text = stringResource(R.string.chat_with_the_poster),
+                    style = Theme.textStyle.title.small,
+                    color = Theme.colors.shade.primary,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                ChatWithPosterCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp),
+                    state = state,
+                    interactionListener = interactionListener
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ChatWithPosterCard(
+    modifier: Modifier = Modifier,
+    state: CraftsmanRequestDetailsUiState,
+    interactionListener: CraftsmanRequestDetailsInteractionListener
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
+            .background(Theme.colors.background.card)
+            .padding(20.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier.size(40.dp)
+            ) {
+                AsyncImage(
+                    model = state.customer.profilePhoto,
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape),
+                )
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = state.customer.name,
+                    color = Theme.colors.shade.primary,
+                    style = Theme.textStyle.body.medium.medium,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                Text(
+                    text = stringResource(R.string.request_poster),
+                    style = Theme.textStyle.body.small.regular,
+                    color = Theme.colors.shade.tertiary
+                )
+            }
+        }
+
+        AppButton(
+            type = AppButtonType.Primary,
+            onClick = { interactionListener.onChatWithPosterClick(state.customer.id) },
+            text = stringResource(R.string.send_message),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            size = AppButtonSize.Large
+        )
     }
 }
 
@@ -132,7 +236,7 @@ fun AddYourOfferSection(
     modifier: Modifier,
     interactionListener: CraftsmanRequestDetailsInteractionListener
 ) {
-    Column (
+    Column(
         modifier = modifier
             .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
             .background(Theme.colors.background.card)
