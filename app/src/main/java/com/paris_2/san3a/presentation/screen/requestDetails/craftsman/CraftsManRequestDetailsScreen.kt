@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.craftsman
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,9 +31,6 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppBar
-import com.paris_2.san3a.presentation.shared.components.AppButton
-import com.paris_2.san3a.presentation.shared.components.AppButtonSize
-import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
@@ -136,7 +132,26 @@ fun AddYourOfferSection(
     modifier: Modifier,
     interactionListener: CraftsmanRequestDetailsInteractionListener
 ) {
+    Column (
+        modifier = modifier
+            .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
+            .background(Theme.colors.background.card)
+            .padding(20.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.add_your_offer),
+            style = Theme.textStyle.title.small,
+            color = Theme.colors.shade.primary,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Text(
+            text = stringResource(R.string.be_competitive_but_fair_consider_materials_and_time),
+            style = Theme.textStyle.body.small.regular,
+            color = Theme.colors.shade.secondary,
+            modifier = Modifier.padding(bottom = 20.dp)
+        )
 
+    }
 }
 
 @Composable
