@@ -764,16 +764,6 @@ class AccountViewModel(
     override fun onProfileButtonClicked() {
         tryToExecute(
             execute = {
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                profileButtonState = AppButtonState.Loading
-                            )
-                        )
-                    )
-                )
-
                 val fullName = screenState.value.accountUiState.customerName
                 val profilePhotoUri =
                     screenState.value.accountUiState.customerProfilePhotoUri
@@ -788,11 +778,21 @@ class AccountViewModel(
                         )
                     )
                 }
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                                profileButtonState = AppButtonState.Loading
+                            )
+                        )
+                    )
+                )
                 setUpAccountUseCase.savePersonalInfo(
                     phone = screenState.value.accountUiState.phoneNumber,
                     fullName,
                     profilePhotoUri
                 )
+
             },
             onSuccess = {
                 if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
