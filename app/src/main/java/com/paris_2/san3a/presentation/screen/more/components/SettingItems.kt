@@ -93,19 +93,20 @@ fun SettingItems(
             label = R.string.my_location,
             onClickItem = moreInteractionListener::onClickLocation
         )
+        SettingHorizontalDivider()
+        SettingItem(
+            modifier = Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = moreInteractionListener::onClickMyService
+            ),
+            icon = R.drawable.ic_sledgehammer_outline,
+            label = R.string.my_services,
+            onClickItem = moreInteractionListener::onClickMyService
+        )
         AnimatedVisibility(isCraftsman) {
             Column {
-                SettingHorizontalDivider()
-                SettingItem(
-                    modifier = Modifier.clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = moreInteractionListener::onClickMyService
-                    ),
-                    icon = R.drawable.ic_sledgehammer_outline,
-                    label = R.string.my_services,
-                    onClickItem = moreInteractionListener::onClickMyService
-                )
+
                 SettingHorizontalDivider()
                 SettingItem(
                     modifier = Modifier.clickable(
