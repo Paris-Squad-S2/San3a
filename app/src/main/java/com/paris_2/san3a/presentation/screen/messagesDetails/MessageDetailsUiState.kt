@@ -29,10 +29,22 @@ fun Message.toMessageUi(imageUserUrl: String, currentUserId: String) = MessageUi
     text = handleTextMessage(messageContent),
     images = handleImagesMessage(messageContent),
     anotherUserImage = imageUserUrl,
-    time = this.time.time.toString(),
+    time = formatChatTime(this.time.time),
     isReceived = this.receiverId == currentUserId,
     isSeen = this.seen,
 )
+
+private fun formatChatTime(time: kotlinx.datetime.LocalTime?): String {
+    return time?.let {
+        try {
+            val outputFormat = java.time.format.DateTimeFormatter.ofPattern("hh:mm a")
+            val javaLocalTime = java.time.LocalTime.of(it.hour, it.minute, it.second, it.nanosecond)
+            javaLocalTime.format(outputFormat)
+        } catch (e: Exception) {
+            ""
+        }
+    } ?: ""
+}
 
 fun handleTextMessage(messageContent: MessageContent): String {
     return if (messageContent is MessageContent.Text)
