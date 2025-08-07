@@ -2,9 +2,9 @@ package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -55,6 +55,7 @@ fun AppBar(
                 color = Theme.colors.shade.primary,
             )
         }
+        Spacer(modifier = Modifier.weight(1f))
         actionIcon()
     }
 
