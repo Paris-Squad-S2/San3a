@@ -1,10 +1,13 @@
 package com.paris_2.san3a.data.repository
 
+import android.R
+import android.R.attr.accountType
 import android.net.Uri
 import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
+import com.paris_2.san3a.data.utils.NetworkConnectionChecker
 import com.paris_2.san3a.domain.AddUserException
 import com.paris_2.san3a.domain.CompleteUserSetupException
 import com.paris_2.san3a.domain.GetAccountTypeException
@@ -14,6 +17,7 @@ import com.paris_2.san3a.domain.GetStatsException
 import com.paris_2.san3a.domain.GetUserException
 import com.paris_2.san3a.domain.GetUserProgressException
 import com.paris_2.san3a.domain.GetUserWorkMediaException
+import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.SaveAccountTypeException
 import com.paris_2.san3a.domain.SaveLocationException
 import com.paris_2.san3a.domain.SavePersonalInfoException
@@ -34,18 +38,26 @@ import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
-    private val storageRemoteDataSource: StorageRemoteDataSource
-) : UserRepository, BaseRepository() {
+    private val storageRemoteDataSource: StorageRemoteDataSource,
+    private val networkConnectionChecker: NetworkConnectionChecker,
+
+    ) : UserRepository, BaseRepository() {
 
     override suspend fun addUser(phone: String) =
         safeCall(AddUserException()) {
             userRemoteDataSource.addUser(phone)
         }
 
-    override suspend fun saveAccountType(phone: String, accountType: AccountType) =
-        safeCall(SaveAccountTypeException()) {
+    override suspend fun saveAccountType(phone: String, accountType: AccountType) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
+        return safeCall(SaveAccountTypeException()) {
             userRemoteDataSource.saveAccountType(phone, accountType)
         }
+    }
+
 
     override suspend fun getAccountType(phone: String): AccountType =
         safeCall(GetAccountTypeException()) {
@@ -56,23 +68,42 @@ class UserRepositoryImpl(
         phone: String,
         services: List<Service>,
         isCraftsman: Boolean
-    ) =
+    ) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
         safeCall(SaveServicesException()) {
             userRemoteDataSource.saveServices(phone, services, isCraftsman)
         }
+    }
 
-    override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<Service>> =
-        userRemoteDataSource.getServices(phone, isCraftsman).map { it.toEntity() }.catch {
+    override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<Service>> {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
+        return userRemoteDataSource.getServices(phone, isCraftsman).map { it.toEntity() }.catch {
             Log.e("UserRepositoryImpl", "Error fetching services: ${it.message}")
             throw GetServicesException()
         }
+    }
 
-    override suspend fun saveLocation(phone: String, location: Location) =
+    override suspend fun saveLocation(phone: String, location: Location) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
         safeCall(SaveLocationException()) {
             userRemoteDataSource.updateLocation(phone, location)
         }
+    }
 
-    override suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?) =
+    override suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
         safeCall(SavePersonalInfoException()) {
             val profileUrl = profileUri?.let { uri ->
                 val path = "$PROFILE_IMAGE_PATH/$phone.jpg"
@@ -81,6 +112,7 @@ class UserRepositoryImpl(
             }
             userRemoteDataSource.updatePersonalInfo(phone, fullName, profileUrl)
         }
+    }
 
     override suspend fun saveWorkShowcase(
         phone: String,
@@ -118,7 +150,10 @@ class UserRepositoryImpl(
             .catch { throw GetRecentRelatedJobsException() }
     }
 
-    override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) =
+    override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
         safeCall(UploadNationalIdImagesException()) {
             val frontUrl = frontUri?.let { uri ->
                 val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
@@ -133,11 +168,17 @@ class UserRepositoryImpl(
             }
             userRemoteDataSource.updateNationalIdImages(phone, frontUrl, backUrl)
         }
+    }
 
-    override suspend fun getUser(phone: String): User =
-        safeCall(GetUserException()) {
+    override suspend fun getUser(phone: String): User {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
+        return safeCall(GetUserException()) {
             userRemoteDataSource.getUser(phone)
         }
+    }
 
     override suspend fun getWorkMedia(phone: String): List<String> =
         safeCall(GetUserWorkMediaException()) {

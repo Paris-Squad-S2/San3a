@@ -10,6 +10,7 @@ import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
 import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
+import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,7 +40,7 @@ class CustomerHomeViewModel(
     override fun initBottomSheet(serviceTitle: String, serviceId: String, iconRes: Int) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetState = true,
                     bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
                     bottomSheetServiceTitle = serviceTitle,
@@ -165,7 +166,8 @@ class CustomerHomeViewModel(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetSelectedGovernment = government,
-                    isGovernmentSheetVisible = false
+                    isGovernmentSheetVisible = true,
+                    locationBottomSheetType = LocationBottomSheetContentType.CITY
                 )
             )
         )
@@ -177,6 +179,7 @@ class CustomerHomeViewModel(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetSelectedCity = city,
+                    isGovernmentSheetVisible = false,
                     isCitySheetVisible = false
                 )
             )
@@ -184,14 +187,21 @@ class CustomerHomeViewModel(
     }
 
     override fun showGovernmentSheet(show: Boolean) {
+        val currentGovernments = screenState.value.bottomSheetUiState.bottomSheetGovernments
+        if (show && currentGovernments.isEmpty()) {
+            getGovernments()
+        }
+
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                    isGovernmentSheetVisible = show
+                    isGovernmentSheetVisible = show,
+                    locationBottomSheetType = LocationBottomSheetContentType.GOVERNMENT
                 )
             )
         )
     }
+
 
     override fun showCitySheet(show: Boolean) {
         updateState(
@@ -206,7 +216,7 @@ class CustomerHomeViewModel(
     override fun resetBottomSheetState() {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
                     bottomSheetServiceTitle = "",
                     bottomSheetSubtitle = "",
@@ -279,11 +289,11 @@ class CustomerHomeViewModel(
                     screenState.value.copy(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                             bottomSheetGovernments = governments.names,
-                            bottomSheetSelectedGovernment = governments.names.firstOrNull() ?: ""
+                            bottomSheetSelectedGovernment = ""
                         ),
                         customerUiState = screenState.value.customerUiState.copy(
                             locationUiState = screenState.value.customerUiState.locationUiState.copy(
-                                government = governments.names.firstOrNull() ?: ""
+                                government = ""
                             ),
                         ),
                     )
@@ -313,12 +323,11 @@ class CustomerHomeViewModel(
                     screenState.value.copy(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                             bottomSheetCities = cities.names,
-                            bottomSheetSelectedCity = cities.names.firstOrNull() ?: "",
-                            isCitySheetVisible = true
+                            bottomSheetSelectedCity = "",
                         ),
                         customerUiState = screenState.value.customerUiState.copy(
                             locationUiState = screenState.value.customerUiState.locationUiState.copy(
-                                city = cities.names.firstOrNull() ?: ""
+                                city = ""
                             ),
                         ),
                     )
@@ -471,8 +480,8 @@ class CustomerHomeViewModel(
                 )
             )
         )
-        resetBottomSheetState()
     }
+
 
     companion object {
         const val ARABIC_NAME = "arabicName"
