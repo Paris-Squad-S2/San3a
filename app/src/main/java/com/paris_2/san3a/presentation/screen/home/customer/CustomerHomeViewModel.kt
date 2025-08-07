@@ -37,7 +37,7 @@ class CustomerHomeViewModel(
     override fun initBottomSheet(serviceTitle: String, serviceId: String, iconRes: Int) {
         updateState(
             screenState.value.copy(
-                bottomSheetUiState = BottomSheetUiState(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetState = true,
                     bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
                     bottomSheetServiceTitle = serviceTitle,
