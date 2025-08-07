@@ -81,6 +81,12 @@ class LocationViewModel(
             return
         }
 
+        updateState(
+            screenState.value.copy(
+                isLoadingSaveButton = true
+            )
+        )
+
         tryToExecute(
             execute = {
                 val phone = getPhoneNumberUseCase()
@@ -95,6 +101,7 @@ class LocationViewModel(
                 updateState(
                     screenState.value.copy(
                         showSnackBarSuccess = true,
+                        isLoadingSaveButton = false,
                         successMessageSnackBar = R.string.success_location_saved
                     )
                 )
@@ -104,6 +111,7 @@ class LocationViewModel(
                 updateState(
                     screenState.value.copy(
                         showSnackBarError = true,
+                        isLoadingSaveButton = false,
                         errorMessage = R.string.some_error_happened
                     )
                 )

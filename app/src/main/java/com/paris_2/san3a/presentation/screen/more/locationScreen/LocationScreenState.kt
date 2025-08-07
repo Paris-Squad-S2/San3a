@@ -11,6 +11,7 @@ data class LocationScreenState(
     val isStreetSheetVisible: Boolean = false,
     @StringRes val errorMessage: Int? = null,
     @StringRes val successMessageSnackBar: Int? = null,
+    val isLoadingSaveButton: Boolean = false,
 )
 
 data class LocationUiState(
@@ -18,7 +19,7 @@ data class LocationUiState(
     val selectedGovernorate: String = "",
     val streets: List<String> = emptyList(),
     val selectedStreet: String = "",
-    val activeBottomSheet: LocationBottomSheetType = LocationBottomSheetType.NONE
+    val activeBottomSheet: LocationBottomSheetType = LocationBottomSheetType.NONE,
 )
 
 enum class LocationBottomSheetType {

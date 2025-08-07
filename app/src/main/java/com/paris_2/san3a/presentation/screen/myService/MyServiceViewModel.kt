@@ -25,6 +25,7 @@ data class MyServiceScreenState(
     val isNoInternet: Boolean = false,
     val phoneNumber: String = "",
     val isCraftsman: Boolean = false,
+    val isLoadingSaveButton: Boolean = false,
 )
 
 
@@ -122,6 +123,9 @@ class MyServiceViewModel(
     }
 
     private fun uploadService() {
+        updateState(
+            screenState.value.copy(isLoadingSaveButton = true)
+        )
         tryToExecute(
             execute = {
                 val currentLocale = "englishName"
@@ -153,7 +157,8 @@ class MyServiceViewModel(
                 showSnackBarSuccess = true,
                 successMessageSnackBar = R.string.services_uploaded_successfully,
                 showSnackBarError = false,
-                errorMessage = null
+                errorMessage = null,
+                isLoadingSaveButton = false
             )
         )
         navigateUp()
@@ -168,7 +173,9 @@ class MyServiceViewModel(
                     errorMessage = null,
                     showSnackBarError = false,
                     showSnackBarSuccess = false,
-                    successMessageSnackBar = null
+                    successMessageSnackBar = null,
+                    isLoadingSaveButton = false
+
                 )
             )
         } else {
@@ -176,7 +183,8 @@ class MyServiceViewModel(
                 screenState.value.copy(
                     isLoading = false,
                     errorMessage = R.string.occur_error_when_upload_service,
-                    showSnackBarError = true
+                    showSnackBarError = true,
+                    isLoadingSaveButton = false
                 )
             )
         }
