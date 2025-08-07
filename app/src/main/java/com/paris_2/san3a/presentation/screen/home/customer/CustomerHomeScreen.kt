@@ -115,6 +115,7 @@ private fun CustomerHomeScreenContent(
             }
             voiceLauncher.launch(intent)
         }
+
     }
 
     val servicesToDisplay = if (state.customerUiState.searchQuery.isNotEmpty())

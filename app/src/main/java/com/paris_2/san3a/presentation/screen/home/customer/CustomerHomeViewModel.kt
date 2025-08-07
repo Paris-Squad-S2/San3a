@@ -185,16 +185,21 @@ class CustomerHomeViewModel(
     }
 
     override fun showGovernmentSheet(show: Boolean) {
+        val currentGovernments = screenState.value.bottomSheetUiState.bottomSheetGovernments
+        if (show && currentGovernments.isEmpty()) {
+            getGovernments()
+        }
+
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     isGovernmentSheetVisible = show,
                     locationBottomSheetType = LocationBottomSheetContentType.GOVERNMENT
-
                 )
             )
         )
     }
+
 
     override fun showCitySheet(show: Boolean) {
         updateState(
@@ -282,11 +287,11 @@ class CustomerHomeViewModel(
                     screenState.value.copy(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                             bottomSheetGovernments = governments.names,
-                            bottomSheetSelectedGovernment = governments.names.firstOrNull() ?: ""
+                            bottomSheetSelectedGovernment = ""
                         ),
                         customerUiState = screenState.value.customerUiState.copy(
                             locationUiState = screenState.value.customerUiState.locationUiState.copy(
-                                government = governments.names.firstOrNull() ?: ""
+                                government = ""
                             ),
                         ),
                     )
@@ -316,11 +321,11 @@ class CustomerHomeViewModel(
                     screenState.value.copy(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                             bottomSheetCities = cities.names,
-                            bottomSheetSelectedCity = cities.names.firstOrNull() ?: "",
+                            bottomSheetSelectedCity = "",
                         ),
                         customerUiState = screenState.value.customerUiState.copy(
                             locationUiState = screenState.value.customerUiState.locationUiState.copy(
-                                city = cities.names.firstOrNull() ?: ""
+                                city = ""
                             ),
                         ),
                     )
