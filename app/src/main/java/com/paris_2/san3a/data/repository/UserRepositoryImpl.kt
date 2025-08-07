@@ -5,6 +5,7 @@ import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
+import com.paris_2.san3a.data.utils.NetworkConnectionChecker
 import com.paris_2.san3a.domain.AddUserException
 import com.paris_2.san3a.domain.CompleteUserSetupException
 import com.paris_2.san3a.domain.GetAccountTypeException
@@ -14,6 +15,7 @@ import com.paris_2.san3a.domain.GetStatsException
 import com.paris_2.san3a.domain.GetUserException
 import com.paris_2.san3a.domain.GetUserProgressException
 import com.paris_2.san3a.domain.GetUserWorkMediaException
+import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.SaveAccountTypeException
 import com.paris_2.san3a.domain.SaveLocationException
 import com.paris_2.san3a.domain.SavePersonalInfoException
@@ -34,8 +36,10 @@ import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
-    private val storageRemoteDataSource: StorageRemoteDataSource
-) : UserRepository, BaseRepository() {
+    private val storageRemoteDataSource: StorageRemoteDataSource,
+    private val networkConnectionChecker: NetworkConnectionChecker,
+
+    ) : UserRepository, BaseRepository() {
 
     override suspend fun addUser(phone: String) =
         safeCall(AddUserException()) {
@@ -72,7 +76,11 @@ class UserRepositoryImpl(
             userRemoteDataSource.updateLocation(phone, location)
         }
 
-    override suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?) =
+    override suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
         safeCall(SavePersonalInfoException()) {
             val profileUrl = profileUri?.let { uri ->
                 val path = "$PROFILE_IMAGE_PATH/$phone.jpg"
@@ -81,6 +89,7 @@ class UserRepositoryImpl(
             }
             userRemoteDataSource.updatePersonalInfo(phone, fullName, profileUrl)
         }
+    }
 
     override suspend fun saveWorkShowcase(
         phone: String,
