@@ -199,15 +199,71 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onPriceChanged(price: String) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
+                        price = price
+                    )
+                )
+            )
+        )
     }
 
     override fun onDateChanged(date: LocalDate) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
+                        preferredDate = date
+                    )
+                )
+            )
+        )
     }
 
     override fun onTimeChanged(time: LocalTime) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
+                        preferredTime = time
+                    )
+                )
+            )
+        )
     }
 
     override fun onMessageChanged(message: String) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
+                        messageToCustomer = message
+                    )
+                )
+            )
+        )
+    }
+
+    override fun onShowDatePickerChange(show: Boolean) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    showDatePicker = show
+                )
+            )
+        )
+    }
+
+    override fun onShowTimePickerChange(show: Boolean) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    showTimePicker = show
+                )
+            )
+        )
     }
 
     override fun onClickFavorite() {

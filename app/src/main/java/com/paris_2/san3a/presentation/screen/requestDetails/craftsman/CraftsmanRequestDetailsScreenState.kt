@@ -1,5 +1,12 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.craftsman
 
+import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TimePickerState
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
@@ -25,6 +32,8 @@ data class CraftsmanRequestDetailsUiState(
     val craftsmanRequestDetails: CraftsmanRequestDetails? = null,
     val acceptedOffer: RequestOfferUiState? = null,
     val customer: Customer = Customer(),
+    val showDatePicker: Boolean = false,
+    val showTimePicker: Boolean = false
 )
 
 data class OfferToAddUiState(

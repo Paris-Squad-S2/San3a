@@ -17,4 +17,6 @@ interface CraftsmanRequestDetailsInteractionListener {
     fun onDateChanged(date: LocalDate)
     fun onTimeChanged(time: LocalTime)
     fun onMessageChanged(message: String)
+    fun onShowDatePickerChange(show: Boolean)
+    fun onShowTimePickerChange(show: Boolean)
 }

@@ -18,8 +18,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.screen.requestDetails.components.AddOfferForm
 import com.paris_2.san3a.presentation.screen.requestDetails.components.RequestInfoSection
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppButton
@@ -135,6 +139,7 @@ fun CraftsmanRequestDetailsContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 24.dp),
+                state = state,
                 interactionListener = interactionListener
             )
         }
@@ -315,30 +320,30 @@ fun ChatWithPosterCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddYourOfferSection(
     modifier: Modifier,
-    interactionListener: CraftsmanRequestDetailsInteractionListener
+    interactionListener: CraftsmanRequestDetailsInteractionListener,
+    state: CraftsmanRequestDetailsUiState
 ) {
-    Column(
-        modifier = modifier
-            .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
-            .background(Theme.colors.background.card)
-            .padding(20.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.add_your_offer),
-            style = Theme.textStyle.title.small,
-            color = Theme.colors.shade.primary,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = stringResource(R.string.be_competitive_but_fair_consider_materials_and_time),
-            style = Theme.textStyle.body.small.regular,
-            color = Theme.colors.shade.secondary,
-            modifier = Modifier.padding(bottom = 20.dp)
-        )
-
-    }
+    AddOfferForm(
+        modifier = modifier,
+        price = state.offerToAdd.price,
+        onPriceChange = interactionListener::onPriceChanged,
+        selectedDate = state.offerToAdd.preferredDate,
+        onDateChange = interactionListener::onDateChanged,
+        selectedTime = state.offerToAdd.preferredTime,
+        onTimeChange = interactionListener::onTimeChanged,
+        message = state.offerToAdd.messageToCustomer,
+        onMessageChange = interactionListener::onMessageChanged,
+        onSendClick = interactionListener::onSendOfferClick,
+        showDatePicker = state.showDatePicker,
+        onShowDatePickerChange = interactionListener::onShowDatePickerChange,
+        datePickerState = rememberDatePickerState(),
+        timePickerState = rememberTimePickerState(),
+        showTimePicker = state.showTimePicker,
+        onShowTimePickerChange = interactionListener::onShowTimePickerChange
+    )
 }
 

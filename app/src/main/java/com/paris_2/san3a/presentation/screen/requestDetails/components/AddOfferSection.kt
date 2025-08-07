@@ -42,6 +42,7 @@ import java.time.ZoneId
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddOfferForm(
+    modifier: Modifier = Modifier,
     price: String,
     onPriceChange: (String) -> Unit,
     selectedDate: LocalDate?,
@@ -63,7 +64,7 @@ fun AddOfferForm(
         colors = CardDefaults.cardColors(
             containerColor = Theme.colors.background.card
         ),
-        modifier = Modifier
+        modifier = modifier
             .padding(16.dp)
             .fillMaxWidth(),
     ) {
