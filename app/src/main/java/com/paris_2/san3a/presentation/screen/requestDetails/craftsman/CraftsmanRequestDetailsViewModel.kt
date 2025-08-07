@@ -117,11 +117,49 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onClickSendMessage(customerId: String) {
-        //TODO("Not yet implemented")
+        tryToExecute(
+            execute = { createChatUseCase(listOf(phoneNumber, customerId)) },
+            onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Chat created successfully")
+                navigate(
+                    Destinations.MessageDetails(
+                        chatId = it,
+                        currentUserId = phoneNumber,
+                        otherUserId = customerId
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while creating chat",
+                    )
+                )
+            }
+        )
     }
 
     override fun onSendOfferClick() {
-        // TODO("Not yet implemented")
+        tryToExecute(
+            execute = { addOfferUseCase(screenState.value.uiState.offerToAdd.toOffer()) },
+            onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Offer added successfully")
+                updateState(
+                    screenState.value.copy(
+                        uiState = screenState.value.uiState.copy(
+                            offerToAdd = OfferToAddUiState()
+                        )
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while sending offer",
+                    )
+                )
+            }
+        )
     }
 
     override fun onChatWithPosterClick(customerId: String) {
