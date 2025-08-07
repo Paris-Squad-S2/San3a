@@ -510,7 +510,8 @@ class MoreViewModel(
         } else {
             updateState(
                 screenState.value.copy(
-                    errorMessage = R.string.occrus_error_when_saving_user_information
+                    errorMessage = R.string.occrus_error_when_saving_user_information,
+                    isLoading = false
                 )
             )
         }

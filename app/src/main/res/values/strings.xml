@@ -287,5 +287,7 @@ We may revise this policy from time to time. You will be notified of significant
 
     <string name="occrus_error_when_get_version_name">occurs error when get version name</string>
     <string name="error_occurred_while_fetching_services">An error occurred while fetching services</string>
+    <string name="send_message">Send Message</string>
+    <string name="mark_as_done">Mark as Done</string>
 
 </resources>

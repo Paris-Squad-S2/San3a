@@ -37,6 +37,7 @@ import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetYourOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetGetCraftsManRequestsUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -79,4 +80,5 @@ val useCaseModule = module {
     factoryOf(::AddOfferUseCase)
     factoryOf(::GetYourOfferUseCase)
     factoryOf(::GetAcceptedOffersUseCase)
+    factoryOf(::GetGetCraftsManRequestsUseCase)
 }
