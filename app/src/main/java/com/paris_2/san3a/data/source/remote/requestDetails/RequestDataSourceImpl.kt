@@ -3,7 +3,9 @@ package com.paris_2.san3a.data.source.remote.requestDetails
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.source.remote.requestDetails.dto.OfferDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlin.collections.mapOf
 
 class RequestDataSourceImpl(
@@ -83,15 +85,24 @@ class RequestDataSourceImpl(
         )
     }
 
-    override fun getCraftsManRequests(userId: String): Flow<List<RequestServiceDto>> {
-        return fireStoreService.streamCollection(
-            path = REQUEST_DETAILS_COLLECTION,
-            fromJson = RequestServiceDto::fromJson,
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getCraftsManRequests(userId: String): Flow<List<RequestServiceDto>> =
+        fireStoreService.streamCollection(
+            path = OFFERS_COLLECTION,
+            fromJson = OfferDto::fromJson,
             queryBuilder = { query ->
-                query.whereEqualTo("selectedCraftsmanId", userId)
+                query.whereEqualTo("craftsmanId", userId)
             }
-        )
-    }
+        ).flatMapLatest { offers ->
+            val requestIds = offers.map { it.requestId }
+            fireStoreService.streamCollection(
+                path = REQUEST_DETAILS_COLLECTION,
+                fromJson = RequestServiceDto::fromJson,
+                queryBuilder = { query ->
+                    query.whereIn("id", requestIds)
+                }
+            )
+        }
 
 
     companion object{

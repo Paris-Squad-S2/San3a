@@ -9,7 +9,7 @@ class CustomerRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
     private val getOffersUseCase: GetOffersUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase
-): BaseViewModel<CustomerRequestUiState>(CustomerRequestUiState()), CustomerInteractionListener {
+): BaseViewModel<CustomerRequestDetailsScreenState>(CustomerRequestDetailsScreenState()), CustomerInteractionListener {
 
     init {
 
