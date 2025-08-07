@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.screen.myService
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
@@ -13,6 +12,8 @@ import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.ServiceUiState
+import com.paris_2.san3a.presentation.shared.components.AppButton
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 data class MyServiceScreenState(
@@ -25,7 +26,7 @@ data class MyServiceScreenState(
     val isNoInternet: Boolean = false,
     val phoneNumber: String = "",
     val isCraftsman: Boolean = false,
-    val isLoadingSaveButton: Boolean = false,
+    val serviceButtonState: AppButtonState = AppButtonState.Enable
 )
 
 
@@ -67,6 +68,7 @@ class MyServiceViewModel(
                         },
                     )
                 )
+
             },
             onError = { errorMessage ->
                 updateState(
@@ -124,7 +126,9 @@ class MyServiceViewModel(
 
     private fun uploadService() {
         updateState(
-            screenState.value.copy(isLoadingSaveButton = true)
+            screenState.value.copy(
+                serviceButtonState = AppButtonState.Loading
+            )
         )
         tryToExecute(
             execute = {
@@ -158,7 +162,6 @@ class MyServiceViewModel(
                 successMessageSnackBar = R.string.services_uploaded_successfully,
                 showSnackBarError = false,
                 errorMessage = null,
-                isLoadingSaveButton = false
             )
         )
         navigateUp()
@@ -174,8 +177,6 @@ class MyServiceViewModel(
                     showSnackBarError = false,
                     showSnackBarSuccess = false,
                     successMessageSnackBar = null,
-                    isLoadingSaveButton = false
-
                 )
             )
         } else {
@@ -184,7 +185,6 @@ class MyServiceViewModel(
                     isLoading = false,
                     errorMessage = R.string.occur_error_when_upload_service,
                     showSnackBarError = true,
-                    isLoadingSaveButton = false
                 )
             )
         }
@@ -215,6 +215,11 @@ class MyServiceViewModel(
     override fun onClickService(serviceId: String) {
         val updatedServices = screenState.value.myServiceUiState.map {
             if (it.id == serviceId) {
+                updateState(
+                    screenState.value.copy(
+                        serviceButtonState = AppButtonState.Enable
+                    )
+                )
                 it.copy(isSelected = !it.isSelected)
             } else {
                 it
@@ -225,6 +230,19 @@ class MyServiceViewModel(
                 myServiceUiState = updatedServices
             )
         )
+        if (screenState.value.myServiceUiState.any{it.isSelected}){
+            updateState(
+                screenState.value.copy(
+                    serviceButtonState = AppButtonState.Enable
+                )
+            )
+        }else{
+            updateState(
+                screenState.value.copy(
+                    serviceButtonState = AppButtonState.Disabled
+                )
+            )
+        }
     }
 
     override fun onDismissSnack() {

@@ -105,12 +105,11 @@ fun MyServiceScreenContent(
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 16.dp),
-                    state = AppButtonState.Enable,
+                    state = myServiceScreenState.serviceButtonState,
                     type = AppButtonType.Primary,
                     loadingIcon = {
-                        AnimatedVisibility(myServiceScreenState.isLoadingSaveButton) {
                             LoadingScreen(Modifier.size(16.dp), background = Theme.colors.brand.primary)
-                        }
+
                     }
                 )
 
