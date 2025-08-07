@@ -143,6 +143,7 @@ fun CraftsmanRequestDetailsContent(
                 interactionListener = interactionListener
             )
         }
+
         item {
             AnimatedVisibility(
                 visible = state.yourOffers.contains(state.acceptedOffer)
@@ -166,8 +167,8 @@ fun CraftsmanRequestDetailsContent(
                     )
                 }
             }
-
         }
+
 
         item {
 
@@ -201,6 +202,49 @@ fun CraftsmanRequestDetailsContent(
                         )
                     }
                 }
+            }
+        }
+
+        if (state.yourOffers.isNotEmpty()){
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.your_offers),
+                        style = Theme.textStyle.title.small,
+                        color = Theme.colors.shade.primary,
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = stringResource(
+                            R.string.offers_count,
+                            state.yourOffers.size
+                        ),
+                        style = Theme.textStyle.body.small.regular,
+                        color = Theme.colors.shade.tertiary,
+                    )
+                }
+            }
+
+            items(state.yourOffers) { offer ->
+                CraftsManOffer(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        .animateItem(),
+                    addShadow = true,
+                    offerDetails = offer.toOfferDetailsUIState(),
+                    painter = rememberAsyncImagePainter(model = offer.craftsmanImageUrl),
+                    onChatClick = {
+                        interactionListener.onChatWithPosterClick(offer.craftsmanId)
+                    },
+                    onAcceptOfferClick = {
+                        interactionListener.onAcceptOfferClick(offer.id)
+                    },
+                )
             }
         }
 

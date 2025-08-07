@@ -61,6 +61,9 @@ class CraftsmanRequestDetailsViewModel(
         tryToObserve(
             observe = { getOffersUseCase(requestId) },
             onEach = {
+                it.forEach { offer ->
+                    Log.d("CraftsmanRequestDetailsVM", "Offer: ${offer.toOfferUiState()}")
+                }
                 updateState(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
@@ -89,6 +92,9 @@ class CraftsmanRequestDetailsViewModel(
                 screenState.value.uiState.offers.filter { it.craftsmanId != phoneNumber && it.isAccepted.not() }
             },
             onSuccess = {
+                it.forEach { offer ->
+                    Log.d("CraftsmanRequestDetailsVM", "Offer from craftsMen: $offer")
+                }
                 updateState(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
@@ -284,6 +290,9 @@ class CraftsmanRequestDetailsViewModel(
                 screenState.value.uiState.offers.filter { it.craftsmanId == phoneNumber }
             },
             onSuccess = {
+                it.forEach { offer ->
+                    Log.d("CraftsmanRequestDetailsVM", "your Offer: $offer")
+                }
                 updateState(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
@@ -308,6 +317,7 @@ class CraftsmanRequestDetailsViewModel(
                 screenState.value.uiState.offers.firstOrNull { it.isAccepted }
             },
             onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Accepted offer: $it")
                 updateState(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
