@@ -1,7 +1,10 @@
 package com.paris_2.san3a.presentation.screen.messages
 
+import android.util.Log
 import com.paris_2.san3a.domain.entity.Chat
 import com.paris_2.san3a.domain.entity.MessageContent
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.number
 
 data class MessagesState(
     val chatsMap: Map<String, ChatUI> = emptyMap(),
@@ -24,20 +27,36 @@ data class ChatUI(
 fun MessageContent.toMessageContentUI(): String {
     return when (this) {
         is MessageContent.Text -> this.content
-        is MessageContent.Image -> "\uD83D\uDDBC️" 
-        is MessageContent.Audio -> "\uD83C\uDFB5" 
+        is MessageContent.Image -> "\uD83D\uDDBC️"
+        is MessageContent.Audio -> "\uD83C\uDFB5"
     }
 }
 
 fun Chat.toChatUI(userId: String): ChatUI {
+    Log.d("ChatUI", "toChatUI: ${this.lastMessage?.time}")
     return ChatUI(
         chatId = this.id,
         lastMessage = this.lastMessage?.messageContent?.toMessageContentUI() ?: "",
-        lastMessageTime = this.lastMessage?.time?.toString() ?: "",
+        lastMessageTime = formatLastMessageTime(this.lastMessage?.time),
         lastMessageReceiverId = this.lastMessage?.receiverId ?: "",
         unreadMessagesCount = this.unreadMessagesCount,
         theOtherUserId = this.usersParticipantIds.firstOrNull { it != userId } ?: userId,
     )
+}
+
+private fun formatLastMessageTime(time: LocalDateTime?): String {
+    return time?.let {
+        try {
+            val outputFormat = java.time.format.DateTimeFormatter.ofPattern("hh:mm a")
+            val javaLocalDateTime = java.time.LocalDateTime.of(
+                it.year, it.month.number, it.day,
+                it.hour, it.minute, it.second, it.nanosecond
+            )
+            javaLocalDateTime.format(outputFormat)
+        } catch (e: Exception) {
+            ""
+        }
+    }.toString()
 }
 
 fun List<Chat>.toChatUIMap(userId: String): Map<String, ChatUI> {
