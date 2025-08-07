@@ -80,9 +80,9 @@ fun VerificationScreenContent(
     verificationScreenState: VerificationScreenState,
     verificationInteractionListener: VerificationInteractionListener,
     onFrontOfNationalIdUploadClick: () -> Unit,
-    onBackOfNationalIdUploadClick: () -> Unit
+    onBackOfNationalIdUploadClick: () -> Unit,
 
-) {
+    ) {
 
     val scroll = rememberScrollState()
 
@@ -96,7 +96,8 @@ fun VerificationScreenContent(
         topBar = {
             AppBar(
                 title = stringResource(R.string.verification),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .background(Theme.colors.background.card),
                 onBackClick = verificationInteractionListener::onBackClick
             )
@@ -157,23 +158,24 @@ fun VerificationScreenContent(
                             ) {
                                 Column(Modifier.fillMaxSize()) {
                                     Spacer(Modifier.weight(1f))
-                                    if(it){
+                                    if (it) {
                                         AppButton(
                                             text = text,
                                             onClick = verificationInteractionListener::onClickSave,
                                             modifier = buttonModifier,
-                                            state = AppButtonState.Enable,
+                                            state = verificationScreenState.verificationButtonState,
                                             type = typeButton,
                                             loadingIcon = {
-                                                AnimatedVisibility(verificationScreenState.isLoadingButton) {
-                                                    LoadingScreen(Modifier.size(16.dp), background = Theme.colors.brand.primary)
-                                                }
+                                                LoadingScreen(
+                                                    Modifier.size(16.dp),
+                                                    background = Theme.colors.brand.primary
+                                                )
                                             }
                                         )
-                                    } else{
+                                    } else {
                                         AppButton(
                                             text = text,
-                                            onClick = {  },
+                                            onClick = { },
                                             modifier = buttonModifier,
                                             state = AppButtonState.Disabled,
                                             type = typeButton,
@@ -222,7 +224,6 @@ fun VerificationScreenContent(
             }
         }
     )
-
 
 
 }

@@ -6,6 +6,7 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 data class VerificationScreenState(
@@ -16,7 +17,7 @@ data class VerificationScreenState(
     val showSnackBarSuccess: Boolean = false,
     val showSnackBarError: Boolean = false,
     val isNoInternet: Boolean = false,
-    val isLoadingButton: Boolean = false
+    val verificationButtonState: AppButtonState = AppButtonState.Disabled,
 )
 
 data class VerificationUiState(
@@ -28,7 +29,7 @@ data class VerificationUiState(
 
 class VerificationViewModel(
     private val setUpAccountUseCase: SetUpAccountUseCase,
-    private val getPhoneNumberUseCase: GetPhoneNumberUseCase
+    private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
 ) : BaseViewModel<VerificationScreenState>(VerificationScreenState()),
     VerificationInteractionListener {
 
@@ -98,7 +99,7 @@ class VerificationViewModel(
 
             updateState(
                 screenState.value.copy(
-                    isLoadingButton = true
+                    verificationButtonState = AppButtonState.Loading
                 )
             )
             tryToExecute(
@@ -125,7 +126,7 @@ class VerificationViewModel(
                 errorMessage = null,
                 showSnackBarSuccess = true,
                 showSnackBarError = false,
-                isLoadingButton = false,
+                verificationButtonState = AppButtonState.Enable,
                 successMessageSnackBar = R.string.r_string_national_id_images_uploaded_successfully
             )
         )
@@ -144,7 +145,7 @@ class VerificationViewModel(
                     showSnackBarError = false,
                     showSnackBarSuccess = false,
                     successMessageSnackBar = null,
-                    isLoadingButton = false
+                    verificationButtonState = AppButtonState.Enable,
                 )
             )
         } else {
@@ -156,7 +157,7 @@ class VerificationViewModel(
                     showSnackBarError = true,
                     showSnackBarSuccess = false,
                     successMessageSnackBar = null,
-                    isLoadingButton = false
+                    verificationButtonState = AppButtonState.Disabled,
                 )
             )
         }
@@ -168,6 +169,10 @@ class VerificationViewModel(
                 verificationUiState = screenState.value.verificationUiState.copy(
                     frontOfNationalIdUri = uri
                 ),
+                verificationButtonState = if (screenState.value.verificationUiState.backOfNationalIdUri != null)
+                    AppButtonState.Enable
+                else
+                    AppButtonState.Disabled
             )
         )
     }
@@ -176,9 +181,12 @@ class VerificationViewModel(
         updateState(
             screenState.value.copy(
                 verificationUiState = screenState.value.verificationUiState.copy(
-                    backOfNationalIdUri = uri
-
-                )
+                    backOfNationalIdUri = uri,
+                ),
+                verificationButtonState = if (screenState.value.verificationUiState.frontOfNationalIdUri != null)
+                    AppButtonState.Enable
+                else
+                    AppButtonState.Disabled
             )
         )
     }
