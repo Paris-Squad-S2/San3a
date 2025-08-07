@@ -35,10 +35,10 @@ fun NotificationScreen(
             AppBar(
                 title = stringResource(R.string.notifications),
                 onBackClick = { viewModel.onBackClick() },
-
-                )
+            )
         },
         modifier = Modifier
+            .background(Theme.colors.background.card)
             .statusBarsPadding()
             .fillMaxSize()
             .background(Theme.colors.background.screen)

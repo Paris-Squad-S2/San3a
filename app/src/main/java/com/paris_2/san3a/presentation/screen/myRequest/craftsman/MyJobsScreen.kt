@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
@@ -48,14 +49,14 @@ private fun MyRequestScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Theme.colors.background.screen),
+            .background(Theme.colors.background.card)
+            .statusBarsPadding(),
     ) {
 
         AppBar(
             modifier = modifier
                 .fillMaxWidth(),
             title = stringResource(R.string.my_jobs),
-            onBackClick = {},
             actionIcon = {
                 Icon(
                     modifier = Modifier
@@ -68,101 +69,113 @@ private fun MyRequestScreenContent(
             }
         )
 
-        when {
-            uiState.isLoading -> {
-                LoadingScreen(modifier = Modifier.fillMaxSize())
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Theme.colors.background.screen)
+        )
+        {
+            when {
+                uiState.isLoading -> {
+                    LoadingScreen(modifier = Modifier.fillMaxSize())
+                }
 
-            uiState.errorMessage != null -> {
-                PlaceHolderScreen(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(30.dp),
-                    action = {
-                        myJobCraftsmanInteractionListener.onRetryClick()
-                    },
-                    actionText = R.string.try_again,
-                    image = R.drawable.img_lost_connection,
-                    title = R.string.oops_no_internet,
-                    description = R.string.please_check_your_connection_and_try_again_we_ll_keep_trying_in_the_background
-                )
-            }
+                uiState.errorMessage != null -> {
+                    PlaceHolderScreen(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(30.dp),
+                        action = {
+                            myJobCraftsmanInteractionListener.onRetryClick()
+                        },
+                        actionText = R.string.try_again,
+                        image = R.drawable.img_lost_connection,
+                        title = R.string.oops_no_internet,
+                        description = R.string.please_check_your_connection_and_try_again_we_ll_keep_trying_in_the_background
+                    )
+                }
 
-            else -> {
-                val tabs = listOf(
-                    stringResource(R.string.ongoing),
-                    stringResource(R.string.completed),
-                    stringResource(R.string.canceled)
-                )
-                val selectedIndex = remember { mutableIntStateOf(0) }
-                AppTabBar(
-                    tabItems = tabs,
-                    selectedIndex = selectedIndex.intValue,
-                    onTabSelected = { index ->
-                        selectedIndex.intValue = index
-                    },
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Theme.colors.background.screen)
-                ) {
-                    when (selectedIndex.intValue) {
-                        0 -> {
-                            val ongoingRequests = uiState.myOffersCraftsmanUiState.ongoing
-                            if (ongoingRequests.isEmpty()) {
-                                Box(Modifier.fillMaxSize()) {
-                                    PlaceHolderScreen(
-                                        Modifier.align(Alignment.Center),
-                                        image = R.drawable.img_placeholder_lllustration1,
-                                        title = R.string.no_service_requests_yet,
-                                        description = R.string.start_by_choosing_a_service_and_submitting_your_first_request
+                else -> {
+                    val tabs = listOf(
+                        stringResource(R.string.ongoing),
+                        stringResource(R.string.completed),
+                        stringResource(R.string.canceled)
+                    )
+                    val selectedIndex = remember { mutableIntStateOf(0) }
+                    AppTabBar(
+                        tabItems = tabs,
+                        selectedIndex = selectedIndex.intValue,
+                        onTabSelected = { index ->
+                            selectedIndex.intValue = index
+                        },
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen)
+                    ) {
+                        when (selectedIndex.intValue) {
+                            0 -> {
+                                val ongoingRequests = uiState.myOffersCraftsmanUiState.ongoing
+                                if (ongoingRequests.isEmpty()) {
+                                    Box(Modifier.fillMaxSize()) {
+                                        PlaceHolderScreen(
+                                            Modifier.align(Alignment.Center),
+                                            image = R.drawable.img_placeholder_lllustration1,
+                                            title = R.string.no_service_requests_yet,
+                                            description = R.string.start_by_choosing_a_service_and_submitting_your_first_request
+                                        )
+                                    }
+                                } else {
+                                    JobsList(
+                                        offers = ongoingRequests,
+                                        myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
                                     )
                                 }
-                            } else {
-                                JobsList(offers = ongoingRequests,myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener)
                             }
-                        }
 
-                        1 -> {
-                            val completedRequests = uiState.myOffersCraftsmanUiState.completed
-                            if (completedRequests.isEmpty()) {
-                                Box(Modifier.fillMaxSize()) {
-                                    PlaceHolderScreen(
-                                        Modifier.align(Alignment.Center),
-                                        image = R.drawable.img_placeholder_lllustration1,
-                                        title = R.string.no_service_requests_yet,
-                                        description = R.string.start_by_choosing_a_service_and_submitting_your_first_request
+                            1 -> {
+                                val completedRequests = uiState.myOffersCraftsmanUiState.completed
+                                if (completedRequests.isEmpty()) {
+                                    Box(Modifier.fillMaxSize()) {
+                                        PlaceHolderScreen(
+                                            Modifier.align(Alignment.Center),
+                                            image = R.drawable.img_placeholder_lllustration1,
+                                            title = R.string.no_service_requests_yet,
+                                            description = R.string.start_by_choosing_a_service_and_submitting_your_first_request
+                                        )
+                                    }
+                                } else {
+                                    JobsList(
+                                        offers = completedRequests,
+                                        myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
                                     )
                                 }
-                            } else {
-                                JobsList(offers = completedRequests,myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener)
                             }
-                        }
 
-                        2 -> {
-                            val canceledRequests = uiState.myOffersCraftsmanUiState.canceled
-                            if (canceledRequests.isEmpty()) {
-                                Box(Modifier.fillMaxSize()) {
-                                    PlaceHolderScreen(
-                                        Modifier.align(Alignment.Center),
-                                        image = R.drawable.img_placeholder_lllustration1,
-                                        title = R.string.no_service_requests_yet,
-                                        description = R.string.start_by_choosing_a_service_and_submitting_your_first_request
+                            2 -> {
+                                val canceledRequests = uiState.myOffersCraftsmanUiState.canceled
+                                if (canceledRequests.isEmpty()) {
+                                    Box(Modifier.fillMaxSize()) {
+                                        PlaceHolderScreen(
+                                            Modifier.align(Alignment.Center),
+                                            image = R.drawable.img_placeholder_lllustration1,
+                                            title = R.string.no_service_requests_yet,
+                                            description = R.string.start_by_choosing_a_service_and_submitting_your_first_request
+                                        )
+                                    }
+                                } else {
+                                    JobsList(
+                                        offers = canceledRequests,
+                                        myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
                                     )
                                 }
-                            } else {
-                                JobsList(
-                                    offers = canceledRequests,
-                                    myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
-                                )
                             }
                         }
                     }
                 }
             }
         }
-
     }
 }
 
@@ -176,7 +189,7 @@ private fun JobsList(
             MyJobOfferCard(
                 offerUiState = offer,
                 onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails("") },
-                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick("+201118295474") },
+                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick("+201118295474") }, //TODO
                 onMarkAsDone = { myJobCraftsmanInteractionListener.onSendAsDone("") }
             )
         }
