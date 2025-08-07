@@ -75,7 +75,7 @@ class UserRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        userRemoteDataSource.getServices(phone, isCraftsman).map { it.toEntity() }.catch {
+        return userRemoteDataSource.getServices(phone, isCraftsman).map { it.toEntity() }.catch {
             Log.e("UserRepositoryImpl", "Error fetching services: ${it.message}")
             throw GetServicesException()
         }
