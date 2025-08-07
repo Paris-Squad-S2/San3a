@@ -85,12 +85,10 @@ fun CraftsManOffer(
             .fillMaxWidth()
             .let {
                 if (addShadow) {
-                    it
-                        .graphicsLayer {
+                    it.graphicsLayer {
                             shadowElevation = 0.dp.toPx()
                             translationY = (-3.48).dp.toPx()
-                        }
-                        .shadow(
+                        }.shadow(
                             elevation = 69.52.dp,
                             shape = RoundedCornerShape(Theme.radius.extraLarge),
                             clip = false,
@@ -106,6 +104,8 @@ fun CraftsManOffer(
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
 
+        val paddingAcceptedRequest = if (offerDetails.status == OfferStatus.OFFER_ACCEPTED)  2.dp  else 0.dp
+
         if (offerDetails.status == OfferStatus.OFFER_ACCEPTED)
             Text(
                 modifier = Modifier
@@ -119,9 +119,9 @@ fun CraftsManOffer(
         CraftsmanOfferDetails(
             modifier = Modifier
                 .padding(
-                    start = 2.dp,
-                    end = 2.dp,
-                    bottom = 2.dp
+                    start = paddingAcceptedRequest,
+                    end = paddingAcceptedRequest,
+                    bottom = paddingAcceptedRequest
                 )
                 .clip(
                     RoundedCornerShape(
@@ -131,7 +131,7 @@ fun CraftsManOffer(
                 )
                 .background(Theme.colors.background.card)
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(if (offerDetails.status == OfferStatus.OFFER_ACCEPTED)  14.dp  else 16.dp),
             painter = painter,
             isVerified = offerDetails.isVerify,
             name = offerDetails.name,
@@ -152,7 +152,7 @@ fun CraftsManOffer(
                     ) {
                         AppButton(
                             type = AppButtonType.Secondary,
-                            onClick = { },
+                            onClick = onChatClick,
                             text = stringResource(R.string.chat),
                             modifier = Modifier.weight(1f),
                             size = AppButtonSize.Small,
@@ -161,7 +161,7 @@ fun CraftsManOffer(
                         )
                         AppButton(
                             type = AppButtonType.Primary,
-                            onClick = {},
+                            onClick = onAcceptOfferClick,
                             text = stringResource(R.string.accept_offer),
                             modifier = Modifier.weight(1f),
                             size = AppButtonSize.Small
