@@ -290,5 +290,9 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="send_message">Send Message</string>
     <string name="mark_as_done">Mark as Done</string>
     <string name="services_uploaded_successfully">services uploaded successfully</string>
+    <string name="request_details">Request Details</string>
+    <string name="add_your_offer">Add Your Offer</string>
+    <string name="price_placeholder">e.g., 25,000</string>
+    <string name="send_offer">Send Offer</string>
 
 </resources>

@@ -28,7 +28,10 @@ sealed interface Destinations : Graph {
     data object Home : Destination
 
     @Serializable
-    data object MyRequest : Destination
+    data object Requests : Destination
+
+    @Serializable
+    data class RequestDetails(val requestId: String, val phoneNumber: String) : Destination
 
     @Serializable
     data object Messages : Destination
@@ -52,9 +55,8 @@ sealed interface Destinations : Graph {
     data object Verification : Destination
 
     @Serializable
-    data class MyService(val phoneNumber: String = "", val isCraftsman: Boolean = false) :
-        Destination
+    data class MyService(val phoneNumber: String = "", val isCraftsman: Boolean = false) : Destination
+
     @Serializable
     data object Location : Destination
-
 }

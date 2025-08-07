@@ -1,5 +1,8 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.craftsman
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
@@ -14,33 +17,32 @@ class CraftsmanRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
     private val addOfferUseCase: AddOfferUseCase,
     private val getOffersUseCase: GetOffersUseCase,
-    private val getYourOfferUseCase: GetYourOfferUseCase,
-    private val getAcceptOfferUseCase: GetAcceptedOffersUseCase,
     private val getUserUseCase: GetUserUseCase,
-    private val getPhoneNumberUseCase: GetPhoneNumberUseCase
-): BaseViewModel<CraftsmanRequestUiState>(CraftsmanRequestUiState()), CraftsmanInteractionListener
-{
-    init {
+    savedStateHandle: SavedStateHandle
+) : BaseViewModel<CraftsmanRequestDetailsScreenState>(CraftsmanRequestDetailsScreenState()),
+    CraftsmanRequestDetailsInteractionListener {
 
+    val requestId = savedStateHandle.toRoute<Destinations.RequestDetails>().requestId
+    val phoneNumber = savedStateHandle.toRoute<Destinations.RequestDetails>().phoneNumber
+
+    init {
+        loadRequestDetails(requestId)
+        loadOffers(requestId)
     }
 
-    fun loadRequestDetails(requestId: String){
+    fun loadRequestDetails(requestId: String) {
         tryToExecute(
             execute = { getRequestDetailsByIdUseCase(requestId) },
             onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Request details loaded: $it")
                 updateState(
                     screenState.value.copy(
-                        craftsmanRequestDetails = CraftsmanRequestDetails(
-                            requestId = it.id,
-                            title = it.title,
-                            description = it.description,
-                            serviceType = it.serviceType,
-                            time = it.time.toString(),
-                            location = it.location,
-                            photos = it.image,
-                        )
+                        uiState = screenState.value.uiState.copy(
+                            request = it.toRequestServiceUIState(),
+                        ),
                     )
                 )
+                getCustomer(it.userId)
             },
             onError = {
                 updateState(
@@ -52,15 +54,19 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    fun loadOffers(requestId: String){
+    fun loadOffers(requestId: String) {
         tryToObserve(
             observe = { getOffersUseCase(requestId) },
             onEach = {
                 updateState(
                     screenState.value.copy(
-                        offers = it,
+                        uiState = screenState.value.uiState.copy(
+                            offers = it
+                        ),
                     )
                 )
+                loadYourOffers()
+                loadAcceptedOffers()
             },
             onError = {
                 updateState(
@@ -85,19 +91,37 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    override fun onClickSendMessage(customerId: String) {}
-
-    override fun onClickFavorite() {
-        TODO("Not yet implemented")
+    override fun onClickSendMessage(customerId: String) {
+        //TODO("Not yet implemented")
     }
 
-    fun loadYourOffers(craftsmanId: String){
+    override fun onSendOfferClick() {
+        // TODO("Not yet implemented")
+    }
+
+    override fun onClickFavorite() {
+//        TODO("Not yet implemented")
+    }
+
+    override fun onClickBack() {
+        navigateUp()
+    }
+
+    override fun onRetryClick() {
+//        TODO("Not yet implemented")
+    }
+
+    fun loadYourOffers() {
         tryToExecute(
-            execute = { getYourOfferUseCase(craftsmanId) },
+            execute = {
+                screenState.value.uiState.offers.filter { it.craftsmanId == phoneNumber }
+            },
             onSuccess = {
                 updateState(
                     screenState.value.copy(
-                        yourOffer = it
+                        uiState = screenState.value.uiState.copy(
+                            yourOffers = it
+                        ),
                     )
                 )
             },
@@ -111,13 +135,17 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    fun loadAcceptedOffers(requestId: String) {
-        tryToObserve(
-            observe = { getAcceptOfferUseCase(requestId) },
-            onEach = {
+    fun loadAcceptedOffers() {
+        tryToExecute(
+            execute = {
+                screenState.value.uiState.offers.firstOrNull { it.isAccepted }
+            },
+            onSuccess = {
                 updateState(
                     screenState.value.copy(
-                        acceptedOffers = it
+                        uiState = screenState.value.uiState.copy(
+                            acceptedOffer = it
+                        )
                     )
                 )
             },
@@ -131,16 +159,18 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    fun getCustomer(){
+    fun getCustomer(userId: String) {
         tryToExecute(
-            execute = { getUserUseCase(getPhoneNumberUseCase())},
+            execute = { getUserUseCase(userId) },
             onSuccess = {
                 updateState(
                     screenState.value.copy(
-                        customer = Customer(
-                            id = it.id,
-                            name = it.fullName,
-                            profilePhoto = it.profilePhoto
+                        uiState = screenState.value.uiState.copy(
+                            customer = Customer(
+                                id = it.id,
+                                name = it.fullName,
+                                profilePhoto = it.profilePhoto
+                            )
                         )
                     )
                 )

@@ -41,7 +41,7 @@ private fun MessagesScreenContent(
     state: MessagesState
 ) {
     AppScaffold(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Theme.colors.background.card)
             .statusBarsPadding(),
@@ -79,7 +79,7 @@ private fun MessagesScreenContent(
             }
             state.chatsMap.isEmpty() -> {
                 PlaceHolderScreen(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .background(Theme.colors.background.screen)
                         .padding(horizontal = 60.dp),

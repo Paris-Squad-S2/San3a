@@ -23,6 +23,7 @@ import com.paris_2.san3a.presentation.screen.onboarding.OnBoardingScreen
 import com.paris_2.san3a.presentation.screen.onboarding.onboardingPages
 import com.paris_2.san3a.presentation.screen.register.otpScreen.OTPRegisterScreen
 import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterScreen
+import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.CraftsManRequestDetailsScreen
 import com.paris_2.san3a.presentation.screen.splash.SplashScreen
 import org.koin.compose.koinInject
 
@@ -63,7 +64,8 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.Home> { CustomerHomeScreen() }
         composable<Destinations.Messages> { MessagesScreen() }
         composable<Destinations.MessageDetails> { MessageDetails() }
-        composable<Destinations.MyRequest> { MyRequestScreen() }
+        composable<Destinations.Requests> { MyRequestScreen() }
+        composable<Destinations.RequestDetails> { MyRequestScreen() } //TODO
         composable<Destinations.Notification> { NotificationScreen() }
         composable<Destinations.More> { MoreScreen() }
     }
@@ -72,7 +74,8 @@ fun NavGraphBuilder.buildSan3aNavGraph() {
         composable<Destinations.Home> { CraftsmanHomeScreen() }
         composable<Destinations.Messages> { MessagesScreen() }
         composable<Destinations.MessageDetails> { MessageDetails() }
-        composable<Destinations.MyRequest> { MyJobsScreen() }
+        composable<Destinations.Requests> { MyJobsScreen() }
+        composable<Destinations.RequestDetails> { CraftsManRequestDetailsScreen() }
         composable<Destinations.Notification> { NotificationScreen() }
         composable<Destinations.More> { MoreScreen() }
         composable<Destinations.Verification> { VerificationScreen() }
