@@ -1,5 +1,7 @@
 package com.paris_2.san3a.data.repository
 
+import android.R
+import android.R.attr.accountType
 import android.net.Uri
 import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
@@ -46,10 +48,16 @@ class UserRepositoryImpl(
             userRemoteDataSource.addUser(phone)
         }
 
-    override suspend fun saveAccountType(phone: String, accountType: AccountType) =
-        safeCall(SaveAccountTypeException()) {
+    override suspend fun saveAccountType(phone: String, accountType: AccountType) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
+        return safeCall(SaveAccountTypeException()) {
             userRemoteDataSource.saveAccountType(phone, accountType)
         }
+    }
+
 
     override suspend fun getAccountType(phone: String): AccountType =
         safeCall(GetAccountTypeException()) {
@@ -162,10 +170,15 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun getUser(phone: String): User =
-        safeCall(GetUserException()) {
+    override suspend fun getUser(phone: String): User {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
+        return safeCall(GetUserException()) {
             userRemoteDataSource.getUser(phone)
         }
+    }
 
     override suspend fun getWorkMedia(phone: String): List<String> =
         safeCall(GetUserWorkMediaException()) {
