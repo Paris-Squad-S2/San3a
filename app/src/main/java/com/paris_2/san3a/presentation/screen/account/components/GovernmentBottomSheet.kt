@@ -28,11 +28,11 @@ fun GovernmentBottomSheet(
     governments: List<String>,
     cities: List<String>,
     onGovernmentClick: (String) -> Unit = {},
-    onCityClick:(String) -> Unit = {},
+    onCityClick: (String) -> Unit = {},
     isVisible: Boolean = false,
     skipPartiallyExpanded: Boolean = false,
     onDismissRequest: () -> Unit = {},
-    locationBottomSheetType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
+    locationBottomSheetType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT,
 ) {
 
     BottomSheet(
@@ -51,7 +51,7 @@ fun GovernmentBottomSheet(
                 AnimatedContent(
                     targetState = locationBottomSheetType
                 ) {
-                    when(it){
+                    when (it) {
                         LocationBottomSheetContentType.GOVERNMENT -> {
                             Text(
                                 text = "Choose Government",
@@ -60,6 +60,7 @@ fun GovernmentBottomSheet(
                                 color = Theme.colors.shade.primary
                             )
                         }
+
                         LocationBottomSheetContentType.CITY -> {
                             Text(
                                 text = "Choose City",
@@ -84,18 +85,27 @@ fun GovernmentBottomSheet(
             AnimatedContent(
                 targetState = locationBottomSheetType
             ) {
-                when(it){
+                when (it) {
                     LocationBottomSheetContentType.GOVERNMENT -> {
                         LazyColumn(modifier = Modifier.fillMaxWidth()) {
                             items(governments) { government ->
-                                LocationCard(title = government, onClick = onGovernmentClick)
+                                LocationCard(
+                                    title = government,
+                                    onClick = onGovernmentClick,
+                                    showTrailingIcon = true
+                                )
                             }
                         }
                     }
+
                     LocationBottomSheetContentType.CITY -> {
                         LazyColumn(modifier = Modifier.fillMaxWidth()) {
                             items(cities) { city ->
-                                LocationCard(title = city, onClick = onCityClick)
+                                LocationCard(
+                                    title = city,
+                                    onClick = onCityClick,
+                                    showTrailingIcon = false
+                                )
                             }
                         }
                     }
@@ -105,8 +115,8 @@ fun GovernmentBottomSheet(
         })
 }
 
-enum class LocationBottomSheetContentType{
-    GOVERNMENT,CITY
+enum class LocationBottomSheetContentType {
+    GOVERNMENT, CITY
 }
 
 @Preview

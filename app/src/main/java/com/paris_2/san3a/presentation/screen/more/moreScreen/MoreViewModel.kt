@@ -200,6 +200,7 @@ class MoreViewModel(
             screenState.value.copy(
                 isLoading = false,
                 errorMessage = null,
+                isLoadingChangeAccount = false,
                 showSnackBarError = false,
                 isNoInternet = false,
                 moreUiState = screenState.value.moreUiState.copy(
@@ -217,7 +218,8 @@ class MoreViewModel(
                     isNoInternet = true,
                     isLoading = false,
                     errorMessage = null,
-                    showSnackBarError = false
+                    showSnackBarError = false,
+                    isLoadingChangeAccount = false
                 )
             )
         } else {
@@ -226,7 +228,8 @@ class MoreViewModel(
                     errorMessage = R.string.user_information_not_found,
                     isNoInternet = false,
                     isLoading = false,
-                    showSnackBarError = true
+                    showSnackBarError = true,
+                    isLoadingChangeAccount = false
                 )
             )
         }
@@ -371,16 +374,27 @@ class MoreViewModel(
     }
 
     private fun onSaveAccountTypeError(throwable: Throwable) {
-        updateState(
-            screenState.value.copy(
-                isLoadingChangeAccount = false,
-                errorMessage = R.string.occur_error_when_save_account_type,
-                showSnackBarError = true,
-                isNoInternet = false,
-                isLoading = false,
-                showSnackBarSuccess = false
+        if (throwable is NoInternetConnectionException) {
+            updateState(
+                screenState.value.copy(
+                    isNoInternet = true,
+                    isLoadingChangeAccount = false,
+                    isLoading = false
+                )
             )
-        )
+        } else {
+            updateState(
+                screenState.value.copy(
+                    isLoadingChangeAccount = false,
+                    errorMessage = R.string.occur_error_when_save_account_type,
+                    showSnackBarError = true,
+                    isNoInternet = false,
+                    isLoading = false,
+                    showSnackBarSuccess = false
+                )
+            )
+        }
+
     }
 
 
@@ -579,7 +593,8 @@ class MoreViewModel(
                 isNoInternet = false,
                 showSnackBarError = false,
                 showSnackBarSuccess = false,
-                successMessageSnackBar = null
+                successMessageSnackBar = null,
+                isLoadingChangeAccount = false
             )
         )
 
