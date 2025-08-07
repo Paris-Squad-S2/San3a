@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
@@ -42,6 +43,7 @@ import com.paris_2.san3a.presentation.shared.components.AdCard
 import com.paris_2.san3a.presentation.shared.components.AddPhotos
 import com.paris_2.san3a.presentation.shared.components.AddPhotosContent
 import com.paris_2.san3a.presentation.shared.components.AppBar
+import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.BottomSheet
 import com.paris_2.san3a.presentation.shared.components.CategoryItem
 import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
@@ -49,7 +51,6 @@ import com.paris_2.san3a.presentation.shared.components.RequestDescriptionConten
 import com.paris_2.san3a.presentation.shared.components.RequestTitleContent
 import com.paris_2.san3a.presentation.shared.components.SearchBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
-import kotlinx.datetime.LocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
 
@@ -264,152 +265,154 @@ private fun CustomerHomeScreenContent(
         }
     }
 
-    Column(
+    AppScaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(Theme.colors.background.screen)
-    ) {
-        AppBar(
-            modifier = Modifier
-                .padding(top = 40.dp),
-            actionIcon = {
-                Icon(
-                    modifier = Modifier
-                        .clickable(onClick = {
-                            action.onNotificationClick()
-                        }),
-                    painter = painterResource(R.drawable.ic_notification_outline),
-                    contentDescription = null,
-                    tint = Theme.colors.shade.primary
-                )
-            },
-            leadingIcon = {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 16.dp)
-                ) {
-                    Text(
-                        text = stringResource(
-                            R.string.good_morning,
-                            state.customerUiState.currentUserName
-                        ),
-
-                        style = Theme.textStyle.title.small,
-                        color = Theme.colors.shade.primary,
-                    )
-                    Row(
+            .background(Theme.colors.background.card)
+            .statusBarsPadding(),
+        topBar = {
+            AppBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                actionIcon = {
+                    Icon(
                         modifier = Modifier
-                            .padding(top = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .clickable(onClick = {
+                                action.onNotificationClick()
+                            })
+                            .padding(end = 8.dp),
+                        painter = painterResource(R.drawable.ic_notification_outline),
+                        contentDescription = null,
+                        tint = Theme.colors.shade.primary
+                    )
+                },
+                leadingIcon = {
+                    Column(
+                        modifier = Modifier
+//                            .weight(1f)
+                            .padding(start = 16.dp)
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_location_outline),
-                            contentDescription = "",
-                            tint = Theme.colors.shade.secondary,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .padding(end = 4.dp)
-                        )
                         Text(
-                            text = "${state.customerUiState.government}, ${state.customerUiState.city}",
-                            style = Theme.textStyle.body.small.medium,
-                            color = Theme.colors.shade.secondary
+                            text = stringResource(
+                                R.string.good_morning,
+                                state.customerUiState.currentUserName
+                            ),
+
+                            style = Theme.textStyle.title.small,
+                            color = Theme.colors.shade.primary,
+                        )
+                        Row(
+                            modifier = Modifier
+                                .padding(top = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_location_outline),
+                                contentDescription = "",
+                                tint = Theme.colors.shade.secondary,
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .padding(end = 4.dp)
+                            )
+                            Text(
+                                text = "${state.customerUiState.government}, ${state.customerUiState.city}",
+                                style = Theme.textStyle.body.small.medium,
+                                color = Theme.colors.shade.secondary
+                            )
+                        }
+                    }
+                },
+            )
+        },
+        content = {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Theme.colors.background.screen),
+                horizontalAlignment = CenterHorizontally,
+            ) {
+                item {
+                    SearchBar(
+                        value = state.customerUiState.searchQuery,
+                        onValueChange = { action.onSearch(it) },
+                        hint = stringResource(R.string.search),
+                        onMicClick = {
+                            action.onMicClick()
+                        },
+                        modifier = Modifier
+                            .padding(top = 16.dp, bottom = 24.dp)
+                    )
+                }
+
+                if (state.customerUiState.mostRequestedServices.isNotEmpty() && state.customerUiState.searchQuery.isEmpty()) {
+                    item {
+                        MostRequestedServices(
+                            services = state.customerUiState.mostRequestedServices,
+                            isArabic = isArabic,
+                            action = action
+                        ) { selectedTitle, selectedServiceId ->
+                            val iconRes = getResource(selectedServiceId)
+                            action.initBottomSheet(selectedTitle, selectedServiceId, iconRes)
+                        }
+                    }
+                }
+
+
+                if (state.customerUiState.searchQuery.isNotEmpty() && servicesToDisplay.isEmpty()) {
+                    item {
+                        PlaceHolderScreen(
+                            image = R.drawable.img_no_search_result,
+                            title = R.string.no_results_found,
+                            description = R.string.try_a_different_keyword_or_check_your_spelling_some_services_may_be_listed_under_other_names,
+                            modifier = Modifier
+                                .padding(top = 24.dp)
+                                .padding(horizontal = 16.dp)
+                        )
+                    }
+                } else {
+                    item {
+                        Text(
+                            text = stringResource(R.string.find_what_you_need),
+                            style = Theme.textStyle.title.small,
+                            color = Theme.colors.shade.primary,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, bottom = 16.dp)
+                        )
+                    }
+                    items(servicesToDisplay) { service ->
+                        CategoryItem(
+                            title = service.title[if (isArabic) ARABIC_NAME else ENGLISH_NAME] ?: "",
+                            description = service.description[if (isArabic) ARABIC_DESCRIPTION else ENGLISH_DESCRIPTION]
+                                ?: "",
+                            tint = getResourceTint(service.id),
+                            iconColor = getResourceColors(service.id),
+                            isLarge = false,
+                            painter = painterResource(getResource(service.id)),
+                            modifier = Modifier
+                                .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
+                            onclick = {
+                                action.onServiceClick(service.id)
+                            }
                         )
                     }
                 }
-            },
-        )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Theme.colors.background.screen),
-            horizontalAlignment = CenterHorizontally,
-        ) {
-            item {
-                SearchBar(
-                    value = state.customerUiState.searchQuery,
-                    onValueChange = { action.onSearch(it) },
-                    hint = stringResource(R.string.search),
-                    onMicClick = {
-                        action.onMicClick()
-                    },
-                    modifier = Modifier
-                        .padding(top = 16.dp, bottom = 24.dp)
-                )
-            }
-
-            if (state.customerUiState.mostRequestedServices.isNotEmpty() && state.customerUiState.searchQuery.isEmpty()) {
-                item {
-                    MostRequestedServices(
-                        services = state.customerUiState.mostRequestedServices,
-                        isArabic = isArabic,
-                        action = action
-                    ) { selectedTitle, selectedServiceId ->
-                        val iconRes = getResource(selectedServiceId)
-                        action.initBottomSheet(selectedTitle, selectedServiceId, iconRes)
+                if (state.customerUiState.searchQuery.isEmpty()) {
+                    item {
+                        AdCard(
+                            title = stringResource(R.string.got_a_skill_start_earning),
+                            caption = stringResource(R.string.create_your_craftsman_account_and_get_job_requests),
+                            buttonTitle = stringResource(R.string.become_a_craftsman),
+                            onClick = { action.onBecomeCraftsmanClick() },
+                            modifier = Modifier
+                                .padding(vertical = 12.dp)
+                        )
                     }
                 }
-            }
 
-
-            if (state.customerUiState.searchQuery.isNotEmpty() && servicesToDisplay.isEmpty()) {
-                item {
-                    PlaceHolderScreen(
-                        image = R.drawable.img_no_search_result,
-                        title = R.string.no_results_found,
-                        description = R.string.try_a_different_keyword_or_check_your_spelling_some_services_may_be_listed_under_other_names,
-                        modifier = Modifier
-                            .align(CenterHorizontally)
-                            .padding(top = 24.dp)
-                            .padding(horizontal = 16.dp)
-                    )
-                }
-            } else {
-                item {
-                    Text(
-                        text = stringResource(R.string.find_what_you_need),
-                        style = Theme.textStyle.title.small,
-                        color = Theme.colors.shade.primary,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, bottom = 16.dp)
-                    )
-                }
-                items(servicesToDisplay) { service ->
-                    CategoryItem(
-                        title = service.title[if (isArabic) ARABIC_NAME else ENGLISH_NAME] ?: "",
-                        description = service.description[if (isArabic) ARABIC_DESCRIPTION else ENGLISH_DESCRIPTION]
-                            ?: "",
-                        tint = getResourceTint(service.id),
-                        iconColor = getResourceColors(service.id),
-                        isLarge = false,
-                        painter = painterResource(getResource(service.id)),
-                        modifier = Modifier
-                            .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
-                        onclick = {
-                            action.onServiceClick(service.id)
-                        }
-                    )
-                }
             }
-            if (state.customerUiState.searchQuery.isEmpty()) {
-                item {
-                    AdCard(
-                        title = stringResource(R.string.got_a_skill_start_earning),
-                        caption = stringResource(R.string.create_your_craftsman_account_and_get_job_requests),
-                        buttonTitle = stringResource(R.string.become_a_craftsman),
-                        onClick = { action.onBecomeCraftsmanClick() },
-                        modifier = Modifier
-                            .padding(vertical = 12.dp)
-                    )
-                }
-            }
-
         }
-
-    }
-
+    )
 }
 
 const val ARABIC_NAME = "arabicName"
