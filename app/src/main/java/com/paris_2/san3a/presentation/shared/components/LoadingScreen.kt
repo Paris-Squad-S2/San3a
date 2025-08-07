@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -24,8 +25,9 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 @Composable
 fun LoadingScreen(
     modifier: Modifier = Modifier,
+    background: Color = Theme.colors.background.card
 ) {
-    Box(modifier = modifier.background(Theme.colors.background.card), contentAlignment = Alignment.Center) {
+    Box(modifier = modifier.background(background), contentAlignment = Alignment.Center) {
         rememberInfiniteTransition().apply {
             val rotation by animateFloat(
                 initialValue = 0f,
