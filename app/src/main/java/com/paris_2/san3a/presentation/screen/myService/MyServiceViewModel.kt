@@ -49,6 +49,7 @@ class MyServiceViewModel(
     }
 
     private fun getUserSelectedServices() {
+        updateState(screenState.value.copy(isLoading = true))
         tryToObserve(
             observe = {
                 getUserServicesUseCase(
@@ -71,6 +72,7 @@ class MyServiceViewModel(
                     screenState.value.copy(
                         errorMessage = R.string.error_occurred_while_fetching_services,
                         isLoading = false,
+                        showSnackBarError = true
                     )
                 )
             }
@@ -88,11 +90,8 @@ class MyServiceViewModel(
                     updateState(
                         screenState.value.copy(
                             myServiceUiState = serviceUiStates,
-                            isLoading = false,
-                            errorMessage = null
                         )
                     )
-                Log.d("MyServiceViewModel", "getAllServices: $services")
                 getUserSelectedServices()
                 }
             },
@@ -142,7 +141,20 @@ class MyServiceViewModel(
                     isCraftsman = isCraftsman
                 )
             },
+            onSuccess = ::onUploadServiceSuccess,
             onError = ::onUploadServiceError
+        )
+    }
+
+    private fun onUploadServiceSuccess(unit: Unit){
+        updateState(
+            screenState.value.copy(
+                isLoading = false,
+                showSnackBarSuccess = true,
+                successMessageSnackBar = R.string.services_uploaded_successfully,
+                showSnackBarError = false,
+                errorMessage = null
+            )
         )
     }
 
@@ -202,6 +214,17 @@ class MyServiceViewModel(
         updateState(
             screenState.value.copy(
                 myServiceUiState = updatedServices
+            )
+        )
+    }
+
+    override fun onDismissSnack() {
+        updateState(
+            screenState.value.copy(
+                showSnackBarError = false,
+                showSnackBarSuccess = false,
+                errorMessage = null,
+                successMessageSnackBar = null
             )
         )
     }
