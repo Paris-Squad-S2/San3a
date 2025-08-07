@@ -298,5 +298,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="chat_with_the_poster">Chat with the Poster</string>
     <string name="request_poster">Request Poster</string>
     <string name="selected_offer">Selected Offer</string>
+    <string name="offers_from_craftsmen">Offers from Craftsmen</string>
+    <string name="offers_count">%1$d offers</string>
 
 </resources>

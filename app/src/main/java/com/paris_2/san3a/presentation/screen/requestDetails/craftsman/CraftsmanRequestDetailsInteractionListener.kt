@@ -9,4 +9,5 @@ interface CraftsmanRequestDetailsInteractionListener {
     fun onClickSendMessage(customerId: String)
     fun onSendOfferClick()
     fun onChatWithPosterClick(customerId: String)
+    fun onAcceptOfferClick(offerId: String)
 }

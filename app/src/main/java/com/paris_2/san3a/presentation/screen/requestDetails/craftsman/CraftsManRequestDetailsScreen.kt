@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -142,74 +143,107 @@ fun CraftsmanRequestDetailsContent(
             )
         }
         item {
-            OffersFromCraftsmenSection(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                state = state,
-                interactionListener = interactionListener
-            )
-        }
-    }
-}
 
-@Composable
-fun OffersFromCraftsmenSection(
-    modifier: Modifier,
-    state: CraftsmanRequestDetailsUiState,
-    interactionListener: CraftsmanRequestDetailsInteractionListener
-) {
-    Column {
-        AnimatedVisibility(
+            AnimatedVisibility(
 //            visible = state.yourOffers.contains(state.acceptedOffer)
-            visible = true
-        ) {
-            Column(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp)
+                visible = true
             ) {
-                Text(
-                    text = stringResource(R.string.chat_with_the_poster),
-                    style = Theme.textStyle.title.small,
-                    color = Theme.colors.shade.primary,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-                ChatWithPosterCard(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    state = state,
-                    interactionListener = interactionListener
-                )
+                Column(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.chat_with_the_poster),
+                        style = Theme.textStyle.title.small,
+                        color = Theme.colors.shade.primary,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    ChatWithPosterCard(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        state = state,
+                        interactionListener = interactionListener
+                    )
+                }
+            }
+
+        }
+        item {
+
+            AnimatedVisibility(
+//            visible = state.acceptedOffer != null
+                visible = true
+            ) {
+                Column(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.selected_offer),
+                        style = Theme.textStyle.title.small,
+                        color = Theme.colors.shade.primary,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    CraftsManOffer(
+                        addShadow = true,
+                        offerDetails = OfferDetailsUIState(
+                            status =
+                                if (state.yourOffers.contains(state.acceptedOffer))
+                                    OfferStatus.YOUR_ACCEPTED_OFFER
+                                else
+                                    OfferStatus.OFFER_ACCEPTED
+                        ),
+                        painter = painterResource(id = R.drawable.img_avatar2),
+                        onChatClick = {
+
+                        },
+                        onAcceptOfferClick = {},
+                    )
+                }
             }
         }
-        AnimatedVisibility(
-//            visible = state.acceptedOffer != null
-            visible = true
-        ) {
-            Column(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.selected_offer),
-                    style = Theme.textStyle.title.small,
-                    color = Theme.colors.shade.primary,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
+
+        if (state.yourOffers.isNotEmpty()) {
+            item {
+                AnimatedVisibility(
+//            visible = state.offers.isNotEmpty()
+                    visible = true
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.offers_from_craftsmen),
+                            style = Theme.textStyle.title.small,
+                            color = Theme.colors.shade.primary,
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(
+                            text = stringResource(R.string.offers_count, state.offers.size),
+                            style = Theme.textStyle.body.small.regular,
+                            color = Theme.colors.shade.tertiary,
+                        )
+                    }
+                }
+            }
+            items(state.offers) { offer ->
                 CraftsManOffer(
+                    modifier = Modifier
+                        .animateItem(),
                     addShadow = true,
-                    offerDetails = OfferDetailsUIState(
-                        status =
-                            if (state.yourOffers.contains(state.acceptedOffer))
-                                OfferStatus.YOUR_ACCEPTED_OFFER
-                            else
-                                OfferStatus.OFFER_ACCEPTED
-                    ),
-                    painter = painterResource(id = R.drawable.img_avatar2),
-                    onChatClick = {},
-                    onAcceptOfferClick = {},
+                    offerDetails = offer.toOfferDetailsUIState(),
+                    painter = painterResource(id = R.drawable.img_avatar1),
+                    onChatClick = {
+                        interactionListener.onChatWithPosterClick(offer.craftsmanId)
+                    },
+                    onAcceptOfferClick = {
+                        interactionListener.onAcceptOfferClick(offer.id)
+                    },
                 )
             }
         }

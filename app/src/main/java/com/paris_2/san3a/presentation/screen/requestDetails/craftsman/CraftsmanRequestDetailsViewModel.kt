@@ -60,7 +60,7 @@ class CraftsmanRequestDetailsViewModel(
                 updateState(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
-                            offers = it
+                            offers = it.toOfferUiStateList()
                         ),
                     )
                 )
@@ -119,6 +119,10 @@ class CraftsmanRequestDetailsViewModel(
                 )
             }
         )
+    }
+
+    override fun onAcceptOfferClick(offerId: String) {
+        //TODO("Not yet implemented")
     }
 
     override fun onClickFavorite() {

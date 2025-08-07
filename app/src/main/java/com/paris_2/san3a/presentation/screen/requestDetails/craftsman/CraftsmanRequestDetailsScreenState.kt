@@ -3,14 +3,12 @@ package com.paris_2.san3a.presentation.screen.requestDetails.craftsman
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.presentation.shared.components.OfferDetailsUIState
+import com.paris_2.san3a.presentation.shared.components.OfferStatus
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import com.paris_2.san3a.presentation.utill.getTimeAgo
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlin.time.ExperimentalTime
 
 data class CraftsmanRequestDetailsScreenState(
     val isLoading: Boolean = false,
@@ -20,12 +18,59 @@ data class CraftsmanRequestDetailsScreenState(
 
 data class CraftsmanRequestDetailsUiState(
     val request: RequestServiceUIState = RequestServiceUIState(),
-    val offers: List<Offer> = emptyList(),
-    val yourOffers: List<Offer> = emptyList(),
+    val offers: List<RequestOfferUiState> = emptyList(),
+    val yourOffers: List<RequestOfferUiState> = emptyList(),
     val craftsmanRequestDetails: CraftsmanRequestDetails? = null,
-    val acceptedOffer: Offer? = null,
+    val acceptedOffer: RequestOfferUiState? = null,
     val customer: Customer = Customer(),
 )
+
+data class RequestOfferUiState(
+    val id: String = "",
+    val craftsmanId: String = "",
+    val craftsmanImageUrl: String = "",
+    val craftsmanName: String = "",
+    val craftsmanRate: Float = 3.5f,
+    val craftsmanReviewsNumber: Int = 150,
+    val requestId: String = "",
+    val price: String = "0.0",
+    val time: String = "Tomorrow at 10:00 AM",
+    val postedTime: String = "1 hour ago", //TODO
+    val messageToCustomer: String = "",
+    val isAccepted: Boolean = false,
+)
+
+fun Offer.toOfferUiState(): RequestOfferUiState {
+    return RequestOfferUiState(
+        id = this.id,
+        craftsmanId = this.craftsmanId,
+        requestId = this.requestId,
+        price = this.price.toString(),
+        time = "${this.preferredDate} ${this.preferredTime}",
+        postedTime = "1 hour ago", // TODO: Replace with actual time logic
+        messageToCustomer = this.messageToCustomer,
+        isAccepted = this.isAccepted
+    )
+}
+
+fun RequestOfferUiState.toOfferDetailsUIState(): OfferDetailsUIState {
+    return OfferDetailsUIState(
+        imageUrl = this.craftsmanImageUrl,
+        name = this.craftsmanName,
+        rate = this.craftsmanRate,
+        reviewsNumber = this.craftsmanReviewsNumber,
+        description = this.messageToCustomer,
+        amount = this.price,
+        time = this.time,
+        postedTime = this.postedTime,
+        status = if (this.isAccepted) OfferStatus.OFFER_ACCEPTED else OfferStatus.PENDING_OFFER,
+        isVerify = false
+    )
+}
+
+fun List<Offer>.toOfferUiStateList(): List<RequestOfferUiState> {
+    return this.map { it.toOfferUiState() }
+}
 
 data class RequestServiceUIState(
     val id: String = "",
