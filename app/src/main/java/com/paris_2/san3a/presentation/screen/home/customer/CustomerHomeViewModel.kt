@@ -8,6 +8,7 @@ import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
 import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
+import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -163,7 +164,8 @@ class CustomerHomeViewModel(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetSelectedGovernment = government,
-                    isGovernmentSheetVisible = false
+                    isGovernmentSheetVisible = true,
+                    locationBottomSheetType = LocationBottomSheetContentType.CITY
                 )
             )
         )
@@ -175,6 +177,7 @@ class CustomerHomeViewModel(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetSelectedCity = city,
+                    isGovernmentSheetVisible = false,
                     isCitySheetVisible = false
                 )
             )
@@ -185,7 +188,9 @@ class CustomerHomeViewModel(
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                    isGovernmentSheetVisible = show
+                    isGovernmentSheetVisible = show,
+                    locationBottomSheetType = LocationBottomSheetContentType.GOVERNMENT
+
                 )
             )
         )
@@ -312,7 +317,6 @@ class CustomerHomeViewModel(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                             bottomSheetCities = cities.names,
                             bottomSheetSelectedCity = cities.names.firstOrNull() ?: "",
-                            isCitySheetVisible = true
                         ),
                         customerUiState = screenState.value.customerUiState.copy(
                             locationUiState = screenState.value.customerUiState.locationUiState.copy(
@@ -469,6 +473,7 @@ class CustomerHomeViewModel(
             )
         )
     }
+
 
     companion object {
         const val ARABIC_NAME = "arabicName"
