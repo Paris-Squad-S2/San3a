@@ -68,7 +68,7 @@ fun CustomerHomeScreen(
 @Composable
 private fun CustomerHomeScreenContent(
     state: CustomerHomeUiState,
-    action: CustomerHomeInteractionListener
+    action: CustomerHomeInteractionListener,
 ) {
     val isArabic = remember { Locale.getDefault().language == "ar" }
     val imagePicker = rememberLauncherForActivityResult(
@@ -209,7 +209,11 @@ private fun CustomerHomeScreenContent(
                             onGetLocationClicked = {
                                 action.showGovernmentSheet(true)
                             },
-                            locationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
+                            locationBottomSheetContentType = if (state.bottomSheetUiState.bottomSheetSelectedGovernment.isNotEmpty()) {
+                                LocationBottomSheetContentType.CITY
+                            } else {
+                                LocationBottomSheetContentType.GOVERNMENT
+                            }
                         )
                     }
                 }
@@ -382,7 +386,8 @@ private fun CustomerHomeScreenContent(
                     }
                     items(servicesToDisplay) { service ->
                         CategoryItem(
-                            title = service.title[if (isArabic) ARABIC_NAME else ENGLISH_NAME] ?: "",
+                            title = service.title[if (isArabic) ARABIC_NAME else ENGLISH_NAME]
+                                ?: "",
                             description = service.description[if (isArabic) ARABIC_DESCRIPTION else ENGLISH_DESCRIPTION]
                                 ?: "",
                             tint = getResourceTint(service.id),
