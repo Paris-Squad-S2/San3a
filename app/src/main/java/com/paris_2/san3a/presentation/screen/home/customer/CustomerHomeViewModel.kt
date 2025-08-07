@@ -460,7 +460,7 @@ class CustomerHomeViewModel(
 
     override fun onBecomeCraftsmanClick() {
         LocalAccountType.value = AccountType.CRAFTSMAN
-        navigate(Destinations.More)
+        navigate(Destinations.CraftManGraph)
     }
 
     override fun onDismissBottomSheet() {
