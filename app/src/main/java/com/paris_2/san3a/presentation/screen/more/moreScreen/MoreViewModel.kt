@@ -371,16 +371,23 @@ class MoreViewModel(
     }
 
     private fun onSaveAccountTypeError(throwable: Throwable) {
-        updateState(
-            screenState.value.copy(
-                isLoadingChangeAccount = false,
-                errorMessage = R.string.occur_error_when_save_account_type,
-                showSnackBarError = true,
-                isNoInternet = false,
-                isLoading = false,
-                showSnackBarSuccess = false
+        if (throwable is NoInternetConnectionException) {
+            updateState(
+                screenState.value.copy(isNoInternet = true)
             )
-        )
+        } else {
+            updateState(
+                screenState.value.copy(
+                    isLoadingChangeAccount = false,
+                    errorMessage = R.string.occur_error_when_save_account_type,
+                    showSnackBarError = true,
+                    isNoInternet = false,
+                    isLoading = false,
+                    showSnackBarSuccess = false
+                )
+            )
+        }
+
     }
 
 
