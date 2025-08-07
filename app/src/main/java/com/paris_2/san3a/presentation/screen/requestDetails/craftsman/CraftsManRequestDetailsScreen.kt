@@ -206,7 +206,7 @@ fun CraftsmanRequestDetailsContent(
             }
         }
 
-        if (state.yourOffers.isNotEmpty()) {
+        if (state.offers.isNotEmpty()) {
             item {
                 AnimatedVisibility(
 //            visible = state.offers.isNotEmpty()
@@ -232,6 +232,7 @@ fun CraftsmanRequestDetailsContent(
                     }
                 }
             }
+
             items(state.offers) { offer ->
                 CraftsManOffer(
                     modifier = Modifier
