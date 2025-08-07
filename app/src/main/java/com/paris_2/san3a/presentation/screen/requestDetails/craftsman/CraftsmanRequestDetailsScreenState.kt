@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.requestDetails.craftsman
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.presentation.shared.components.OfferDetailsUIState
 import com.paris_2.san3a.presentation.shared.components.OfferStatus
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
@@ -19,7 +20,7 @@ data class CraftsmanRequestDetailsScreenState(
 data class CraftsmanRequestDetailsUiState(
     val request: RequestServiceUIState = RequestServiceUIState(),
     val offerToAdd: OfferToAddUiState = OfferToAddUiState(),
-    val offers: List<RequestOfferUiState> = emptyList(),
+    val offers: Map<String, RequestOfferUiState> = emptyMap(),
     val offersFromCraftsman: List<RequestOfferUiState> = emptyList(),
     val yourOffers: List<RequestOfferUiState> = emptyList(),
     val craftsmanRequestDetails: CraftsmanRequestDetails? = null,
@@ -78,6 +79,14 @@ fun Offer.toOfferUiState(): RequestOfferUiState {
     )
 }
 
+fun User.toRequestOfferUiState(request: RequestOfferUiState): RequestOfferUiState {
+    return request.copy(
+        craftsmanId = this.id,
+        craftsmanImageUrl = this.profilePhoto,
+        craftsmanName = this.fullName,
+    )
+}
+
 fun RequestOfferUiState.toOfferDetailsUIState(yourOfferAccepted: Boolean = false): OfferDetailsUIState {
     return OfferDetailsUIState(
         imageUrl = this.craftsmanImageUrl,
@@ -93,8 +102,8 @@ fun RequestOfferUiState.toOfferDetailsUIState(yourOfferAccepted: Boolean = false
     )
 }
 
-fun List<Offer>.toOfferUiStateList(): List<RequestOfferUiState> {
-    return this.map { it.toOfferUiState() }
+fun List<Offer>.toOfferUiStateMap(): Map<String, RequestOfferUiState> {
+    return this.associateBy({ it.id }, { it.toOfferUiState() })
 }
 
 data class RequestServiceUIState(

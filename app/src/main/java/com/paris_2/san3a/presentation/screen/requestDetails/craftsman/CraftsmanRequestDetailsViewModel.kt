@@ -67,14 +67,11 @@ class CraftsmanRequestDetailsViewModel(
                 updateState(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
-                            offers = it.toOfferUiStateList()
-//                            offers = offerList //TODO
+                            offers = it.toOfferUiStateMap()
                         ),
                     )
                 )
-                loadOffersFromCraftsman()
-                loadYourOffers()
-                loadAcceptedOffers()
+                loadCraftsMenInfo()
             },
             onError = {
                 updateState(
@@ -86,10 +83,45 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
+    private fun loadCraftsMenInfo() {
+        tryToExecute(
+            execute = {
+                screenState.value.uiState.offers.forEach { offer ->
+                    getUserUseCase(offer.value.craftsmanId).also { user ->
+                        user.toRequestOfferUiState(offer.value).also { offerUiState ->
+                            Log.d("CraftsmanRequestDetailsVM", "Craftsman info: $offerUiState")
+                            updateState(
+                                screenState.value.copy(
+                                    uiState = screenState.value.uiState.copy(
+                                        offers = screenState.value.uiState.offers.toMutableMap().apply {
+                                            this[offer.key] = offerUiState
+                                        }
+                                    )
+                                )
+                            )
+                        }
+                    }
+                }
+            },
+            onSuccess = {
+                loadOffersFromCraftsman()
+                loadYourOffers()
+                loadAcceptedOffers()
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while loading craftsmen info",
+                    )
+                )
+
+            })
+    }
+
     private fun loadOffersFromCraftsman() {
         tryToExecute(
             execute = {
-                screenState.value.uiState.offers.filter { it.craftsmanId != phoneNumber && it.isAccepted.not() }
+                screenState.value.uiState.offers.values.filter { it.craftsmanId != phoneNumber && it.isAccepted.not() }
             },
             onSuccess = {
                 it.forEach { offer ->
@@ -287,7 +319,7 @@ class CraftsmanRequestDetailsViewModel(
     fun loadYourOffers() {
         tryToExecute(
             execute = {
-                screenState.value.uiState.offers.filter { it.craftsmanId == phoneNumber }
+                screenState.value.uiState.offers.values.filter { it.craftsmanId == phoneNumber }
             },
             onSuccess = {
                 it.forEach { offer ->
@@ -314,7 +346,7 @@ class CraftsmanRequestDetailsViewModel(
     fun loadAcceptedOffers() {
         tryToExecute(
             execute = {
-                screenState.value.uiState.offers.firstOrNull { it.isAccepted }
+                screenState.value.uiState.offers.values.firstOrNull { it.isAccepted }
             },
             onSuccess = {
                 Log.d("CraftsmanRequestDetailsVM", "Accepted offer: $it")
