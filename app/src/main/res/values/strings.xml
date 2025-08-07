@@ -310,4 +310,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="select_time">Select time</string>
     <string name="message_to_customer">Message to Customer</string>
     <string name="offer_message_placeholder">Tell the customer why you are the right choice for this job</string>
+    <string name="waiting_for_offers">Waiting for offers</string>
+    <string name="craftsmen_in_your_area_will_send_offers_soon_you_ll_be_notified_when_they_arrive">Craftsmen in your area will send offers soon. You\'ll be notified when they arrive.</string>
 </resources>
