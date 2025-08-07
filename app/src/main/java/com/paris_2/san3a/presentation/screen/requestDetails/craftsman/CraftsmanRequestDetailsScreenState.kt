@@ -19,6 +19,7 @@ data class CraftsmanRequestDetailsScreenState(
 data class CraftsmanRequestDetailsUiState(
     val request: RequestServiceUIState = RequestServiceUIState(),
     val offers: List<RequestOfferUiState> = emptyList(),
+    val offersFromCraftsman: List<RequestOfferUiState> = emptyList(),
     val yourOffers: List<RequestOfferUiState> = emptyList(),
     val craftsmanRequestDetails: CraftsmanRequestDetails? = null,
     val acceptedOffer: RequestOfferUiState? = null,
@@ -53,7 +54,7 @@ fun Offer.toOfferUiState(): RequestOfferUiState {
     )
 }
 
-fun RequestOfferUiState.toOfferDetailsUIState(): OfferDetailsUIState {
+fun RequestOfferUiState.toOfferDetailsUIState(yourOfferAccepted: Boolean = false): OfferDetailsUIState {
     return OfferDetailsUIState(
         imageUrl = this.craftsmanImageUrl,
         name = this.craftsmanName,
@@ -63,7 +64,7 @@ fun RequestOfferUiState.toOfferDetailsUIState(): OfferDetailsUIState {
         amount = this.price,
         time = this.time,
         postedTime = this.postedTime,
-        status = if (this.isAccepted) OfferStatus.OFFER_ACCEPTED else OfferStatus.PENDING_OFFER,
+        status = if (yourOfferAccepted) OfferStatus.OFFER_ACCEPTED else if (this.isAccepted) OfferStatus.YOUR_ACCEPTED_OFFER else OfferStatus.PENDING_OFFER,
         isVerify = false
     )
 }
@@ -161,4 +162,35 @@ fun OfferUiState.toEntity() = Offer(
     preferredTime = this.preferredTime,
     messageToCustomer = this.messageToCustomer,
     isAccepted = this.isAccepted
+)
+
+val offerList = listOf(
+    RequestOfferUiState(
+        id = "1",
+        craftsmanId = "c1",
+        craftsmanImageUrl = "https://example.com/image1.jpg",
+        craftsmanName = "John Doe",
+        craftsmanRate = 4.5f,
+        craftsmanReviewsNumber = 200,
+        requestId = "r1",
+        price = "150.0",
+        time = "Tomorrow at 10:00 AM",
+        postedTime = "2 hours ago",
+        messageToCustomer = "Looking forward to working with you!",
+        isAccepted = false
+    ),
+    RequestOfferUiState(
+        id = "2",
+        craftsmanId = "+201118295474",
+        craftsmanImageUrl = "https://example.com/image2.jpg",
+        craftsmanName = "Jane Smith",
+        craftsmanRate = 4.8f,
+        craftsmanReviewsNumber = 180,
+        requestId = "r1",
+        price = "170.0",
+        time = "Tomorrow at 11:00 AM",
+        postedTime = "1 hour ago",
+        messageToCustomer = "I can start right away.",
+        isAccepted = true
+    )
 )

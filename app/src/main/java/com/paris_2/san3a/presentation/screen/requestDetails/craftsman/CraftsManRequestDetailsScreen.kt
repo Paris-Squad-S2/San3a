@@ -45,8 +45,6 @@ import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.CraftsManOffer
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
-import com.paris_2.san3a.presentation.shared.components.OfferDetailsUIState
-import com.paris_2.san3a.presentation.shared.components.OfferStatus
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -143,10 +141,8 @@ fun CraftsmanRequestDetailsContent(
             )
         }
         item {
-
             AnimatedVisibility(
-//            visible = state.yourOffers.contains(state.acceptedOffer)
-                visible = true
+                visible = state.yourOffers.contains(state.acceptedOffer)
             ) {
                 Column(
                     modifier = modifier
@@ -173,45 +169,42 @@ fun CraftsmanRequestDetailsContent(
         item {
 
             AnimatedVisibility(
-//            visible = state.acceptedOffer != null
-                visible = true
+                visible = state.acceptedOffer != null
             ) {
-                Column(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 24.dp, start = 16.dp, end = 16.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.selected_offer),
-                        style = Theme.textStyle.title.small,
-                        color = Theme.colors.shade.primary,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    CraftsManOffer(
-                        addShadow = true,
-                        offerDetails = OfferDetailsUIState(
-                            status =
-                                if (state.yourOffers.contains(state.acceptedOffer))
-                                    OfferStatus.YOUR_ACCEPTED_OFFER
-                                else
-                                    OfferStatus.OFFER_ACCEPTED
-                        ),
-                        painter = painterResource(id = R.drawable.img_avatar2),
-                        onChatClick = {
+                if (state.acceptedOffer != null) {
+                    Column(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 24.dp, start = 16.dp, end = 16.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.selected_offer),
+                            style = Theme.textStyle.title.small,
+                            color = Theme.colors.shade.primary,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                        CraftsManOffer(
+                            addShadow = true,
+                            offerDetails = state.acceptedOffer.toOfferDetailsUIState(
+                                yourOfferAccepted = state.yourOffers.contains(state.acceptedOffer)
+                            ),
+                            painter = painterResource(id = R.drawable.img_avatar2),
+                            onChatClick = {
 
-                        },
-                        onAcceptOfferClick = {},
-                    )
+                            },
+                            onAcceptOfferClick = {},
+                        )
+                    }
                 }
             }
         }
 
-        if (state.offers.isNotEmpty()) {
+        if (state.offersFromCraftsman.isNotEmpty()) {
             item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 16.dp),
+                        .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
@@ -221,16 +214,20 @@ fun CraftsmanRequestDetailsContent(
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
-                        text = stringResource(R.string.offers_count, state.offers.size),
+                        text = stringResource(
+                            R.string.offers_count,
+                            state.offersFromCraftsman.size
+                        ),
                         style = Theme.textStyle.body.small.regular,
                         color = Theme.colors.shade.tertiary,
                     )
                 }
             }
 
-            items(state.offers) { offer ->
+            items(state.offersFromCraftsman) { offer ->
                 CraftsManOffer(
                     modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         .animateItem(),
                     addShadow = true,
                     offerDetails = offer.toOfferDetailsUIState(),

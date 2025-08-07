@@ -61,9 +61,11 @@ class CraftsmanRequestDetailsViewModel(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
                             offers = it.toOfferUiStateList()
+//                            offers = offerList //TODO
                         ),
                     )
                 )
+                loadOffersFromCraftsman()
                 loadYourOffers()
                 loadAcceptedOffers()
             },
@@ -71,6 +73,30 @@ class CraftsmanRequestDetailsViewModel(
                 updateState(
                     screenState.value.copy(
                         error = it.message ?: "An error occurred while loading offers",
+                    )
+                )
+            }
+        )
+    }
+
+    private fun loadOffersFromCraftsman() {
+        tryToExecute(
+            execute = {
+                screenState.value.uiState.offers.filter { it.craftsmanId != phoneNumber && it.isAccepted.not() }
+            },
+            onSuccess = {
+                updateState(
+                    screenState.value.copy(
+                        uiState = screenState.value.uiState.copy(
+                            offersFromCraftsman = it
+                        ),
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while loading craftsman offers",
                     )
                 )
             }
