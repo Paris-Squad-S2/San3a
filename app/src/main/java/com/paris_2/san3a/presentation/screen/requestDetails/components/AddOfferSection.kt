@@ -198,7 +198,7 @@ fun AddOfferForm(
     }
 
     if (showTimePicker) {
-        TimePickerDialog(
+        androidx.compose.material3.AlertDialog(
             onDismissRequest = { onShowTimePickerChange(false) },
             confirmButton = {
                 TextButton(
@@ -216,12 +216,11 @@ fun AddOfferForm(
                 TextButton(onClick = { onShowTimePickerChange(false) }) {
                     Text(stringResource(R.string.cancel))
                 }
+            },
+            text = {
+                TimePicker(state = timePickerState)
             }
-        ) {
-            TimePicker(state = timePickerState)
-        }
-
-
+        )
     }
 }
 
