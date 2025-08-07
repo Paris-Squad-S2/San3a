@@ -189,6 +189,7 @@ fun CraftsmanRequestDetailsContent(
                         )
                         CraftsManOffer(
                             addShadow = true,
+                            showActionButtons = state.yourOffers.contains(state.acceptedOffer),
                             offerDetails = state.acceptedOffer.toOfferDetailsUIState(
                                 yourOfferAccepted = state.yourOffers.contains(state.acceptedOffer)
                             ),
@@ -236,6 +237,7 @@ fun CraftsmanRequestDetailsContent(
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         .animateItem(),
                     addShadow = true,
+                    showActionButtons = false,
                     offerDetails = offer.toOfferDetailsUIState(),
                     painter = rememberAsyncImagePainter(model = offer.craftsmanImageUrl),
                     onChatClick = {
@@ -279,6 +281,7 @@ fun CraftsmanRequestDetailsContent(
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         .animateItem(),
                     addShadow = true,
+                    showActionButtons = false,
                     offerDetails = offer.toOfferDetailsUIState(),
                     painter = painterResource(id = R.drawable.img_avatar1),
                     onChatClick = {

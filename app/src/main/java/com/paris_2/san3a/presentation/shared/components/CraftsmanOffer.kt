@@ -68,7 +68,8 @@ fun CraftsManOffer(
     offerDetails: OfferDetailsUIState,
     addShadow: Boolean = false,
     onChatClick: () -> Unit,
-    onAcceptOfferClick: () -> Unit
+    onAcceptOfferClick: () -> Unit,
+    showActionButtons: Boolean = true
 ) {
 
     val targetColor = when (offerDetails.status) {
@@ -143,7 +144,7 @@ fun CraftsManOffer(
             status = offerDetails.status,
             time = offerDetails.time,
             stickyFooter = {
-                if (it == OfferStatus.PENDING_OFFER)
+                if (it == OfferStatus.PENDING_OFFER && showActionButtons)
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
