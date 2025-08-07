@@ -7,17 +7,9 @@ import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.CraftsmanR
 data class CustomerRequestDetailsScreenState(
     val isLoading: Boolean = false,
     val error: String? = null,
-//    val customerRequestDetails: CustomerRequestDetails? = null,
-//    val offers: List<Offer> = emptyList(),
-    val uiState: CustomerRequestDetailsUiState = CustomerRequestDetailsUiState(),
-)
-
-data class CustomerRequestDetailsUiState(
-    val request: CustomerRequestDetails = CustomerRequestDetails(),
+    val customerRequestDetails: CustomerRequestDetails? = null,
     val offers: List<Offer> = emptyList(),
-    val acceptedOffer: Offer? = null,
-    val showDatePicker: Boolean = false,
-    val showTimePicker: Boolean = false
+    val uiState: CraftsmanRequestDetailsUiState = CraftsmanRequestDetailsUiState(),
 )
 
 data class CustomerRequestDetails(
