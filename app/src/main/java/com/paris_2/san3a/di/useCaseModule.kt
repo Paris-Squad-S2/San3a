@@ -33,6 +33,7 @@ import com.paris_2.san3a.domain.usecase.messages.SendMessageUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetAcceptedOffersUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersCountUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetYourOfferUseCase
@@ -76,6 +77,7 @@ val useCaseModule = module {
     factoryOf(::GetRequestDetailsByIdUseCase)
     factoryOf(::AcceptOfferUseCase)
     factoryOf(::GetOffersUseCase)
+    factoryOf(::GetOffersCountUseCase)
     factoryOf(::GetRequestDetailsByIdUseCase)
     factoryOf(::AddOfferUseCase)
     factoryOf(::GetYourOfferUseCase)

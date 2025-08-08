@@ -46,6 +46,11 @@ interface FireStoreService {
         queryBuilder: (Query) -> Query = { it }
     ): Int
 
+    fun streamCountOfCollection(
+        path: String,
+        queryBuilder: (Query) -> Query = { it }
+    ): Flow<Int>
+
     suspend fun clearCollection(
         path: String
     )

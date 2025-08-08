@@ -8,11 +8,13 @@ import com.paris_2.san3a.data.service.firestore.UpdateOperation
 import com.paris_2.san3a.data.source.remote.messages.dto.ChatDto
 import com.paris_2.san3a.data.source.remote.messages.dto.MessageDto
 import com.paris_2.san3a.data.utils.toLong
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlin.time.ExperimentalTime
 
@@ -60,8 +62,8 @@ class MessagesRemoteDataSourceImp(
         return savedMessage
     }
 
-    suspend fun getUnreadMessageCountForUserByChatId(chatId: String, userId: String): Int {
-        return fireStoreService.getCountOfCollection(
+    fun getUnreadMessageCountForUserByChatId(chatId: String, userId: String): Flow<Int> {
+        return fireStoreService.streamCountOfCollection(
             path = "$CHATS_COLLECTION/$chatId/$MESSAGES_COLLECTION",
             queryBuilder = { query ->
                 query
@@ -72,6 +74,7 @@ class MessagesRemoteDataSourceImp(
         )
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getUserChats(userId: String): Flow<List<ChatDto>> {
         val chats = fireStoreService.streamCollection(
             path = CHATS_COLLECTION,
@@ -82,18 +85,15 @@ class MessagesRemoteDataSourceImp(
             },
         )
 
-        val countsFlow = chats.map { chatList ->
-            coroutineScope {
+        val countsFlow = chats.flatMapLatest { chatList ->
+            combine(
                 chatList.map { chat ->
-                    async {
-                        val count = getUnreadMessageCountForUserByChatId(
-                            chatId = chat.id,
-                            userId = userId
-                        )
-                        chat.id to count
-                    }
-                }.awaitAll().toMap()
-            }
+                    getUnreadMessageCountForUserByChatId(
+                        chatId = chat.id,
+                        userId = userId
+                    ).map { count -> chat.id to count }
+                }
+            ) { pairs -> pairs.toMap() }
         }
 
         return combine(chats, countsFlow) { chatList, countsMap ->
