@@ -77,12 +77,18 @@ class MessagesDetailsViewModel(
             },
             onSuccess = { flowMessages ->
                 flowMessages.collect { messages ->
+                    val groupedMessages = messages
+                        .map { it.toMessageUi(screenState.value.profilePhoto, currentUserId) }
+                        .groupBy { it.date }
+                        .toSortedMap(compareBy { it })
+
                     updateState(
                         screenState.value.copy(
                             messages = messages.map { it.toMessageUi(screenState.value.profilePhoto, currentUserId) },
+                            groupedMessages = groupedMessages,
                             chatTitle = screenState.value.chatTitle,
                             isLoading = false
-                        ),
+                        )
                     )
                     markMessagesAsSeen()
                 }
@@ -94,7 +100,7 @@ class MessagesDetailsViewModel(
                         isLoading = false
                     )
                 )
-            },
+            }
         )
     }
 

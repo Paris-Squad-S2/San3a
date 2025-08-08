@@ -143,6 +143,7 @@ fun MessageDetailsContent(
                 } else {
                     MessageList(
                         messages = state.messages,
+                        groupedMessages = state.groupedMessages,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 16.dp)
@@ -204,6 +205,7 @@ fun MessageDetailsContent(
 @Composable
 fun MessageList(
     messages: List<MessageUi>,
+    groupedMessages: Map<String, List<MessageUi>>, // Add parameter
     modifier: Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -220,35 +222,38 @@ fun MessageList(
         contentPadding = PaddingValues(bottom = 80.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        item {
-            Text(
-                text = "9:23", // Todo(time of message )
-                style = Theme.textStyle.body.medium.regular,
-                color = Theme.colors.shade.tertiary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .fillMaxWidth()
-            )
-        }
-        items(messages) { item ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Message(
-                    images = item.images,
+        groupedMessages.forEach { (date, messagesForDate) ->
+            stickyHeader {
+                Text(
+                    text = date,
+                    style = Theme.textStyle.body.medium.regular,
+                    color = Theme.colors.shade.tertiary,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
-                        .align(if (item.isReceived) Alignment.CenterStart else Alignment.CenterEnd)
-                        .animateItem(),
-                    text = item.text,
-                    isReceived = item.isReceived,
-                    isSeen = item.isSeen,
-                    time = item.time,
-                    profileImageUrl = if (item.isReceived) item.anotherUserImage else null,
+                        .padding(top = 10.dp, bottom = 8.dp)
+                        .fillMaxWidth()
+                        .padding(8.dp)
                 )
             }
-            Spacer(modifier = Modifier.width(10.dp))
+
+            items(messagesForDate) { item ->
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Message(
+                        images = item.images,
+                        modifier = Modifier
+                            .align(if (item.isReceived) Alignment.CenterStart else Alignment.CenterEnd)
+                            .animateItem(),
+                        text = item.text,
+                        isReceived = item.isReceived,
+                        isSeen = item.isSeen,
+                        time = item.time,
+                        profileImageUrl = if (item.isReceived) item.anotherUserImage else null,
+                    )
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+            }
         }
     }
 }
