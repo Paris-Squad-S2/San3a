@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.myRequest.component
+package com.paris_2.san3a.presentation.screen.requests.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.screen.myRequest.craftsman.MyJobOfferUiState
+import com.paris_2.san3a.presentation.screen.requests.craftsman.MyJobOfferUiState
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -42,8 +42,7 @@ fun MyJobOfferCard(
 ) {
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Theme.colors.background.card

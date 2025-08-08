@@ -1,8 +1,9 @@
-package com.paris_2.san3a.presentation.screen.myRequest.customer
+package com.paris_2.san3a.presentation.screen.requests.customer
 
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersCountUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
@@ -10,6 +11,7 @@ import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 class MyRequestCustomerViewModel(
     private val getCustomerRequestsUseCase: GetCustomerRequestsUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
+    private val getOffersCountUseCase: GetOffersCountUseCase,
     private val getUserUseCase: GetUserUseCase,
 ) : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState()), MyRequestCustomerInteractionListener {
 
@@ -75,7 +77,7 @@ class MyRequestCustomerViewModel(
     }
 
     override fun onRequestClick(requestId: String) {
-        TODO("Not yet implemented")
+        navigate(Destinations.RequestDetails(requestId, phoneNumber = screenState.value.myRequestCustomerUiState.customerPhone))
     }
 
     override fun onNotificationClick() {

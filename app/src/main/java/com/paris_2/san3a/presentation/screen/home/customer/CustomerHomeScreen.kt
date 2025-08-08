@@ -248,7 +248,7 @@ private fun CustomerHomeScreenContent(
                             action.createRequest(
                                 RequestServiceUiState(
                                     serviceType = state.bottomSheetUiState.bottomSheetServiceTitle,
-                                    title = state.bottomSheetUiState.bottomSheetServiceTitle,
+                                    title = state.bottomSheetUiState.bottomSheetSubtitle,
                                     description = state.bottomSheetUiState.bottomSheetDescription,
                                     location = "${state.bottomSheetUiState.bottomSheetSelectedGovernment}, ${state.bottomSheetUiState.bottomSheetSelectedCity}",
                                     locationDetails = state.bottomSheetUiState.bottomSheetAddressDetails,

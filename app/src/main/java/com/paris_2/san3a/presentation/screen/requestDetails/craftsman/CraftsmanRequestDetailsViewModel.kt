@@ -1,46 +1,51 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.craftsman
 
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetAcceptedOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetYourOfferUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 class CraftsmanRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
     private val addOfferUseCase: AddOfferUseCase,
     private val getOffersUseCase: GetOffersUseCase,
-    private val getYourOfferUseCase: GetYourOfferUseCase,
-    private val getAcceptOfferUseCase: GetAcceptedOffersUseCase,
+    private val acceptedOffersUseCase: AcceptOfferUseCase,
     private val getUserUseCase: GetUserUseCase,
-    private val getPhoneNumberUseCase: GetPhoneNumberUseCase
-): BaseViewModel<CraftsmanRequestUiState>(CraftsmanRequestUiState()), CraftsmanInteractionListener
-{
-    init {
+    private val createChatUseCase: CreateChatUseCase,
+    savedStateHandle: SavedStateHandle
+) : BaseViewModel<CraftsmanRequestDetailsScreenState>(CraftsmanRequestDetailsScreenState()),
+    CraftsmanRequestDetailsInteractionListener {
 
+    val requestId = savedStateHandle.toRoute<Destinations.RequestDetails>().requestId
+    val phoneNumber = savedStateHandle.toRoute<Destinations.RequestDetails>().phoneNumber
+
+    init {
+        loadRequestDetails(requestId)
+        loadOffers(requestId)
     }
 
-    fun loadRequestDetails(requestId: String){
+    fun loadRequestDetails(requestId: String) {
         tryToExecute(
             execute = { getRequestDetailsByIdUseCase(requestId) },
             onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Request details loaded: $it")
                 updateState(
                     screenState.value.copy(
-                        craftsmanRequestDetails = CraftsmanRequestDetails(
-                            requestId = it.id,
-                            title = it.title,
-                            description = it.description,
-                            serviceType = it.serviceType,
-                            time = it.time.toString(),
-                            location = it.location,
-                            photos = it.image,
-                        )
+                        uiState = screenState.value.uiState.copy(
+                            request = it.toRequestServiceUIState(),
+                        ),
                     )
                 )
+                getCustomer(it.userId)
             },
             onError = {
                 updateState(
@@ -52,15 +57,21 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    fun loadOffers(requestId: String){
+    fun loadOffers(requestId: String) {
         tryToObserve(
             observe = { getOffersUseCase(requestId) },
             onEach = {
+                it.forEach { offer ->
+                    Log.d("CraftsmanRequestDetailsVM", "Offer: ${offer.toOfferUiState()}")
+                }
                 updateState(
                     screenState.value.copy(
-                        offers = it,
+                        uiState = screenState.value.uiState.copy(
+                            offers = it.toOfferUiStateMap()
+                        ),
                     )
                 )
+                loadCraftsMenInfo()
             },
             onError = {
                 updateState(
@@ -72,32 +83,255 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    override fun onClickAddOffer(offer: OfferUiState) {
+    private fun loadCraftsMenInfo() {
         tryToExecute(
-            execute = { addOfferUseCase(offer.toEntity()) },
+            execute = {
+                screenState.value.uiState.offers.forEach { offer ->
+                    getUserUseCase(offer.value.craftsmanId).also { user ->
+                        user.toRequestOfferUiState(offer.value).also { offerUiState ->
+                            Log.d("CraftsmanRequestDetailsVM", "Craftsman info: $offerUiState")
+                            updateState(
+                                screenState.value.copy(
+                                    uiState = screenState.value.uiState.copy(
+                                        offers = screenState.value.uiState.offers.toMutableMap()
+                                            .apply {
+                                                this[offer.key] = offerUiState
+                                            }
+                                    )
+                                )
+                            )
+                        }
+                    }
+                }
+            },
+            onSuccess = {
+                loadOffersFromCraftsman()
+                loadYourOffers()
+                loadAcceptedOffers()
+            },
             onError = {
                 updateState(
                     screenState.value.copy(
-                        error = it.message ?: "An error occurred while adding offer",
+                        error = it.message ?: "An error occurred while loading craftsmen info",
+                    )
+                )
+
+            }
+        )
+    }
+
+    private fun loadOffersFromCraftsman() {
+        tryToExecute(
+            execute = {
+                screenState.value.uiState.offers.values.filter { it.craftsmanId != phoneNumber && it.isAccepted.not() }
+            },
+            onSuccess = {
+                it.forEach { offer ->
+                    Log.d("CraftsmanRequestDetailsVM", "Offer from craftsMen: $offer")
+                }
+                updateState(
+                    screenState.value.copy(
+                        uiState = screenState.value.uiState.copy(
+                            offersFromCraftsman = it
+                        ),
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while loading craftsman offers",
                     )
                 )
             }
         )
     }
 
-    override fun onClickSendMessage(customerId: String) {}
-
-    override fun onClickFavorite() {
-        TODO("Not yet implemented")
-    }
-
-    fun loadYourOffers(craftsmanId: String){
+    override fun onClickSendMessage(customerId: String) {
         tryToExecute(
-            execute = { getYourOfferUseCase(craftsmanId) },
+            execute = { createChatUseCase(listOf(phoneNumber, customerId)) },
             onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Chat created successfully")
+                navigate(
+                    Destinations.MessageDetails(
+                        chatId = it,
+                        currentUserId = phoneNumber,
+                        otherUserId = customerId
+                    )
+                )
+            },
+            onError = {
                 updateState(
                     screenState.value.copy(
-                        yourOffer = it
+                        error = it.message ?: "An error occurred while creating chat",
+                    )
+                )
+            }
+        )
+    }
+
+    override fun onSendOfferClick() {
+        tryToExecute(
+            execute = {
+                addOfferUseCase(
+                    screenState.value.uiState.offerToAdd.toOffer(
+                        craftsManId = phoneNumber,
+                        requestId = requestId
+                    )
+                )
+            },
+            onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Offer added successfully")
+                updateState(
+                    screenState.value.copy(
+                        uiState = screenState.value.uiState.copy(
+                            offerToAdd = OfferToAddUiState()
+                        )
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while sending offer",
+                    )
+                )
+            }
+        )
+    }
+
+    override fun onChatWithPosterClick(customerId: String) {
+        tryToExecute(
+            execute = { createChatUseCase(listOf(phoneNumber, customerId)) },
+            onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Chat created successfully")
+                navigate(
+                    Destinations.MessageDetails(
+                        chatId = it,
+                        currentUserId = phoneNumber,
+                        otherUserId = customerId
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while creating chat",
+                    )
+                )
+            }
+        )
+    }
+
+    override fun onAcceptOfferClick(offerId: String) {
+        tryToExecute(
+            execute = {
+                acceptedOffersUseCase(offerId)
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while accepting offer",
+                    )
+                )
+            }
+        )
+    }
+
+    override fun onPriceChanged(price: String) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
+                        price = price
+                    )
+                )
+            )
+        )
+    }
+
+    override fun onDateChanged(date: LocalDate) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
+                        preferredDate = date
+                    )
+                )
+            )
+        )
+    }
+
+    override fun onTimeChanged(time: LocalTime) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
+                        preferredTime = time
+                    )
+                )
+            )
+        )
+    }
+
+    override fun onMessageChanged(message: String) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
+                        messageToCustomer = message
+                    )
+                )
+            )
+        )
+    }
+
+    override fun onShowDatePickerChange(show: Boolean) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    showDatePicker = show
+                )
+            )
+        )
+    }
+
+    override fun onShowTimePickerChange(show: Boolean) {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    showTimePicker = show
+                )
+            )
+        )
+    }
+
+    override fun onClickFavorite() {
+    }
+
+    override fun onClickBack() {
+        navigateUp()
+    }
+
+    override fun onRetryClick() {
+        loadRequestDetails(requestId)
+        loadOffers(requestId)
+    }
+
+    fun loadYourOffers() {
+        tryToExecute(
+            execute = {
+                screenState.value.uiState.offers.values.filter { it.craftsmanId == phoneNumber }
+            },
+            onSuccess = {
+                it.forEach { offer ->
+                    Log.d("CraftsmanRequestDetailsVM", "your Offer: $offer")
+                }
+                updateState(
+                    screenState.value.copy(
+                        uiState = screenState.value.uiState.copy(
+                            yourOffers = it
+                        ),
                     )
                 )
             },
@@ -111,13 +345,18 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    fun loadAcceptedOffers(requestId: String) {
-        tryToObserve(
-            observe = { getAcceptOfferUseCase(requestId) },
-            onEach = {
+    fun loadAcceptedOffers() {
+        tryToExecute(
+            execute = {
+                screenState.value.uiState.offers.values.firstOrNull { it.isAccepted }
+            },
+            onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Accepted offer: $it")
                 updateState(
                     screenState.value.copy(
-                        acceptedOffers = it
+                        uiState = screenState.value.uiState.copy(
+                            acceptedOffer = it
+                        )
                     )
                 )
             },
@@ -131,16 +370,18 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    fun getCustomer(){
+    fun getCustomer(userId: String) {
         tryToExecute(
-            execute = { getUserUseCase(getPhoneNumberUseCase())},
+            execute = { getUserUseCase(userId) },
             onSuccess = {
                 updateState(
                     screenState.value.copy(
-                        customer = Customer(
-                            id = it.id,
-                            name = it.fullName,
-                            profilePhoto = it.profilePhoto
+                        uiState = screenState.value.uiState.copy(
+                            customer = Customer(
+                                id = it.id,
+                                name = it.fullName,
+                                profilePhoto = it.profilePhoto
+                            )
                         )
                     )
                 )

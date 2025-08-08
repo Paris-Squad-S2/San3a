@@ -292,4 +292,26 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="services_uploaded_successfully">services uploaded successfully</string>
     <string name="otp_code_is_wrong">otp code is wrong</string>
 
+    <string name="request_details">Request Details</string>
+    <string name="send_offer">Send Offer</string>
+    <string name="be_competitive_but_fair_consider_materials_and_time">Be competitive but fair. Consider materials and time.</string>
+    <string name="chat_with_the_poster">Chat with the Poster</string>
+    <string name="request_poster">Request Poster</string>
+    <string name="selected_offer">Selected Offer</string>
+    <string name="offers_from_craftsmen">Offers from Craftsmen</string>
+    <string name="offers_count">%1$d offers</string>
+    <string name="add_your_offer">Add Your Offer</string>
+    <string name="offer_hint">Be competitive but fair. Consider materials and time.</string>
+    <string name="your_price">Your price (IQD)</string>
+    <string name="price_placeholder">e.g., 25,000</string>
+    <string name="preferred_date">Preferred Date</string>
+    <string name="select_date">Select date</string>
+    <string name="preferred_time">Preferred Time</string>
+    <string name="select_time">Select time</string>
+    <string name="message_to_customer">Message to Customer</string>
+    <string name="offer_message_placeholder">Tell the customer why you are the right choice for this job</string>
+    <string name="waiting_for_offers">Waiting for offers</string>
+    <string name="craftsmen_in_your_area_will_send_offers_soon_you_ll_be_notified_when_they_arrive">Craftsmen in your area will send offers soon. You\'ll be notified when they arrive.</string>
+    <string name="attached_images">Attached Images</string>
+    <string name="your_offers">Your Offers</string>
 </resources>

@@ -8,6 +8,7 @@ interface RequestsRepository {
     suspend fun addOffer(offer: Offer)
     fun getAcceptedOffers(requestId: String): Flow<List<Offer>>
     fun getOffers(requestId: String): Flow<List<Offer>>
+    fun getOffersCount(requestId: String): Flow<Int>
     suspend fun getRequestDetailsById(requestId: String): RequestService
     suspend fun getYourOffer(craftsmanId: String): List<Offer>
     suspend fun assignRequestToCraftsman(requestId: String, craftsmanId: String)

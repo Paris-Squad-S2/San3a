@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +24,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.navigation.Navigator
 import com.paris_2.san3a.presentation.navigation.San3aNavGraph
 import com.paris_2.san3a.presentation.screen.main.MainViewModel
@@ -30,6 +32,7 @@ import com.paris_2.san3a.presentation.shared.components.AppNavBarItem
 import com.paris_2.san3a.presentation.shared.components.AppNavigationBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
+import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -81,7 +84,9 @@ fun San3aScaffold(
 
     San3aTheme(isDarkTheme = uiState.value.isDark) {
         AppScaffold(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
+            containerColor = Theme.colors.background.card,
             content = { San3aNavGraph(navController = navController) },
             bottomBar = {
                 AnimatedVisibility(
@@ -98,10 +103,9 @@ fun San3aScaffold(
                                     destination,
                                     navOptions = NavOptions.Builder()
                                         .setPopUpTo(
-                                            navigator.startGraph,
-                                            inclusive = false
-                                        )
-                                        .build()
+                                            0,
+                                            inclusive = true
+                                        ).build()
                                 )
                             }
                         }

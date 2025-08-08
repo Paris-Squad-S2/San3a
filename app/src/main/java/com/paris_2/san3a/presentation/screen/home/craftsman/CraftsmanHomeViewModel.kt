@@ -27,12 +27,19 @@ class CraftsmanHomeViewModel(
     private fun getUserServices() {
         val currentLocale = "englishName"
         tryToObserve(
-            observe = { getUserServicesUseCase(screenState.value.craftsmanHomeUiState.phoneNumber, isCraftsman = true) },
+            observe = {
+                getUserServicesUseCase(
+                    screenState.value.craftsmanHomeUiState.phoneNumber,
+                    isCraftsman = true
+                )
+            },
             onEach = { services ->
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            userServices = services.map { it.title[currentLocale] ?: it.title.values.firstOrNull() ?: "" },
+                            userServices = services.map {
+                                it.title[currentLocale] ?: it.title.values.firstOrNull() ?: ""
+                            },
                         )
                     )
                 )
@@ -175,7 +182,12 @@ class CraftsmanHomeViewModel(
     override fun onSearch(query: String) {}
 
     override fun onJobClick(serviceId: String) {
-        // navigate to request details
+        navigate(
+            Destinations.RequestDetails(
+                requestId = serviceId,
+                phoneNumber = screenState.value.craftsmanHomeUiState.phoneNumber
+            )
+        )
     }
 
 }

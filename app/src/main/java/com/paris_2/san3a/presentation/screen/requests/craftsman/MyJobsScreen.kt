@@ -1,10 +1,13 @@
-package com.paris_2.san3a.presentation.screen.myRequest.customer
+package com.paris_2.san3a.presentation.screen.requests.craftsman
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,9 +24,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
-import com.paris_2.san3a.domain.entity.RequestStatus
-import com.paris_2.san3a.presentation.screen.myRequest.component.RequestCard
+import com.paris_2.san3a.presentation.screen.requests.component.MyJobOfferCard
 import com.paris_2.san3a.presentation.shared.components.AppBar
+import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.AppTabBar
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
@@ -33,51 +36,56 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun MyRequestScreen(
-    viewModel: MyRequestCustomerViewModel = koinViewModel()
+fun MyJobsScreen(
+    viewModel: MyOfferCraftsmanViewModel = koinViewModel()
 ) {
     val state by viewModel.screenState.collectAsState()
-
-    MyRequestScreenContent(state, viewModel)
+    MyRequestScreenContent(uiState = state, myJobCraftsmanInteractionListener = viewModel)
 }
 
 @Composable
 private fun MyRequestScreenContent(
-    state: MyRequestCustomerScreenState,
-    myRequestCustomerInteractionListener: MyRequestCustomerInteractionListener,
     modifier: Modifier = Modifier,
+    myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener,
+    uiState: MyOfferCraftsmanScreenState = MyOfferCraftsmanScreenState()
 ) {
-    Column(
+
+    AppScaffold(
         modifier = modifier
             .fillMaxSize()
             .background(Theme.colors.background.card)
             .statusBarsPadding(),
+        topBar = {
+            AppBar(
+                modifier = modifier
+                    .fillMaxWidth(),
+                title = stringResource(R.string.my_jobs),
+                actionIcon = {
+                    Icon(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable(onClick = myJobCraftsmanInteractionListener::onNotificationClick),
+                        painter = painterResource(R.drawable.ic_notification_outline),
+                        contentDescription = "Request Icon",
+                        tint = Theme.colors.shade.primary,
+                    )
+                }
+            )
+        },
+        containerColor = Theme.colors.background.screen
     ) {
-        AppBar(
-            title = stringResource(R.string.my_requests),
-            actionIcon = {
-                Icon(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clickable(onClick = myRequestCustomerInteractionListener::onNotificationClick),
-                    painter = painterResource(R.drawable.ic_notification_outline),
-                    contentDescription = null,
-                    tint = Theme.colors.shade.primary
-                )
-            },
-        )
         when {
-            state.isLoading -> {
+            uiState.isLoading -> {
                 LoadingScreen(modifier = Modifier.fillMaxSize())
             }
 
-            state.errorMessage != null -> {
+            uiState.errorMessage != null -> {
                 PlaceHolderScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(30.dp),
                     action = {
-                        myRequestCustomerInteractionListener.onRetryClick()
+                        myJobCraftsmanInteractionListener.onRetryClick()
                     },
                     actionText = R.string.try_again,
                     image = R.drawable.img_lost_connection,
@@ -87,27 +95,23 @@ private fun MyRequestScreenContent(
             }
 
             else -> {
-                val tabs = listOf(
-                    stringResource(R.string.ongoing),
-                    stringResource(R.string.completed),
-                    stringResource(R.string.canceled)
-                )
-                val selectedIndex = remember { mutableIntStateOf(0) }
-                AppTabBar(
-                    tabItems = tabs,
-                    selectedIndex = selectedIndex.intValue,
-                    onTabSelected = { index ->
-                        selectedIndex.intValue = index
-                    },
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Theme.colors.background.screen)
-                ) {
+                Column {
+                    val tabs = listOf(
+                        stringResource(R.string.ongoing),
+                        stringResource(R.string.completed),
+                        stringResource(R.string.canceled)
+                    )
+                    val selectedIndex = remember { mutableIntStateOf(0) }
+                    AppTabBar(
+                        tabItems = tabs,
+                        selectedIndex = selectedIndex.intValue,
+                        onTabSelected = { index ->
+                            selectedIndex.intValue = index
+                        },
+                    )
                     when (selectedIndex.intValue) {
                         0 -> {
-                            val ongoingRequests = state.myRequestCustomerUiState.ongoing
+                            val ongoingRequests = uiState.myOffersCraftsmanUiState.ongoing
                             if (ongoingRequests.isEmpty()) {
                                 Box(Modifier.fillMaxSize()) {
                                     PlaceHolderScreen(
@@ -118,12 +122,15 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = ongoingRequests)
+                                JobsList(
+                                    offers = ongoingRequests,
+                                    myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
+                                )
                             }
                         }
 
                         1 -> {
-                            val completedRequests = state.myRequestCustomerUiState.completed
+                            val completedRequests = uiState.myOffersCraftsmanUiState.completed
                             if (completedRequests.isEmpty()) {
                                 Box(Modifier.fillMaxSize()) {
                                     PlaceHolderScreen(
@@ -134,12 +141,15 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = completedRequests)
+                                JobsList(
+                                    offers = completedRequests,
+                                    myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
+                                )
                             }
                         }
 
                         2 -> {
-                            val canceledRequests = state.myRequestCustomerUiState.canceled
+                            val canceledRequests = uiState.myOffersCraftsmanUiState.canceled
                             if (canceledRequests.isEmpty()) {
                                 Box(Modifier.fillMaxSize()) {
                                     PlaceHolderScreen(
@@ -150,7 +160,10 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = canceledRequests)
+                                JobsList(
+                                    offers = canceledRequests,
+                                    myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
+                                )
                             }
                         }
                     }
@@ -158,16 +171,23 @@ private fun MyRequestScreenContent(
             }
         }
     }
-
 }
 
 @Composable
-private fun RequestList(requests: List<MyRequestCustomerUi>) {
-    LazyColumn {
-        items(requests) { request ->
-            RequestCard(
-                requestUi = request,
-                onActionClick = {},
+private fun JobsList(
+    offers: List<MyJobOfferUiState>,
+    myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        items(offers) { offer ->
+            MyJobOfferCard(
+                offerUiState = offer,
+                onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails("") },
+                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick("+201118295474") }, //TODO
+                onMarkAsDone = { myJobCraftsmanInteractionListener.onSendAsDone("") }
             )
         }
     }
@@ -178,34 +198,21 @@ private fun RequestList(requests: List<MyRequestCustomerUi>) {
 fun MyRequestScreenPreview() {
     BasePreview {
         MyRequestScreenContent(
-            state = MyRequestCustomerScreenState(
-                myRequestCustomerUiState = MyRequestCustomerUiState(
-                    ongoing = listOf(
-                        MyRequestCustomerUi(
-                            isCraftsmanVerified = true,
-                            status = RequestStatus.ONGOING,
-                            craftsmanURL = "",
-                            isAcceptedOffer = true
-                        ),
-                        MyRequestCustomerUi(),
-                        MyRequestCustomerUi(),
-                    ),
-                    completed = emptyList(),
-                    canceled = emptyList()
-                )
-            ),
-            myRequestCustomerInteractionListener = object : MyRequestCustomerInteractionListener {
-                override fun onRequestClick(requestId: String) {
-                    // Handle request click
-                }
-
-                override fun onNotificationClick() {
+            myJobCraftsmanInteractionListener = object : MyJobCraftsmanInteractionListener {
+                override fun onRetryClick() {}
+                override fun onSendAsDone(requestId: String) {
                     TODO("Not yet implemented")
                 }
 
-                override fun onRetryClick() {
+                override fun onSendMessageClick(phoneNumber: String) {
                     TODO("Not yet implemented")
                 }
+
+                override fun onViewRequestDetails(requestId: String) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onNotificationClick() {}
             },
         )
     }

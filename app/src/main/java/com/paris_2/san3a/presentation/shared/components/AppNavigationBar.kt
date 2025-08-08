@@ -164,7 +164,7 @@ sealed class AppNavBarItem(
     data class MyRequest(val accountType: AccountType) : AppNavBarItem(
         selectedIcon = R.drawable.ic_clipboard_bold,
         unSelectedIcon = R.drawable.ic_clipboard_outline,
-        destination = Destinations.MyRequest,
+        destination = Destinations.Requests,
         label = if (accountType == AccountType.CUSTOMER) R.string.my_request else R.string.my_jobs
     )
 

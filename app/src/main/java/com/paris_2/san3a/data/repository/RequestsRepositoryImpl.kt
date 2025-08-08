@@ -7,6 +7,7 @@ import com.paris_2.san3a.domain.AcceptOfferException
 import com.paris_2.san3a.domain.AssignRequestToCraftsmanException
 import com.paris_2.san3a.domain.GetCraftsmanOffersException
 import com.paris_2.san3a.domain.GetCustomerRequestsException
+import com.paris_2.san3a.domain.GetOffersCountException
 import com.paris_2.san3a.domain.GetOffersException
 import com.paris_2.san3a.domain.GetRequestDetailsException
 import com.paris_2.san3a.domain.entity.Offer
@@ -35,6 +36,11 @@ class RequestsRepositoryImpl(
         return requestDataSource.getOffers(requestId)
             .map { list -> list.map { it.toEntity() } }
             .catch { throw GetOffersException() }
+    }
+
+    override fun getOffersCount(requestId: String): Flow<Int> {
+        return requestDataSource.getOffersCount(requestId)
+            .catch { throw GetOffersCountException() }
     }
 
     override suspend fun getRequestDetailsById(requestId: String): RequestService {
