@@ -1,5 +1,6 @@
 package com.paris_2.san3a.data.source.remote.requestDetails
 
+import com.google.firebase.firestore.FieldPath
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.source.remote.requestDetails.dto.OfferDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
@@ -108,7 +109,7 @@ class RequestDataSourceImpl(
                 path = REQUEST_DETAILS_COLLECTION,
                 fromJson = RequestServiceDto::fromJson,
                 queryBuilder = { query ->
-                    query.whereIn("id", requestIds)
+                    query.whereIn(FieldPath.documentId(), requestIds)
                 }
             )
         }
