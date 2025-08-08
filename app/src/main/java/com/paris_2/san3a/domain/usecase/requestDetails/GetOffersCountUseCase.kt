@@ -2,8 +2,8 @@ package com.paris_2.san3a.domain.usecase.requestDetails
 
 import com.paris_2.san3a.domain.repository.RequestsRepository
 
-class GetOffersUseCase(
+class GetOffersCountUseCase(
     private val requestDetailsRepository: RequestsRepository
 ) {
-    operator fun invoke(requestId: String) = requestDetailsRepository.getOffers(requestId)
+    operator fun invoke(requestId: String) = requestDetailsRepository.getOffersCount(requestId)
 }

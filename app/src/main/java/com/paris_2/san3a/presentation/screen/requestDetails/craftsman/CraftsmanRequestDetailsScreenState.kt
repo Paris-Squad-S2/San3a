@@ -23,7 +23,6 @@ data class CraftsmanRequestDetailsUiState(
     val offers: Map<String, RequestOfferUiState> = emptyMap(),
     val offersFromCraftsman: List<RequestOfferUiState> = emptyList(),
     val yourOffers: List<RequestOfferUiState> = emptyList(),
-    val craftsmanRequestDetails: CraftsmanRequestDetails? = null,
     val acceptedOffer: RequestOfferUiState? = null,
     val customer: Customer = Customer(),
     val showDatePicker: Boolean = false,
@@ -87,7 +86,7 @@ fun User.toRequestOfferUiState(request: RequestOfferUiState): RequestOfferUiStat
     )
 }
 
-fun RequestOfferUiState.toOfferDetailsUIState(yourOfferAccepted: Boolean = false): OfferDetailsUIState {
+fun RequestOfferUiState.toOfferDetailsUIState(offerAccepted: Boolean = false): OfferDetailsUIState {
     return OfferDetailsUIState(
         imageUrl = this.craftsmanImageUrl,
         name = this.craftsmanName,
@@ -97,7 +96,7 @@ fun RequestOfferUiState.toOfferDetailsUIState(yourOfferAccepted: Boolean = false
         amount = this.price,
         time = this.time,
         postedTime = this.postedTime,
-        status = if (yourOfferAccepted) OfferStatus.OFFER_ACCEPTED else if (this.isAccepted) OfferStatus.YOUR_ACCEPTED_OFFER else OfferStatus.PENDING_OFFER,
+        status = if (offerAccepted) OfferStatus.OFFER_ACCEPTED else if (this.isAccepted) OfferStatus.YOUR_ACCEPTED_OFFER else OfferStatus.PENDING_OFFER,
         isVerify = false
     )
 }
@@ -118,7 +117,6 @@ data class RequestServiceUIState(
     val time: String = "Loading...",
     val state: String = "Loading...",
     val images: List<String> = emptyList(),
-    val offers: List<OfferUiState> = emptyList(),
     val selectedCraftsmanId: String? = null,
 )
 

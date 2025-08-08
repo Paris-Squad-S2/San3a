@@ -68,6 +68,15 @@ class RequestDataSourceImpl(
         )
     }
 
+    override fun getOffersCount(requestId: String): Flow<Int> {
+        return fireStoreService.streamCountOfCollection(
+            path = OFFERS_COLLECTION,
+            queryBuilder = { query ->
+                query.whereEqualTo("requestId", requestId)
+            }
+        )
+    }
+
     override suspend fun acceptOffer(offerId: String) {
         return fireStoreService.updateDoc(
             path = "$OFFERS_COLLECTION/$offerId",
