@@ -23,7 +23,6 @@ data class CraftsmanRequestDetailsUiState(
     val offers: Map<String, RequestOfferUiState> = emptyMap(),
     val offersFromCraftsman: List<RequestOfferUiState> = emptyList(),
     val yourOffers: List<RequestOfferUiState> = emptyList(),
-    val craftsmanRequestDetails: CraftsmanRequestDetails? = null,
     val acceptedOffer: RequestOfferUiState? = null,
     val customer: Customer = Customer(),
     val showDatePicker: Boolean = false,
@@ -118,7 +117,6 @@ data class RequestServiceUIState(
     val time: String = "Loading...",
     val state: String = "Loading...",
     val images: List<String> = emptyList(),
-    val offers: List<OfferUiState> = emptyList(),
     val selectedCraftsmanId: String? = null,
 )
 

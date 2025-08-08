@@ -1,15 +1,20 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.customer
 
-import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestDetailsStatus
-import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.CraftsmanRequestDetailsUiState
+import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.RequestOfferUiState
+import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.RequestServiceUIState
 
 data class CustomerRequestDetailsScreenState(
     val isLoading: Boolean = false,
     val error: String? = null,
-    val customerRequestDetails: CustomerRequestDetails? = null,
-    val offers: List<Offer> = emptyList(),
-    val uiState: CraftsmanRequestDetailsUiState = CraftsmanRequestDetailsUiState(),
+    val uiState: CustomerRequestDetailsUiState = CustomerRequestDetailsUiState(),
+)
+
+data class CustomerRequestDetailsUiState(
+    val request: RequestServiceUIState = RequestServiceUIState(),
+    val offers: Map<String, RequestOfferUiState> = emptyMap(),
+    val showDatePicker: Boolean = false,
+    val showTimePicker: Boolean = false
 )
 
 data class CustomerRequestDetails(

@@ -1,18 +1,30 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.customer
 
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
+import com.paris_2.san3a.presentation.navigation.Destinations
+import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toOfferUiStateMap
+import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toRequestServiceUIState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
-class CustomerRequestDetailsViewModel(
+class CustomerRequestDetailsRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
     private val getOffersUseCase: GetOffersUseCase,
-    private val acceptOfferUseCase: AcceptOfferUseCase
-): BaseViewModel<CustomerRequestDetailsScreenState>(CustomerRequestDetailsScreenState()), CustomerInteractionListener {
+    private val acceptOfferUseCase: AcceptOfferUseCase,
+    savedStateHandle: SavedStateHandle
+): BaseViewModel<CustomerRequestDetailsScreenState>(CustomerRequestDetailsScreenState()), CustomerRequestDetailsInteractionListener {
+
+
+
+    val requestId = savedStateHandle.toRoute<Destinations.RequestDetails>().requestId
+    val phoneNumber = savedStateHandle.toRoute<Destinations.RequestDetails>().phoneNumber
 
     init {
-
+        loadRequestDetails(requestId)
+        loadOffers(requestId)
     }
 
     fun loadRequestDetails(requestId: String){
@@ -21,15 +33,11 @@ class CustomerRequestDetailsViewModel(
             onSuccess = {
                 updateState(
                     screenState.value.copy(
-                        customerRequestDetails = CustomerRequestDetails(
-                            requestId = it.id,
-                            title = it.title,
-                            description = it.description,
-                            serviceType = it.serviceType,
-                            time = it.time.toString(),
-                            location = it.location,
-                            photos = it.image,
-                        )
+                        isLoading = false,
+                        error = null,
+                        uiState = screenState.value.uiState.copy(
+                            request = it.toRequestServiceUIState(),
+                        ),
                     )
                 )
             },
@@ -49,7 +57,11 @@ class CustomerRequestDetailsViewModel(
             onEach = {
                 updateState(
                     screenState.value.copy(
-                        offers = it,
+                        isLoading = false,
+                        error = null,
+                        uiState = screenState.value.uiState.copy(
+                            offers = it.toOfferUiStateMap()
+                        )
                     )
                 )
             },
@@ -76,7 +88,25 @@ class CustomerRequestDetailsViewModel(
         )
     }
 
-    override fun onClickDetails() {}
+    override fun onClickBack() {
+        navigateUp()
+    }
+
+    override fun onClickActonDots() {
+//        TODO("Not yet implemented")
+    }
+
+    override fun onRetryClick() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onChartWithCraftsmanClick(craftsmanId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onAcceptOfferClick(offerId: String) {
+        TODO("Not yet implemented")
+    }
 
 
 }

@@ -283,7 +283,7 @@ fun CraftsmanRequestDetailsContent(
                     addShadow = true,
                     showActionButtons = false,
                     offerDetails = offer.toOfferDetailsUIState(),
-                    painter = painterResource(id = R.drawable.img_avatar1),
+                    painter = rememberAsyncImagePainter(model = offer.craftsmanImageUrl),
                     onChatClick = {
                         interactionListener.onChatWithPosterClick(offer.craftsmanId)
                     },

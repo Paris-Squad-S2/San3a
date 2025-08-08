@@ -118,7 +118,7 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = ongoingRequests)
+                                RequestList(requests = ongoingRequests, interactionListener = myRequestCustomerInteractionListener)
                             }
                         }
 
@@ -134,7 +134,7 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = completedRequests)
+                                RequestList(requests = completedRequests, interactionListener = myRequestCustomerInteractionListener)
                             }
                         }
 
@@ -150,7 +150,7 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = canceledRequests)
+                                RequestList(requests = canceledRequests, interactionListener = myRequestCustomerInteractionListener)
                             }
                         }
                     }
@@ -162,12 +162,14 @@ private fun MyRequestScreenContent(
 }
 
 @Composable
-private fun RequestList(requests: List<MyRequestCustomerUi>) {
+private fun RequestList(requests: List<MyRequestCustomerUi>, interactionListener: MyRequestCustomerInteractionListener) {
     LazyColumn {
         items(requests) { request ->
             RequestCard(
                 requestUi = request,
-                onActionClick = {},
+                onActionClick = {
+                    interactionListener.onRequestClick(request.id)
+                },
             )
         }
     }

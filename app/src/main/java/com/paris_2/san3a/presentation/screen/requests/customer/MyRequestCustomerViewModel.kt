@@ -75,7 +75,7 @@ class MyRequestCustomerViewModel(
     }
 
     override fun onRequestClick(requestId: String) {
-        TODO("Not yet implemented")
+        navigate(Destinations.RequestDetails(requestId, phoneNumber = screenState.value.myRequestCustomerUiState.customerPhone))
     }
 
     override fun onNotificationClick() {
