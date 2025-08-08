@@ -191,6 +191,23 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
         }
     }
 
+    override fun streamCountOfCollection(
+        path: String,
+        queryBuilder: (Query) -> Query
+    ): Flow<Int> {
+        var query: Query = firestore.collection(path)
+        query = queryBuilder(query)
+
+        return query.snapshots()
+            .map { snapshot -> snapshot.size() }
+            .catch { e ->
+                when (e) {
+                    is FirebaseFirestoreException -> throw handleFirebaseException(e, path)
+                    else -> throw StreamDataException(path)
+                }
+            }
+    }
+
     override suspend fun clearCollection(path: String) {
         try {
             val batch = firestore.batch()

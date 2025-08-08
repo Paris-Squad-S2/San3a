@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.home.customer
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.speech.RecognizerIntent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
@@ -26,9 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
@@ -78,6 +81,18 @@ private fun CustomerHomeScreenContent(
             action.addBottomSheetImages(newImages)
         }
     )
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            action.onMicClick()
+        } else {
+            // Show permission denied message or dialog
+        }
+    }
+
+    val context = LocalContext.current
 
     val voiceSearchPrompt = stringResource(R.string.voice_search)
 
@@ -233,7 +248,7 @@ private fun CustomerHomeScreenContent(
                             action.createRequest(
                                 RequestServiceUiState(
                                     serviceType = state.bottomSheetUiState.bottomSheetServiceTitle,
-                                    title = state.bottomSheetUiState.bottomSheetServiceTitle,
+                                    title = state.bottomSheetUiState.bottomSheetSubtitle,
                                     description = state.bottomSheetUiState.bottomSheetDescription,
                                     location = "${state.bottomSheetUiState.bottomSheetSelectedGovernment}, ${state.bottomSheetUiState.bottomSheetSelectedCity}",
                                     locationDetails = state.bottomSheetUiState.bottomSheetAddressDetails,
@@ -342,7 +357,16 @@ private fun CustomerHomeScreenContent(
                         onValueChange = { action.onSearch(it) },
                         hint = stringResource(R.string.search),
                         onMicClick = {
-                            action.onMicClick()
+
+
+                            if (ContextCompat.checkSelfPermission(
+                                    context,
+                                    android.Manifest.permission.RECORD_AUDIO
+                                ) == PackageManager.PERMISSION_GRANTED) {
+                                action.onMicClick()
+                            } else {
+                                permissionLauncher.launch(android.Manifest.permission.RECORD_AUDIO)
+                            }
                         },
                         modifier = Modifier
                             .padding(top = 16.dp, bottom = 24.dp)

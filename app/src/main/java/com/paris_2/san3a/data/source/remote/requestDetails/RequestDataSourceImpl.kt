@@ -1,10 +1,14 @@
 package com.paris_2.san3a.data.source.remote.requestDetails
 
+import com.google.firebase.firestore.FieldPath
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.source.remote.requestDetails.dto.OfferDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlin.collections.mapOf
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 
 class RequestDataSourceImpl(
     private val fireStoreService: FireStoreService,
@@ -64,6 +68,15 @@ class RequestDataSourceImpl(
         )
     }
 
+    override fun getOffersCount(requestId: String): Flow<Int> {
+        return fireStoreService.streamCountOfCollection(
+            path = OFFERS_COLLECTION,
+            queryBuilder = { query ->
+                query.whereEqualTo("requestId", requestId)
+            }
+        )
+    }
+
     override suspend fun acceptOffer(offerId: String) {
         return fireStoreService.updateDoc(
             path = "$OFFERS_COLLECTION/$offerId",
@@ -83,15 +96,24 @@ class RequestDataSourceImpl(
         )
     }
 
-    override fun getCraftsManRequests(userId: String): Flow<List<RequestServiceDto>> {
-        return fireStoreService.streamCollection(
-            path = REQUEST_DETAILS_COLLECTION,
-            fromJson = RequestServiceDto::fromJson,
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getCraftsManRequests(userId: String): Flow<List<RequestServiceDto>> =
+        fireStoreService.streamCollection(
+            path = OFFERS_COLLECTION,
+            fromJson = OfferDto::fromJson,
             queryBuilder = { query ->
-                query.whereEqualTo("selectedCraftsmanId", userId)
+                query.whereEqualTo("craftsmanId", userId)
             }
-        )
-    }
+        ).flatMapLatest { offers ->
+            val requestIds = offers.map { it.requestId }
+            fireStoreService.streamCollection(
+                path = REQUEST_DETAILS_COLLECTION,
+                fromJson = RequestServiceDto::fromJson,
+                queryBuilder = { query ->
+                    query.whereIn(FieldPath.documentId(), requestIds)
+                }
+            )
+        }
 
 
     companion object{

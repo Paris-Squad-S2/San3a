@@ -7,7 +7,8 @@ data class OTPRegisterScreenState(
     val isLoading: Boolean = false,
     @StringRes val errorMessage: Int? = null,
     val showBottomSheet: Boolean = false,
-    val isNoInternet: Boolean = false
+    val isNoInternet: Boolean = false,
+    val showSnackBarError: Boolean = false
 )
 
 data class OTPRegisterUiState(

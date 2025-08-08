@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.myRequest.customer
+package com.paris_2.san3a.presentation.screen.requests.customer
 
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
@@ -19,6 +19,7 @@ data class MyRequestCustomerUiState(
 
 fun RequestService.toRequestServiceUiState(): MyRequestCustomerUi { //TODO
     return MyRequestCustomerUi(
+        id = this.id,
         requestTitle = this.title,
         serviceType = this.serviceType,
         numberOfOffers = this.offers.size,
@@ -32,6 +33,7 @@ fun List<RequestService>.toRequestServiceUiStateList(): List<MyRequestCustomerUi
 }
 
 data class MyRequestCustomerUi(
+    val id: String = "",
     val requestTitle: String = "My Requests",
     val serviceType: String = "Service Request",
     val numberOfOffers: Int = 0,

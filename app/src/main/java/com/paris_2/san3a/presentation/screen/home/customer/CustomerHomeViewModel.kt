@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
+import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
@@ -7,6 +8,7 @@ import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
 import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
+import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
@@ -466,7 +468,8 @@ class CustomerHomeViewModel(
     }
 
     override fun onBecomeCraftsmanClick() {
-        navigate(Destinations.More)
+        LocalAccountType.value = AccountType.CRAFTSMAN
+        navigate(Destinations.CraftManGraph)
     }
 
     override fun onDismissBottomSheet() {
