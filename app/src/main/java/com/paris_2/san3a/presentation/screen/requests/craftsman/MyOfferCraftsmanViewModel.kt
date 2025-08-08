@@ -7,7 +7,6 @@ import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetGetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
-import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toOfferUiStateMap
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class MyOfferCraftsmanViewModel(
@@ -57,17 +56,19 @@ class MyOfferCraftsmanViewModel(
                 getGetCraftsManRequestsUseCase(screenState.value.myOffersCraftsmanUiState.customerPhone)
             },
             onEach = { result ->
-                val result = result.toMyJobOfferUiStateList()
+                val resultt = result.toMyJobOfferUiStateList() //TODO
                 updateState(
                     MyOfferCraftsmanScreenState(
                         isLoading = false,
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            ongoing = result.filter { it.status == RequestStatus.ONGOING },
-                            completed = result.filter { it.status == RequestStatus.COMPLETED },
-                            canceled = result.filter { it.status == RequestStatus.CANCELLED }
+                            requests = result.toMyJobOfferUiStateMap(),
+                            ongoing = resultt.filter { it.status == RequestStatus.ONGOING }, //TODO
+                            completed = resultt.filter { it.status == RequestStatus.COMPLETED }, //TODO
+                            canceled = resultt.filter { it.status == RequestStatus.CANCELLED } //TODO
                         )
                     )
                 )
+                getOffersForRequest()
             },
             onError = {
                 updateState(
@@ -80,17 +81,25 @@ class MyOfferCraftsmanViewModel(
         )
     }
 
-    private fun getOffersForRequest(requestId: String) {
-        tryToObserve(
-            observe = { getOffersUseCase(requestId) },
-            onStart = {
-                updateState(
-                    screenState.value.copy(
-                        isLoading = true
-                    )
-                )
+    private fun getOffersForRequest() {
+        tryToExecute(
+            execute = {
+//                //getOffersUseCase(requestId)
+//                screenState.value.myOffersCraftsmanUiState.requests.forEach { id, request ->
+//                    getOffersUseCase(id).collect { offers ->
+//                        updateState(
+//                            screenState.value.copy(
+//                                myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+//                                    requests = screenState.value.myOffersCraftsmanUiState.requests.toMutableMap().apply {
+//                                        // TODO
+//                                    }
+//                                )
+//                            )
+//                        )
+//                    }
+//                }
             },
-            onEach = { offers ->
+            onSuccess = { offers ->
                 updateState(
                     screenState.value.copy(
                         isLoading = false,
