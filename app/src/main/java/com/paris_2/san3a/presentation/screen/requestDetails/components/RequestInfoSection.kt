@@ -46,7 +46,7 @@ fun RequestInfoSection(
                     .padding(8.dp)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_waterdrops_bold),
+                    painter = painterResource(id = R.drawable.ic_waterdrops_bold), //TODO
                     contentDescription = "",
                     tint = Theme.colors.additional.primary.blue,
                     modifier = Modifier
