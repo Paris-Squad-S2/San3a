@@ -1,12 +1,15 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.customer
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
+import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toOfferUiStateMap
+import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toRequestOfferUiState
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toRequestServiceUIState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
@@ -14,9 +17,10 @@ class CustomerRequestDetailsRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
     private val getOffersUseCase: GetOffersUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase,
+    private val getUserUseCase: GetUserUseCase,
     savedStateHandle: SavedStateHandle
-): BaseViewModel<CustomerRequestDetailsScreenState>(CustomerRequestDetailsScreenState()), CustomerRequestDetailsInteractionListener {
-
+) : BaseViewModel<CustomerRequestDetailsScreenState>(CustomerRequestDetailsScreenState()),
+    CustomerRequestDetailsInteractionListener {
 
 
     val requestId = savedStateHandle.toRoute<Destinations.RequestDetails>().requestId
@@ -27,7 +31,7 @@ class CustomerRequestDetailsRequestDetailsViewModel(
         loadOffers(requestId)
     }
 
-    fun loadRequestDetails(requestId: String){
+    fun loadRequestDetails(requestId: String) {
         tryToExecute(
             execute = { getRequestDetailsByIdUseCase(requestId) },
             onSuccess = {
@@ -51,7 +55,7 @@ class CustomerRequestDetailsRequestDetailsViewModel(
         )
     }
 
-    fun loadOffers(requestId: String){
+    fun loadOffers(requestId: String) {
         tryToObserve(
             observe = { getOffersUseCase(requestId) },
             onEach = {
@@ -64,6 +68,7 @@ class CustomerRequestDetailsRequestDetailsViewModel(
                         )
                     )
                 )
+                loadCraftsMenInfo()
             },
             onError = {
                 updateState(
@@ -73,6 +78,42 @@ class CustomerRequestDetailsRequestDetailsViewModel(
                 )
             }
         )
+    }
+
+    private fun loadCraftsMenInfo() {
+        tryToExecute(
+            execute = {
+                screenState.value.uiState.offers.forEach { offer ->
+                    getUserUseCase(offer.value.craftsmanId).also { user ->
+                        user.toRequestOfferUiState(offer.value).also { offerUiState ->
+                            Log.d("CraftsmanRequestDetailsVM", "Craftsman info: $offerUiState")
+                            updateState(
+                                screenState.value.copy(
+                                    uiState = screenState.value.uiState.copy(
+                                        offers = screenState.value.uiState.offers.toMutableMap()
+                                            .apply {
+                                                this[offer.key] = offerUiState
+                                            }
+                                    )
+                                )
+                            )
+                        }
+                    }
+                }
+            },
+            onSuccess = {
+
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while loading craftsmen info",
+                    )
+                )
+
+            }
+        )
+
     }
 
     override fun onClickOffer(offerId: String) {

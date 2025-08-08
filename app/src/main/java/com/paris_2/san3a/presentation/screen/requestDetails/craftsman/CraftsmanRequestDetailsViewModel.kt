@@ -93,9 +93,10 @@ class CraftsmanRequestDetailsViewModel(
                             updateState(
                                 screenState.value.copy(
                                     uiState = screenState.value.uiState.copy(
-                                        offers = screenState.value.uiState.offers.toMutableMap().apply {
-                                            this[offer.key] = offerUiState
-                                        }
+                                        offers = screenState.value.uiState.offers.toMutableMap()
+                                            .apply {
+                                                this[offer.key] = offerUiState
+                                            }
                                     )
                                 )
                             )
@@ -115,7 +116,8 @@ class CraftsmanRequestDetailsViewModel(
                     )
                 )
 
-            })
+            }
+        )
     }
 
     private fun loadOffersFromCraftsman() {
