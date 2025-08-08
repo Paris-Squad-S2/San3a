@@ -316,5 +316,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="your_offers">Your Offers</string>
     <string name="rate_craftsman">Rate the Craftsman</string>
     <string name="add_rating">Add Rating</string>
+    <string name="view_request_details">View Request Details</string>
 
 </resources>
