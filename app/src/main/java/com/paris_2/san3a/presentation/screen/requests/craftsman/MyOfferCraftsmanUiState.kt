@@ -4,52 +4,42 @@ import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 
-data class MyOfferCraftsmanScreenState(
+data class MyJobsCraftsmanScreenState(
     val isLoading: Boolean = false,
     val myOffersCraftsmanUiState: MyOfferCraftsmanUiState = MyOfferCraftsmanUiState(),
     val errorMessage: String? = null
 )
 
 data class MyOfferCraftsmanUiState(
-    val customerPhone: String = "",
-    val requests: Map<String, MyJobOfferUiState> = emptyMap(),
-    val ongoing: List<MyJobOfferUiState> = emptyList(),
-    val completed: List<MyJobOfferUiState> = emptyList(),
-    val canceled: List<MyJobOfferUiState> = emptyList(),
-    val offers: List<OfferUiState> = emptyList()
+    val craftsManId: String = "",
+
+    val requests: Map<String, JobUiState> = emptyMap(),
+
+    val ongoing: List<JobUiState> = emptyList(),
+    val completed: List<JobUiState> = emptyList(),
+    val canceled: List<JobUiState> = emptyList(),
 )
 
-fun List<RequestService>.toMyJobOfferUiStateMap(): Map<String, MyJobOfferUiState> {
+fun List<RequestService>.toMyJobOfferUiStateMap(): Map<String, JobUiState> {
     return this.associateBy { it.id }.mapValues { it.value.toMyJobOfferUiState() }
 }
 
-data class MyJobOfferUiState(
-    val customerPhone: String = "",
-    val craftsManId: String = "",
-    val jobOfferTitle: String = "job Offer Title",
-    val serviceType: String = "Service Request",
-    val date: String = "2023-10-01",
-    val acceptedTime: String = "10:00 AM",
-    val address: String = "123 Main St, City, Country",
-    val craftsmanName: String? = "John Doe",
-    val craftsmanRating: Float? = 4.5f,
-    val reviewsNumber: Int? = 100,
-    val craftsmanURL: String? = null,
-    val isCraftsmanVerified: Boolean = false,
-    val craftsmanMessages: String = "Hello, I am available for your request.",
-    val isApproved: Boolean = false,
-    val craftsmanOfferPrice: Double = 53_000.0,
-    val status: RequestStatus = RequestStatus.ONGOING
+data class JobUiState(
+    val id: String,
+    val customerPhone: String,
+    val serviceType: String,
+    val address: String,
+    val status: RequestStatus,
+    val offer: OfferUiState? = null,
 )
 
-fun RequestService.toMyJobOfferUiState(): MyJobOfferUiState {
-    return MyJobOfferUiState(
+fun RequestService.toMyJobOfferUiState(): JobUiState {
+    return JobUiState(
+        id = this.id,
         customerPhone = this.userId,
-        jobOfferTitle = this.title,
         serviceType = this.serviceType,
-        date = this.time.date.toString(),
-        acceptedTime = this.time.time.toString(),
-        craftsmanOfferPrice = this.offers.firstOrNull() ?: 0.0,
+        address = this.location,
+        status = this.requestStatus
     )
 }
 
@@ -59,23 +49,25 @@ data class OfferUiState(
     val preferredDate: String,
     val preferredTime: String,
     val messageToCustomer: String,
-    val isAccepted: Boolean
+    val isAccepted: Boolean,
 )
 
-fun Offer.toUiState(): OfferUiState {
-    return OfferUiState(
-        id = id,
-        price = price,
-        preferredDate = preferredDate.toString(),
-        preferredTime = preferredTime.toString(),
-        messageToCustomer = messageToCustomer,
-        isAccepted = isAccepted
-    )
+fun Offer?.toUiState(): OfferUiState? {
+    return this?.let {
+        OfferUiState(
+            id = it.id,
+            price = it.price,
+            preferredDate = it.preferredDate.toString(),
+            preferredTime = it.preferredTime.toString(),
+            messageToCustomer = it.messageToCustomer,
+            isAccepted = it.isAccepted,
+        )
+    }
 }
 
-fun List<Offer>.toUiStateList(): List<OfferUiState> = map { it.toUiState() }
+fun List<Offer>.toUiStateList(): List<OfferUiState?> = map { it.toUiState() }
 
-fun List<RequestService>.toMyJobOfferUiStateList(): List<MyJobOfferUiState> {
+fun List<RequestService>.toMyJobOfferUiStateList(): List<JobUiState> {
     return this.map { it.toMyJobOfferUiState() }
 }
 

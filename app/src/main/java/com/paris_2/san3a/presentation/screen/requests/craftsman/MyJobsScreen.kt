@@ -47,7 +47,7 @@ fun MyJobsScreen(
 private fun MyRequestScreenContent(
     modifier: Modifier = Modifier,
     myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener,
-    uiState: MyOfferCraftsmanScreenState = MyOfferCraftsmanScreenState()
+    uiState: MyJobsCraftsmanScreenState = MyJobsCraftsmanScreenState()
 ) {
 
     AppScaffold(
@@ -175,7 +175,7 @@ private fun MyRequestScreenContent(
 
 @Composable
 private fun JobsList(
-    offers: List<MyJobOfferUiState>,
+    offers: List<JobUiState>,
     myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener
 ) {
     LazyColumn(

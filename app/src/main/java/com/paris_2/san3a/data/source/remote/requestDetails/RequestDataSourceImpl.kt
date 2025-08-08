@@ -115,6 +115,24 @@ class RequestDataSourceImpl(
             )
         }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getCraftManAcceptedOfferOnRequestUseCase(
+        craftsManId: String,
+        requestId: String
+    ): Flow<OfferDto?> {
+        return fireStoreService.streamCollection(
+            path = OFFERS_COLLECTION,
+            fromJson = OfferDto::fromJson,
+            queryBuilder = { query ->
+                query.whereEqualTo("craftsmanId", craftsManId)
+                    .whereEqualTo("requestId", requestId)
+                    .whereEqualTo("isAccepted", true)
+            }
+        ).flatMapLatest { offers ->
+            flow { emit(offers.firstOrNull()) }
+        }
+    }
+
 
     companion object{
         const val REQUEST_DETAILS_COLLECTION = "service_requests"

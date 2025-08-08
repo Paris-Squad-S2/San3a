@@ -5,6 +5,7 @@ import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.requestDetails.RequestDataSource
 import com.paris_2.san3a.domain.AcceptOfferException
 import com.paris_2.san3a.domain.AssignRequestToCraftsmanException
+import com.paris_2.san3a.domain.GetCraftsmanOfferOnRequestException
 import com.paris_2.san3a.domain.GetCraftsmanOffersException
 import com.paris_2.san3a.domain.GetCustomerRequestsException
 import com.paris_2.san3a.domain.GetOffersCountException
@@ -78,6 +79,15 @@ class RequestsRepositoryImpl(
         return requestDataSource.getCraftsManRequests(userId)
             .map { list -> list.map { it.toEntity() } }
             .catch { throw GetCustomerRequestsException() }
+    }
+
+    override fun getCraftManAcceptedOfferOnRequestUseCase(
+        craftsManId: String,
+        requestId: String
+    ): Flow<Offer?> {
+        return requestDataSource.getCraftManAcceptedOfferOnRequestUseCase(craftsManId, requestId)
+            .map { it?.toEntity() }
+            .catch { throw GetCraftsmanOfferOnRequestException() }
     }
 
 

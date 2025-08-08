@@ -19,7 +19,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.screen.requests.craftsman.MyJobOfferUiState
+import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.presentation.screen.requests.craftsman.JobUiState
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -34,7 +35,14 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 @Composable
 fun MyJobOfferCard(
     modifier: Modifier = Modifier,
-    offerUiState: MyJobOfferUiState = MyJobOfferUiState(),
+    offerUiState: JobUiState = JobUiState(
+        id = "",
+        customerPhone = "",
+        serviceType = "",
+        address = "",
+        status = RequestStatus.ONGOING,
+        offer = null
+    ),
     painter: Painter? = null,
     onViewDetailsRequest: () -> Unit,
     onSendMessage: () -> Unit,
@@ -135,7 +143,7 @@ fun MyJobOfferCard(
 fun MyJobOfferCardPreview() {
     BasePreview {
         MyJobOfferCard(
-            offerUiState = MyJobOfferUiState(),
+            offerUiState = JobUiState(),
             onViewDetailsRequest = {},
             onSendMessage = {},
             onMarkAsDone = {}

@@ -4,25 +4,27 @@ import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.GetCraftManAcceptedOfferOnRequestUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
-import com.paris_2.san3a.domain.usecase.requests.GetGetCraftsManRequestsUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class MyOfferCraftsmanViewModel(
-    private val getGetCraftsManRequestsUseCase: GetGetCraftsManRequestsUseCase,
+    private val getCraftsManRequestsUseCase: GetCraftsManRequestsUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getOffersUseCase: GetOffersUseCase,
+    private val getCraftManAcceptedOfferOnRequestUseCase: GetCraftManAcceptedOfferOnRequestUseCase,
     private val createChatUseCase: CreateChatUseCase,
-) : BaseViewModel<MyOfferCraftsmanScreenState>(MyOfferCraftsmanScreenState()),
+) : BaseViewModel<MyJobsCraftsmanScreenState>(MyJobsCraftsmanScreenState()),
     MyJobCraftsmanInteractionListener {
 
     init {
-        getCustomerPhone()
+        getCraftsManPhone()
     }
 
-    private fun getCustomerPhone() {
+    private fun getCraftsManPhone() {
         tryToExecute(
             execute = {
                 screenState.value.copy(
@@ -34,7 +36,7 @@ class MyOfferCraftsmanViewModel(
                 updateState(
                     screenState.value.copy(
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            customerPhone = phoneNumber
+                            craftsManId = phoneNumber
                         )
                     )
                 )
@@ -53,26 +55,26 @@ class MyOfferCraftsmanViewModel(
     private fun getCraftsManOfferOnRequest() {
         tryToObserve(
             observe = {
-                getGetCraftsManRequestsUseCase(screenState.value.myOffersCraftsmanUiState.customerPhone)
+                getCraftsManRequestsUseCase(screenState.value.myOffersCraftsmanUiState.craftsManId)
             },
             onEach = { result ->
-                val resultt = result.toMyJobOfferUiStateList() //TODO
+//                val resultt = result.toMyJobOfferUiStateList() //TODO
                 updateState(
-                    MyOfferCraftsmanScreenState(
+                    MyJobsCraftsmanScreenState(
                         isLoading = false,
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
                             requests = result.toMyJobOfferUiStateMap(),
-                            ongoing = resultt.filter { it.status == RequestStatus.ONGOING }, //TODO
-                            completed = resultt.filter { it.status == RequestStatus.COMPLETED }, //TODO
-                            canceled = resultt.filter { it.status == RequestStatus.CANCELLED } //TODO
+//                            ongoing = resultt.filter { it.status == RequestStatus.ONGOING }, //TODO
+//                            completed = resultt.filter { it.status == RequestStatus.COMPLETED }, //TODO
+//                            canceled = resultt.filter { it.status == RequestStatus.CANCELLED } //TODO
                         )
                     )
                 )
-                getOffersForRequest()
+                getOffersForRequests()
             },
             onError = {
                 updateState(
-                    MyOfferCraftsmanScreenState(
+                    MyJobsCraftsmanScreenState(
                         isLoading = false,
                         errorMessage = it.message
                     )
@@ -81,30 +83,23 @@ class MyOfferCraftsmanViewModel(
         )
     }
 
-    private fun getOffersForRequest() {
+    private fun getOffersForRequests() {
         tryToExecute(
             execute = {
 //                //getOffersUseCase(requestId)
-//                screenState.value.myOffersCraftsmanUiState.requests.forEach { id, request ->
-//                    getOffersUseCase(id).collect { offers ->
-//                        updateState(
-//                            screenState.value.copy(
-//                                myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-//                                    requests = screenState.value.myOffersCraftsmanUiState.requests.toMutableMap().apply {
-//                                        // TODO
-//                                    }
-//                                )
-//                            )
-//                        )
-//                    }
-//                }
+                screenState.value.myOffersCraftsmanUiState.requests.forEach { id, request ->
+                    updateRequestOffer(requestId = id)
+                }
             },
-            onSuccess = { offers ->
+            onSuccess = {
+                val result = screenState.value.myOffersCraftsmanUiState.requests.values.toList()
                 updateState(
-                    screenState.value.copy(
+                    MyJobsCraftsmanScreenState(
                         isLoading = false,
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            offers = emptyList()//todo map to offer ui
+                            ongoing = result.filter { it.status == RequestStatus.ONGOING },
+                            completed = result.filter { it.status == RequestStatus.COMPLETED },
+                            canceled = result.filter { it.status == RequestStatus.CANCELLED }
                         )
                     )
                 )
@@ -120,6 +115,44 @@ class MyOfferCraftsmanViewModel(
         )
     }
 
+    private fun updateRequestOffer(requestId: String) {
+        tryToExecute(
+            execute = {
+                getCraftManAcceptedOfferOnRequestUseCase(
+                    requestId = requestId,
+                    craftsManId = screenState.value.myOffersCraftsmanUiState.craftsManId
+                )
+            },
+            onSuccess = { offerFlow ->
+                offerFlow.collect { offer ->
+                    val updatedRequests =
+                        screenState.value.myOffersCraftsmanUiState.requests.toMutableMap()
+
+                    updatedRequests[requestId] = updatedRequests[requestId]?.copy(
+                        offer = offer?.toUiState()
+                    ) ?: return@collect
+
+                    updateState(
+                        screenState.value.copy(
+                            myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                                requests = updatedRequests
+                            ),
+                        )
+                    )
+                }
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        isLoading = false,
+                        errorMessage = it.message ?: "Failed to load offers for request $requestId"
+                    )
+                )
+            },
+        )
+    }
+
+
     override fun onSendAsDone(requestId: String) {
         /*TODO("Not yet implemented")*/
     }
@@ -128,14 +161,14 @@ class MyOfferCraftsmanViewModel(
         tryToExecute(
             execute = {
                 createChatUseCase(
-                    listOf(screenState.value.myOffersCraftsmanUiState.customerPhone, phoneNumber)
+                    listOf(screenState.value.myOffersCraftsmanUiState.craftsManId, phoneNumber)
                 )
             },
             onSuccess = { chatId ->
                 navigate(
                     Destinations.MessageDetails(
                         chatId = chatId,
-                        currentUserId = screenState.value.myOffersCraftsmanUiState.customerPhone,
+                        currentUserId = screenState.value.myOffersCraftsmanUiState.craftsManId,
                         otherUserId = phoneNumber
                     )
                 )
