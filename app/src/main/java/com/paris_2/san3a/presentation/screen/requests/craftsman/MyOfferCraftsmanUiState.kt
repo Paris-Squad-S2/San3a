@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.requests.craftsman
 
+import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 
@@ -13,7 +14,8 @@ data class MyOfferCraftsmanUiState(
     val customerPhone: String = "",
     val ongoing: List<MyJobOfferUiState> = emptyList(),
     val completed: List<MyJobOfferUiState> = emptyList(),
-    val canceled: List<MyJobOfferUiState> = emptyList()
+    val canceled: List<MyJobOfferUiState> = emptyList(),
+    val offers: List<OfferUiState> = emptyList()
 )
 
 data class MyJobOfferUiState(
@@ -44,6 +46,28 @@ fun RequestService.toMyJobOfferUiState(): MyJobOfferUiState {
         craftsmanOfferPrice = this.offers.firstOrNull() ?: 0.0,
     )
 }
+
+data class OfferUiState(
+    val id: String,
+    val price: Double,
+    val preferredDate: String,
+    val preferredTime: String,
+    val messageToCustomer: String,
+    val isAccepted: Boolean
+)
+
+fun Offer.toUiState(): OfferUiState {
+    return OfferUiState(
+        id = id,
+        price = price,
+        preferredDate = preferredDate.toString(),
+        preferredTime = preferredTime.toString(),
+        messageToCustomer = messageToCustomer,
+        isAccepted = isAccepted
+    )
+}
+
+fun List<Offer>.toUiStateList(): List<OfferUiState> = map { it.toUiState() }
 
 fun List<RequestService>.toMyJobOfferUiStateList(): List<MyJobOfferUiState> {
     return this.map { it.toMyJobOfferUiState() }

@@ -6,8 +6,9 @@ import com.paris_2.san3a.data.source.remote.requestDetails.dto.OfferDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlin.collections.mapOf
+import kotlinx.coroutines.flow.flow
 
 class RequestDataSourceImpl(
     private val fireStoreService: FireStoreService,
