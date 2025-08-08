@@ -86,7 +86,7 @@ fun User.toRequestOfferUiState(request: RequestOfferUiState): RequestOfferUiStat
     )
 }
 
-fun RequestOfferUiState.toOfferDetailsUIState(yourOfferAccepted: Boolean = false): OfferDetailsUIState {
+fun RequestOfferUiState.toOfferDetailsUIState(offerAccepted: Boolean = false): OfferDetailsUIState {
     return OfferDetailsUIState(
         imageUrl = this.craftsmanImageUrl,
         name = this.craftsmanName,
@@ -96,7 +96,7 @@ fun RequestOfferUiState.toOfferDetailsUIState(yourOfferAccepted: Boolean = false
         amount = this.price,
         time = this.time,
         postedTime = this.postedTime,
-        status = if (yourOfferAccepted) OfferStatus.OFFER_ACCEPTED else if (this.isAccepted) OfferStatus.YOUR_ACCEPTED_OFFER else OfferStatus.PENDING_OFFER,
+        status = if (offerAccepted) OfferStatus.OFFER_ACCEPTED else if (this.isAccepted) OfferStatus.YOUR_ACCEPTED_OFFER else OfferStatus.PENDING_OFFER,
         isVerify = false
     )
 }

@@ -151,8 +151,8 @@ fun CraftsmanRequestDetailsContent(
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         .animateItem(),
                     addShadow = true,
-                    showActionButtons = false,
-                    offerDetails = offer.toOfferDetailsUIState(),
+                    showActionButtons = state.offers.any { it.value.isAccepted }.not(),
+                    offerDetails = offer.toOfferDetailsUIState(offer.isAccepted),
                     painter = rememberAsyncImagePainter(offer.craftsmanImageUrl),
                     onChatClick = {
                         interactionListener.onChartWithCraftsmanClick(offer.craftsmanId)

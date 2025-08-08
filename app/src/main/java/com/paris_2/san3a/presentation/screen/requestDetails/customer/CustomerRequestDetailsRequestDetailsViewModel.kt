@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
@@ -18,6 +19,7 @@ class CustomerRequestDetailsRequestDetailsViewModel(
     private val getOffersUseCase: GetOffersUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val createChatUseCase: CreateChatUseCase,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<CustomerRequestDetailsScreenState>(CustomerRequestDetailsScreenState()),
     CustomerRequestDetailsInteractionListener {
@@ -138,15 +140,43 @@ class CustomerRequestDetailsRequestDetailsViewModel(
     }
 
     override fun onRetryClick() {
-        TODO("Not yet implemented")
+        updateState(
+            screenState.value.copy(
+                isLoading = true,
+                error = null
+            )
+        )
+        loadRequestDetails(requestId)
+        loadOffers(requestId)
     }
 
     override fun onChartWithCraftsmanClick(craftsmanId: String) {
-        TODO("Not yet implemented")
+        tryToExecute(
+            execute = { createChatUseCase(listOf(craftsmanId, phoneNumber)) },
+            onSuccess = { chatId ->
+                navigate(Destinations.MessageDetails(chatId, phoneNumber, craftsmanId))
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while creating chat",
+                    )
+                )
+            }
+        )
     }
 
     override fun onAcceptOfferClick(offerId: String) {
-        TODO("Not yet implemented")
+        tryToExecute(
+            execute = { acceptOfferUseCase(offerId) },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while accepting the offer",
+                    )
+                )
+            }
+        )
     }
 
 

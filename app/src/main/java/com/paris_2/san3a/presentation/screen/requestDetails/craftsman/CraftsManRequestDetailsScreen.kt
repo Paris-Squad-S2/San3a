@@ -191,7 +191,7 @@ fun CraftsmanRequestDetailsContent(
                             addShadow = true,
                             showActionButtons = state.yourOffers.contains(state.acceptedOffer),
                             offerDetails = state.acceptedOffer.toOfferDetailsUIState(
-                                yourOfferAccepted = state.yourOffers.contains(state.acceptedOffer)
+                                offerAccepted = state.yourOffers.contains(state.acceptedOffer)
                             ),
                             painter = rememberAsyncImagePainter(model = state.acceptedOffer.craftsmanImageUrl),
                             onChatClick = {

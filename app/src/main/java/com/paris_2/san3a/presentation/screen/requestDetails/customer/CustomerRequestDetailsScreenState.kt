@@ -13,8 +13,6 @@ data class CustomerRequestDetailsScreenState(
 data class CustomerRequestDetailsUiState(
     val request: RequestServiceUIState = RequestServiceUIState(),
     val offers: Map<String, RequestOfferUiState> = emptyMap(),
-    val showDatePicker: Boolean = false,
-    val showTimePicker: Boolean = false
 )
 
 data class CustomerRequestDetails(
