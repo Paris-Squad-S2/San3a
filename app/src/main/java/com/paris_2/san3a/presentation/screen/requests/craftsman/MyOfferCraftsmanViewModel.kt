@@ -8,6 +8,8 @@ import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetGetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 
 class MyOfferCraftsmanViewModel(
     private val getGetCraftsManRequestsUseCase: GetGetCraftsManRequestsUseCase,
@@ -56,15 +58,15 @@ class MyOfferCraftsmanViewModel(
                 getGetCraftsManRequestsUseCase(screenState.value.myOffersCraftsmanUiState.customerPhone)
             },
             onEach = { result ->
-                val resultt = result.toMyJobOfferUiStateList() //TODO
+                val jobOffers = result.toMyJobOfferUiStateList()
                 updateState(
                     MyOfferCraftsmanScreenState(
                         isLoading = false,
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
                             requests = result.toMyJobOfferUiStateMap(),
-                            ongoing = resultt.filter { it.status == RequestStatus.ONGOING }, //TODO
-                            completed = resultt.filter { it.status == RequestStatus.COMPLETED }, //TODO
-                            canceled = resultt.filter { it.status == RequestStatus.CANCELLED } //TODO
+                            ongoing = jobOffers.filter { it.status == RequestStatus.ONGOING },
+                            completed = jobOffers.filter { it.status == RequestStatus.COMPLETED },
+                            canceled = jobOffers.filter { it.status == RequestStatus.CANCELLED }
                         )
                     )
                 )
@@ -74,7 +76,7 @@ class MyOfferCraftsmanViewModel(
                 updateState(
                     MyOfferCraftsmanScreenState(
                         isLoading = false,
-                        errorMessage = it.message
+                        errorMessage = it.message ?: "Failed to load requests"
                     )
                 )
             }
@@ -82,29 +84,22 @@ class MyOfferCraftsmanViewModel(
     }
 
     private fun getOffersForRequest() {
-        tryToExecute(
-            execute = {
-//                //getOffersUseCase(requestId)
-//                screenState.value.myOffersCraftsmanUiState.requests.forEach { id, request ->
-//                    getOffersUseCase(id).collect { offers ->
-//                        updateState(
-//                            screenState.value.copy(
-//                                myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-//                                    requests = screenState.value.myOffersCraftsmanUiState.requests.toMutableMap().apply {
-//                                        // TODO
-//                                    }
-//                                )
-//                            )
-//                        )
-//                    }
-//                }
+        tryToObserve(
+            observe = {
+                combine(
+                    screenState.value.myOffersCraftsmanUiState.requests.keys.map { requestId ->
+                        getOffersUseCase(requestId).map { offers -> requestId to offers }
+                    }
+                ) { offerMaps ->
+                    offerMaps.flatMap { it.second }.toUiStateList()
+                }
             },
-            onSuccess = { offers ->
+            onEach = { offers ->
                 updateState(
                     screenState.value.copy(
                         isLoading = false,
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            offers = emptyList()//todo map to offer ui
+                            offers = offers
                         )
                     )
                 )
@@ -120,8 +115,9 @@ class MyOfferCraftsmanViewModel(
         )
     }
 
+
     override fun onSendAsDone(requestId: String) {
-        /*TODO("Not yet implemented")*/
+
     }
 
     override fun onSendMessageClick(phoneNumber: String) {
@@ -141,13 +137,22 @@ class MyOfferCraftsmanViewModel(
                 )
             },
             onError = {
-                //todo show snack bar
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it.message ?: "Failed to create chat"
+                    )
+                )
             }
         )
     }
 
     override fun onViewRequestDetails(requestId: String) {
-        /*TODO("Not yet implemented")*/
+        navigate(
+            Destinations.RequestDetails(
+                requestId,
+                screenState.value.myOffersCraftsmanUiState.customerPhone
+            )
+        )
     }
 
     override fun onNotificationClick() {
@@ -155,5 +160,7 @@ class MyOfferCraftsmanViewModel(
     }
 
     override fun onRetryClick() {
+
     }
+
 }
