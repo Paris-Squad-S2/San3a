@@ -56,8 +56,7 @@ private fun formatChatTime(time: LocalTime?): String {
     } ?: ""
 }
 
-@OptIn(ExperimentalTime::class)
-fun formatDateHeader(date: LocalDate): String {
+private fun formatDateHeader(date: LocalDate): String {
     val javaLocalDate = java.time.LocalDate.of(date.year, date.month.number, date.day)
     return  javaLocalDate.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"))
 }
