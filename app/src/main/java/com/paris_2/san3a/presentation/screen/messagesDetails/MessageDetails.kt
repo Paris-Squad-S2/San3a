@@ -205,7 +205,7 @@ fun MessageDetailsContent(
 @Composable
 fun MessageList(
     messages: List<MessageUi>,
-    groupedMessages: Map<String, List<MessageUi>>, // Add parameter
+    groupedMessages: Map<String, List<MessageUi>>,
     modifier: Modifier,
 ) {
     val listState = rememberLazyListState()
