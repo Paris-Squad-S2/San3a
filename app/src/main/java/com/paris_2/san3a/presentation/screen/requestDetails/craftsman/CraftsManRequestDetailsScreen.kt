@@ -387,7 +387,8 @@ fun AddYourOfferSection(
         datePickerState = rememberDatePickerState(),
         timePickerState = rememberTimePickerState(),
         showTimePicker = state.showTimePicker,
-        onShowTimePickerChange = interactionListener::onShowTimePickerChange
+        onShowTimePickerChange = interactionListener::onShowTimePickerChange,
+        isOfferValid = state.isOfferValid
     )
 }
 

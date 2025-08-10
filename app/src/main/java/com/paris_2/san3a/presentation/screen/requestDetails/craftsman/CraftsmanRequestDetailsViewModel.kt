@@ -281,52 +281,53 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onPriceChanged(price: String) {
+        val updatedOffer = screenState.value.uiState.offerToAdd.copy(price = price)
         updateState(
             screenState.value.copy(
                 uiState = screenState.value.uiState.copy(
-                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
-                        price = price
-                    )
+                    offerToAdd = updatedOffer,
+                    isOfferValid = validateOffer(updatedOffer)
                 )
             )
         )
     }
 
     override fun onDateChanged(date: LocalDate) {
+        val updatedOffer = screenState.value.uiState.offerToAdd.copy(preferredDate = date)
         updateState(
             screenState.value.copy(
                 uiState = screenState.value.uiState.copy(
-                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
-                        preferredDate = date
-                    )
+                    offerToAdd = updatedOffer,
+                    isOfferValid = validateOffer(updatedOffer)
                 )
             )
         )
     }
 
     override fun onTimeChanged(time: LocalTime) {
+        val updatedOffer = screenState.value.uiState.offerToAdd.copy(preferredTime = time)
         updateState(
             screenState.value.copy(
                 uiState = screenState.value.uiState.copy(
-                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
-                        preferredTime = time
-                    )
+                    offerToAdd = updatedOffer,
+                    isOfferValid = validateOffer(updatedOffer)
                 )
             )
         )
     }
 
     override fun onMessageChanged(message: String) {
+        val updatedOffer = screenState.value.uiState.offerToAdd.copy(messageToCustomer = message)
         updateState(
             screenState.value.copy(
                 uiState = screenState.value.uiState.copy(
-                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
-                        messageToCustomer = message
-                    )
+                    offerToAdd = updatedOffer,
+                    isOfferValid = validateOffer(updatedOffer)
                 )
             )
         )
     }
+
 
     override fun onShowDatePickerChange(show: Boolean) {
         updateState(
@@ -435,5 +436,12 @@ class CraftsmanRequestDetailsViewModel(
                 )
             }
         )
+    }
+
+    private fun validateOffer(offer: OfferToAddUiState): Boolean {
+        return offer.price.isNotBlank()
+                && offer.preferredDate != null
+                && offer.preferredTime != null
+                && offer.messageToCustomer.isNotBlank()
     }
 }
