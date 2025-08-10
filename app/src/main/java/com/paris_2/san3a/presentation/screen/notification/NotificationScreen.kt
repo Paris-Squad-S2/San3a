@@ -41,7 +41,8 @@ fun NotificationScreen(
             .background(Theme.colors.background.card)
             .statusBarsPadding()
             .fillMaxSize()
-            .background(Theme.colors.background.screen)
+            .background(Theme.colors.background.screen),
+        containerColor = Theme.colors.background.screen,
     ) {
         when {
             state.isLoading -> {

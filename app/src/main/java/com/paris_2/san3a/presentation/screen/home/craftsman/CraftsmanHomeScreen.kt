@@ -66,10 +66,7 @@ fun CraftsmanHomeContent(
                     .background(Theme.colors.background.card),
                 actionIcon = {
                     Icon(
-                        modifier = Modifier
-                            .clickable(onClick = {
-                                action.onNotificationClick()
-                            }),
+                        modifier = Modifier.clickable(onClick = action::onNotificationClick).padding(end = 8.dp),
                         painter = painterResource(R.drawable.ic_notification_outline),
                         contentDescription = null,
                         tint = Theme.colors.shade.primary
@@ -78,7 +75,7 @@ fun CraftsmanHomeContent(
                 leadingIcon = {
                     Column(
                         modifier = Modifier
-                            .padding(start = 16.dp)
+                            .padding(start = 8.dp)
                     ) {
                         Text(
                             text = stringResource(
@@ -153,11 +150,11 @@ fun CraftsmanHomeContent(
                             contentPadding = PaddingValues(horizontal = 16.dp),
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            items(state.craftsmanHomeUiState.recentRelatedJobs) {
+                            items(state.craftsmanHomeUiState.recentRelatedJobs.values.toList()) {
                                 RequestCardForCraftsMan(
                                     title = it.title,
                                     type = it.serviceType,
-                                    offers = it.offers.size.toString(),
+                                    offers = it.offersCount.toString(),
                                     description = it.description,
                                     location = it.location,
                                     onClick = { action.onJobClick(it.id) }
@@ -176,11 +173,11 @@ fun CraftsmanHomeContent(
                             modifier = Modifier.padding(start = 16.dp)
                         )
                     }
-                    items(state.craftsmanHomeUiState.availableJobs) {
+                    items(state.craftsmanHomeUiState.availableJobs.values.toList()) {
                         RequestCardForCraftsMan(
                             title = it.title,
                             type = it.serviceType,
-                            offers = it.offers.size.toString(),
+                            offers = it.offersCount.toString(),
                             description = it.description,
                             location = it.location,
                             modifier = Modifier.padding(horizontal = 16.dp),
@@ -212,98 +209,80 @@ private fun Preview() {
                     earnings = 2500.0,
                     rating = 4.7
                 ),
-                recentRelatedJobs = listOf(
-                    RequestService(
+                recentRelatedJobs = mapOf(
+                    "1" to RequestServiceUiState(
                         id = "1",
                         title = "Shower is not working",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
-                        offers = listOf(3.0, 2.0),
-                        userId = "",
-                        locationDetails = "",
-                        image = listOf(),
+                        offersCount = 2,
                         serviceType = "",
-                        selectedCraftsmanId = "",
+                        userId = "123",
+                        requestStatus = RequestStatus.ONGOING,
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = "",
-                        requestStatus = RequestStatus.ONGOING
+                        locationDetails = "123 Street, Cairo",
                     ),
-                    RequestService(
+                    "2" to RequestServiceUiState(
                         id = "2",
                         title = "Shower is not working",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
-                        offers = listOf(3.0, 2.0),
-                        userId = "",
-                        locationDetails = "",
-                        image = listOf(),
+                        offersCount = 2,
                         serviceType = "",
-                        selectedCraftsmanId = "",
+                        userId = "placeholder_userId",
+                        requestStatus = RequestStatus.ONGOING,
+                        locationDetails = "placeholder_locationDetails",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = "",
-                        requestStatus = RequestStatus.ONGOING
                     ),
-                    RequestService(
+                    "3" to RequestServiceUiState(
                         id = "3",
                         title = "Shower is not working",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
-                        offers = listOf(3.0, 2.0),
-                        userId = "",
-                        locationDetails = "",
-                        image = listOf(),
+                        offersCount = 2,
                         serviceType = "",
-                        selectedCraftsmanId = "",
+                        userId = "placeholder_userId",
+                        requestStatus = RequestStatus.ONGOING,
+                        locationDetails = "placeholder_locationDetails",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = "",
-                        requestStatus = RequestStatus.ONGOING
                     ),
                 ),
-                availableJobs = listOf(
-                    RequestService(
+                availableJobs = mapOf(
+                    "1" to RequestServiceUiState(
                         id = "1",
                         title = "Shower is not working",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
-                        offers = listOf(3.0, 2.0),
-                        userId = "",
-                        locationDetails = "",
-                        image = listOf(),
+                        offersCount = 2,
                         serviceType = "",
-                        selectedCraftsmanId = "",
+                        userId = "placeholder_userId",
+                        requestStatus = RequestStatus.ONGOING,
+                        locationDetails = "placeholder_locationDetails",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = "",
-                        requestStatus = RequestStatus.ONGOING
                     ),
-                    RequestService(
+                    "2" to RequestServiceUiState(
                         id = "2",
                         title = "Shower is not working",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
-                        offers = listOf(3.0, 2.0),
-                        userId = "",
-                        locationDetails = "",
-                        image = listOf(),
+                        offersCount = 2,
                         serviceType = "",
-                        selectedCraftsmanId = "",
+                        userId = "placeholder_userId",
+                        requestStatus = RequestStatus.ONGOING,
+                        locationDetails = "placeholder_locationDetails",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = "",
-                        requestStatus = RequestStatus.ONGOING
                     ),
-                    RequestService(
+                    "3" to RequestServiceUiState(
                         id = "3",
                         title = "Shower is not working",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
-                        offers = listOf(3.0, 2.0),
-                        userId = "",
-                        locationDetails = "",
-                        image = listOf(),
+                        offersCount = 2,
                         serviceType = "",
-                        selectedCraftsmanId = "",
+                        userId = "placeholder_userId",
+                        requestStatus = RequestStatus.ONGOING,
+                        locationDetails = "placeholder_locationDetails",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
-                        state = "",
-                        requestStatus = RequestStatus.ONGOING
                     ),
                 )
             )

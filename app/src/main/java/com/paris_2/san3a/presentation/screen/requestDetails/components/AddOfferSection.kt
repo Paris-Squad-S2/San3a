@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,11 +29,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.AppTextField
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -60,6 +63,7 @@ fun AddOfferForm(
     showTimePicker: Boolean,
     onShowTimePickerChange: (Boolean) -> Unit,
     timePickerState: TimePickerState,
+    isOfferValid: Boolean
 ) {
     Card(
         shape = RoundedCornerShape(Theme.radius.tripleXLarge),
@@ -95,7 +99,10 @@ fun AddOfferForm(
                         contentDescription = null,
                         tint = Theme.colors.shade.tertiary
                     )
-                }
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                )
             )
 
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -181,6 +188,7 @@ fun AddOfferForm(
             AppButton(
                 type = AppButtonType.Primary,
                 size = AppButtonSize.Large,
+                state = if (isOfferValid) AppButtonState.Enable else AppButtonState.Disabled,
                 text = stringResource(R.string.send_offer),
                 onClick = onSendClick,
                 modifier = Modifier.fillMaxWidth()
@@ -265,6 +273,7 @@ fun AddOfferFormPreview() {
     val datePickerState = rememberDatePickerState()
     val timePickerState = rememberTimePickerState()
 
+
     AddOfferForm(
         price = price.value,
         onPriceChange = { price.value = it },
@@ -280,6 +289,7 @@ fun AddOfferFormPreview() {
         datePickerState = datePickerState,
         showTimePicker = showTimePicker.value,
         onShowTimePickerChange = { showTimePicker.value = it },
-        timePickerState = timePickerState
+        timePickerState = timePickerState,
+        isOfferValid = true
     )
 }

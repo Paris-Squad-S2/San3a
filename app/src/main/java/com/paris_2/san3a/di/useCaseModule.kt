@@ -32,13 +32,17 @@ import com.paris_2.san3a.domain.usecase.messages.MarkMessagesAsSeenUseCase
 import com.paris_2.san3a.domain.usecase.messages.SendMessageUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.CancelRequestUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.GetAcceptedOfferOnRequestUseCaseUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetAcceptedOffersUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.GetCraftManOfferOnRequestUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersCountUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetYourOfferUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
-import com.paris_2.san3a.domain.usecase.requests.GetGetCraftsManRequestsUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -82,5 +86,9 @@ val useCaseModule = module {
     factoryOf(::AddOfferUseCase)
     factoryOf(::GetYourOfferUseCase)
     factoryOf(::GetAcceptedOffersUseCase)
-    factoryOf(::GetGetCraftsManRequestsUseCase)
+    factoryOf(::GetCraftManOfferOnRequestUseCase)
+    factoryOf(::GetCraftsManRequestsUseCase)
+    factoryOf(::CancelRequestUseCase)
+    factoryOf(::GetAcceptedOfferOnRequestUseCaseUseCase)
+    factoryOf(::MarkRequestAsDoneUseCase)
 }

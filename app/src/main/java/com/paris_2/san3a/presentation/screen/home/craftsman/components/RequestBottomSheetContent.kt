@@ -106,6 +106,7 @@ fun RequestBottomSheetContent(
                         Icon(
                             painter = painterResource(R.drawable.ic_alt_arrow_left_outline),
                             contentDescription = null,
+                            tint = Theme.colors.button.onSecondary,
                             modifier = Modifier
                                 .align(Alignment.Center)
                         )

@@ -14,12 +14,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
-import com.paris_2.san3a.presentation.screen.requests.craftsman.MyJobOfferUiState
+import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.presentation.screen.requests.craftsman.JobUiState
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -34,8 +36,7 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 @Composable
 fun MyJobOfferCard(
     modifier: Modifier = Modifier,
-    offerUiState: MyJobOfferUiState = MyJobOfferUiState(),
-    painter: Painter? = null,
+    jobUiState: JobUiState = JobUiState(),
     onViewDetailsRequest: () -> Unit,
     onSendMessage: () -> Unit,
     onMarkAsDone: () -> Unit,
@@ -49,83 +50,110 @@ fun MyJobOfferCard(
         )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-
-            ServiceTypeCard(
-                title = offerUiState.jobOfferTitle,
-                serviceType = offerUiState.serviceType
-            )
-
-            Row(Modifier.padding(top = 16.dp)) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_location_pin),
-                    contentDescription = "",
-                    tint = Theme.colors.shade.secondary
+            Column {
+                ServiceTypeCard(
+                    title = jobUiState.title,
+                    serviceType = jobUiState.serviceType
                 )
-                Text(
-                    modifier = Modifier.padding(start = 4.dp),
-                    text = offerUiState.address,
-                    style = Theme.textStyle.body.small.medium,
-                    color = Theme.colors.shade.secondary
+
+                Row(Modifier.padding(top = 16.dp)) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_location_pin),
+                        contentDescription = "",
+                        tint = Theme.colors.shade.secondary
+                    )
+                    Text(
+                        modifier = Modifier.padding(start = 4.dp),
+                        text = jobUiState.address,
+                        style = Theme.textStyle.body.small.medium,
+                        color = Theme.colors.shade.secondary
+                    )
+                }
+                AppButton(
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .fillMaxWidth(),
+                    type = AppButtonType.Secondary,
+                    onClick = onViewDetailsRequest,
+                    enableSecondaryBackgroundColor = Theme.colors.shade.quaternary,
+                    text = stringResource(R.string.view_request_details),
+                    size = AppButtonSize.Small,
+                    state = AppButtonState.Enable
                 )
             }
-            AppButton(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .fillMaxWidth(),
-                type = AppButtonType.Secondary,
-                onClick = onViewDetailsRequest,
-                enableSecondaryBackgroundColor = Theme.colors.shade.quaternary,
-                text = stringResource(R.string.view_request_details),
-                size = AppButtonSize.Small,
-                state = AppButtonState.Enable
-            )
 
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 16.dp),
-                color = Theme.colors.shade.quaternary,
-                thickness = 1.dp
-            )
-            CraftsmanOfferDetails(
-                modifier = Modifier
-                    .background(Theme.colors.background.card)
-                    .fillMaxWidth(),
-                painter = painter,
-                isVerified = offerUiState.isCraftsmanVerified,
-                name = offerUiState.craftsmanName,
-                postedTime = offerUiState.acceptedTime,
-                description = offerUiState.craftsmanMessages,
-                amount = offerUiState.craftsmanOfferPrice.toString(),
-                rate = offerUiState.craftsmanRating,
-                reviewsNumber = offerUiState.reviewsNumber,
-                status = OfferStatus.PENDING_OFFER,
-                time = offerUiState.acceptedTime,
-                stickyFooter = {
-                    if (it == OfferStatus.PENDING_OFFER)
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 24.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        ) {
-                            AppButton(
-                                type = AppButtonType.Secondary,
-                                onClick = onSendMessage,
-                                text = stringResource(R.string.send_message),
-                                modifier = Modifier.weight(1f),
-                                size = AppButtonSize.Small,
-                                state = AppButtonState.Enable,
-                                enableSecondaryBackgroundColor = Theme.colors.shade.quaternary
-                            )
-                            AppButton(
-                                type = AppButtonType.Primary,
-                                onClick = onMarkAsDone,
-                                text = stringResource(R.string.mark_as_done),
-                                modifier = Modifier.weight(1f),
-                                size = AppButtonSize.Small
-                            )
+
+            jobUiState.offer?.let {
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    color = Theme.colors.shade.quaternary,
+                    thickness = 1.dp
+                )
+
+                CraftsmanOfferDetails(
+                    modifier = Modifier
+                        .background(Theme.colors.background.card)
+                        .fillMaxWidth(),
+                    painter = rememberAsyncImagePainter(jobUiState.offer.craftsMan.profileUrl),
+                    isVerified = jobUiState.offer.craftsMan.isVerify,
+                    name = jobUiState.offer.craftsMan.name,
+                    postedTime = jobUiState.offer.preferredTime,
+                    description = jobUiState.offer.messageToCustomer,
+                    amount = jobUiState.offer.price.toString(),
+                    rate = jobUiState.offer.craftsMan.rating,
+                    reviewsNumber = jobUiState.offer.craftsMan.review,
+                    status = OfferStatus.PENDING_OFFER,
+                    time = jobUiState.offer.preferredTime,
+                    stickyFooter = {
+                        if (jobUiState.status == RequestStatus.ONGOING) {
+                            when (jobUiState.offer.isAccepted) {
+                                true -> {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 24.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                    ) {
+                                        AppButton(
+                                            type = AppButtonType.Secondary,
+                                            onClick = onSendMessage,
+                                            text = stringResource(R.string.send_message),
+                                            modifier = Modifier.weight(1f),
+                                            size = AppButtonSize.Small,
+                                            state = AppButtonState.Enable,
+                                            enableSecondaryBackgroundColor = Theme.colors.shade.quaternary
+                                        )
+                                        AppButton(
+                                            type = AppButtonType.Primary,
+                                            onClick = onMarkAsDone,
+                                            text = stringResource(R.string.mark_as_done),
+                                            modifier = Modifier.weight(1f),
+                                            size = AppButtonSize.Small
+                                        )
+                                    }
+                                }
+
+                                false -> {
+                                    HorizontalDivider(
+                                        modifier = Modifier.padding(vertical = 16.dp),
+                                        color = Theme.colors.shade.quaternary,
+                                        thickness = 1.dp
+                                    )
+                                    Text(
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
+                                        text = stringResource(R.string.waiting_for_the_approval),
+                                        textAlign = TextAlign.Center,
+                                        style = Theme.textStyle.body.medium.regular,
+                                        color = Theme.colors.shade.secondary
+                                    )
+                                }
+                            }
                         }
-                },
-            )
+                    },
+                )
+            }
         }
     }
 }
@@ -135,7 +163,7 @@ fun MyJobOfferCard(
 fun MyJobOfferCardPreview() {
     BasePreview {
         MyJobOfferCard(
-            offerUiState = MyJobOfferUiState(),
+            jobUiState = JobUiState(),
             onViewDetailsRequest = {},
             onSendMessage = {},
             onMarkAsDone = {}

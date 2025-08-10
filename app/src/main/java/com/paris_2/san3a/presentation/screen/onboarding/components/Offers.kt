@@ -32,8 +32,8 @@ fun Offers(
         contentAlignment = Alignment.TopCenter
     ) {
         CraftsManOffer(
-            onChatClick = {},
-            onAcceptOfferClick = {},
+            onSecondaryButtonClick = {},
+            onPrimaryButtonClick = {},
             modifier = Modifier
                 .graphicsLayer { rotationZ = 8f }
                 .offset(y = 20.dp),
@@ -47,11 +47,12 @@ fun Offers(
                 postedTime = stringResource(R.string._5_hour_ago),
             ),
             painter = painterResource(id = R.drawable.img_avatar1),
-            addShadow = true
+            addShadow = true,
+            forCraftsMan = false,
         )
         CraftsManOffer(
-            onChatClick = {},
-            onAcceptOfferClick = {},
+            onSecondaryButtonClick = {},
+            onPrimaryButtonClick = {},
             modifier = Modifier
                 .padding(top = 22.dp)
                 .graphicsLayer { rotationZ = -8f }
@@ -67,10 +68,11 @@ fun Offers(
             ),
             painter = painterResource(id = R.drawable.img_avatar2),
             addShadow = true,
+            forCraftsMan = false,
         )
         CraftsManOffer(
-            onChatClick = {},
-            onAcceptOfferClick = {},
+            onSecondaryButtonClick = {},
+            onPrimaryButtonClick = {},
             modifier = Modifier
                 .graphicsLayer { rotationZ = 5f }
                 .offset(y = 165.dp, x = 6.dp),
@@ -85,6 +87,7 @@ fun Offers(
             ),
             painter = painterResource(id = R.drawable.img_avatar3),
             addShadow = true,
+            forCraftsMan = false,
         )
     }
 }

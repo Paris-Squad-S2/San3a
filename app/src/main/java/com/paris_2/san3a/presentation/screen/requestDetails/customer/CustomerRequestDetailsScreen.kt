@@ -90,7 +90,7 @@ private fun CustomerRequestDetailsScreenContent(
             }
 
             else -> {
-                CraftsmanRequestDetailsContent(
+                CustomerRequestDetailsContent(
                     modifier = Modifier
                         .fillMaxSize(),
                     state = state.uiState,
@@ -103,7 +103,7 @@ private fun CustomerRequestDetailsScreenContent(
 }
 
 @Composable
-fun CraftsmanRequestDetailsContent(
+fun CustomerRequestDetailsContent(
     modifier: Modifier,
     state: CustomerRequestDetailsUiState,
     interactionListener: CustomerRequestDetailsInteractionListener
@@ -154,12 +154,13 @@ fun CraftsmanRequestDetailsContent(
                     showActionButtons = state.offers.any { it.value.isAccepted }.not(),
                     offerDetails = offer.toOfferDetailsUIState(offer.isAccepted),
                     painter = rememberAsyncImagePainter(offer.craftsmanImageUrl),
-                    onChatClick = {
+                    onSecondaryButtonClick = {
                         interactionListener.onChartWithCraftsmanClick(offer.craftsmanId)
                     },
-                    onAcceptOfferClick = {
-                        interactionListener.onAcceptOfferClick(offer.id)
+                    onPrimaryButtonClick = {
+                        interactionListener.onAcceptOfferClick(offer.id, offer.craftsmanId)
                     },
+                    forCraftsMan = false,
                 )
             }
 

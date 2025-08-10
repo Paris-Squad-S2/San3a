@@ -8,10 +8,10 @@ interface CraftsmanRequestDetailsInteractionListener {
     fun onClickFavorite()
     fun onClickBack()
     fun onRetryClick()
-    fun onClickSendMessage(customerId: String)
     fun onSendOfferClick()
     fun onChatWithPosterClick(customerId: String)
-    fun onAcceptOfferClick(offerId: String)
+    fun onCancelRequestClick(requestId: String)
+    fun markAsDoneClick(requestId: String)
 
     fun onPriceChanged(price: String)
     fun onDateChanged(date: LocalDate)

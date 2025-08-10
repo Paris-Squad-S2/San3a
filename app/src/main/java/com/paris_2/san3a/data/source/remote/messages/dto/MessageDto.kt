@@ -1,6 +1,6 @@
 package com.paris_2.san3a.data.source.remote.messages.dto
 
-import com.paris_2.san3a.data.utils.getCurrentDate
+import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.data.utils.toFloatList
 import com.paris_2.san3a.data.utils.toLocalDateTime
 import com.paris_2.san3a.data.utils.toLong
@@ -22,7 +22,7 @@ data class MessageDto(
     val voiceDuration: Int? = null, // seconds
     val voiceWaveform: List<Float>? = null,
 
-    val dateTime: LocalDateTime = getCurrentDate(),
+    val dateTime: LocalDateTime = getCurrentDateTime(),
 
     val seen: Boolean = false
 ) {

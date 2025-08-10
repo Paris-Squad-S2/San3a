@@ -96,7 +96,7 @@ private fun MoreScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Theme.colors.background.card)
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 8.dp),
                 title = stringResource(R.string.more),
                 actionIcon = {
                     NotificationIcon(

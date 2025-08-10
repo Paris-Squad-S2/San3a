@@ -58,7 +58,7 @@ private fun MyRequestScreenContent(
             actionIcon = {
                 Icon(
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(end = 8.dp)
                         .clickable(onClick = myRequestCustomerInteractionListener::onNotificationClick),
                     painter = painterResource(R.drawable.ic_notification_outline),
                     contentDescription = null,

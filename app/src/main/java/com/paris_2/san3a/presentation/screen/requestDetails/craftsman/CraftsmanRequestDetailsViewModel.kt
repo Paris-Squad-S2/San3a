@@ -3,14 +3,19 @@ package com.paris_2.san3a.presentation.screen.requestDetails.craftsman
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
+import com.paris_2.san3a.domain.entity.Notification
+import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.CancelRequestUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
@@ -19,6 +24,9 @@ class CraftsmanRequestDetailsViewModel(
     private val addOfferUseCase: AddOfferUseCase,
     private val getOffersUseCase: GetOffersUseCase,
     private val acceptedOffersUseCase: AcceptOfferUseCase,
+    private val cancelRequestUseCase: CancelRequestUseCase,
+    private val addNotificationUseCase: AddNotificationUseCase,
+    private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val createChatUseCase: CreateChatUseCase,
     savedStateHandle: SavedStateHandle
@@ -147,29 +155,6 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    override fun onClickSendMessage(customerId: String) {
-        tryToExecute(
-            execute = { createChatUseCase(listOf(phoneNumber, customerId)) },
-            onSuccess = {
-                Log.d("CraftsmanRequestDetailsVM", "Chat created successfully")
-                navigate(
-                    Destinations.MessageDetails(
-                        chatId = it,
-                        currentUserId = phoneNumber,
-                        otherUserId = customerId
-                    )
-                )
-            },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        error = it.message ?: "An error occurred while creating chat",
-                    )
-                )
-            }
-        )
-    }
-
     override fun onSendOfferClick() {
         tryToExecute(
             execute = {
@@ -187,6 +172,15 @@ class CraftsmanRequestDetailsViewModel(
                         uiState = screenState.value.uiState.copy(
                             offerToAdd = OfferToAddUiState()
                         )
+                    )
+                )
+                addNotificationUseCase(
+                    Notification(
+                        id = "",
+                        title = "New Offer Received",
+                        caption = "You have received a new offer for your request ${screenState.value.uiState.request.title}",
+                        date = getCurrentDateTime(),
+                        userId = screenState.value.uiState.request.userId
                     )
                 )
             },
@@ -223,15 +217,47 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    override fun onAcceptOfferClick(offerId: String) {
+    override fun onCancelRequestClick(requestId: String) {
         tryToExecute(
             execute = {
-                acceptedOffersUseCase(offerId)
+                cancelRequestUseCase(requestId)
+            },
+            onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Request cancelled successfully")
+                navigateUp()
             },
             onError = {
                 updateState(
                     screenState.value.copy(
-                        error = it.message ?: "An error occurred while accepting offer",
+                        error = it.message ?: "An error occurred while cancelling request",
+                    )
+                )
+            }
+        )
+    }
+
+    override fun markAsDoneClick(requestId: String) {
+        tryToExecute(
+            execute = {
+                markRequestAsDoneUseCase(requestId)
+            },
+            onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Request marked as done successfully")
+                addNotificationUseCase(
+                    Notification(
+                        id = "",
+                        title = "Request Completed",
+                        caption = "Your request ${screenState.value.uiState.request.title} has been marked as done.",
+                        date = getCurrentDateTime(),
+                        userId = screenState.value.uiState.request.userId
+                    )
+                )
+                navigateUp()
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while marking request as done",
                     )
                 )
             }
@@ -239,52 +265,53 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onPriceChanged(price: String) {
+        val updatedOffer = screenState.value.uiState.offerToAdd.copy(price = price)
         updateState(
             screenState.value.copy(
                 uiState = screenState.value.uiState.copy(
-                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
-                        price = price
-                    )
+                    offerToAdd = updatedOffer,
+                    isOfferValid = validateOffer(updatedOffer)
                 )
             )
         )
     }
 
     override fun onDateChanged(date: LocalDate) {
+        val updatedOffer = screenState.value.uiState.offerToAdd.copy(preferredDate = date)
         updateState(
             screenState.value.copy(
                 uiState = screenState.value.uiState.copy(
-                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
-                        preferredDate = date
-                    )
+                    offerToAdd = updatedOffer,
+                    isOfferValid = validateOffer(updatedOffer)
                 )
             )
         )
     }
 
     override fun onTimeChanged(time: LocalTime) {
+        val updatedOffer = screenState.value.uiState.offerToAdd.copy(preferredTime = time)
         updateState(
             screenState.value.copy(
                 uiState = screenState.value.uiState.copy(
-                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
-                        preferredTime = time
-                    )
+                    offerToAdd = updatedOffer,
+                    isOfferValid = validateOffer(updatedOffer)
                 )
             )
         )
     }
 
     override fun onMessageChanged(message: String) {
+        val updatedOffer = screenState.value.uiState.offerToAdd.copy(messageToCustomer = message)
         updateState(
             screenState.value.copy(
                 uiState = screenState.value.uiState.copy(
-                    offerToAdd = screenState.value.uiState.offerToAdd.copy(
-                        messageToCustomer = message
-                    )
+                    offerToAdd = updatedOffer,
+                    isOfferValid = validateOffer(updatedOffer)
                 )
             )
         )
     }
+
 
     override fun onShowDatePickerChange(show: Boolean) {
         updateState(
@@ -306,8 +333,7 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    override fun onClickFavorite() {
-    }
+    override fun onClickFavorite() {}
 
     override fun onClickBack() {
         navigateUp()
@@ -321,16 +347,15 @@ class CraftsmanRequestDetailsViewModel(
     fun loadYourOffers() {
         tryToExecute(
             execute = {
-                screenState.value.uiState.offers.values.filter { it.craftsmanId == phoneNumber }
+                screenState.value.uiState.offers.values.firstOrNull { it.craftsmanId == phoneNumber }
             },
-            onSuccess = {
-                it.forEach { offer ->
-                    Log.d("CraftsmanRequestDetailsVM", "your Offer: $offer")
-                }
+            onSuccess = { offer ->
+                Log.d("CraftsmanRequestDetailsVM", "your Offer: $offer")
+
                 updateState(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
-                            yourOffers = it
+                            yourOffer = offer
                         ),
                     )
                 )
@@ -394,5 +419,12 @@ class CraftsmanRequestDetailsViewModel(
                 )
             }
         )
+    }
+
+    private fun validateOffer(offer: OfferToAddUiState): Boolean {
+        return offer.price.isNotBlank()
+                && offer.preferredDate != null
+                && offer.preferredTime != null
+                && offer.messageToCustomer.isNotBlank()
     }
 }

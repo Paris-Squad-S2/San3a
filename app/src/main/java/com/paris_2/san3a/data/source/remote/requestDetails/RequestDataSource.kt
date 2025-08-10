@@ -15,4 +15,8 @@ interface RequestDataSource {
     suspend fun acceptOffer(offerId: String)
     fun getCustomerRequests(userId: String): Flow<List<RequestServiceDto>>
     fun getCraftsManRequests(userId: String): Flow<List<RequestServiceDto>>
+    fun getCraftManOfferOnRequestUseCase(craftsManId: String, requestId: String): Flow<OfferDto?>
+    suspend fun cancelRequest(requestId: String)
+    suspend fun markRequestAsDone(requestId: String)
+    fun getAcceptedOfferOnRequestUseCase(requestId: String): Flow<OfferDto?>
 }
