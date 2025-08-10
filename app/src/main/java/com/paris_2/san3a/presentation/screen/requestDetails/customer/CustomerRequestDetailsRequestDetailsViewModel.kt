@@ -3,6 +3,8 @@ package com.paris_2.san3a.presentation.screen.requestDetails.customer
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
+import com.paris_2.san3a.domain.entity.Notification
+import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
@@ -13,11 +15,13 @@ import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toOfferUiS
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toRequestOfferUiState
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toRequestServiceUIState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 
 class CustomerRequestDetailsRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
     private val getOffersUseCase: GetOffersUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase,
+    private val addNotificationUseCase: AddNotificationUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val createChatUseCase: CreateChatUseCase,
     savedStateHandle: SavedStateHandle
@@ -118,18 +122,6 @@ class CustomerRequestDetailsRequestDetailsViewModel(
 
     }
 
-    override fun onClickOffer(offerId: String) {
-        tryToExecute(
-            execute = { acceptOfferUseCase(offerId) },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        error = it.message ?: "An error occurred while accepting the offer",
-                    )
-                )
-            }
-        )
-    }
 
     override fun onClickBack() {
         navigateUp()
@@ -166,9 +158,20 @@ class CustomerRequestDetailsRequestDetailsViewModel(
         )
     }
 
-    override fun onAcceptOfferClick(offerId: String) {
+    override fun onAcceptOfferClick(offerId: String, craftsmanId: String) {
         tryToExecute(
             execute = { acceptOfferUseCase(offerId) },
+            onSuccess = {
+                addNotificationUseCase(
+                    Notification(
+                        id = "",
+                        title = "New Offer Accepted",
+                        caption = "Your offer for request '${screenState.value.uiState.request.title}' has been accepted.",
+                        date = getCurrentDateTime(),
+                        userId = craftsmanId
+                    )
+                )
+            },
             onError = {
                 updateState(
                     screenState.value.copy(

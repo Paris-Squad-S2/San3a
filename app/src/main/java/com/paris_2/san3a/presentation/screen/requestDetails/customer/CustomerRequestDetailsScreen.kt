@@ -158,7 +158,7 @@ fun CustomerRequestDetailsContent(
                         interactionListener.onChartWithCraftsmanClick(offer.craftsmanId)
                     },
                     onPrimaryButtonClick = {
-                        interactionListener.onAcceptOfferClick(offer.id)
+                        interactionListener.onAcceptOfferClick(offer.id, offer.craftsmanId)
                     },
                     forCraftsMan = false,
                 )
