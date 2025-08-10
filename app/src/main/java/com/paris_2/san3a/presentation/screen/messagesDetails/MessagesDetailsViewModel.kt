@@ -70,22 +70,27 @@ class MessagesDetailsViewModel(
     }
 
     private fun loadMessages(chatId: String) {
-        tryToExecute(
-            execute = {
+        tryToObserve(
+            observe = {
                 updateState(screenState.value.copy(isLoading = true))
                 getMessagesByChatIdUseCase(chatId)
             },
-            onSuccess = { flowMessages ->
-                flowMessages.collect { messages ->
-                    updateState(
-                        screenState.value.copy(
-                            messages = messages.map { it.toMessageUi(screenState.value.profilePhoto, currentUserId) },
-                            chatTitle = screenState.value.chatTitle,
-                            isLoading = false
-                        ),
+            onEach = { messages ->
+                val messageUis =
+                    messages.map { it.toMessageUi(screenState.value.profilePhoto, currentUserId) }
+                val groupedMessages = messageUis
+                    .groupBy { it.date }
+                    .toSortedMap(compareBy { it })
+
+                updateState(
+                    screenState.value.copy(
+                        messages = messageUis,
+                        groupedMessages = groupedMessages,
+                        chatTitle = screenState.value.chatTitle,
+                        isLoading = false
                     )
-                    markMessagesAsSeen()
-                }
+                )
+                markMessagesAsSeen()
             },
             onError = {
                 updateState(
@@ -94,7 +99,7 @@ class MessagesDetailsViewModel(
                         isLoading = false
                     )
                 )
-            },
+            }
         )
     }
 
