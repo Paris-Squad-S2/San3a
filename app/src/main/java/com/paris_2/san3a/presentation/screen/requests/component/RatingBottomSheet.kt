@@ -119,7 +119,7 @@ fun StarRatingBar(
     starSize: Dp = 32.dp,
     spacing: Dp = 6.dp,
     filledColor: Color = Theme.colors.additional.primary.yellow,
-    unfilledColor: Color = Theme.colors.shade.tertiary,
+    unfilledColor: Color = Theme.colors.additional.primary.yellow,
     isRtl: Boolean = false,
 ) {
     val density = LocalDensity.current
