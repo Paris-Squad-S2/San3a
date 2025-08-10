@@ -68,9 +68,9 @@ class MyOfferCraftsmanViewModel(
                     MyJobsCraftsmanScreenState(
                         isLoading = false,
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            ongoing = result.filter { it.requestStatus == RequestStatus.ONGOING }.toMyJobOfferUiStateMap(), //TODO
-                            completed = result.filter { it.requestStatus == RequestStatus.COMPLETED }.toMyJobOfferUiStateMap(), //TODO
-                            canceled = result.filter { it.requestStatus == RequestStatus.CANCELLED }.toMyJobOfferUiStateMap() //TODO
+                            ongoing = result.filter { it.requestStatus == RequestStatus.ONGOING }.toMyJobOfferUiStateMap(),
+                            completed = result.filter { it.requestStatus == RequestStatus.COMPLETED }.toMyJobOfferUiStateMap(),
+                            canceled = result.filter { it.requestStatus == RequestStatus.CANCELLED }.toMyJobOfferUiStateMap()
                         )
                     )
                 )
