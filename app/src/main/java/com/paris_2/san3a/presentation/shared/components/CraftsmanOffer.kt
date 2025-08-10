@@ -50,17 +50,6 @@ data class OfferDetailsUIState(
     val isVerify: Boolean = true
 )
 
-/*todo use this when u want to load image from url firebase
-val painter = if (offerDetails.imageUrl != null) {
-            rememberAsyncImagePainter(
-                model = offerDetails.imageUrl,
-                placeholder = painterResource(R.drawable.img_avatar),
-                error = painterResource(R.drawable.img_avatar),
-            )
-        } else {
-            painterResource(id = R.drawable.img_avatar)
-        }*/
-
 @Composable
 fun CraftsManOffer(
     modifier: Modifier = Modifier,
@@ -75,6 +64,7 @@ fun CraftsManOffer(
 
     val targetColor = when (offerDetails.status) {
         OfferStatus.OFFER_ACCEPTED -> Theme.colors.additional.primary.success
+        OfferStatus.YOUR_ACCEPTED_OFFER -> Theme.colors.additional.primary.success
         else -> Theme.colors.background.card
     }
     val animatedBgColor by animateColorAsState(
@@ -108,9 +98,9 @@ fun CraftsManOffer(
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
 
-        val paddingAcceptedRequest = if (offerDetails.status == OfferStatus.OFFER_ACCEPTED)  2.dp  else 0.dp
+        val paddingAcceptedRequest = if (offerDetails.status == OfferStatus.OFFER_ACCEPTED || offerDetails.status == OfferStatus.YOUR_ACCEPTED_OFFER)  2.dp  else 0.dp
 
-        if (offerDetails.status == OfferStatus.OFFER_ACCEPTED)
+        if (offerDetails.status == OfferStatus.OFFER_ACCEPTED || offerDetails.status == OfferStatus.YOUR_ACCEPTED_OFFER) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -120,6 +110,7 @@ fun CraftsManOffer(
                 style = Theme.textStyle.body.medium.medium,
                 textAlign = TextAlign.Center
             )
+        }
         CraftsmanOfferDetails(
             modifier = Modifier
                 .padding(
@@ -135,7 +126,7 @@ fun CraftsManOffer(
                 )
                 .background(Theme.colors.background.card)
                 .fillMaxWidth()
-                .padding(if (offerDetails.status == OfferStatus.OFFER_ACCEPTED) 14.dp else 16.dp),
+                .padding(if (offerDetails.status == OfferStatus.OFFER_ACCEPTED || offerDetails.status == OfferStatus.YOUR_ACCEPTED_OFFER) 14.dp else 16.dp),
             painter = painter,
             isVerified = offerDetails.isVerify,
             name = offerDetails.name,
