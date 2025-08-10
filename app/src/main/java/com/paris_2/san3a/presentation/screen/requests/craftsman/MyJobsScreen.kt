@@ -187,7 +187,7 @@ private fun JobsList(
                 jobUiState = job,
                 onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails(job.id) },
                 onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick(job.customerPhone) },
-                onMarkAsDone = { myJobCraftsmanInteractionListener.onMarkAsDone(job.id) }
+                onMarkAsDone = { myJobCraftsmanInteractionListener.onMarkAsDone(requestId = job.id, requestTitle = job.title, customerId = job.customerPhone) }
             )
         }
     }
@@ -200,7 +200,11 @@ fun MyRequestScreenPreview() {
         MyRequestScreenContent(
             myJobCraftsmanInteractionListener = object : MyJobCraftsmanInteractionListener {
                 override fun onRetryClick() {}
-                override fun onMarkAsDone(requestId: String) {}
+                override fun onMarkAsDone(
+                    requestId: String,
+                    requestTitle: String,
+                    customerId: String
+                ) {}
 
                 override fun onSendMessageClick(phoneNumber: String) {}
 

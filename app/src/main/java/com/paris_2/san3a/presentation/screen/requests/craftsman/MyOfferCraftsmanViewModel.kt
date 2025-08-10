@@ -1,7 +1,9 @@
 package com.paris_2.san3a.presentation.screen.requests.craftsman
 
 import android.util.Log
+import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
@@ -10,12 +12,15 @@ import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
+import okhttp3.Request
 
 class MyOfferCraftsmanViewModel(
     private val getCraftsManRequestsUseCase: GetCraftsManRequestsUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
+    private val addNotificationUseCase: AddNotificationUseCase,
     private val getCraftManOfferOnRequestUseCase: GetCraftManOfferOnRequestUseCase,
     private val createChatUseCase: CreateChatUseCase,
 ) : BaseViewModel<MyJobsCraftsmanScreenState>(MyJobsCraftsmanScreenState()),
@@ -205,10 +210,21 @@ class MyOfferCraftsmanViewModel(
     }
 
 
-    override fun onMarkAsDone(requestId: String) {
+    override fun onMarkAsDone(requestId: String, requestTitle: String, customerId: String) {
         tryToExecute(
             execute = {
                 markRequestAsDoneUseCase(requestId)
+            },
+            onSuccess = {
+                addNotificationUseCase(
+                    Notification(
+                        id = "",
+                        title = "Request Completed",
+                        caption = "Your request $requestTitle has been marked as done.",
+                        date = getCurrentDateTime(),
+                        userId = customerId
+                    )
+                )
             },
             onError = {
                 //todo show snack bar
