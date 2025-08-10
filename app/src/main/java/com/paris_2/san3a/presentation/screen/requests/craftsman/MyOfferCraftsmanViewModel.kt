@@ -13,7 +13,6 @@ import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
-import okhttp3.Request
 
 class MyOfferCraftsmanViewModel(
     private val getCraftsManRequestsUseCase: GetCraftsManRequestsUseCase,

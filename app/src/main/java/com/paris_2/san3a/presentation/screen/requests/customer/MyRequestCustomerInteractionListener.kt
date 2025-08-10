@@ -4,4 +4,5 @@ interface MyRequestCustomerInteractionListener {
     fun onRequestClick(requestId: String)
     fun onNotificationClick()
     fun onRetryClick()
+    fun onClickChat(phoneNumber: String)
 }

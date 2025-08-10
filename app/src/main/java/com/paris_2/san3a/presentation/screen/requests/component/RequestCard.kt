@@ -36,7 +36,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.RequestStatus
@@ -45,6 +44,7 @@ import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.CraftsmanAvatar
+import com.paris_2.san3a.presentation.shared.components.IconPosition
 import com.paris_2.san3a.presentation.shared.components.ServiceTypeCard
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
@@ -69,7 +69,7 @@ fun RequestCard(
 
             ServiceTypeCard(title = requestUi.requestTitle, serviceType = requestUi.serviceType)
 
-            if (requestUi.status == RequestStatus.ONGOING && requestUi.isAcceptedOffer) {
+            if (requestUi.status == RequestStatus.ONGOING && requestUi.offer.isAccepted) {
                 HorizontalDivider(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -123,12 +123,12 @@ fun RequestCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CraftsmanSection(
-                    imageUri = requestUi.craftsmanURL,
-                    name = requestUi.craftsmanName,
-                    rating = requestUi.craftsmanRating,
-                    isAcceptedOffer = requestUi.isAcceptedOffer,
-                    isVerified = requestUi.isCraftsmanVerified,
-                    numberOfOffers = requestUi.numberOfOffers
+                    imageUri = requestUi.offer.craftsMan.profileUrl,
+                    name = requestUi.offer.craftsMan.name,
+                    rating = requestUi.offer.craftsMan.rating,
+                    isAcceptedOffer = requestUi.offer.isAccepted,
+                    isVerified = requestUi.offer.craftsMan.isVerify,
+                    numberOfOffers = requestUi.offersCount
                 )
 
                 val buttonConfig = getButtonConfig(requestUi)
@@ -139,7 +139,8 @@ fun RequestCard(
                         onClick = onActionClick,
                         type = AppButtonType.Secondary,
                         size = AppButtonSize.Small,
-                        icon = buttonConfig.icon
+                        icon = buttonConfig.icon,
+                        iconPosition = IconPosition.Start,
                     )
                 }
             }
@@ -185,25 +186,18 @@ private fun CraftsmanSection(
 
     if (imageUri != null && !name.isNullOrEmpty()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            AsyncImage(
-                model = imageUri,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-            )
-
             if (isVerified) {
                 CraftsmanAvatar(
                     painter = rememberAsyncImagePainter(model = imageUri),
                     isVerify = true,
-                    modifier = Modifier.size(36.dp)
+                    modifier = Modifier.size(40.dp)
                 )
             } else {
                 Image(
                     painter = rememberAsyncImagePainter(model = imageUri),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(36.dp)
+                        .size(40.dp)
                         .clip(CircleShape)
                 )
             }
@@ -333,14 +327,9 @@ fun RequestCardNoCraftsmanWithOffersPreview() {
                 requestUi = MyRequestCustomerUi(
                     requestTitle = "request title",
                     serviceType = "Plumbing",
-                    numberOfOffers = 3,
+                    offersCount = 3,
                     date = "2025-08-04",
                     time = "10:30 AM",
-                    craftsmanName = null,
-                    craftsmanURL = null,
-                    craftsmanRating = null,
-                    isAcceptedOffer = false,
-                    isCraftsmanVerified = true
                 ),
                 onActionClick = {},
 
@@ -351,14 +340,9 @@ fun RequestCardNoCraftsmanWithOffersPreview() {
                 requestUi = MyRequestCustomerUi(
                     requestTitle = "request title",
                     serviceType = "Electrical",
-                    numberOfOffers = 3,
+                    offersCount = 3,
                     date = "2025-08-05",
                     time = "2:00 PM",
-                    craftsmanName = "Mohamed Ali",
-                    craftsmanURL = "",
-                    craftsmanRating = 4.5f,
-                    isAcceptedOffer = true,
-                    isCraftsmanVerified = true
                 ),
                 onActionClick = {},
             )
@@ -367,14 +351,9 @@ fun RequestCardNoCraftsmanWithOffersPreview() {
                 requestUi = MyRequestCustomerUi(
                     requestTitle = "Electrical Work",
                     serviceType = "Electrical",
-                    numberOfOffers = 3,
+                    offersCount = 3,
                     date = "2025-08-06",
                     time = "9:00 AM",
-                    craftsmanName = "Ahmed salah",
-                    craftsmanURL = "",
-                    craftsmanRating = 2.5f,
-                    isAcceptedOffer = true,
-                    isCraftsmanVerified = false,
                     status = RequestStatus.COMPLETED,
                     isRated = true
                 ),

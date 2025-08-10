@@ -46,17 +46,17 @@ fun CraftsmanAvatar(
 
         AnimatedVisibility(isVerify) {
             Box(
-                modifier = Modifier.size(16.dp),
+                modifier = Modifier.size(16.dp)
+                    .graphicsLayer {
+                    translationY = 55f
+                },
                 contentAlignment = Alignment.Center
             ){
                 Icon(
                     painter = painterResource(R.drawable.ic_verified_check_bold),
                     contentDescription = stringResource(R.string.verified_check),
                     modifier = Modifier
-                        .size(16.dp)
-                        .graphicsLayer {
-                            translationY = 75f
-                        },
+                        .size(16.dp),
                     tint = Theme.colors.additional.primary.success
                 )
 
@@ -64,10 +64,7 @@ fun CraftsmanAvatar(
                     painter = painterResource(R.drawable.ic_check),
                     contentDescription = stringResource(R.string.verified_check),
                     modifier = Modifier
-                        .size(8.dp)
-                        .graphicsLayer {
-                            translationY = 75f
-                        },
+                        .size(8.dp),
                     tint = Color.White
                 )
             }

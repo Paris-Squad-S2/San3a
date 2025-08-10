@@ -59,6 +59,20 @@ data class OfferUiState(
     val isAccepted: Boolean,
     val craftsMan: CraftsManUiState
 )
+fun Offer?.toUiState(): OfferUiState? {
+    return this?.let {
+        OfferUiState(
+            id = it.id,
+            price = it.price,
+            craftsmanId = it.craftsmanId,
+            preferredDate = it.preferredDate.toString(),
+            preferredTime = it.preferredTime.toString(),
+            messageToCustomer = it.messageToCustomer,
+            isAccepted = it.isAccepted,
+            craftsMan = CraftsManUiState()
+        )
+    }
+}
 
 fun User.toCraftsManUiState() : CraftsManUiState{
     return CraftsManUiState(
@@ -80,20 +94,6 @@ data class CraftsManUiState(
     val isVerify: Boolean = false,
 )
 
-fun Offer?.toUiState(): OfferUiState? {
-    return this?.let {
-        OfferUiState(
-            id = it.id,
-            price = it.price,
-            craftsmanId = it.craftsmanId,
-            preferredDate = it.preferredDate.toString(),
-            preferredTime = it.preferredTime.toString(),
-            messageToCustomer = it.messageToCustomer,
-            isAccepted = it.isAccepted,
-            craftsMan = CraftsManUiState()
-        )
-    }
-}
 
 fun List<Offer>.toUiStateList(): List<OfferUiState?> = map { it.toUiState() }
 

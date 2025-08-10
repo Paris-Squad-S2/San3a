@@ -17,7 +17,7 @@ data class ButtonConfig(
 fun getButtonConfig(requestUi: MyRequestCustomerUi): ButtonConfig {
     return when (requestUi.status) {
         RequestStatus.ONGOING -> {
-            if (requestUi.isAcceptedOffer) {
+            if (requestUi.offer.isAccepted) {
                 ButtonConfig(
                     text = stringResource(R.string.chat),
                     icon = ImageVector.vectorResource(R.drawable.ic_dialog_bold)

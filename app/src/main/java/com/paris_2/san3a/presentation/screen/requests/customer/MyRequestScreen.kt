@@ -118,7 +118,10 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = ongoingRequests, interactionListener = myRequestCustomerInteractionListener)
+                                RequestList(
+                                    requests = ongoingRequests.values.toList(),
+                                    interactionListener = myRequestCustomerInteractionListener
+                                )
                             }
                         }
 
@@ -134,7 +137,10 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = completedRequests, interactionListener = myRequestCustomerInteractionListener)
+                                RequestList(
+                                    requests = completedRequests.values.toList(),
+                                    interactionListener = myRequestCustomerInteractionListener
+                                )
                             }
                         }
 
@@ -150,7 +156,10 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = canceledRequests, interactionListener = myRequestCustomerInteractionListener)
+                                RequestList(
+                                    requests = canceledRequests.values.toList(),
+                                    interactionListener = myRequestCustomerInteractionListener
+                                )
                             }
                         }
                     }
@@ -162,13 +171,20 @@ private fun MyRequestScreenContent(
 }
 
 @Composable
-private fun RequestList(requests: List<MyRequestCustomerUi>, interactionListener: MyRequestCustomerInteractionListener) {
+private fun RequestList(
+    requests: List<MyRequestCustomerUi>,
+    interactionListener: MyRequestCustomerInteractionListener
+) {
     LazyColumn {
         items(requests) { request ->
             RequestCard(
                 requestUi = request,
                 onActionClick = {
-                    interactionListener.onRequestClick(request.id)
+                    if (request.offer.craftsMan.phoneNumber.isNotBlank()) {
+                        interactionListener.onClickChat(request.offer.craftsMan.phoneNumber)
+                    } else {
+                        interactionListener.onRequestClick(request.id)
+                    }
                 },
             )
         }
@@ -182,32 +198,22 @@ fun MyRequestScreenPreview() {
         MyRequestScreenContent(
             state = MyRequestCustomerScreenState(
                 myRequestCustomerUiState = MyRequestCustomerUiState(
-                    ongoing = listOf(
-                        MyRequestCustomerUi(
-                            isCraftsmanVerified = true,
-                            status = RequestStatus.ONGOING,
-                            craftsmanURL = "",
-                            isAcceptedOffer = true
-                        ),
-                        MyRequestCustomerUi(),
-                        MyRequestCustomerUi(),
+                    ongoing = mapOf(
+                        "1" to MyRequestCustomerUi(),
+                        "2" to MyRequestCustomerUi(),
+                        "3" to MyRequestCustomerUi(),
                     ),
-                    completed = emptyList(),
-                    canceled = emptyList()
+                    completed = emptyMap(),
+                    canceled = emptyMap()
                 )
             ),
             myRequestCustomerInteractionListener = object : MyRequestCustomerInteractionListener {
-                override fun onRequestClick(requestId: String) {
-                    // Handle request click
-                }
+                override fun onRequestClick(requestId: String) {}
 
-                override fun onNotificationClick() {
-                    TODO("Not yet implemented")
-                }
+                override fun onNotificationClick() {}
 
-                override fun onRetryClick() {
-                    TODO("Not yet implemented")
-                }
+                override fun onRetryClick() {}
+                override fun onClickChat(phoneNumber: String) {}
             },
         )
     }
