@@ -26,14 +26,15 @@ data class CraftsmanRequestDetailsUiState(
     val acceptedOffer: RequestOfferUiState? = null,
     val customer: Customer = Customer(),
     val showDatePicker: Boolean = false,
-    val showTimePicker: Boolean = false
+    val showTimePicker: Boolean = false,
+    val isOfferValid: Boolean = false
 )
 
 data class OfferToAddUiState(
     val id: String = "",
-    val price: String = "0.0",
-    val preferredDate: LocalDate = LocalDate(1970, 1, 1),
-    val preferredTime: LocalTime = LocalTime(0, 0),
+    val price: String = "",
+    val preferredDate: LocalDate? = null ,
+    val preferredTime: LocalTime? = null,
     val messageToCustomer: String = "",
 )
 
@@ -43,8 +44,8 @@ fun OfferToAddUiState.toOffer(craftsManId: String, requestId: String): Offer {
         craftsmanId = craftsManId,
         requestId = requestId,
         price = this.price.toDoubleOrNull() ?: 0.0,
-        preferredDate = this.preferredDate,
-        preferredTime = this.preferredTime,
+        preferredDate = this.preferredDate?: LocalDate(0, 0, 0),
+        preferredTime = this.preferredTime?: LocalTime(0, 0),
         messageToCustomer = this.messageToCustomer,
         isAccepted = false
     )
