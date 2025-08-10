@@ -110,10 +110,8 @@ fun MessageDetailsContent(
                     actionIcon = {
                         Icon(
                             modifier = Modifier
-                                .clickable(onClick = {
-                                    messageInteractionListener.onDropMenuClick()
-                                })
-                                .padding(end = 16.dp),
+                                .clickable(onClick = messageInteractionListener::onDropMenuClick)
+                                .padding(end = 8.dp),
                             painter = painterResource(R.drawable.ic_menu_dots_outline),
                             contentDescription = null,
                             tint = Theme.colors.shade.primary

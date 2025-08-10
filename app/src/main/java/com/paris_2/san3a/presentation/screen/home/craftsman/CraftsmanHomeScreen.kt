@@ -66,10 +66,7 @@ fun CraftsmanHomeContent(
                     .background(Theme.colors.background.card),
                 actionIcon = {
                     Icon(
-                        modifier = Modifier
-                            .clickable(onClick = {
-                                action.onNotificationClick()
-                            }),
+                        modifier = Modifier.clickable(onClick = action::onNotificationClick).padding(end = 8.dp),
                         painter = painterResource(R.drawable.ic_notification_outline),
                         contentDescription = null,
                         tint = Theme.colors.shade.primary
@@ -78,7 +75,7 @@ fun CraftsmanHomeContent(
                 leadingIcon = {
                     Column(
                         modifier = Modifier
-                            .padding(start = 16.dp)
+                            .padding(start = 8.dp)
                     ) {
                         Text(
                             text = stringResource(
