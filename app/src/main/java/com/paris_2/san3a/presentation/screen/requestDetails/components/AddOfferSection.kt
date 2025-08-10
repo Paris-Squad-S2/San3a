@@ -13,6 +13,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
@@ -218,16 +220,43 @@ fun AddOfferForm(
                         onShowDatePickerChange(false)
                     }
                 ) {
-                    Text(text = stringResource(R.string.ok))
+                    Text(
+                        text = stringResource(R.string.ok),
+                        color = Theme.colors.brand.primary
+                    )
                 }
             },
             dismissButton = {
                 TextButton(onClick = { onShowDatePickerChange(false) }) {
-                    Text(text = stringResource(R.string.cancel))
+                    Text(
+                        text = stringResource(R.string.cancel),
+                        color = Theme.colors.brand.primary
+                    )
                 }
-            }
+            },
+            colors = DatePickerDefaults.colors(
+                containerColor = Theme.colors.background.card
+            )
         ) {
-            DatePicker(state = datePickerState)
+            DatePicker(
+                state = datePickerState,
+                colors = DatePickerDefaults.colors(
+                    containerColor = Theme.colors.background.card,
+                    titleContentColor = Theme.colors.shade.primary,
+                    headlineContentColor = Theme.colors.shade.primary,
+                    weekdayContentColor = Theme.colors.shade.secondary,
+                    subheadContentColor = Theme.colors.shade.secondary,
+                    yearContentColor = Theme.colors.shade.primary,
+                    currentYearContentColor = Theme.colors.brand.primary,
+                    selectedYearContentColor = Theme.colors.button.onPrimary,
+                    selectedYearContainerColor = Theme.colors.brand.primary,
+                    dayContentColor = Theme.colors.shade.primary,
+                    selectedDayContentColor = Theme.colors.button.onPrimary,
+                    selectedDayContainerColor = Theme.colors.brand.primary,
+                    todayContentColor = Theme.colors.brand.primary,
+                    todayDateBorderColor = Theme.colors.brand.primary
+                )
+            )
         }
     }
 
@@ -243,17 +272,43 @@ fun AddOfferForm(
                         onShowTimePickerChange(false)
                     }
                 ) {
-                    Text(stringResource(R.string.ok))
+                    Text(
+                        stringResource(R.string.ok),
+                        color = Theme.colors.brand.primary
+
+                    )
                 }
             },
             dismissButton = {
                 TextButton(onClick = { onShowTimePickerChange(false) }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(
+                        stringResource(R.string.cancel), color = Theme.colors.brand.primary
+                    )
                 }
             },
             text = {
-                TimePicker(state = timePickerState)
-            }
+                TimePicker(
+                    state = timePickerState,
+                    colors = TimePickerDefaults.colors(
+                        clockDialColor = Theme.colors.background.bottomSheetCard,
+                        selectorColor = Theme.colors.brand.primary,
+                        containerColor = Theme.colors.background.card,
+                        periodSelectorBorderColor = Theme.colors.stroke.primary,
+                        clockDialSelectedContentColor = Theme.colors.button.onPrimary,
+                        clockDialUnselectedContentColor = Theme.colors.shade.primary,
+                        periodSelectorSelectedContainerColor = Theme.colors.brand.primary,
+                        periodSelectorUnselectedContainerColor = Theme.colors.background.bottomSheetCard,
+                        periodSelectorSelectedContentColor = Theme.colors.button.onPrimary,
+                        periodSelectorUnselectedContentColor = Theme.colors.shade.primary,
+                        timeSelectorSelectedContainerColor = Theme.colors.brand.primary,
+                        timeSelectorUnselectedContainerColor = Theme.colors.background.bottomSheetCard,
+                        timeSelectorSelectedContentColor = Theme.colors.button.onPrimary,
+                        timeSelectorUnselectedContentColor = Theme.colors.shade.primary
+                    ),
+
+                    )
+            },
+            containerColor = Theme.colors.background.card
         )
     }
 }
