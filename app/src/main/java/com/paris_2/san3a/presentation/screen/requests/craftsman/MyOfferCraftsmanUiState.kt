@@ -26,22 +26,21 @@ fun List<RequestService>.toMyJobOfferUiStateMap(): Map<String, MyJobOfferUiState
 data class MyJobOfferUiState(
     val customerPhone: String = "",
     val craftsManId: String = "",
-    val jobOfferTitle: String = "",
-    val serviceType: String = "",
-    val date: String = "",
-    val acceptedTime: String = "",
-    val address: String = "",
-    val craftsmanName: String? = "",
-    val craftsmanRating: Float? = 0.0f,
-    val reviewsNumber: Int? = 0,
+    val jobOfferTitle: String = "job Offer Title",
+    val serviceType: String = "Service Request",
+    val date: String = "2023-10-01",
+    val acceptedTime: String = "10:00 AM",
+    val address: String = "123 Main St, City, Country",
+    val craftsmanName: String? = "John Doe",
+    val craftsmanRating: Float? = 4.5f,
+    val reviewsNumber: Int? = 100,
     val craftsmanURL: String? = null,
     val isCraftsmanVerified: Boolean = false,
-    val craftsmanMessages: String = "",
+    val craftsmanMessages: String = "Hello, I am available for your request.",
     val isApproved: Boolean = false,
-    val craftsmanOfferPrice: Double = 0.0,
+    val craftsmanOfferPrice: Double = 53_000.0,
     val status: RequestStatus = RequestStatus.ONGOING,
 )
-
 
 fun RequestService.toMyJobOfferUiState(): MyJobOfferUiState {
     return MyJobOfferUiState(
@@ -79,4 +78,3 @@ fun List<Offer>.toUiStateList(): List<OfferUiState> = map { it.toUiState() }
 fun List<RequestService>.toMyJobOfferUiStateList(): List<MyJobOfferUiState> {
     return this.map { it.toMyJobOfferUiState() }
 }
-
