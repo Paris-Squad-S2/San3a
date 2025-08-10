@@ -7,8 +7,10 @@ import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.CancelRequestUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.datetime.LocalDate
@@ -19,6 +21,8 @@ class CraftsmanRequestDetailsViewModel(
     private val addOfferUseCase: AddOfferUseCase,
     private val getOffersUseCase: GetOffersUseCase,
     private val acceptedOffersUseCase: AcceptOfferUseCase,
+    private val cancelRequestUseCase: CancelRequestUseCase,
+    private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val createChatUseCase: CreateChatUseCase,
     savedStateHandle: SavedStateHandle
@@ -238,6 +242,44 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
+    override fun onCancelRequestClick(requestId: String) {
+        tryToExecute(
+            execute = {
+                cancelRequestUseCase(requestId)
+            },
+            onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Request cancelled successfully")
+                navigateUp()
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while cancelling request",
+                    )
+                )
+            }
+        )
+    }
+
+    override fun markAsDoneClick(requestId: String) {
+        tryToExecute(
+            execute = {
+                markRequestAsDoneUseCase(requestId)
+            },
+            onSuccess = {
+                Log.d("CraftsmanRequestDetailsVM", "Request marked as done successfully")
+                navigateUp()
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while marking request as done",
+                    )
+                )
+            }
+        )
+    }
+
     override fun onPriceChanged(price: String) {
         updateState(
             screenState.value.copy(
@@ -321,16 +363,15 @@ class CraftsmanRequestDetailsViewModel(
     fun loadYourOffers() {
         tryToExecute(
             execute = {
-                screenState.value.uiState.offers.values.filter { it.craftsmanId == phoneNumber }
+                screenState.value.uiState.offers.values.firstOrNull { it.craftsmanId == phoneNumber }
             },
-            onSuccess = {
-                it.forEach { offer ->
-                    Log.d("CraftsmanRequestDetailsVM", "your Offer: $offer")
-                }
+            onSuccess = { offer ->
+                Log.d("CraftsmanRequestDetailsVM", "your Offer: $offer")
+
                 updateState(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
-                            yourOffers = it
+                            yourOffer = offer
                         ),
                     )
                 )

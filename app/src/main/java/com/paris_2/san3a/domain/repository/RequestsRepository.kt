@@ -16,4 +16,7 @@ interface RequestsRepository {
     fun getCustomerRequests(userId: String): Flow<List<RequestService>>
     fun getCraftsManRequests(userId: String): Flow<List<RequestService>>
     fun getCraftManOfferOnRequestUseCase(craftsManId: String, requestId: String): Flow<Offer?>
+    suspend fun cancelRequest(requestId: String)
+    suspend fun markRequestAsDone(requestId: String)
+    fun getAcceptedOfferOnRequestUseCase(requestId: String): Flow<Offer?>
 }

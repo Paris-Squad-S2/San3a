@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.presentation.screen.requests.craftsman.JobUiState
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
@@ -105,46 +106,49 @@ fun MyJobOfferCard(
                     status = OfferStatus.PENDING_OFFER,
                     time = jobUiState.offer.preferredTime,
                     stickyFooter = {
-                        when (jobUiState.offer.isAccepted){
-                            true -> {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 24.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                ) {
-                                    AppButton(
-                                        type = AppButtonType.Secondary,
-                                        onClick = onSendMessage,
-                                        text = stringResource(R.string.send_message),
-                                        modifier = Modifier.weight(1f),
-                                        size = AppButtonSize.Small,
-                                        state = AppButtonState.Enable,
-                                        enableSecondaryBackgroundColor = Theme.colors.shade.quaternary
+                        if (jobUiState.status == RequestStatus.ONGOING) {
+                            when (jobUiState.offer.isAccepted) {
+                                true -> {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 24.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                    ) {
+                                        AppButton(
+                                            type = AppButtonType.Secondary,
+                                            onClick = onSendMessage,
+                                            text = stringResource(R.string.send_message),
+                                            modifier = Modifier.weight(1f),
+                                            size = AppButtonSize.Small,
+                                            state = AppButtonState.Enable,
+                                            enableSecondaryBackgroundColor = Theme.colors.shade.quaternary
+                                        )
+                                        AppButton(
+                                            type = AppButtonType.Primary,
+                                            onClick = onMarkAsDone,
+                                            text = stringResource(R.string.mark_as_done),
+                                            modifier = Modifier.weight(1f),
+                                            size = AppButtonSize.Small
+                                        )
+                                    }
+                                }
+
+                                false -> {
+                                    HorizontalDivider(
+                                        modifier = Modifier.padding(vertical = 16.dp),
+                                        color = Theme.colors.shade.quaternary,
+                                        thickness = 1.dp
                                     )
-                                    AppButton(
-                                        type = AppButtonType.Primary,
-                                        onClick = onMarkAsDone,
-                                        text = stringResource(R.string.mark_as_done),
-                                        modifier = Modifier.weight(1f),
-                                        size = AppButtonSize.Small
+                                    Text(
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
+                                        text = stringResource(R.string.waiting_for_the_approval),
+                                        textAlign = TextAlign.Center,
+                                        style = Theme.textStyle.body.medium.regular,
+                                        color = Theme.colors.shade.secondary
                                     )
                                 }
-                            }
-                            false -> {
-                                HorizontalDivider(
-                                    modifier = Modifier.padding(vertical = 16.dp),
-                                    color = Theme.colors.shade.quaternary,
-                                    thickness = 1.dp
-                                )
-                                Text(
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    text = stringResource(R.string.waiting_for_the_approval),
-                                    textAlign = TextAlign.Center,
-                                    style = Theme.textStyle.body.medium.regular,
-                                    color = Theme.colors.shade.secondary
-                                )
                             }
                         }
                     },

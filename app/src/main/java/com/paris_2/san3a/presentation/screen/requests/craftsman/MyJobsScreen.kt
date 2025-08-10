@@ -176,7 +176,7 @@ private fun MyRequestScreenContent(
 @Composable
 private fun JobsList(
     jobs: List<JobUiState>,
-    myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener
+    myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener,
 ) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
@@ -187,7 +187,7 @@ private fun JobsList(
                 jobUiState = job,
                 onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails(job.id) },
                 onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick(job.customerPhone) }, //TODO
-                onMarkAsDone = { myJobCraftsmanInteractionListener.onSendAsDone(job.id) }
+                onMarkAsDone = { myJobCraftsmanInteractionListener.onMarkAsDone(job.id) }
             )
         }
     }
@@ -200,7 +200,7 @@ fun MyRequestScreenPreview() {
         MyRequestScreenContent(
             myJobCraftsmanInteractionListener = object : MyJobCraftsmanInteractionListener {
                 override fun onRetryClick() {}
-                override fun onSendAsDone(requestId: String) {
+                override fun onMarkAsDone(requestId: String) {
                     TODO("Not yet implemented")
                 }
 

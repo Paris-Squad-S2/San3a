@@ -67,9 +67,10 @@ fun CraftsManOffer(
     painter: Painter,
     offerDetails: OfferDetailsUIState,
     addShadow: Boolean = false,
-    onChatClick: () -> Unit,
-    onAcceptOfferClick: () -> Unit,
-    showActionButtons: Boolean = true
+    onSecondaryButtonClick: () -> Unit,
+    onPrimaryButtonClick: () -> Unit,
+    showActionButtons: Boolean = true,
+    forCraftsMan: Boolean
 ) {
 
     val targetColor = when (offerDetails.status) {
@@ -86,10 +87,12 @@ fun CraftsManOffer(
             .fillMaxWidth()
             .let {
                 if (addShadow) {
-                    it.graphicsLayer {
+                    it
+                        .graphicsLayer {
                             shadowElevation = 0.dp.toPx()
                             translationY = (-3.48).dp.toPx()
-                        }.shadow(
+                        }
+                        .shadow(
                             elevation = 69.52.dp,
                             shape = RoundedCornerShape(Theme.radius.extraLarge),
                             clip = false,
@@ -132,7 +135,7 @@ fun CraftsManOffer(
                 )
                 .background(Theme.colors.background.card)
                 .fillMaxWidth()
-                .padding(if (offerDetails.status == OfferStatus.OFFER_ACCEPTED)  14.dp  else 16.dp),
+                .padding(if (offerDetails.status == OfferStatus.OFFER_ACCEPTED) 14.dp else 16.dp),
             painter = painter,
             isVerified = offerDetails.isVerify,
             name = offerDetails.name,
@@ -144,31 +147,59 @@ fun CraftsManOffer(
             status = offerDetails.status,
             time = offerDetails.time,
             stickyFooter = {
-                if (it == OfferStatus.PENDING_OFFER && showActionButtons)
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 24.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        AppButton(
-                            type = AppButtonType.Secondary,
-                            onClick = onChatClick,
-                            text = stringResource(R.string.chat),
-                            modifier = Modifier.weight(1f),
-                            size = AppButtonSize.Small,
-                            state = AppButtonState.Enable,
-                            enableSecondaryBackgroundColor = Theme.colors.shade.quaternary
-                        )
-                        AppButton(
-                            type = AppButtonType.Primary,
-                            onClick = onAcceptOfferClick,
-                            text = stringResource(R.string.accept_offer),
-                            modifier = Modifier.weight(1f),
-                            size = AppButtonSize.Small
-                        )
+                if (showActionButtons) {
+                    when {
+                        it == OfferStatus.PENDING_OFFER && !forCraftsMan -> {
+                            ActionButtonsRow(
+                                primaryText = stringResource(R.string.accept_offer),
+                                secondaryText = stringResource(R.string.chat),
+                                onPrimaryClick = onPrimaryButtonClick,
+                                onSecondaryClick = onSecondaryButtonClick
+                            )
+                        }
+                        it == OfferStatus.YOUR_ACCEPTED_OFFER && forCraftsMan -> {
+                            ActionButtonsRow(
+                                primaryText = stringResource(R.string.mark_as_done),
+                                secondaryText = stringResource(R.string.cancel_request),
+                                onPrimaryClick = onPrimaryButtonClick,
+                                onSecondaryClick = onSecondaryButtonClick
+                            )
+                        }
                     }
+                }
             }
+        )
+    }
+}
+
+@Composable
+fun ActionButtonsRow(
+    primaryText: String,
+    secondaryText: String,
+    onPrimaryClick: () -> Unit,
+    onSecondaryClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 24.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        AppButton(
+            type = AppButtonType.Secondary,
+            onClick = onSecondaryClick,
+            text = secondaryText,
+            modifier = Modifier.weight(1f),
+            size = AppButtonSize.Small,
+            state = AppButtonState.Enable,
+            enableSecondaryBackgroundColor = Theme.colors.shade.quaternary
+        )
+        AppButton(
+            type = AppButtonType.Primary,
+            onClick = onPrimaryClick,
+            text = primaryText,
+            modifier = Modifier.weight(1f),
+            size = AppButtonSize.Small
         )
     }
 }
@@ -182,24 +213,27 @@ fun CardsPreview() {
                 addShadow = true,
                 offerDetails = OfferDetailsUIState(),
                 painter = painterResource(id = R.drawable.img_avatar1),
-                onChatClick = {},
-                onAcceptOfferClick = {},
+                onSecondaryButtonClick = {},
+                onPrimaryButtonClick = {},
+                forCraftsMan = false
             )
             Spacer(Modifier.height(16.dp))
             CraftsManOffer(
                 addShadow = true,
                 offerDetails = OfferDetailsUIState(status = OfferStatus.OFFER_ACCEPTED),
                 painter = painterResource(id = R.drawable.img_avatar2),
-                onChatClick = {},
-                onAcceptOfferClick = {},
+                onSecondaryButtonClick = {},
+                onPrimaryButtonClick = {},
+                forCraftsMan = false
             )
             Spacer(Modifier.height(16.dp))
             CraftsManOffer(
                 addShadow = true,
                 offerDetails = OfferDetailsUIState(status = OfferStatus.YOUR_ACCEPTED_OFFER),
                 painter = painterResource(id = R.drawable.img_avatar3),
-                onChatClick = {},
-                onAcceptOfferClick = {},
+                onSecondaryButtonClick = {},
+                onPrimaryButtonClick = {},
+                forCraftsMan = true
             )
         }
     }

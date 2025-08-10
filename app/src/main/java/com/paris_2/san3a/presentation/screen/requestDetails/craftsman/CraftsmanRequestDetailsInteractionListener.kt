@@ -12,6 +12,8 @@ interface CraftsmanRequestDetailsInteractionListener {
     fun onSendOfferClick()
     fun onChatWithPosterClick(customerId: String)
     fun onAcceptOfferClick(offerId: String)
+    fun onCancelRequestClick(requestId: String)
+    fun markAsDoneClick(requestId: String)
 
     fun onPriceChanged(price: String)
     fun onDateChanged(date: LocalDate)

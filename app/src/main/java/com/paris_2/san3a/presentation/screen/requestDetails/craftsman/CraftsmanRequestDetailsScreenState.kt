@@ -22,7 +22,7 @@ data class CraftsmanRequestDetailsUiState(
     val offerToAdd: OfferToAddUiState = OfferToAddUiState(),
     val offers: Map<String, RequestOfferUiState> = emptyMap(),
     val offersFromCraftsman: List<RequestOfferUiState> = emptyList(),
-    val yourOffers: List<RequestOfferUiState> = emptyList(),
+    val yourOffer: RequestOfferUiState? = null,
     val acceptedOffer: RequestOfferUiState? = null,
     val customer: Customer = Customer(),
     val showDatePicker: Boolean = false,
@@ -96,7 +96,7 @@ fun RequestOfferUiState.toOfferDetailsUIState(offerAccepted: Boolean = false): O
         amount = this.price,
         time = this.time,
         postedTime = this.postedTime,
-        status = if (offerAccepted) OfferStatus.OFFER_ACCEPTED else if (this.isAccepted) OfferStatus.YOUR_ACCEPTED_OFFER else OfferStatus.PENDING_OFFER,
+        status = if (offerAccepted) OfferStatus.YOUR_ACCEPTED_OFFER else if (this.isAccepted) OfferStatus.OFFER_ACCEPTED else OfferStatus.PENDING_OFFER,
         isVerify = false
     )
 }

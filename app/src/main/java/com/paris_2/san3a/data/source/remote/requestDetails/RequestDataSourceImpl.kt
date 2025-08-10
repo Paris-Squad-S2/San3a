@@ -6,7 +6,6 @@ import com.paris_2.san3a.data.source.remote.requestDetails.dto.OfferDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 
@@ -96,6 +95,24 @@ class RequestDataSourceImpl(
         )
     }
 
+    override suspend fun cancelRequest(requestId: String) {
+        fireStoreService.updateDoc(
+            path = "$REQUEST_DETAILS_COLLECTION/$requestId",
+            data = mapOf(
+                "requestStatus" to "CANCELLED"
+            )
+        )
+    }
+
+    override suspend fun markRequestAsDone(requestId: String) {
+        fireStoreService.updateDoc(
+            path = "$REQUEST_DETAILS_COLLECTION/$requestId",
+            data = mapOf(
+                "requestStatus" to "COMPLETED"
+            )
+        )
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getCraftsManRequests(userId: String): Flow<List<RequestServiceDto>> =
         fireStoreService.streamCollection(
@@ -126,6 +143,23 @@ class RequestDataSourceImpl(
             queryBuilder = { query ->
                 query.whereEqualTo("craftsmanId", craftsManId)
                     .whereEqualTo("requestId", requestId)
+            }
+        ).flatMapLatest { offers ->
+            flow { emit(offers.firstOrNull()) }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getAcceptedOfferOnRequestUseCase(
+        requestId: String
+    ): Flow<OfferDto?> {
+        return fireStoreService.streamCollection(
+            path = OFFERS_COLLECTION,
+            fromJson = OfferDto::fromJson,
+            queryBuilder = { query ->
+                query
+                    .whereEqualTo("requestId", requestId)
+                    .whereEqualTo("isAccepted", true)
             }
         ).flatMapLatest { offers ->
             flow { emit(offers.firstOrNull()) }

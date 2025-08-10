@@ -6,7 +6,7 @@ import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetCraftManOfferOnRequestUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
@@ -15,7 +15,7 @@ class MyOfferCraftsmanViewModel(
     private val getCraftsManRequestsUseCase: GetCraftsManRequestsUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
-    private val getOffersUseCase: GetOffersUseCase,
+    private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
     private val getCraftManOfferOnRequestUseCase: GetCraftManOfferOnRequestUseCase,
     private val createChatUseCase: CreateChatUseCase,
 ) : BaseViewModel<MyJobsCraftsmanScreenState>(MyJobsCraftsmanScreenState()),
@@ -85,14 +85,14 @@ class MyOfferCraftsmanViewModel(
     private fun getOffersForRequests() {
         tryToExecute(
             execute = {
-                screenState.value.myOffersCraftsmanUiState.ongoing.map { (id, request) ->
-                    updateRequestOffer(requestId = id, listType = ListType.ONGOING)
+                screenState.value.myOffersCraftsmanUiState.ongoing.map { mapEntry ->
+                    updateRequestOffer(requestId = mapEntry.key, listType = ListType.ONGOING)
                 }
-                screenState.value.myOffersCraftsmanUiState.completed.map { (id, request) ->
-                    updateRequestOffer(requestId = id, listType = ListType.COMPLETED)
+                screenState.value.myOffersCraftsmanUiState.completed.map { mapEntry ->
+                    updateRequestOffer(requestId = mapEntry.key, listType = ListType.COMPLETED)
                 }
-                screenState.value.myOffersCraftsmanUiState.canceled.map { (id, request) ->
-                    updateRequestOffer(requestId = id, listType = ListType.CANCELED)
+                screenState.value.myOffersCraftsmanUiState.canceled.map { mapEntry ->
+                    updateRequestOffer(requestId = mapEntry.key, listType = ListType.CANCELED)
                 }
             },
             onError = {
@@ -205,8 +205,15 @@ class MyOfferCraftsmanViewModel(
     }
 
 
-    override fun onSendAsDone(requestId: String) {
-        /*TODO("Not yet implemented")*/
+    override fun onMarkAsDone(requestId: String) {
+        tryToExecute(
+            execute = {
+                markRequestAsDoneUseCase(requestId)
+            },
+            onError = {
+                //todo show snack bar
+            }
+        )
     }
 
     override fun onSendMessageClick(phoneNumber: String) {

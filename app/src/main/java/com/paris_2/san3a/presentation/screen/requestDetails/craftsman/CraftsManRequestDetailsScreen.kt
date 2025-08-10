@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.presentation.screen.requestDetails.components.AddOfferForm
 import com.paris_2.san3a.presentation.screen.requestDetails.components.RequestInfoSection
 import com.paris_2.san3a.presentation.shared.components.AppBar
@@ -135,18 +136,23 @@ fun CraftsmanRequestDetailsContent(
             )
         }
         item {
-            AddYourOfferSection(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 24.dp),
-                state = state,
-                interactionListener = interactionListener
-            )
+            AnimatedVisibility(visible = state.yourOffer == null) {
+                if (state.yourOffer == null) {
+                    AddYourOfferSection(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 24.dp),
+                        state = state,
+                        interactionListener = interactionListener
+                    )
+                }
+            }
         }
+
 
         item {
             AnimatedVisibility(
-                visible = state.yourOffers.contains(state.acceptedOffer)
+                visible = state.yourOffer != null && state.yourOffer == state.acceptedOffer
             ) {
                 Column(
                     modifier = modifier
@@ -171,7 +177,6 @@ fun CraftsmanRequestDetailsContent(
 
 
         item {
-
             AnimatedVisibility(
                 visible = state.acceptedOffer != null
             ) {
@@ -179,7 +184,7 @@ fun CraftsmanRequestDetailsContent(
                     Column(
                         modifier = modifier
                             .fillMaxWidth()
-                            .padding(bottom = 24.dp, start = 16.dp, end = 16.dp)
+                            .padding(top = 16.dp, bottom = 24.dp, start = 16.dp, end = 16.dp)
                     ) {
                         Text(
                             text = stringResource(R.string.selected_offer),
@@ -189,63 +194,54 @@ fun CraftsmanRequestDetailsContent(
                         )
                         CraftsManOffer(
                             addShadow = true,
-                            showActionButtons = state.yourOffers.contains(state.acceptedOffer), //TODO
+                            showActionButtons = state.yourOffer == state.acceptedOffer, //TODO
                             offerDetails = state.acceptedOffer.toOfferDetailsUIState(
                                 offerAccepted = true
                             ),
                             painter = rememberAsyncImagePainter(model = state.acceptedOffer.craftsmanImageUrl),
-                            onChatClick = {
-                                interactionListener.onChatWithPosterClick(state.customer.id)
+                            onSecondaryButtonClick = {
+                                interactionListener.onCancelRequestClick(state.request.id)
                             },
-                            onAcceptOfferClick = {
-                                interactionListener.onAcceptOfferClick(state.acceptedOffer.id)
+                            onPrimaryButtonClick = {
+                                interactionListener.markAsDoneClick(state.request.id)
                             },
+                            forCraftsMan = true,
                         )
                     }
                 }
             }
         }
 
-        if (state.yourOffers.isNotEmpty()){
+        if (state.yourOffer != null && state.yourOffer.isAccepted.not()) {
             item {
-                Row(
+                Text(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = stringResource(R.string.your_offers),
-                        style = Theme.textStyle.title.small,
-                        color = Theme.colors.shade.primary,
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = stringResource(
-                            R.string.offers_count,
-                            state.yourOffers.size
-                        ),
-                        style = Theme.textStyle.body.small.regular,
-                        color = Theme.colors.shade.tertiary,
-                    )
-                }
+                    text = stringResource(R.string.your_offer),
+                    style = Theme.textStyle.title.small,
+                    color = Theme.colors.shade.primary,
+                )
             }
 
-            items(state.yourOffers) { offer ->
+            item {
                 CraftsManOffer(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         .animateItem(),
                     addShadow = true,
-                    showActionButtons = false,
-                    offerDetails = offer.toOfferDetailsUIState(),
-                    painter = rememberAsyncImagePainter(model = offer.craftsmanImageUrl),
-                    onChatClick = {
-                        interactionListener.onChatWithPosterClick(offer.craftsmanId)
+                    showActionButtons = state.request.requestStatus == RequestStatus.ONGOING,
+                    offerDetails = state.yourOffer.toOfferDetailsUIState(
+                        offerAccepted = state.yourOffer.isAccepted,
+                    ),
+                    painter = rememberAsyncImagePainter(model = state.yourOffer.craftsmanImageUrl),
+                    onSecondaryButtonClick = {
+                        interactionListener.onCancelRequestClick(state.request.id)
                     },
-                    onAcceptOfferClick = {
-                        interactionListener.onAcceptOfferClick(offer.id)
+                    onPrimaryButtonClick = {
+                        interactionListener.markAsDoneClick(state.request.id)
                     },
+                    forCraftsMan = true,
                 )
             }
         }
@@ -284,12 +280,13 @@ fun CraftsmanRequestDetailsContent(
                     showActionButtons = false,
                     offerDetails = offer.toOfferDetailsUIState(),
                     painter = rememberAsyncImagePainter(model = offer.craftsmanImageUrl),
-                    onChatClick = {
-                        interactionListener.onChatWithPosterClick(offer.craftsmanId)
+                    onSecondaryButtonClick = {
+                        interactionListener.onCancelRequestClick(state.request.id)
                     },
-                    onAcceptOfferClick = {
-                        interactionListener.onAcceptOfferClick(offer.id)
+                    onPrimaryButtonClick = {
+                        interactionListener.markAsDoneClick(state.request.id)
                     },
+                    forCraftsMan = true,
                 )
             }
         }
@@ -299,12 +296,12 @@ fun CraftsmanRequestDetailsContent(
                 visible = state.offers.isEmpty()
             ) {
                 PlaceHolderScreen(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 60.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 60.dp),
                     image = R.drawable.img_empty_offers,
-                title = R.string.waiting_for_offers,
-                description = R.string.craftsmen_in_your_area_will_send_offers_soon_you_ll_be_notified_when_they_arrive,
+                    title = R.string.waiting_for_offers,
+                    description = R.string.craftsmen_in_your_area_will_send_offers_soon_you_ll_be_notified_when_they_arrive,
                 )
             }
         }

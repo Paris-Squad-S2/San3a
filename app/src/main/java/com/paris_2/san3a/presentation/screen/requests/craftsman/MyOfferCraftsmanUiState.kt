@@ -41,7 +41,7 @@ fun RequestService.toMyJobOfferUiState(): JobUiState {
         id = this.id,
         customerPhone = this.userId,
         serviceType = this.serviceType,
-        address = this.location,
+        address = this.location + " " + this.locationDetails,
         status = this.requestStatus,
         time = this.time.toString(), //TODO
         title = this.title,
