@@ -18,6 +18,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
@@ -238,25 +239,32 @@ fun AddOfferForm(
                 containerColor = Theme.colors.background.card
             )
         ) {
-            DatePicker(
-                state = datePickerState,
-                colors = DatePickerDefaults.colors(
-                    containerColor = Theme.colors.background.card,
-                    titleContentColor = Theme.colors.shade.primary,
-                    headlineContentColor = Theme.colors.shade.primary,
-                    weekdayContentColor = Theme.colors.shade.secondary,
-                    subheadContentColor = Theme.colors.shade.secondary,
-                    yearContentColor = Theme.colors.shade.primary,
-                    currentYearContentColor = Theme.colors.brand.primary,
-                    selectedYearContentColor = Theme.colors.button.onPrimary,
-                    selectedYearContainerColor = Theme.colors.brand.primary,
-                    dayContentColor = Theme.colors.shade.primary,
-                    selectedDayContentColor = Theme.colors.button.onPrimary,
-                    selectedDayContainerColor = Theme.colors.brand.primary,
-                    todayContentColor = Theme.colors.brand.primary,
-                    todayDateBorderColor = Theme.colors.brand.primary
+            MaterialTheme(
+                colorScheme = MaterialTheme.colorScheme.copy(
+                    onSurface = Theme.colors.shade.primary,
+                    primary = Theme.colors.brand.primary
                 )
-            )
+            ) {
+                DatePicker(
+                    state = datePickerState,
+                    colors = DatePickerDefaults.colors(
+                        containerColor = Theme.colors.background.card,
+                        titleContentColor = Theme.colors.shade.primary,
+                        headlineContentColor = Theme.colors.shade.primary,
+                        weekdayContentColor = Theme.colors.shade.secondary,
+                        subheadContentColor = Theme.colors.shade.secondary,
+                        yearContentColor = Theme.colors.shade.primary,
+                        currentYearContentColor = Theme.colors.brand.primary,
+                        selectedYearContentColor = Theme.colors.button.onPrimary,
+                        selectedYearContainerColor = Theme.colors.brand.primary,
+                        dayContentColor = Theme.colors.shade.primary,
+                        selectedDayContentColor = Theme.colors.button.onPrimary,
+                        selectedDayContainerColor = Theme.colors.brand.primary,
+                        todayContentColor = Theme.colors.brand.primary,
+                        todayDateBorderColor = Theme.colors.brand.primary
+                    )
+                )
+            }
         }
     }
 
