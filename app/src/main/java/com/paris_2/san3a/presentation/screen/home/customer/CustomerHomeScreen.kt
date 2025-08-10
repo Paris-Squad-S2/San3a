@@ -298,9 +298,7 @@ private fun CustomerHomeScreenContent(
                 actionIcon = {
                     Icon(
                         modifier = Modifier
-                            .clickable(onClick = {
-                                action.onNotificationClick()
-                            })
+                            .clickable(onClick = action::onNotificationClick)
                             .padding(end = 8.dp),
                         painter = painterResource(R.drawable.ic_notification_outline),
                         contentDescription = null,

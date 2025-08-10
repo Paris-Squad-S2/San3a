@@ -5,11 +5,15 @@ import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.requestDetails.RequestDataSource
 import com.paris_2.san3a.domain.AcceptOfferException
 import com.paris_2.san3a.domain.AssignRequestToCraftsmanException
+import com.paris_2.san3a.domain.CancelRequestException
+import com.paris_2.san3a.domain.GetAcceptedOfferOnRequestException
+import com.paris_2.san3a.domain.GetCraftsmanOfferOnRequestException
 import com.paris_2.san3a.domain.GetCraftsmanOffersException
 import com.paris_2.san3a.domain.GetCustomerRequestsException
 import com.paris_2.san3a.domain.GetOffersCountException
 import com.paris_2.san3a.domain.GetOffersException
 import com.paris_2.san3a.domain.GetRequestDetailsException
+import com.paris_2.san3a.domain.MarkRequestAsDoneException
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.repository.RequestsRepository
@@ -78,6 +82,33 @@ class RequestsRepositoryImpl(
         return requestDataSource.getCraftsManRequests(userId)
             .map { list -> list.map { it.toEntity() } }
             .catch { throw GetCustomerRequestsException() }
+    }
+
+    override fun getCraftManOfferOnRequestUseCase(
+        craftsManId: String,
+        requestId: String
+    ): Flow<Offer?> {
+        return requestDataSource.getCraftManOfferOnRequestUseCase(craftsManId, requestId)
+            .map { it?.toEntity() }
+            .catch { throw GetCraftsmanOfferOnRequestException() }
+    }
+
+    override suspend fun cancelRequest(requestId: String) {
+        safeCall(CancelRequestException()) {
+            requestDataSource.cancelRequest(requestId)
+        }
+    }
+
+    override suspend fun markRequestAsDone(requestId: String) {
+        safeCall(MarkRequestAsDoneException()) {
+            requestDataSource.markRequestAsDone(requestId)
+        }
+    }
+
+    override fun getAcceptedOfferOnRequestUseCase(requestId: String): Flow<Offer?> {
+        return requestDataSource.getAcceptedOfferOnRequestUseCase(requestId)
+            .map { it?.toEntity() }
+            .catch { throw GetAcceptedOfferOnRequestException() }
     }
 
 

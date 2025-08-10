@@ -52,7 +52,7 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
                 val result = execute()
                 onSuccess?.invoke(result)
             } catch (e: Exception) {
-                Log.e("BaseViewModel", "Error executing operation", e)
+                Log.e("BaseViewModel", "tryToExecute: Error executing operation", e)
                 onError(e)
             }
         }
@@ -72,7 +72,7 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
             observe()
                 .onStart { onStart() }
                 .catch {
-                    Log.e("BaseViewModel", "Error executing operation", it)
+                    Log.e("BaseViewModel", "tryToObserve: Error executing operation", it)
                     onError(it)
                 }
                 .collect { onEach(it) }

@@ -48,6 +48,7 @@ private fun MessagesScreenContent(
         topBar = {
             AppBar(
                 title = stringResource(R.string.messages),
+                modifier = Modifier.padding(horizontal = 8.dp),
                 actionIcon = {
                     Icon(
                         modifier = Modifier

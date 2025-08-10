@@ -379,18 +379,16 @@ class CustomerHomeViewModel(
     }
 
     private fun loadMostRequestedServices() {
-        tryToExecute(
-            execute = getMostRequestedServicesUseCase::invoke,
-            onSuccess = { mostRequestedServices ->
-                mostRequestedServices.collect {
-                    updateState(
-                        screenState.value.copy(
-                            customerUiState = screenState.value.customerUiState.copy(
-                                mostRequestedServices = it
-                            )
+        tryToObserve(
+            observe = getMostRequestedServicesUseCase::invoke,
+            onEach = { mostRequestedServices ->
+                updateState(
+                    screenState.value.copy(
+                        customerUiState = screenState.value.customerUiState.copy(
+                            mostRequestedServices = mostRequestedServices
                         )
                     )
-                }
+                )
             },
             onError = {
                 updateState(

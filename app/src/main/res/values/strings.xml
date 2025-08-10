@@ -313,5 +313,8 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="waiting_for_offers">Waiting for offers</string>
     <string name="craftsmen_in_your_area_will_send_offers_soon_you_ll_be_notified_when_they_arrive">Craftsmen in your area will send offers soon. You\'ll be notified when they arrive.</string>
     <string name="attached_images">Attached Images</string>
-    <string name="your_offers">Your Offers</string>
+    <string name="your_offer">Your Offer</string>
+    <string name="view_request_details">View Request Details</string>
+    <string name="waiting_for_the_approval">Waiting for the approval</string>
+    <string name="cancel_request">Cancel Request</string>
 </resources>

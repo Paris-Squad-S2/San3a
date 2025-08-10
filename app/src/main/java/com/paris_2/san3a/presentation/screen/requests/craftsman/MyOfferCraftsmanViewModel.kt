@@ -1,28 +1,36 @@
 package com.paris_2.san3a.presentation.screen.requests.craftsman
 
+import android.util.Log
+import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
-import com.paris_2.san3a.domain.usecase.requests.GetGetCraftsManRequestsUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.GetCraftManOfferOnRequestUseCase
+import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
+import okhttp3.Request
 
 class MyOfferCraftsmanViewModel(
-    private val getGetCraftsManRequestsUseCase: GetGetCraftsManRequestsUseCase,
+    private val getCraftsManRequestsUseCase: GetCraftsManRequestsUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
-    private val getOffersUseCase: GetOffersUseCase,
+    private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
+    private val addNotificationUseCase: AddNotificationUseCase,
+    private val getCraftManOfferOnRequestUseCase: GetCraftManOfferOnRequestUseCase,
     private val createChatUseCase: CreateChatUseCase,
-) : BaseViewModel<MyOfferCraftsmanScreenState>(MyOfferCraftsmanScreenState()),
+) : BaseViewModel<MyJobsCraftsmanScreenState>(MyJobsCraftsmanScreenState()),
     MyJobCraftsmanInteractionListener {
 
     init {
-        getCustomerPhone()
+        getCraftsManPhone()
     }
 
-    private fun getCustomerPhone() {
+    private fun getCraftsManPhone() {
         tryToExecute(
             execute = {
                 screenState.value.copy(
@@ -34,7 +42,7 @@ class MyOfferCraftsmanViewModel(
                 updateState(
                     screenState.value.copy(
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            customerPhone = phoneNumber
+                            craftsManId = phoneNumber
                         )
                     )
                 )
@@ -53,26 +61,24 @@ class MyOfferCraftsmanViewModel(
     private fun getCraftsManOfferOnRequest() {
         tryToObserve(
             observe = {
-                getGetCraftsManRequestsUseCase(screenState.value.myOffersCraftsmanUiState.customerPhone)
+                getCraftsManRequestsUseCase(screenState.value.myOffersCraftsmanUiState.craftsManId)
             },
             onEach = { result ->
-                val resultt = result.toMyJobOfferUiStateList() //TODO
                 updateState(
-                    MyOfferCraftsmanScreenState(
+                    MyJobsCraftsmanScreenState(
                         isLoading = false,
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            requests = result.toMyJobOfferUiStateMap(),
-                            ongoing = resultt.filter { it.status == RequestStatus.ONGOING }, //TODO
-                            completed = resultt.filter { it.status == RequestStatus.COMPLETED }, //TODO
-                            canceled = resultt.filter { it.status == RequestStatus.CANCELLED } //TODO
+                            ongoing = result.filter { it.requestStatus == RequestStatus.ONGOING }.toMyJobOfferUiStateMap(), //TODO
+                            completed = result.filter { it.requestStatus == RequestStatus.COMPLETED }.toMyJobOfferUiStateMap(), //TODO
+                            canceled = result.filter { it.requestStatus == RequestStatus.CANCELLED }.toMyJobOfferUiStateMap() //TODO
                         )
                     )
                 )
-                getOffersForRequest()
+                getOffersForRequests()
             },
             onError = {
                 updateState(
-                    MyOfferCraftsmanScreenState(
+                    MyJobsCraftsmanScreenState(
                         isLoading = false,
                         errorMessage = it.message
                     )
@@ -81,61 +87,163 @@ class MyOfferCraftsmanViewModel(
         )
     }
 
-    private fun getOffersForRequest() {
+    private fun getOffersForRequests() {
         tryToExecute(
             execute = {
-//                //getOffersUseCase(requestId)
-//                screenState.value.myOffersCraftsmanUiState.requests.forEach { id, request ->
-//                    getOffersUseCase(id).collect { offers ->
-//                        updateState(
-//                            screenState.value.copy(
-//                                myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-//                                    requests = screenState.value.myOffersCraftsmanUiState.requests.toMutableMap().apply {
-//                                        // TODO
-//                                    }
-//                                )
-//                            )
-//                        )
-//                    }
-//                }
-            },
-            onSuccess = { offers ->
-                updateState(
-                    screenState.value.copy(
-                        isLoading = false,
-                        myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            offers = emptyList()//todo map to offer ui
-                        )
-                    )
-                )
+                screenState.value.myOffersCraftsmanUiState.ongoing.map { mapEntry ->
+                    updateRequestOffer(requestId = mapEntry.key, listType = ListType.ONGOING)
+                }
+                screenState.value.myOffersCraftsmanUiState.completed.map { mapEntry ->
+                    updateRequestOffer(requestId = mapEntry.key, listType = ListType.COMPLETED)
+                }
+                screenState.value.myOffersCraftsmanUiState.canceled.map { mapEntry ->
+                    updateRequestOffer(requestId = mapEntry.key, listType = ListType.CANCELED)
+                }
             },
             onError = {
-                updateState(
-                    screenState.value.copy(
-                        isLoading = false,
-                        errorMessage = it.message ?: "Failed to load offers"
-                    )
-                )
+                Log.e("MyOfferCraftsmanViewModel", "Error fetching offers: ${it.message}")
             }
         )
     }
 
-    override fun onSendAsDone(requestId: String) {
-        /*TODO("Not yet implemented")*/
+    enum class ListType {
+        ONGOING, COMPLETED, CANCELED
+    }
+    private fun updateRequestOffer(requestId: String, listType: ListType) = tryToObserve(
+        observe = {
+            getCraftManOfferOnRequestUseCase(
+                requestId = requestId,
+                craftsManId = screenState.value.myOffersCraftsmanUiState.craftsManId
+            )
+        },
+        onEach = { offer ->
+            if (offer == null) {
+                Log.d("MyOfferCraftsmanViewModel", "No offer found for request $requestId")
+                return@tryToObserve
+            }
+
+            val updatedRequests = when(listType) {
+                ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.ongoing.toMutableMap()
+                ListType.COMPLETED -> screenState.value.myOffersCraftsmanUiState.completed.toMutableMap()
+                ListType.CANCELED -> screenState.value.myOffersCraftsmanUiState.canceled.toMutableMap()
+            }
+
+            Log.d("MyOfferCraftsmanViewModel", "Updating request $requestId with offer: $offer")
+
+            updatedRequests[requestId] = updatedRequests[requestId]?.copy(
+                offer = offer.toUiState()
+            ) ?: return@tryToObserve
+
+            Log.d("MyOfferCraftsmanViewModel", "Updated request $requestId: ${updatedRequests[requestId]}")
+
+            val updatedState = when (listType) {
+                ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.copy(ongoing = updatedRequests)
+                ListType.COMPLETED -> screenState.value.myOffersCraftsmanUiState.copy(completed = updatedRequests)
+                ListType.CANCELED -> screenState.value.myOffersCraftsmanUiState.copy(canceled = updatedRequests)
+            }
+
+            updateState(
+                screenState.value.copy(
+                    myOffersCraftsmanUiState = updatedState
+                )
+            )
+
+            getCraftsManDetails(requestId = requestId, craftsManId = offer.craftsmanId, listType = listType)
+
+        },
+        onError = {
+            Log.e("MyOfferCraftsmanViewModel", "Error fetching offer for request $requestId: ${it.message}")
+            updateState(
+                screenState.value.copy(
+                    isLoading = false,
+                    errorMessage = it.message ?: "Failed to load offers for request $requestId"
+                )
+            )
+        },
+    )
+
+    private fun getCraftsManDetails(
+        requestId: String,
+        craftsManId: String,
+        listType: ListType
+    ) {
+        tryToExecute(
+            execute = {
+                getUserUseCase(craftsManId)
+            },
+            onSuccess = { craftsMan ->
+                Log.d("MyOfferCraftsmanViewModel", "Fetched craftsman details: $craftsMan")
+                val updatedRequests = when (listType) {
+                    ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.ongoing.toMutableMap()
+                    ListType.COMPLETED -> screenState.value.myOffersCraftsmanUiState.completed.toMutableMap()
+                    ListType.CANCELED -> screenState.value.myOffersCraftsmanUiState.canceled.toMutableMap()
+                }
+
+                updatedRequests[requestId] = updatedRequests[requestId]?.copy(
+                    offer = updatedRequests[requestId]?.offer?.copy(
+                        craftsMan = craftsMan.toCraftsManUiState()
+                    )
+                ) ?: return@tryToExecute
+
+                when (listType) {
+                    ListType.ONGOING -> updateState(
+                        screenState.value.copy(
+                            myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(ongoing = updatedRequests)
+                        )
+                    )
+                    ListType.COMPLETED -> updateState(
+                        screenState.value.copy(
+                            myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(completed = updatedRequests)
+                        )
+                    )
+                    ListType.CANCELED -> updateState(
+                        screenState.value.copy(
+                            myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(canceled = updatedRequests)
+                        )
+                    )
+                }
+            },
+            onError = {
+                Log.e("MyOfferCraftsmanViewModel", "Error fetching craftsman details: ${it.message}")
+            }
+        )
+    }
+
+
+    override fun onMarkAsDone(requestId: String, requestTitle: String, customerId: String) {
+        tryToExecute(
+            execute = {
+                markRequestAsDoneUseCase(requestId)
+            },
+            onSuccess = {
+                addNotificationUseCase(
+                    Notification(
+                        id = "",
+                        title = "Request Completed",
+                        caption = "Your request $requestTitle has been marked as done.",
+                        date = getCurrentDateTime(),
+                        userId = customerId
+                    )
+                )
+            },
+            onError = {
+                //todo show snack bar
+            }
+        )
     }
 
     override fun onSendMessageClick(phoneNumber: String) {
         tryToExecute(
             execute = {
                 createChatUseCase(
-                    listOf(screenState.value.myOffersCraftsmanUiState.customerPhone, phoneNumber)
+                    listOf(screenState.value.myOffersCraftsmanUiState.craftsManId, phoneNumber)
                 )
             },
             onSuccess = { chatId ->
                 navigate(
                     Destinations.MessageDetails(
                         chatId = chatId,
-                        currentUserId = screenState.value.myOffersCraftsmanUiState.customerPhone,
+                        currentUserId = screenState.value.myOffersCraftsmanUiState.craftsManId,
                         otherUserId = phoneNumber
                     )
                 )
@@ -147,7 +255,12 @@ class MyOfferCraftsmanViewModel(
     }
 
     override fun onViewRequestDetails(requestId: String) {
-        /*TODO("Not yet implemented")*/
+        navigate(
+            Destinations.RequestDetails(
+                requestId = requestId,
+                phoneNumber = screenState.value.myOffersCraftsmanUiState.craftsManId,
+            )
+        )
     }
 
     override fun onNotificationClick() {

@@ -47,7 +47,7 @@ fun MyJobsScreen(
 private fun MyRequestScreenContent(
     modifier: Modifier = Modifier,
     myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener,
-    uiState: MyOfferCraftsmanScreenState = MyOfferCraftsmanScreenState()
+    uiState: MyJobsCraftsmanScreenState = MyJobsCraftsmanScreenState()
 ) {
 
     AppScaffold(
@@ -63,7 +63,7 @@ private fun MyRequestScreenContent(
                 actionIcon = {
                     Icon(
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(end = 8.dp)
                             .clickable(onClick = myJobCraftsmanInteractionListener::onNotificationClick),
                         painter = painterResource(R.drawable.ic_notification_outline),
                         contentDescription = "Request Icon",
@@ -123,7 +123,7 @@ private fun MyRequestScreenContent(
                                 }
                             } else {
                                 JobsList(
-                                    offers = ongoingRequests,
+                                    jobs = ongoingRequests.values.toList(),
                                     myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
                                 )
                             }
@@ -142,7 +142,7 @@ private fun MyRequestScreenContent(
                                 }
                             } else {
                                 JobsList(
-                                    offers = completedRequests,
+                                    jobs = completedRequests.values.toList(),
                                     myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
                                 )
                             }
@@ -161,7 +161,7 @@ private fun MyRequestScreenContent(
                                 }
                             } else {
                                 JobsList(
-                                    offers = canceledRequests,
+                                    jobs = canceledRequests.values.toList(),
                                     myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
                                 )
                             }
@@ -175,19 +175,19 @@ private fun MyRequestScreenContent(
 
 @Composable
 private fun JobsList(
-    offers: List<MyJobOfferUiState>,
-    myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener
+    jobs: List<JobUiState>,
+    myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener,
 ) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(offers) { offer ->
+        items(jobs) { job ->
             MyJobOfferCard(
-                offerUiState = offer,
-                onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails("") },
-                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick("+201118295474") }, //TODO
-                onMarkAsDone = { myJobCraftsmanInteractionListener.onSendAsDone("") }
+                jobUiState = job,
+                onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails(job.id) },
+                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick(job.customerPhone) },
+                onMarkAsDone = { myJobCraftsmanInteractionListener.onMarkAsDone(requestId = job.id, requestTitle = job.title, customerId = job.customerPhone) }
             )
         }
     }
@@ -200,17 +200,15 @@ fun MyRequestScreenPreview() {
         MyRequestScreenContent(
             myJobCraftsmanInteractionListener = object : MyJobCraftsmanInteractionListener {
                 override fun onRetryClick() {}
-                override fun onSendAsDone(requestId: String) {
-                    TODO("Not yet implemented")
-                }
+                override fun onMarkAsDone(
+                    requestId: String,
+                    requestTitle: String,
+                    customerId: String
+                ) {}
 
-                override fun onSendMessageClick(phoneNumber: String) {
-                    TODO("Not yet implemented")
-                }
+                override fun onSendMessageClick(phoneNumber: String) {}
 
-                override fun onViewRequestDetails(requestId: String) {
-                    TODO("Not yet implemented")
-                }
+                override fun onViewRequestDetails(requestId: String) {}
 
                 override fun onNotificationClick() {}
             },
