@@ -6,6 +6,6 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-fun getCurrentDate(): LocalDateTime {
+fun getCurrentDateTime(): LocalDateTime {
     return Clock.System.now().toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
 }

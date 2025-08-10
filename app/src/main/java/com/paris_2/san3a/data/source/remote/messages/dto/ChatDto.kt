@@ -1,6 +1,6 @@
 package com.paris_2.san3a.data.source.remote.messages.dto
 
-import com.paris_2.san3a.data.utils.getCurrentDate
+import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.data.utils.toLocalDateTime
 import com.paris_2.san3a.data.utils.toLong
 import com.paris_2.san3a.data.utils.toMessageDto
@@ -10,8 +10,8 @@ import kotlin.time.ExperimentalTime
 data class ChatDto(
     val id: String,
     val participants: List<String>,
-    val createdAt: LocalDateTime = getCurrentDate(),
-    val updatedAt: LocalDateTime = getCurrentDate(),
+    val createdAt: LocalDateTime = getCurrentDateTime(),
+    val updatedAt: LocalDateTime = getCurrentDateTime(),
     val lastMessage: MessageDto? = null,
     val unreadMessageCount: Int = 0
 ) {

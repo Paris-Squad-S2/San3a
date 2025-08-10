@@ -3,6 +3,8 @@ package com.paris_2.san3a.presentation.screen.requestDetails.craftsman
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
+import com.paris_2.san3a.domain.entity.Notification
+import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
@@ -13,6 +15,7 @@ import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseC
 import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
@@ -22,6 +25,7 @@ class CraftsmanRequestDetailsViewModel(
     private val getOffersUseCase: GetOffersUseCase,
     private val acceptedOffersUseCase: AcceptOfferUseCase,
     private val cancelRequestUseCase: CancelRequestUseCase,
+    private val addNotificationUseCase: AddNotificationUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val createChatUseCase: CreateChatUseCase,
@@ -151,29 +155,6 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    override fun onClickSendMessage(customerId: String) {
-        tryToExecute(
-            execute = { createChatUseCase(listOf(phoneNumber, customerId)) },
-            onSuccess = {
-                Log.d("CraftsmanRequestDetailsVM", "Chat created successfully")
-                navigate(
-                    Destinations.MessageDetails(
-                        chatId = it,
-                        currentUserId = phoneNumber,
-                        otherUserId = customerId
-                    )
-                )
-            },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        error = it.message ?: "An error occurred while creating chat",
-                    )
-                )
-            }
-        )
-    }
-
     override fun onSendOfferClick() {
         tryToExecute(
             execute = {
@@ -191,6 +172,15 @@ class CraftsmanRequestDetailsViewModel(
                         uiState = screenState.value.uiState.copy(
                             offerToAdd = OfferToAddUiState()
                         )
+                    )
+                )
+                addNotificationUseCase(
+                    Notification(
+                        id = "",
+                        title = "New Offer Received",
+                        caption = "You have received a new offer for your request ${screenState.value.uiState.request.title}",
+                        date = getCurrentDateTime(),
+                        userId = screenState.value.uiState.request.userId
                     )
                 )
             },
@@ -227,21 +217,6 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    override fun onAcceptOfferClick(offerId: String) {
-        tryToExecute(
-            execute = {
-                acceptedOffersUseCase(offerId)
-            },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        error = it.message ?: "An error occurred while accepting offer",
-                    )
-                )
-            }
-        )
-    }
-
     override fun onCancelRequestClick(requestId: String) {
         tryToExecute(
             execute = {
@@ -268,6 +243,15 @@ class CraftsmanRequestDetailsViewModel(
             },
             onSuccess = {
                 Log.d("CraftsmanRequestDetailsVM", "Request marked as done successfully")
+                addNotificationUseCase(
+                    Notification(
+                        id = "",
+                        title = "Request Completed",
+                        caption = "Your request ${screenState.value.uiState.request.title} has been marked as done.",
+                        date = getCurrentDateTime(),
+                        userId = screenState.value.uiState.request.userId
+                    )
+                )
                 navigateUp()
             },
             onError = {
@@ -348,8 +332,7 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    override fun onClickFavorite() {
-    }
+    override fun onClickFavorite() {}
 
     override fun onClickBack() {
         navigateUp()
