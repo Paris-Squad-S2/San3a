@@ -374,10 +374,15 @@ class AccountViewModel(
     }
 
     fun onWorkImageSelected(uris: List<Uri>) {
+
+        val filteredUris = uris.filter { uri ->
+            !screenState.value.accountUiState.workImagesUris.orEmpty().contains(uri)
+        }
+
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    workImagesUris = screenState.value.accountUiState.workImagesUris?.plus(uris),
+                    workImagesUris = screenState.value.accountUiState.workImagesUris?.plus(filteredUris),
                 )
             )
         )
@@ -851,7 +856,7 @@ class AccountViewModel(
                         errorMassage = it.message.orEmpty(),
                         accountUiState = screenState.value.accountUiState.copy(
                             accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                profileButtonState = AppButtonState.Disabled
+                                profileButtonState = AppButtonState.Enable
                             )
                         )
                     )

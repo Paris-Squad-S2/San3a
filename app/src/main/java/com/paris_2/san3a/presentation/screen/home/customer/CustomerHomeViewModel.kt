@@ -130,10 +130,15 @@ class CustomerHomeViewModel(
     }
 
     override fun addBottomSheetImages(newImages: List<String>) {
+
+        val filteredNewImages = newImages.filter {
+            !screenState.value.bottomSheetUiState.bottomSheetImages.contains(it)
+        }
+
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                    bottomSheetImages = screenState.value.bottomSheetUiState.bottomSheetImages + newImages
+                    bottomSheetImages = screenState.value.bottomSheetUiState.bottomSheetImages + filteredNewImages
                 )
             )
         )

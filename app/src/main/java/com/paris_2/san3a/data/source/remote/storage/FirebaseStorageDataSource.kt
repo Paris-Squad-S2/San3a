@@ -14,8 +14,10 @@ class FirebaseStorageDataSource(
                 val storageRef = fireStorage.reference
                 for ((index, uri) in uris.withIndex()) {
                     val path = paths[index]
-                    val imageRef = storageRef.child(path)
-                    imageRef.putFile(uri).await()
+                    if (!checkIfImageAlreadyExist(path)) {
+                        val imageRef = storageRef.child(path)
+                        imageRef.putFile(uri).await()
+                    }
                 }
             } else {
                 throw InvalidPathException(paths.toOneString())
@@ -26,6 +28,20 @@ class FirebaseStorageDataSource(
             throw e
         } catch (e: Exception) {
             throw WriteStorageException(paths.toOneString(), e.message.orEmpty())
+        }
+    }
+
+    private suspend fun checkIfImageAlreadyExist(path: String): Boolean {
+        return try {
+            val storageRef = fireStorage.reference.child(path)
+            storageRef.metadata.await()
+            true
+        } catch (e: StorageException) {
+            if (e.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                false
+            } else {
+                throw e
+            }
         }
     }
 
