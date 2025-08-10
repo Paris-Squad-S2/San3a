@@ -1,8 +1,11 @@
 package com.paris_2.san3a.presentation.screen.requests.craftsman
 
+import coil3.Uri
+import coil3.toUri
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.entity.User
 
 data class MyJobsCraftsmanScreenState(
     val isLoading: Boolean = false,
@@ -12,12 +15,9 @@ data class MyJobsCraftsmanScreenState(
 
 data class MyOfferCraftsmanUiState(
     val craftsManId: String = "",
-
-    val requests: Map<String, JobUiState> = emptyMap(),
-
-    val ongoing: List<JobUiState> = emptyList(),
-    val completed: List<JobUiState> = emptyList(),
-    val canceled: List<JobUiState> = emptyList(),
+    val ongoing: Map<String, JobUiState> = emptyMap(),
+    val completed: Map<String, JobUiState> = emptyMap(),
+    val canceled: Map<String, JobUiState> = emptyMap(),
 )
 
 fun List<RequestService>.toMyJobOfferUiStateMap(): Map<String, JobUiState> {
@@ -25,11 +25,14 @@ fun List<RequestService>.toMyJobOfferUiStateMap(): Map<String, JobUiState> {
 }
 
 data class JobUiState(
-    val id: String,
-    val customerPhone: String,
-    val serviceType: String,
-    val address: String,
-    val status: RequestStatus,
+    val id: String = "",
+    val customerPhone: String = "",
+    val serviceType: String = "",
+    val address: String = "",
+    val status: RequestStatus = RequestStatus.ONGOING,
+    val time: String = "",
+    val title: String = "",
+    val description: String = "",
     val offer: OfferUiState? = null,
 )
 
@@ -39,17 +42,42 @@ fun RequestService.toMyJobOfferUiState(): JobUiState {
         customerPhone = this.userId,
         serviceType = this.serviceType,
         address = this.location,
-        status = this.requestStatus
+        status = this.requestStatus,
+        time = this.time.toString(), //TODO
+        title = this.title,
+        description = this.description,
     )
 }
 
 data class OfferUiState(
     val id: String,
     val price: Double,
+    val craftsmanId: String,
     val preferredDate: String,
     val preferredTime: String,
     val messageToCustomer: String,
     val isAccepted: Boolean,
+    val craftsMan: CraftsManUiState
+)
+
+fun User.toCraftsManUiState() : CraftsManUiState{
+    return CraftsManUiState(
+        profileUrl = this.profilePhoto.toUri(),
+        name = this.fullName,
+        review = 150,
+        rating = 5.0f,
+        phoneNumber = this.id,
+        isVerify = this.nationalIdBackImage.isNotBlank() && this.nationalIdFrontImage.isNotBlank(),
+    )
+}
+
+data class CraftsManUiState(
+    val profileUrl: Uri? = null,
+    val name: String = "",
+    val review: Int = 0,
+    val rating: Float = 0.0f,
+    val phoneNumber: String = "",
+    val isVerify: Boolean = false,
 )
 
 fun Offer?.toUiState(): OfferUiState? {
@@ -57,10 +85,12 @@ fun Offer?.toUiState(): OfferUiState? {
         OfferUiState(
             id = it.id,
             price = it.price,
+            craftsmanId = it.craftsmanId,
             preferredDate = it.preferredDate.toString(),
             preferredTime = it.preferredTime.toString(),
             messageToCustomer = it.messageToCustomer,
             isAccepted = it.isAccepted,
+            craftsMan = CraftsManUiState()
         )
     }
 }

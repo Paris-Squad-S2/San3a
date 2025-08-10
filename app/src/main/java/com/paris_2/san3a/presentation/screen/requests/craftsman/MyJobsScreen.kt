@@ -123,7 +123,7 @@ private fun MyRequestScreenContent(
                                 }
                             } else {
                                 JobsList(
-                                    offers = ongoingRequests,
+                                    jobs = ongoingRequests.values.toList(),
                                     myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
                                 )
                             }
@@ -142,7 +142,7 @@ private fun MyRequestScreenContent(
                                 }
                             } else {
                                 JobsList(
-                                    offers = completedRequests,
+                                    jobs = completedRequests.values.toList(),
                                     myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
                                 )
                             }
@@ -161,7 +161,7 @@ private fun MyRequestScreenContent(
                                 }
                             } else {
                                 JobsList(
-                                    offers = canceledRequests,
+                                    jobs = canceledRequests.values.toList(),
                                     myJobCraftsmanInteractionListener = myJobCraftsmanInteractionListener
                                 )
                             }
@@ -175,19 +175,19 @@ private fun MyRequestScreenContent(
 
 @Composable
 private fun JobsList(
-    offers: List<JobUiState>,
+    jobs: List<JobUiState>,
     myJobCraftsmanInteractionListener: MyJobCraftsmanInteractionListener
 ) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(offers) { offer ->
+        items(jobs) { job ->
             MyJobOfferCard(
-                offerUiState = offer,
-                onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails("") },
-                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick("+201118295474") }, //TODO
-                onMarkAsDone = { myJobCraftsmanInteractionListener.onSendAsDone("") }
+                jobUiState = job,
+                onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails(job.id) },
+                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick(job.customerPhone) }, //TODO
+                onMarkAsDone = { myJobCraftsmanInteractionListener.onSendAsDone(job.id) }
             )
         }
     }

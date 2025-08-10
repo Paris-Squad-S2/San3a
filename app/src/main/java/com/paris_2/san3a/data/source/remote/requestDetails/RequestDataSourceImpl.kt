@@ -116,7 +116,7 @@ class RequestDataSourceImpl(
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getCraftManAcceptedOfferOnRequestUseCase(
+    override fun getCraftManOfferOnRequestUseCase(
         craftsManId: String,
         requestId: String
     ): Flow<OfferDto?> {
@@ -126,7 +126,6 @@ class RequestDataSourceImpl(
             queryBuilder = { query ->
                 query.whereEqualTo("craftsmanId", craftsManId)
                     .whereEqualTo("requestId", requestId)
-                    .whereEqualTo("isAccepted", true)
             }
         ).flatMapLatest { offers ->
             flow { emit(offers.firstOrNull()) }

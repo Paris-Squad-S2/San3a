@@ -81,11 +81,11 @@ class RequestsRepositoryImpl(
             .catch { throw GetCustomerRequestsException() }
     }
 
-    override fun getCraftManAcceptedOfferOnRequestUseCase(
+    override fun getCraftManOfferOnRequestUseCase(
         craftsManId: String,
         requestId: String
     ): Flow<Offer?> {
-        return requestDataSource.getCraftManAcceptedOfferOnRequestUseCase(craftsManId, requestId)
+        return requestDataSource.getCraftManOfferOnRequestUseCase(craftsManId, requestId)
             .map { it?.toEntity() }
             .catch { throw GetCraftsmanOfferOnRequestException() }
     }
