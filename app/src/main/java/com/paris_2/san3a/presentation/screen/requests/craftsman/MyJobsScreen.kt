@@ -186,7 +186,7 @@ private fun JobsList(
             MyJobOfferCard(
                 jobUiState = job,
                 onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails(job.id) },
-                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick(job.customerPhone) }, //TODO
+                onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick(job.customerPhone) },
                 onMarkAsDone = { myJobCraftsmanInteractionListener.onMarkAsDone(job.id) }
             )
         }
@@ -200,17 +200,11 @@ fun MyRequestScreenPreview() {
         MyRequestScreenContent(
             myJobCraftsmanInteractionListener = object : MyJobCraftsmanInteractionListener {
                 override fun onRetryClick() {}
-                override fun onMarkAsDone(requestId: String) {
-                    TODO("Not yet implemented")
-                }
+                override fun onMarkAsDone(requestId: String) {}
 
-                override fun onSendMessageClick(phoneNumber: String) {
-                    TODO("Not yet implemented")
-                }
+                override fun onSendMessageClick(phoneNumber: String) {}
 
-                override fun onViewRequestDetails(requestId: String) {
-                    TODO("Not yet implemented")
-                }
+                override fun onViewRequestDetails(requestId: String) {}
 
                 override fun onNotificationClick() {}
             },
