@@ -60,13 +60,13 @@ class CustomerRequestDetailsRequestDetailsViewModel(
     fun loadOffers(requestId: String) {
         tryToObserve(
             observe = { getOffersUseCase(requestId) },
-            onEach = {
+            onEach = { offers ->
                 updateState(
                     screenState.value.copy(
                         isLoading = false,
                         error = null,
                         uiState = screenState.value.uiState.copy(
-                            offers = it.toOfferUiStateMap()
+                            offers = offers.sortedByDescending { it.isAccepted }.toOfferUiStateMap()
                         )
                     )
                 )
