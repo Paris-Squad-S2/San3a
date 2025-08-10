@@ -37,7 +37,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.RequestStatus
-import com.paris_2.san3a.presentation.screen.requestDetails.components.AddOfferForm
+import com.paris_2.san3a.presentation.screen.requestDetails.components.addOfferSection.AddOfferForm
 import com.paris_2.san3a.presentation.screen.requestDetails.components.RequestInfoSection
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppButton
