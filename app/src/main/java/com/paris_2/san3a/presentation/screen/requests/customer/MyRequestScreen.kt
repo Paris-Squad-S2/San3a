@@ -180,7 +180,11 @@ private fun RequestList(
             RequestCard(
                 requestUi = request,
                 onActionClick = {
-                    if (request.offer.craftsMan.phoneNumber.isNotBlank()) {
+                    if (request.status == RequestStatus.ONGOING && request.offer.craftsMan.phoneNumber.isBlank()) {
+                        interactionListener.onRequestClick(request.id)
+                    } else if (request.status == RequestStatus.COMPLETED) {
+                        interactionListener.onRatingClick(craftsmanId = request.offer.craftsMan.phoneNumber)
+                    } else if (request.status == RequestStatus.ONGOING) {
                         interactionListener.onClickChat(request.offer.craftsMan.phoneNumber)
                     } else {
                         interactionListener.onRequestClick(request.id)
@@ -214,6 +218,7 @@ fun MyRequestScreenPreview() {
 
                 override fun onRetryClick() {}
                 override fun onClickChat(phoneNumber: String) {}
+                override fun onRatingClick(craftsmanId: String) {}
             },
         )
     }

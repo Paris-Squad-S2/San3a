@@ -12,7 +12,6 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.joinAll
 
 class MyRequestCustomerViewModel(
     private val getCustomerRequestsUseCase: GetCustomerRequestsUseCase,
@@ -75,10 +74,10 @@ class MyRequestCustomerViewModel(
                         )
                     )
                 )
-                getOffersCountForOngoing()
-                getOffersCountForCompleted()
-                getOffersCountForCanceled()
                 getOffersForRequests()
+                getOffersCountForRequests(ListType.ONGOING)
+                getOffersCountForRequests(ListType.COMPLETED)
+                getOffersCountForRequests(ListType.CANCELED)
             },
             onError = {
                 updateState(
@@ -91,59 +90,35 @@ class MyRequestCustomerViewModel(
         )
     }
 
-    fun getOffersCountForOngoing() =
-        getOffersCountForRequests(
-            screenState.value.myRequestCustomerUiState.ongoing
-        ) { updatedMap ->
-            updateState(
-                screenState.value.copy(
-                    myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                        ongoing = updatedMap
-                    )
-                )
-            )
+
+
+    private fun getOffersCountForRequests(listType: ListType): List<Job> {
+        val currentMap = when (listType) {
+            ListType.ONGOING -> screenState.value.myRequestCustomerUiState.ongoing
+            ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.completed
+            ListType.CANCELED -> screenState.value.myRequestCustomerUiState.canceled
         }
+        if (currentMap.isEmpty()) return emptyList()
 
-    fun getOffersCountForCompleted() =
-        getOffersCountForRequests(
-            screenState.value.myRequestCustomerUiState.completed
-        ) { updatedMap ->
-            updateState(
-                screenState.value.copy(
-                    myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                        completed = updatedMap
-                    )
-                )
-            )
-        }
-
-
-    fun getOffersCountForCanceled() =
-        getOffersCountForRequests(
-            screenState.value.myRequestCustomerUiState.canceled
-        ) { updatedMap ->
-            updateState(
-                screenState.value.copy(
-                    myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                        canceled = updatedMap
-                    )
-                )
-            )
-        }
-
-    private fun getOffersCountForRequests(
-        list: Map<String, MyRequestCustomerUi>,
-        updateList: (Map<String, MyRequestCustomerUi>) -> Unit
-    ) : List<Job> {
-        if (list.isEmpty()) return emptyList()
-
-        return list.map { (id, request) ->
+        return currentMap.map { (id, _) ->
             tryToExecute(
                 execute = { getOffersCountUseCase(id).first() },
                 onSuccess = { offersCount ->
-                    val updatedRequest = request.copy(offersCount = offersCount)
-                    val updatedMap = list.toMutableMap().apply { this[id] = updatedRequest }
-                    updateList(updatedMap)
+                    val updatedRequests = when (listType) {
+                        ListType.ONGOING -> screenState.value.myRequestCustomerUiState.ongoing.toMutableMap()
+                        ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.completed.toMutableMap()
+                        ListType.CANCELED -> screenState.value.myRequestCustomerUiState.canceled.toMutableMap()
+                    }
+                    val request = updatedRequests[id]
+                    if (request != null) {
+                        updatedRequests[id] = request.copy(offersCount = offersCount)
+                        val updatedUiState = when (listType) {
+                            ListType.ONGOING -> screenState.value.myRequestCustomerUiState.copy(ongoing = updatedRequests)
+                            ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.copy(completed = updatedRequests)
+                            ListType.CANCELED -> screenState.value.myRequestCustomerUiState.copy(canceled = updatedRequests)
+                        }
+                        updateState(screenState.value.copy(myRequestCustomerUiState = updatedUiState))
+                    }
                 },
                 onError = {
                     Log.e("MyRequestCustomerViewModel", "Error loading offers count: ${it.message}")
@@ -340,5 +315,10 @@ class MyRequestCustomerViewModel(
                 )
             }
         )
+    }
+
+    override fun onRatingClick(craftsmanId: String) {
+        // TODO: show rating dialog
+
     }
 }
