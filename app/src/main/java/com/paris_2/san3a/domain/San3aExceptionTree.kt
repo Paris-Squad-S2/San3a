@@ -63,3 +63,8 @@ class GetCraftsmanOfferOnRequestException() : San3aException("Failed to get craf
 class CancelRequestException() : San3aException("Failed to cancel request")
 class MarkRequestAsDoneException() : San3aException("Failed to mark request as done")
 class GetAcceptedOfferOnRequestException() : San3aException("Failed to get accepted offer on request")
+class AddRatingForCraftsmanException() : San3aException("Failed to add rating for craftsman")
+class GetRatingForCraftsmanException() : San3aException("Failed to get rating for craftsman")
+class GetCustomerRatingOnCraftsmanException() : San3aException("Failed to get customer rating on craftsman")
+class UpdateEarningsForCraftsmanException() : San3aException("Failed to update earnings for craftsman")
+class IncrementJobsDoneForCraftsmanException() : San3aException("Failed to increment jobs done for craftsman")

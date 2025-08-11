@@ -96,8 +96,7 @@ fun RequestServiceUiState.toRequestService(): RequestService {
         locationDetails = this.locationDetails,
         image = this.image,
         userId = this.userId,
-        offers = emptyList(),
-        selectedCraftsmanId = "",
+        selectedCraftsmanId = null,
         time = getCurrentDateTime(),
         state = "",
         requestStatus = this.requestStatus

@@ -160,7 +160,9 @@ class CustomerRequestDetailsRequestDetailsViewModel(
 
     override fun onAcceptOfferClick(offerId: String, craftsmanId: String) {
         tryToExecute(
-            execute = { acceptOfferUseCase(offerId) },
+            execute = {
+                acceptOfferUseCase(offerId = offerId, craftsmanId = craftsmanId, requestId = requestId)
+            },
             onSuccess = {
                 addNotificationUseCase(
                     Notification(

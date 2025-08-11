@@ -12,7 +12,7 @@ interface RequestsRepository {
     suspend fun getRequestDetailsById(requestId: String): RequestService
     suspend fun getYourOffer(craftsmanId: String): List<Offer>
     suspend fun assignRequestToCraftsman(requestId: String, craftsmanId: String)
-    suspend fun acceptOffer(offerId: String)
+    suspend fun acceptOffer(offerId: String, craftsmanId: String, requestId: String)
     fun getCustomerRequests(userId: String): Flow<List<RequestService>>
     fun getCraftsManRequests(userId: String): Flow<List<RequestService>>
     fun getCraftManOfferOnRequestUseCase(craftsManId: String, requestId: String): Flow<Offer?>

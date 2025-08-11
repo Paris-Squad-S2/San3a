@@ -25,5 +25,28 @@ interface UserRepository {
     suspend fun getUser(phone: String): User
     suspend fun getWorkMedia(phone: String): List<String>
     suspend fun getStats(userId: String): Stats
+
+    suspend fun addRatingForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        rating: Float
+    )
+
+    suspend fun getRatingForCraftsman(craftsmanId: String): Float
+
+    suspend fun getCustomerRatingOnCraftsman(
+        craftsmanId: String,
+        userId: String
+    ): Float?
+
+    suspend fun updateEarningsForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        requestId: String,
+        earnings: Double
+    )
+
+    suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String)
+
     fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestService>>
 }

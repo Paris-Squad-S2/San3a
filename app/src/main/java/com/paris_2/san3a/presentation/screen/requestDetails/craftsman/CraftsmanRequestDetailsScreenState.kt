@@ -152,7 +152,6 @@ fun RequestServiceUIState.toRequestService(): RequestService {
         time = getCurrentDateTime(),
         state = this.state,
         image = this.images,
-        offers = listOf(),
         selectedCraftsmanId = this.selectedCraftsmanId
     )
 }

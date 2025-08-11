@@ -63,13 +63,16 @@ class MyOfferCraftsmanViewModel(
                 getCraftsManRequestsUseCase(screenState.value.myOffersCraftsmanUiState.craftsManId)
             },
             onEach = { result ->
+                Log.d("MyOfferCraftsmanViewModel", "Fetched requests: $result")
+                val filteredResult = result.filter { it.selectedCraftsmanId.isNullOrBlank() || it.selectedCraftsmanId == screenState.value.myOffersCraftsmanUiState.craftsManId }
+                Log.d("MyOfferCraftsmanViewModel", "Filtered requests: $filteredResult")
                 updateState(
                     MyJobsCraftsmanScreenState(
                         isLoading = false,
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            ongoing = result.filter { it.requestStatus == RequestStatus.ONGOING }.toMyJobOfferUiStateMap(),
-                            completed = result.filter { it.requestStatus == RequestStatus.COMPLETED }.toMyJobOfferUiStateMap(),
-                            canceled = result.filter { it.requestStatus == RequestStatus.CANCELLED }.toMyJobOfferUiStateMap()
+                            ongoing = filteredResult.filter { it.requestStatus == RequestStatus.ONGOING }.toMyJobOfferUiStateMap(),
+                            completed = filteredResult.filter { it.requestStatus == RequestStatus.COMPLETED }.toMyJobOfferUiStateMap(),
+                            canceled = filteredResult.filter { it.requestStatus == RequestStatus.CANCELLED }.toMyJobOfferUiStateMap()
                         )
                     )
                 )

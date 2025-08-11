@@ -14,7 +14,6 @@ data class RequestService(
     val time: LocalDateTime,
     val state: String,
     val image : List<String>,
-    val offers: List<Double>, // TODO: will be removed
     val selectedCraftsmanId: String?
 )
 

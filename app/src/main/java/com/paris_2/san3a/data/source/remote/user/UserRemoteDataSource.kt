@@ -7,7 +7,6 @@ import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import kotlinx.coroutines.flow.Flow
 import com.paris_2.san3a.domain.entity.Service
-import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.domain.entity.User
 
 interface UserRemoteDataSource {
@@ -46,7 +45,7 @@ interface UserRemoteDataSource {
 
     suspend fun getRatingForCraftsman(craftsmanId: String): Float
 
-    suspend fun getRatingOfCustomerOnCraftsman(
+    suspend fun getCustomerRatingOnCraftsman(
         craftsmanId: String,
         userId: String
     ): Float?

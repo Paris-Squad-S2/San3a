@@ -210,7 +210,7 @@ class UserRemoteDataSourceImpl(
         return if (ratingList.isNotEmpty()) ratingList.average().toFloat() else 0f
     }
 
-    override suspend fun getRatingOfCustomerOnCraftsman(
+    override suspend fun getCustomerRatingOnCraftsman(
         craftsmanId: String,
         userId: String
     ): Float? {

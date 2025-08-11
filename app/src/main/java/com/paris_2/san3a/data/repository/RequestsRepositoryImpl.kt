@@ -17,6 +17,8 @@ import com.paris_2.san3a.domain.MarkRequestAsDoneException
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.repository.RequestsRepository
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -66,9 +68,14 @@ class RequestsRepositoryImpl(
         }
     }
 
-    override suspend fun acceptOffer(offerId: String) {
+    override suspend fun acceptOffer(offerId: String, craftsmanId: String, requestId: String) {
         safeCall(AcceptOfferException()) {
-            requestDataSource.acceptOffer(offerId)
+            coroutineScope {
+                val accept = async { requestDataSource.acceptOffer(offerId) }
+                val assign = async { requestDataSource.assignRequestToCraftsman(requestId, craftsmanId) }
+                accept.await()
+                assign.await()
+            }
         }
     }
 

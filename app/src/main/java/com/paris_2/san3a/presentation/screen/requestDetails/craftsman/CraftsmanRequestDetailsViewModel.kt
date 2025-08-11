@@ -7,7 +7,6 @@ import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.CancelRequestUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
@@ -23,7 +22,6 @@ class CraftsmanRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
     private val addOfferUseCase: AddOfferUseCase,
     private val getOffersUseCase: GetOffersUseCase,
-    private val acceptedOffersUseCase: AcceptOfferUseCase,
     private val cancelRequestUseCase: CancelRequestUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
