@@ -22,12 +22,13 @@ data class MyRequestCustomerUiState(
     val customerToRate: String = ""
 )
 
-fun RequestService.toRequestServiceUiState(): MyRequestCustomerUi { //TODO
+fun RequestService.toRequestServiceUiState(): MyRequestCustomerUi {
     return MyRequestCustomerUi(
         id = this.id,
         requestTitle = this.title,
         status = this.requestStatus,
         serviceType = this.serviceType,
+        serviceId = this.serviceId,
         date = this.time.date.toString(),
         time = this.time.time.toString(),
     )
@@ -44,6 +45,7 @@ data class MyRequestCustomerUi(
     val offersCount: Int = 0,
     val date: String = "",
     val time: String = "",
+    val serviceId: String = "",
     val status: RequestStatus = RequestStatus.ONGOING,
     val offer: OfferUiState = OfferUiState(),
     val craftsMan: CraftsManUiState = CraftsManUiState(),

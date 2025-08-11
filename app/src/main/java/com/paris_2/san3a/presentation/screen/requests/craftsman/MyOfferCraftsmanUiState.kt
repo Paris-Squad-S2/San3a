@@ -32,6 +32,7 @@ data class JobUiState(
     val status: RequestStatus = RequestStatus.ONGOING,
     val time: String = "",
     val title: String = "",
+    val serviceId: String = "",
     val description: String = "",
     val selectedCraftsmanId: String? = null,
     val offer: OfferUiState? = null,
@@ -45,6 +46,7 @@ fun RequestService.toMyJobOfferUiState(): JobUiState {
         address = this.location + " " + this.locationDetails,
         status = this.requestStatus,
         time = this.time.toString(), //TODO
+        serviceId = this.serviceId,
         title = this.title,
         selectedCraftsmanId = this.selectedCraftsmanId,
         description = this.description,

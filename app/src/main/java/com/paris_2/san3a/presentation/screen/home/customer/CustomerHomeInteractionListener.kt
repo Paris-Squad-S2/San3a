@@ -6,7 +6,7 @@ interface CustomerHomeInteractionListener {
     fun onServiceClick(serviceId: String)
     fun onBecomeCraftsmanClick()
     fun onDismissBottomSheet()
-    fun createRequest(service: RequestServiceUiState , serviceId: String)
+    fun createRequest(service: RequestServiceUiState)
     fun updateNumOfRequests(serviceId: String)
     fun initBottomSheet(serviceTitle: String, serviceId: String, iconRes: Int)
     fun updateBottomSheetStep(step: BottomSheetStep)

@@ -6,6 +6,7 @@ data class RequestService(
     val id: String,
     val userId: String,
     val requestStatus: RequestStatus,
+    val serviceId: String,
     val title: String,
     val serviceType: String,
     val description: String,

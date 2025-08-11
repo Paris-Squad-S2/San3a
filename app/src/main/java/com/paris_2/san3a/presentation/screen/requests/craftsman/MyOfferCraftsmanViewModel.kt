@@ -270,5 +270,6 @@ class MyOfferCraftsmanViewModel(
     }
 
     override fun onRetryClick() {
+        getCraftsManPhone()
     }
 }

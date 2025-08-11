@@ -17,6 +17,7 @@ fun RequestServiceDto.toEntity() = RequestService(
     title = title,
     time = LocalDateTime.parse(time ?: getCurrentDateTime().toString()),
     state = state,
+    serviceId = serviceId,
     selectedCraftsmanId = selectedCraftsmanId,
     requestStatus = RequestStatus.valueOf(requestStatus ?: RequestStatus.ONGOING.name)
 )
@@ -32,6 +33,7 @@ fun RequestService.toDto(imageUrls: List<String> = emptyList()) = RequestService
     title = title,
     time = time.toString(),
     state = state,
+    serviceId = serviceId,
     selectedCraftsmanId = selectedCraftsmanId,
     requestStatus = requestStatus.name
 )

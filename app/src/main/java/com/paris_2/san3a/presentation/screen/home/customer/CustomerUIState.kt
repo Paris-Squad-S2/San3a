@@ -70,6 +70,7 @@ data class RequestServiceUiState(
     val location: String,
     val locationDetails: String,
     val image: List<String>,
+    val serviceId: String,
     val userId: String = "",
     val requestStatus: RequestStatus = RequestStatus.ONGOING
 )
@@ -83,6 +84,7 @@ fun RequestService.toRequestServiceUiState(): RequestServiceUiState {
         locationDetails = this.locationDetails,
         image = this.image,
         userId = this.userId,
+        serviceId = serviceId
     )
 }
 
@@ -99,7 +101,8 @@ fun RequestServiceUiState.toRequestService(): RequestService {
         selectedCraftsmanId = null,
         time = getCurrentDateTime(),
         state = "",
-        requestStatus = this.requestStatus
+        requestStatus = this.requestStatus,
+        serviceId = serviceId
     )
 }
 
