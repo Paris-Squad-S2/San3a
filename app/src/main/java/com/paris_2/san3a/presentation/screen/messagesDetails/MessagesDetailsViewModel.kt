@@ -12,6 +12,7 @@ import com.paris_2.san3a.domain.usecase.messages.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.messages.MarkMessagesAsSeenUseCase
 import com.paris_2.san3a.domain.usecase.messages.SendMessageUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class MessagesDetailsViewModel(
@@ -107,27 +108,37 @@ class MessagesDetailsViewModel(
     fun sendMessage() {
         tryToExecute(
             execute = {
+                val oldMessage = screenState.value.textMessage
+                updateState(
+                    screenState.value.copy(
+                        sendButtonState = AppButtonState.Disabled,
+                        textMessage = ""
+                    )
+                )
                 sendMessageUseCase(
                     Message(
                         senderId = currentUserId,
                         receiverId = otherUserId,
                         chatId = chatId,
                         messageContent = MessageContent.Text(
-                            content = screenState.value.textMessage
+                            content = oldMessage
                         ),
                         seen = false
                     )
                 )
+            },
+            onSuccess = {
                 updateState(
                     screenState.value.copy(
-                        textMessage = ""
+                        sendButtonState = AppButtonState.Enable
                     )
                 )
             },
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message
+                        errorMessage = it.message,
+                        sendButtonState = AppButtonState.Enable
                     )
                 )
             }

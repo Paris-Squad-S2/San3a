@@ -153,6 +153,7 @@ fun MessageDetailsContent(
                 MessageTextField(
                     value = state.textMessage,
                     onValueChange = viewModel::onMessageChange,
+                    sendButtonState = state.sendButtonState,
                     imageIcon = painterResource(R.drawable.ic_image),
                     voiceIcon = painterResource(R.drawable.ic_voice),
                     sendIcon = painterResource(R.drawable.ic_send),
