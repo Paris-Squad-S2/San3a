@@ -19,6 +19,7 @@ data class MessageDetailsUiState(
     val groupedMessages: Map<String, List<MessageUi>> = emptyMap(),
     val showDeleteChatBottomSheet: Boolean = false,
     val bottomSheetButtonState: AppButtonState = AppButtonState.Enable,
+    val sendButtonState: AppButtonState = AppButtonState.Enable,
     val errorMessage: String? = null,
     val isLoading: Boolean = false,
 )

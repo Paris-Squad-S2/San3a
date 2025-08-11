@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
@@ -36,6 +37,7 @@ fun MessageTextField(
     imageIcon: Painter,
     voiceIcon: Painter,
     sendIcon: Painter,
+    sendButtonState: AppButtonState,
     onImageClick: () -> Unit,
     onSendClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -113,7 +115,7 @@ fun MessageTextField(
                         contentDescription = stringResource(R.string.send_icon),
                         modifier = Modifier
                             .padding(start = 19.dp, end = 19.dp, bottom = 15.dp)
-                            .clickable(onClick = onSendClick)
+                            .clickable(onClick = onSendClick, enabled = sendButtonState == AppButtonState.Enable)
                             .align(Alignment.Bottom)
                     )
 
@@ -138,7 +140,8 @@ private fun MessageTextFieldPreview() {
             onImageClick = {},
             onSendClick = {},
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            sendButtonState = AppButtonState.Enable
         )
     }
 }
@@ -156,7 +159,8 @@ private fun MessageTextFieldPreview1() {
             onImageClick = {},
             onSendClick = {},
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            sendButtonState = AppButtonState.Enable
         )
     }
 }
