@@ -14,7 +14,7 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 
-class MyOfferCraftsmanViewModel(
+class MyJobsCraftsmanViewModel(
     private val getCraftsManRequestsUseCase: GetCraftsManRequestsUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,

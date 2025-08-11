@@ -37,7 +37,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MyJobsScreen(
-    viewModel: MyOfferCraftsmanViewModel = koinViewModel()
+    viewModel: MyJobsCraftsmanViewModel = koinViewModel()
 ) {
     val state by viewModel.screenState.collectAsState()
     MyRequestScreenContent(uiState = state, myJobCraftsmanInteractionListener = viewModel)
