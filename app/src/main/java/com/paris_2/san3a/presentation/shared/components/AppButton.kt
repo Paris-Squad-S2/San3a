@@ -139,14 +139,14 @@ fun AppButton(
                 )
             }
 
-            Spacer(Modifier.width(8.dp))
-
-            AnimatedVisibility(
-                visible = state == AppButtonState.Loading
-            ) {
-                loadingIcon?.invoke()
+            loadingIcon?.let {
+                Spacer(Modifier.width(8.dp))
+                AnimatedVisibility(
+                    visible = state == AppButtonState.Loading
+                ) {
+                    loadingIcon()
+                }
             }
-
         }
 
 
