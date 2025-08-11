@@ -39,8 +39,8 @@ class MyRequestCustomerViewModel(
                 updateState(
                     screenState.value.copy(
                         myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                            customerPhone = phoneNumber
-                        )
+                            customerPhone = phoneNumber,
+                        ),
                     )
                 )
                 getRequests()
@@ -48,7 +48,7 @@ class MyRequestCustomerViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = "Failed to fetch phone number"
+                        errorMessage = "Failed to fetch phone number",
                     )
                 )
             }
@@ -63,15 +63,14 @@ class MyRequestCustomerViewModel(
             onEach = { result ->
                 updateState(
                     MyRequestCustomerScreenState(
-                        isLoading = false,
                         myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
                             ongoing = result.filter { it.requestStatus == RequestStatus.ONGOING }
                                 .toRequestServiceUiStateMap(),
                             completed = result.filter { it.requestStatus == RequestStatus.COMPLETED }
                                 .toRequestServiceUiStateMap(),
                             canceled = result.filter { it.requestStatus == RequestStatus.CANCELLED }
-                                .toRequestServiceUiStateMap()
-                        )
+                                .toRequestServiceUiStateMap(),
+                        ),
                     )
                 )
                 getOffersForRequests()
@@ -82,8 +81,7 @@ class MyRequestCustomerViewModel(
             onError = {
                 updateState(
                     MyRequestCustomerScreenState(
-                        isLoading = false,
-                        errorMessage = it.message
+                        errorMessage = it.message,
                     )
                 )
             }
@@ -113,11 +111,17 @@ class MyRequestCustomerViewModel(
                     if (request != null) {
                         updatedRequests[id] = request.copy(offersCount = offersCount)
                         val updatedUiState = when (listType) {
-                            ListType.ONGOING -> screenState.value.myRequestCustomerUiState.copy(ongoing = updatedRequests)
-                            ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.copy(completed = updatedRequests)
-                            ListType.CANCELED -> screenState.value.myRequestCustomerUiState.copy(canceled = updatedRequests)
+                            ListType.ONGOING -> screenState.value.myRequestCustomerUiState.copy(
+                                ongoing = updatedRequests,
+                            )
+                            ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.copy(
+                                completed = updatedRequests,
+                            )
+                            ListType.CANCELED -> screenState.value.myRequestCustomerUiState.copy(
+                                canceled = updatedRequests,
+                            )
                         }
-                        updateState(screenState.value.copy(myRequestCustomerUiState = updatedUiState))
+                        updateState(screenState.value.copy(myRequestCustomerUiState = updatedUiState,))
                     }
                 },
                 onError = {
@@ -178,14 +182,14 @@ class MyRequestCustomerViewModel(
             )
 
             val updatedState = when (listType) {
-                ListType.ONGOING -> screenState.value.myRequestCustomerUiState.copy(ongoing = updatedRequests)
-                ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.copy(completed = updatedRequests)
-                ListType.CANCELED -> screenState.value.myRequestCustomerUiState.copy(canceled = updatedRequests)
+                ListType.ONGOING -> screenState.value.myRequestCustomerUiState.copy(ongoing = updatedRequests,)
+                ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.copy(completed = updatedRequests,)
+                ListType.CANCELED -> screenState.value.myRequestCustomerUiState.copy(canceled = updatedRequests,)
             }
 
             updateState(
                 screenState.value.copy(
-                    myRequestCustomerUiState = updatedState
+                    myRequestCustomerUiState = updatedState,
                 )
             )
 
@@ -203,8 +207,7 @@ class MyRequestCustomerViewModel(
             )
             updateState(
                 screenState.value.copy(
-                    isLoading = false,
-                    errorMessage = it.message ?: "Failed to load offers for request $requestId"
+                    errorMessage = it.message ?: "Failed to load offers for request $requestId",
                 )
             )
         },
@@ -239,24 +242,24 @@ class MyRequestCustomerViewModel(
                     ListType.ONGOING -> updateState(
                         screenState.value.copy(
                             myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                                ongoing = updatedRequests
-                            )
+                                ongoing = updatedRequests,
+                            ),
                         )
                     )
 
                     ListType.COMPLETED -> updateState(
                         screenState.value.copy(
                             myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                                completed = updatedRequests
-                            )
+                                completed = updatedRequests,
+                            ),
                         )
                     )
 
                     ListType.CANCELED -> updateState(
                         screenState.value.copy(
                             myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                                canceled = updatedRequests
-                            )
+                                canceled = updatedRequests,
+                            ),
                         )
                     )
                 }
@@ -310,7 +313,7 @@ class MyRequestCustomerViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = "Failed to create chat: ${it.message}"
+                        errorMessage = "Failed to create chat: ${it.message}",
                     )
                 )
             }
@@ -318,7 +321,63 @@ class MyRequestCustomerViewModel(
     }
 
     override fun onRatingClick(craftsmanId: String) {
-        // TODO: show rating dialog
+        updateState(
+            screenState.value.copy(
+                myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                    isRatingVisible = true,
+                    customerToRate = craftsmanId,
+                    rating = 0f
+                )
+            )
+        )
+//      TODO  getCustomerRatingOnCraftsman(craftsmanId = craftsmanId, customerId = screenState.value.myRequestCustomerUiState.customerPhone)
+    }
 
+    override fun onRatingDismiss() {
+        updateState(
+            screenState.value.copy(
+                myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                    isRatingVisible = false,
+                    rating = 0f
+                )
+            )
+        )
+    }
+
+    override fun onRatingChange(rating: Float) {
+        updateState(
+            screenState.value.copy(
+                myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                    rating = rating
+                )
+            )
+        )
+        Log.d("MyRequestCustomerViewModel", "Rating changed to: $rating")
+    }
+
+    override fun onRatingCraftsMan() {
+        tryToExecute(
+            execute = {
+                //TODO send rating to server
+            },
+            onSuccess = {
+                updateState(
+                    screenState.value.copy(
+                        myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                            isRatingVisible = false,
+                            rating = 0f,
+                            customerToRate = ""
+                        )
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = "Failed to fetch craftsman details: ${it.message}",
+                    )
+                )
+            }
+        )
     }
 }

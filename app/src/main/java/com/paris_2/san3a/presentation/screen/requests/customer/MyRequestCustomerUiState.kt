@@ -9,20 +9,24 @@ import com.paris_2.san3a.domain.entity.User
 data class MyRequestCustomerScreenState(
     val isLoading: Boolean = false,
     val myRequestCustomerUiState: MyRequestCustomerUiState = MyRequestCustomerUiState(),
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
 
 data class MyRequestCustomerUiState(
     val customerPhone: String = "",
+    val isRatingVisible: Boolean = false,
     val ongoing: Map<String, MyRequestCustomerUi> = emptyMap(),
     val completed: Map<String, MyRequestCustomerUi> = emptyMap(),
-    val canceled: Map<String, MyRequestCustomerUi> = emptyMap()
+    val canceled: Map<String, MyRequestCustomerUi> = emptyMap(),
+    val rating: Float = 0.0f,
+    val customerToRate: String = ""
 )
 
 fun RequestService.toRequestServiceUiState(): MyRequestCustomerUi { //TODO
     return MyRequestCustomerUi(
         id = this.id,
         requestTitle = this.title,
+        status = this.requestStatus,
         serviceType = this.serviceType,
         date = this.time.date.toString(),
         time = this.time.time.toString(),
@@ -40,7 +44,6 @@ data class MyRequestCustomerUi(
     val offersCount: Int = 0,
     val date: String = "",
     val time: String = "",
-    val isRated: Boolean = false,
     val status: RequestStatus = RequestStatus.ONGOING,
     val offer: OfferUiState = OfferUiState(),
     val craftsMan: CraftsManUiState = CraftsManUiState(),

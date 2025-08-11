@@ -31,17 +31,10 @@ fun getButtonConfig(requestUi: MyRequestCustomerUi): ButtonConfig {
         }
 
         RequestStatus.COMPLETED -> {
-            if (requestUi.isRated) {
-                ButtonConfig(
-                    text = null,
-                    icon = null
-                )
-            } else {
-                ButtonConfig(
-                    text = stringResource(R.string.rate),
-                    icon = ImageVector.vectorResource(R.drawable.ic_clipboard_outline)
-                )
-            }
+            ButtonConfig(
+                text = stringResource(R.string.rate),
+                icon = ImageVector.vectorResource(R.drawable.ic_star_outline)
+            )
         }
 
         RequestStatus.CANCELLED -> {

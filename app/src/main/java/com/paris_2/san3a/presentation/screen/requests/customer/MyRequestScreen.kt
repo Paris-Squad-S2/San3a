@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.requests.customer
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.presentation.screen.requests.component.RatingBottomSheet
 import com.paris_2.san3a.presentation.screen.requests.component.RequestCard
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppTabBar
@@ -47,6 +49,18 @@ private fun MyRequestScreenContent(
     myRequestCustomerInteractionListener: MyRequestCustomerInteractionListener,
     modifier: Modifier = Modifier,
 ) {
+    RatingBottomSheet(
+        isVisible = state.myRequestCustomerUiState.isRatingVisible,
+        rating = state.myRequestCustomerUiState.rating,
+        onDismiss = myRequestCustomerInteractionListener::onRatingDismiss,
+        onRatingChange = { rating ->
+            myRequestCustomerInteractionListener.onRatingChange(rating)
+        },
+        onAddRating = {
+            myRequestCustomerInteractionListener.onRatingCraftsMan()
+        },
+    )
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -207,9 +221,7 @@ fun MyRequestScreenPreview() {
                         "2" to MyRequestCustomerUi(),
                         "3" to MyRequestCustomerUi(),
                     ),
-                    completed = emptyMap(),
-                    canceled = emptyMap()
-                )
+                ),
             ),
             myRequestCustomerInteractionListener = object : MyRequestCustomerInteractionListener {
                 override fun onRequestClick(requestId: String) {}
@@ -219,6 +231,11 @@ fun MyRequestScreenPreview() {
                 override fun onRetryClick() {}
                 override fun onClickChat(phoneNumber: String) {}
                 override fun onRatingClick(craftsmanId: String) {}
+                override fun onRatingDismiss() {}
+
+                override fun onRatingChange(rating: Float) {}
+
+                override fun onRatingCraftsMan() {}
             },
         )
     }

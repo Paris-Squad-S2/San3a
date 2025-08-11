@@ -355,7 +355,6 @@ fun RequestCardNoCraftsmanWithOffersPreview() {
                     date = "2025-08-06",
                     time = "9:00 AM",
                     status = RequestStatus.COMPLETED,
-                    isRated = true
                 ),
                 onActionClick = {},
             )
