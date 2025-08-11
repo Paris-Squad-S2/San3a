@@ -1,7 +1,6 @@
 package com.paris_2.san3a.data.source.remote.user
 
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
-import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
@@ -37,7 +36,5 @@ interface UserRemoteDataSource {
     suspend fun getUser(phone: String): User
 
     suspend fun getWorkMedia(phone: String): List<String>
-    suspend fun getStats(userId: String): StatsDto
-    suspend fun updateStats(userId: String, stats: StatsDto)
     fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>>
 }

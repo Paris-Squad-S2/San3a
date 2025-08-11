@@ -7,7 +7,6 @@ import com.paris_2.san3a.data.service.firestore.SetOperation
 import com.paris_2.san3a.data.service.firestore.WriteOperation
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
-import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
@@ -191,35 +190,6 @@ class UserRemoteDataSourceImpl(
         Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
     }
 
-    override suspend fun getStats(userId: String): StatsDto {
-        return try {
-            fireStoreService.getDoc(
-                path = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
-                fromJson = StatsDto::fromJson
-            ) ?: StatsDto(userId, 0, 0.0, 0.0)
-        } catch (_: Exception) {
-            addStats(
-                userId,
-                StatsDto(userId, 0, 0.0, 0.0)
-            )
-            StatsDto(userId, 0, 0.0, 0.0)
-        }
-    }
-
-    suspend fun addStats(userId: String, stats: StatsDto) {
-        fireStoreService.setDoc(
-            path = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
-            data = stats.toJson()
-        )
-    }
-
-    override suspend fun updateStats(userId: String, stats: StatsDto) {
-        fireStoreService.updateDoc(
-            path = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
-            data = stats.toJson()
-        )
-    }
-
     override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>> {
         return fireStoreService.streamCollection(
             path = SERVICE_REQUESTS_COLLECTION,
@@ -237,5 +207,8 @@ class UserRemoteDataSourceImpl(
         const val OFFERED_SERVICES_COLLECTION = "offeredServices"
         const val REQUESTED_SERVICES_PATH = "requestedServices"
         const val SERVICES_COLLECTION = "services"
+        const val RATINGS_COLLECTION = "ratings"
+        const val EARNINGS_COLLECTION = "earnings"
+        const val JOBS_DONE_COLLECTION = "jobs_done"
     }
 }

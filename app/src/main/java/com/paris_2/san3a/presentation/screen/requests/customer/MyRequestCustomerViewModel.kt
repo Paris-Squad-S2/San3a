@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.requests.customer
 import android.util.Log
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.GetStatsUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetAcceptedOfferOnRequestUseCaseUseCase
@@ -19,6 +20,7 @@ class MyRequestCustomerViewModel(
     private val getOffersCountUseCase: GetOffersCountUseCase,
     private val getAcceptedOfferOnRequestUseCaseUseCase: GetAcceptedOfferOnRequestUseCaseUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val getStatsUseCase: GetStatsUseCase,
     private val createChatUseCase: CreateChatUseCase,
 ) : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState()),
     MyRequestCustomerInteractionListener {

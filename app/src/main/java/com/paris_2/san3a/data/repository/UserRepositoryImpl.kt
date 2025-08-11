@@ -140,7 +140,13 @@ class UserRepositoryImpl(
 
     override suspend fun getStats(userId: String): Stats {
         return safeCall(GetStatsException()) {
-            userRemoteDataSource.getStats(userId).toEntity()
+//            userRemoteDataSource.getStats(userId).toEntity() //TODO
+            Stats(
+                userId = "",
+                jobsDone = 0,
+                earnings = 0.0,
+                rating = 0.0
+            )
         }
     }
 
