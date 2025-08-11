@@ -40,8 +40,8 @@ interface UserRepository {
     ): Float?
 
     suspend fun updateEarningsForCraftsman(
-        userId: String,
         craftsmanId: String,
+        userId: String,
         requestId: String,
         earnings: Double
     )

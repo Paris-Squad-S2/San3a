@@ -6,9 +6,9 @@ class UpdateEarningsForCraftsmanUseCase(
     private val userRepository: UserRepository
 ) {
     suspend operator fun invoke(
-        userId: String,
         craftsmanId: String,
+        userId: String,
         requestId: String,
         earnings: Double
-    ) = userRepository.updateEarningsForCraftsman(userId, craftsmanId, requestId, earnings)
+    ) = userRepository.updateEarningsForCraftsman(craftsmanId = craftsmanId,userId = userId, requestId, earnings)
 }

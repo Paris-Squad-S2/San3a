@@ -203,7 +203,7 @@ fun CraftsmanRequestDetailsContent(
                                 interactionListener.onCancelRequestClick(state.request.id)
                             },
                             onPrimaryButtonClick = {
-                                interactionListener.markAsDoneClick(state.request.id)
+                                interactionListener.markAsDoneClick(requestId = state.request.id, price = state.acceptedOffer.price)
                             },
                             forCraftsMan = true,
                         )
@@ -239,7 +239,7 @@ fun CraftsmanRequestDetailsContent(
                         interactionListener.onCancelRequestClick(state.request.id)
                     },
                     onPrimaryButtonClick = {
-                        interactionListener.markAsDoneClick(state.request.id)
+                        interactionListener.markAsDoneClick(requestId = state.request.id, price = state.yourOffer.price)
                     },
                     forCraftsMan = true,
                 )
@@ -284,7 +284,7 @@ fun CraftsmanRequestDetailsContent(
                         interactionListener.onCancelRequestClick(state.request.id)
                     },
                     onPrimaryButtonClick = {
-                        interactionListener.markAsDoneClick(state.request.id)
+                        interactionListener.markAsDoneClick(requestId = state.request.id, price = offer.price)
                     },
                     forCraftsMan = true,
                 )

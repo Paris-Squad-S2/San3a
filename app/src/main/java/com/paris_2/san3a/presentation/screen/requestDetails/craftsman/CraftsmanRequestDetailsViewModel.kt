@@ -7,6 +7,8 @@ import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.IncrementJobsDoneForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.UpdateEarningsForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.CancelRequestUseCase
@@ -29,6 +31,8 @@ class CraftsmanRequestDetailsViewModel(
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
+    private val incrementJobsDoneForCraftsmanUseCase: IncrementJobsDoneForCraftsmanUseCase,
+    private val updateEarningsForCraftsmanUseCase: UpdateEarningsForCraftsmanUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val createChatUseCase: CreateChatUseCase,
     savedStateHandle: SavedStateHandle
@@ -99,7 +103,8 @@ class CraftsmanRequestDetailsViewModel(
                 screenState.value.uiState.offers.forEach { offer ->
                     val craftsmanId = offer.value.craftsmanId
                     val userDeferred = scope.async { getUserUseCase(craftsmanId) }
-                    val ratingDeferred = scope.async { getRatingForCraftsmanUseCase(craftsmanId).first() }
+                    val ratingDeferred =
+                        scope.async { getRatingForCraftsmanUseCase(craftsmanId).first() }
                     val user = userDeferred.await()
                     val rating = ratingDeferred.await()
                     user.toRequestOfferUiState(offer.value, rating).also { offerUiState ->
@@ -241,10 +246,28 @@ class CraftsmanRequestDetailsViewModel(
         )
     }
 
-    override fun markAsDoneClick(requestId: String) {
+    override fun markAsDoneClick(requestId: String, price: Double) {
         tryToExecute(
-            execute = {
+            execute = { scope ->
                 markRequestAsDoneUseCase(requestId)
+                val incrementJob = scope.async {
+                    incrementJobsDoneForCraftsmanUseCase(
+                        craftsmanId = phoneNumber,
+                        requestId = requestId,
+                        userId = screenState.value.uiState.request.userId
+                    )
+                }
+                val updateEarningsJob =
+                    scope.async {
+                        updateEarningsForCraftsmanUseCase(
+                            craftsmanId = phoneNumber,
+                            userId = screenState.value.uiState.request.userId,
+                            requestId = requestId,
+                            earnings = price
+                        )
+                    }
+                incrementJob.await()
+                updateEarningsJob.await()
             },
             onSuccess = {
                 Log.d("CraftsmanRequestDetailsVM", "Request marked as done successfully")
@@ -270,15 +293,17 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onPriceChanged(price: String) {
-        val updatedOffer = screenState.value.uiState.offerToAdd.copy(price = price)
-        updateState(
-            screenState.value.copy(
-                uiState = screenState.value.uiState.copy(
-                    offerToAdd = updatedOffer,
-                    isOfferValid = validateOffer(updatedOffer)
+        if (price.all { it.isDigit() }) {
+            val updatedOffer = screenState.value.uiState.offerToAdd.copy(price = price)
+            updateState(
+                screenState.value.copy(
+                    uiState = screenState.value.uiState.copy(
+                        offerToAdd = updatedOffer,
+                        isOfferValid = validateOffer(updatedOffer)
+                    )
                 )
             )
-        )
+        }
     }
 
     override fun onDateChanged(date: LocalDate) {
