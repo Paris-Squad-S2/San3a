@@ -14,6 +14,7 @@ import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 
 class UserRemoteDataSourceImpl(
@@ -183,6 +184,78 @@ class UserRemoteDataSourceImpl(
         ) ?: throw Exception("User not found with phone number: $phone")
 
         return (userData["workMedia"] as? List<*>)?.filterIsInstance<String>() ?: emptyList()
+    }
+
+    override suspend fun addRatingForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        rating: Float
+    ) {
+        val data = mapOf(
+            "rating" to rating
+        )
+        fireStoreService.setDoc(
+            path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION/$userId",
+            data = data
+        )
+        Log.d("AccountSetup", "Rating added successfully for craftsman $craftsmanId by user $userId")
+    }
+
+    override suspend fun getRatingForCraftsman(craftsmanId: String): Float {
+        val ratings = fireStoreService.getCollection(
+            path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION",
+            fromJson = { data, _ -> (data["rating"] as? Number)?.toFloat() }
+        )
+        val ratingList = ratings.filterNotNull()
+        return if (ratingList.isNotEmpty()) ratingList.average().toFloat() else 0f
+    }
+
+    override suspend fun getRatingOfCustomerOnCraftsman(
+        craftsmanId: String,
+        userId: String
+    ): Float? {
+        return fireStoreService.getDoc(
+            path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION/$userId",
+            fromJson = { data, _ -> (data["rating"] as? Number)?.toFloat() }
+        )
+    }
+
+    override suspend fun updateEarningsForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        requestId: String,
+        earnings: Double
+    ) {
+        val data = mapOf(
+            "earnings" to earnings
+        )
+        fireStoreService.setDoc(
+            path = "$USERS_COLLECTION/$craftsmanId/$EARNINGS_COLLECTION/$userId-$requestId",
+            data = data
+        )
+        Log.d("AccountSetup", "Earnings updated successfully for craftsman $craftsmanId for request $requestId by user $userId")
+    }
+
+    override suspend fun getEarningsForCraftsman(craftsmanId: String): Double {
+        val earnings = fireStoreService.getCollection(
+            path = "$USERS_COLLECTION/$craftsmanId/$EARNINGS_COLLECTION",
+            fromJson = { data, _ -> (data["earnings"] as? Number)?.toDouble() }
+        )
+        return earnings.filterNotNull().sum()
+    }
+
+    override suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String) {
+        fireStoreService.setDoc(
+            path = "$USERS_COLLECTION/$craftsmanId/$JOBS_DONE_COLLECTION/$requestId",
+            data = mapOf("userId" to userId)
+        )
+        Log.d("AccountSetup", "Job done incremented successfully for craftsman $craftsmanId for request $requestId by user $userId")
+    }
+
+    override suspend fun getJobsDoneForCraftsman(craftsmanId: String): Int {
+        return fireStoreService.getCountOfCollection(
+            path = "$USERS_COLLECTION/$craftsmanId/$JOBS_DONE_COLLECTION"
+        )
     }
 
     private suspend fun updateUserData(phone: String, data: Map<String, Any>) {

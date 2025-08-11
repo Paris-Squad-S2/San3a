@@ -114,7 +114,7 @@ class CraftsmanHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            stats = it
+                            stats = it.toStatsUiState()
                         )
                     )
                 )

@@ -19,15 +19,26 @@ data class CraftsmanHomeUiState(
     val userServices: List<String> = emptyList(),
     val relatedJob: String = "",
     val location: String = "",
-    val stats: Stats = Stats(
-        userId = "",
-        jobsDone = 0,
-        earnings = 0.0,
-        rating = 0.0
-    ),
+    val stats: StatsUiState = StatsUiState(),
     val recentRelatedJobs: Map<String, RequestServiceUiState> = emptyMap(),
     val availableJobs: Map<String, RequestServiceUiState> = emptyMap(),
 )
+
+data class StatsUiState(
+    val userId: String = "",
+    val jobsDone: Int = 0,
+    val earnings: Double = 0.0,
+    val rating: Float = 0.0f
+)
+
+fun Stats.toStatsUiState(): StatsUiState {
+    return StatsUiState(
+        userId = userId,
+        jobsDone = jobsDone,
+        earnings = earnings,
+        rating = rating
+    )
+}
 
 fun RequestService.toRequestServiceUiState(): RequestServiceUiState {
     return RequestServiceUiState(

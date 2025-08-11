@@ -7,6 +7,7 @@ import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import kotlinx.coroutines.flow.Flow
 import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.domain.entity.User
 
 interface UserRemoteDataSource {
@@ -36,5 +37,32 @@ interface UserRemoteDataSource {
     suspend fun getUser(phone: String): User
 
     suspend fun getWorkMedia(phone: String): List<String>
+
+    suspend fun addRatingForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        rating: Float
+    )
+
+    suspend fun getRatingForCraftsman(craftsmanId: String): Float
+
+    suspend fun getRatingOfCustomerOnCraftsman(
+        craftsmanId: String,
+        userId: String
+    ): Float?
+
+    suspend fun updateEarningsForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        requestId: String,
+        earnings: Double
+    )
+
+    suspend fun getEarningsForCraftsman(craftsmanId: String): Double
+
+    suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String)
+
+    suspend fun getJobsDoneForCraftsman(craftsmanId: String): Int
+
     fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>>
 }

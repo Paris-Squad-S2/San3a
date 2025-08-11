@@ -145,7 +145,7 @@ class UserRepositoryImpl(
                 userId = "",
                 jobsDone = 0,
                 earnings = 0.0,
-                rating = 0.0
+                rating = 0f
             )
         }
     }

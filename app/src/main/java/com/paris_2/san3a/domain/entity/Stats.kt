@@ -4,5 +4,5 @@ data class Stats(
     val userId: String,
     val jobsDone: Int,
     val earnings: Double,
-    val rating: Double,
+    val rating: Float,
 )
