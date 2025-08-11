@@ -30,7 +30,7 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 fun UserProfileSection(
     isCraftsman: Boolean,
     name: String,
-    rating: Double,
+    rating: Float,
     review: Int,
     isVerify: Boolean,
     painter: Painter,
@@ -114,7 +114,7 @@ fun UserProfileSection(
 private fun UserProfileSectionPreview() {
     UserProfileSection(
         name = stringResource(R.string.mohammed_akkad),
-        rating = 4.7,
+        rating = 4.7f,
         review = 1127,
         onClickEdit = {},
         isVerify = true,
@@ -129,7 +129,7 @@ private fun UserProfileSectionPreview() {
 private fun UserProfileSectionWithoutVerifyPreview() {
     UserProfileSection(
         name = stringResource(R.string.mohammed_akkad),
-        rating = 4.7,
+        rating = 4.7f,
         review = 1127,
         onClickEdit = {},
         isVerify = false,

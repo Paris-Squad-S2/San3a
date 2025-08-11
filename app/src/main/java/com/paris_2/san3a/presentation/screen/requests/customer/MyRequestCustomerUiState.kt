@@ -51,12 +51,12 @@ data class MyRequestCustomerUi(
     val craftsMan: CraftsManUiState = CraftsManUiState(),
 )
 
-fun User.toCraftsManUiState() : CraftsManUiState {
+fun User.toCraftsManUiState(rating: Float) : CraftsManUiState {
     return CraftsManUiState(
         profileUrl = this.profilePhoto,
         name = this.fullName,
         review = 150,
-        rating = 5.0f,
+        rating = rating,
         phoneNumber = this.id,
         isVerify = this.nationalIdBackImage.isNotBlank() && this.nationalIdFrontImage.isNotBlank(),
     )
