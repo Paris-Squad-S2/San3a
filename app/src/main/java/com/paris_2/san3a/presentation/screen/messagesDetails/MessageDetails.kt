@@ -41,7 +41,6 @@ import com.paris_2.san3a.presentation.screen.messagesDetails.components.DeleteCh
 import com.paris_2.san3a.presentation.screen.messagesDetails.components.Message
 import com.paris_2.san3a.presentation.screen.messagesDetails.components.MessageTextField
 import com.paris_2.san3a.presentation.shared.components.AppBar
-import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
