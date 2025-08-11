@@ -43,7 +43,7 @@ interface UserRemoteDataSource {
         rating: Float
     )
 
-    suspend fun getRatingForCraftsman(craftsmanId: String): Float
+    fun getRatingForCraftsman(craftsmanId: String): Flow<Float>
 
     suspend fun getCustomerRatingOnCraftsman(
         craftsmanId: String,
@@ -57,11 +57,11 @@ interface UserRemoteDataSource {
         earnings: Double
     )
 
-    suspend fun getEarningsForCraftsman(craftsmanId: String): Double
+    fun getEarningsForCraftsman(craftsmanId: String): Flow<Double>
 
     suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String)
 
-    suspend fun getJobsDoneForCraftsman(craftsmanId: String): Int
+    fun getJobsDoneForCraftsman(craftsmanId: String): Flow<Int>
 
     fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>>
 }

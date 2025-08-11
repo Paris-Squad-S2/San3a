@@ -19,7 +19,7 @@ data class MyRequestCustomerUiState(
     val completed: Map<String, MyRequestCustomerUi> = emptyMap(),
     val canceled: Map<String, MyRequestCustomerUi> = emptyMap(),
     val rating: Float = 0.0f,
-    val customerToRate: String = ""
+    val craftsmanToRate: String = ""
 )
 
 fun RequestService.toRequestServiceUiState(): MyRequestCustomerUi {

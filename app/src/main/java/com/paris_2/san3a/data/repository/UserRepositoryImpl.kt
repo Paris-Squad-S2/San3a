@@ -35,10 +35,9 @@ import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.repository.UserRepository
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
@@ -143,20 +142,20 @@ class UserRepositoryImpl(
             userRemoteDataSource.updateUserProgress(phone, step)
         }
 
-    override suspend fun getStats(userId: String): Stats {
-        return safeCall(GetStatsException()) {
-            coroutineScope {
-                val ratingDeferred = async { userRemoteDataSource.getRatingForCraftsman(userId) }
-                val earningDeferred = async { userRemoteDataSource.getEarningsForCraftsman(userId) }
-                val jobsDoneDeferred =
-                    async { userRemoteDataSource.getJobsDoneForCraftsman(userId) }
-                Stats(
-                    userId = userId,
-                    jobsDone = jobsDoneDeferred.await(),
-                    earnings = earningDeferred.await(),
-                    rating = ratingDeferred.await()
-                )
-            }
+    override fun getStats(userId: String): Flow<Stats> {
+        return combine(
+            userRemoteDataSource.getJobsDoneForCraftsman(userId),
+            userRemoteDataSource.getEarningsForCraftsman(userId),
+            userRemoteDataSource.getRatingForCraftsman(userId)
+        ) { jobsDone, earnings, rating ->
+            Stats(
+                userId = userId,
+                jobsDone = jobsDone,
+                earnings = earnings,
+                rating = rating
+            )
+        }.catch {
+            throw GetStatsException()
         }
     }
 
@@ -174,14 +173,13 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun getRatingForCraftsman(craftsmanId: String): Float {
+    override fun getRatingForCraftsman(craftsmanId: String): Flow<Float> {
         if (networkConnectionChecker.isConnected.value.not()) {
             throw NoInternetConnectionException()
         }
 
-        return safeCall(GetRatingForCraftsmanException()) {
-            userRemoteDataSource.getRatingForCraftsman(craftsmanId)
-        }
+        return userRemoteDataSource.getRatingForCraftsman(craftsmanId)
+            .catch { throw GetRatingForCraftsmanException() }
     }
 
     override suspend fun getCustomerRatingOnCraftsman(
@@ -208,7 +206,12 @@ class UserRepositoryImpl(
         }
 
         safeCall(UpdateEarningsForCraftsmanException()) {
-            userRemoteDataSource.updateEarningsForCraftsman(userId, craftsmanId, requestId, earnings)
+            userRemoteDataSource.updateEarningsForCraftsman(
+                userId,
+                craftsmanId,
+                requestId,
+                earnings
+            )
         }
     }
 

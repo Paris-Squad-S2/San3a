@@ -14,8 +14,10 @@ import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 
 class UserRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
@@ -201,13 +203,19 @@ class UserRemoteDataSourceImpl(
         Log.d("AccountSetup", "Rating added successfully for craftsman $craftsmanId by user $userId")
     }
 
-    override suspend fun getRatingForCraftsman(craftsmanId: String): Float {
-        val ratings = fireStoreService.getCollection(
+    override fun getRatingForCraftsman(craftsmanId: String): Flow<Float> {
+        return fireStoreService.streamCollection(
             path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION",
             fromJson = { data, _ -> (data["rating"] as? Number)?.toFloat() }
-        )
-        val ratingList = ratings.filterNotNull()
-        return if (ratingList.isNotEmpty()) ratingList.average().toFloat() else 0f
+        ).filterNotNull().let { ratingsFlow ->
+            flow {
+                val ratings = ratingsFlow.firstOrNull() ?: emptyList()
+                val avg = if (ratings.isNotEmpty()) {
+                    ratings.mapNotNull { it }.average().toFloat()
+                } else 0f
+                emit(avg)
+            }
+        }
     }
 
     override suspend fun getCustomerRatingOnCraftsman(
@@ -236,12 +244,16 @@ class UserRemoteDataSourceImpl(
         Log.d("AccountSetup", "Earnings updated successfully for craftsman $craftsmanId for request $requestId by user $userId")
     }
 
-    override suspend fun getEarningsForCraftsman(craftsmanId: String): Double {
-        val earnings = fireStoreService.getCollection(
+    override fun getEarningsForCraftsman(craftsmanId: String): Flow<Double> {
+        val earnings = fireStoreService.streamCollection(
             path = "$USERS_COLLECTION/$craftsmanId/$EARNINGS_COLLECTION",
             fromJson = { data, _ -> (data["earnings"] as? Number)?.toDouble() }
         )
-        return earnings.filterNotNull().sum()
+        return flow {
+            val earningsList = earnings.filterNotNull().firstOrNull() ?: emptyList()
+            val total = earningsList.sumOf { it ?: 0.0 }
+            emit(total)
+        }
     }
 
     override suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String) {
@@ -252,8 +264,8 @@ class UserRemoteDataSourceImpl(
         Log.d("AccountSetup", "Job done incremented successfully for craftsman $craftsmanId for request $requestId by user $userId")
     }
 
-    override suspend fun getJobsDoneForCraftsman(craftsmanId: String): Int {
-        return fireStoreService.getCountOfCollection(
+    override fun getJobsDoneForCraftsman(craftsmanId: String): Flow<Int> {
+        return fireStoreService.streamCountOfCollection(
             path = "$USERS_COLLECTION/$craftsmanId/$JOBS_DONE_COLLECTION"
         )
     }

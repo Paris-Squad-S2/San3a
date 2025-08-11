@@ -5,6 +5,6 @@ import com.paris_2.san3a.domain.repository.UserRepository
 class GetRatingForCraftsmanUseCase(
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(craftsmanId: String) =
+    operator fun invoke(craftsmanId: String) =
         userRepository.getRatingForCraftsman(craftsmanId)
 }

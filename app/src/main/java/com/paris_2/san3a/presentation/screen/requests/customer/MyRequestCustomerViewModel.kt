@@ -2,8 +2,10 @@ package com.paris_2.san3a.presentation.screen.requests.customer
 
 import android.util.Log
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.usecase.AddRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.GetCustomerRatingOnCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.GetStatsUseCase
+import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetAcceptedOfferOnRequestUseCaseUseCase
@@ -20,7 +22,9 @@ class MyRequestCustomerViewModel(
     private val getOffersCountUseCase: GetOffersCountUseCase,
     private val getAcceptedOfferOnRequestUseCaseUseCase: GetAcceptedOfferOnRequestUseCaseUseCase,
     private val getUserUseCase: GetUserUseCase,
-    private val getStatsUseCase: GetStatsUseCase,
+    private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
+    private val getCustomerRatingOnCraftsmanUseCase: GetCustomerRatingOnCraftsmanUseCase,
+    private val addRatingForCraftsmanUseCase: AddRatingForCraftsmanUseCase,
     private val createChatUseCase: CreateChatUseCase,
 ) : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState()),
     MyRequestCustomerInteractionListener {
@@ -91,7 +95,6 @@ class MyRequestCustomerViewModel(
     }
 
 
-
     private fun getOffersCountForRequests(listType: ListType): List<Job> {
         val currentMap = when (listType) {
             ListType.ONGOING -> screenState.value.myRequestCustomerUiState.ongoing
@@ -116,14 +119,16 @@ class MyRequestCustomerViewModel(
                             ListType.ONGOING -> screenState.value.myRequestCustomerUiState.copy(
                                 ongoing = updatedRequests,
                             )
+
                             ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.copy(
                                 completed = updatedRequests,
                             )
+
                             ListType.CANCELED -> screenState.value.myRequestCustomerUiState.copy(
                                 canceled = updatedRequests,
                             )
                         }
-                        updateState(screenState.value.copy(myRequestCustomerUiState = updatedUiState,))
+                        updateState(screenState.value.copy(myRequestCustomerUiState = updatedUiState))
                     }
                 },
                 onError = {
@@ -184,9 +189,9 @@ class MyRequestCustomerViewModel(
             )
 
             val updatedState = when (listType) {
-                ListType.ONGOING -> screenState.value.myRequestCustomerUiState.copy(ongoing = updatedRequests,)
-                ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.copy(completed = updatedRequests,)
-                ListType.CANCELED -> screenState.value.myRequestCustomerUiState.copy(canceled = updatedRequests,)
+                ListType.ONGOING -> screenState.value.myRequestCustomerUiState.copy(ongoing = updatedRequests)
+                ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.copy(completed = updatedRequests)
+                ListType.CANCELED -> screenState.value.myRequestCustomerUiState.copy(canceled = updatedRequests)
             }
 
             updateState(
@@ -327,12 +332,36 @@ class MyRequestCustomerViewModel(
             screenState.value.copy(
                 myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
                     isRatingVisible = true,
-                    customerToRate = craftsmanId,
+                    craftsmanToRate = craftsmanId,
                     rating = 0f
                 )
             )
         )
-//      TODO  getCustomerRatingOnCraftsman(craftsmanId = craftsmanId, customerId = screenState.value.myRequestCustomerUiState.customerPhone)
+        tryToExecute(
+            execute = {
+                getCustomerRatingOnCraftsmanUseCase(
+                    craftsmanId = craftsmanId,
+                    userId = screenState.value.myRequestCustomerUiState.customerPhone
+                )
+            },
+            onSuccess = { rating ->
+                rating?.let {
+                    updateState(
+                        screenState.value.copy(
+                            myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                                rating = rating
+                            )
+                        )
+                    )
+                }
+            },
+            onError = {
+                Log.d(
+                    "MyRequestCustomerViewModel",
+                    "Error fetching customer rating on craftsman: ${it.message}"
+                )
+            }
+        )
     }
 
     override fun onRatingDismiss() {
@@ -360,7 +389,11 @@ class MyRequestCustomerViewModel(
     override fun onRatingCraftsMan() {
         tryToExecute(
             execute = {
-                //TODO send rating to server
+                addRatingForCraftsmanUseCase(
+                    userId = screenState.value.myRequestCustomerUiState.customerPhone,
+                    craftsmanId = screenState.value.myRequestCustomerUiState.craftsmanToRate,
+                    rating = screenState.value.myRequestCustomerUiState.rating
+                )
             },
             onSuccess = {
                 updateState(
@@ -368,7 +401,7 @@ class MyRequestCustomerViewModel(
                         myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
                             isRatingVisible = false,
                             rating = 0f,
-                            customerToRate = ""
+                            craftsmanToRate = ""
                         )
                     )
                 )
