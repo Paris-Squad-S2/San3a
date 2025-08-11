@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
@@ -15,6 +16,8 @@ import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
@@ -23,6 +26,7 @@ class CraftsmanRequestDetailsViewModel(
     private val addOfferUseCase: AddOfferUseCase,
     private val getOffersUseCase: GetOffersUseCase,
     private val cancelRequestUseCase: CancelRequestUseCase,
+    private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
     private val getUserUseCase: GetUserUseCase,
@@ -91,22 +95,25 @@ class CraftsmanRequestDetailsViewModel(
 
     private fun loadCraftsMenInfo() {
         tryToExecute(
-            execute = {
+            execute = { scope ->
                 screenState.value.uiState.offers.forEach { offer ->
-                    getUserUseCase(offer.value.craftsmanId).also { user ->
-                        user.toRequestOfferUiState(offer.value).also { offerUiState ->
-                            Log.d("CraftsmanRequestDetailsVM", "Craftsman info: $offerUiState")
-                            updateState(
-                                screenState.value.copy(
-                                    uiState = screenState.value.uiState.copy(
-                                        offers = screenState.value.uiState.offers.toMutableMap()
-                                            .apply {
-                                                this[offer.key] = offerUiState
-                                            }
-                                    )
+                    val craftsmanId = offer.value.craftsmanId
+                    val userDeferred = scope.async { getUserUseCase(craftsmanId) }
+                    val ratingDeferred = scope.async { getRatingForCraftsmanUseCase(craftsmanId).first() }
+                    val user = userDeferred.await()
+                    val rating = ratingDeferred.await()
+                    user.toRequestOfferUiState(offer.value, rating).also { offerUiState ->
+                        Log.d("CraftsmanRequestDetailsVM", "Craftsman info: $offerUiState")
+                        updateState(
+                            screenState.value.copy(
+                                uiState = screenState.value.uiState.copy(
+                                    offers = screenState.value.uiState.offers.toMutableMap()
+                                        .apply {
+                                            this[offer.key] = offerUiState
+                                        }
                                 )
                             )
-                        }
+                        )
                     }
                 }
             },

@@ -56,7 +56,7 @@ data class RequestOfferUiState(
     val craftsmanId: String = "",
     val craftsmanImageUrl: String = "",
     val craftsmanName: String = "",
-    val craftsmanRate: Float = 3.5f,
+    val craftsmanRate: Float = 0f,
     val craftsmanReviewsNumber: Int = 150,
     val requestId: String = "",
     val price: String = "0.0",
@@ -79,11 +79,12 @@ fun Offer.toOfferUiState(): RequestOfferUiState {
     )
 }
 
-fun User.toRequestOfferUiState(request: RequestOfferUiState): RequestOfferUiState {
+fun User.toRequestOfferUiState(request: RequestOfferUiState, craftsmanRate: Float): RequestOfferUiState {
     return request.copy(
         craftsmanId = this.id,
         craftsmanImageUrl = this.profilePhoto,
         craftsmanName = this.fullName,
+        craftsmanRate = craftsmanRate,
     )
 }
 

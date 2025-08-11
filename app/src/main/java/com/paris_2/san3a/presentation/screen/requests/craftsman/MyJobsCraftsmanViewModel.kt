@@ -5,6 +5,7 @@ import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetCraftManOfferOnRequestUseCase
@@ -13,12 +14,15 @@ import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 
 class MyJobsCraftsmanViewModel(
     private val getCraftsManRequestsUseCase: GetCraftsManRequestsUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
+    private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
     private val getCraftManOfferOnRequestUseCase: GetCraftManOfferOnRequestUseCase,
     private val createChatUseCase: CreateChatUseCase,
@@ -170,10 +174,13 @@ class MyJobsCraftsmanViewModel(
         listType: ListType
     ) {
         tryToExecute(
-            execute = {
-                getUserUseCase(craftsManId)
+            execute = { scope ->
+                val craftsManDeferred = scope.async { getUserUseCase(craftsManId) }
+                val ratingDeferred = scope.async { getRatingForCraftsmanUseCase(craftsManId).first() }
+
+                craftsManDeferred.await() to ratingDeferred.await()
             },
-            onSuccess = { craftsMan ->
+            onSuccess = { (craftsMan, rating) ->
                 Log.d("MyOfferCraftsmanViewModel", "Fetched craftsman details: $craftsMan")
                 val updatedRequests = when (listType) {
                     ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.ongoing.toMutableMap()
@@ -183,7 +190,7 @@ class MyJobsCraftsmanViewModel(
 
                 updatedRequests[requestId] = updatedRequests[requestId]?.copy(
                     offer = updatedRequests[requestId]?.offer?.copy(
-                        craftsMan = craftsMan.toCraftsManUiState()
+                        craftsMan = craftsMan.toCraftsManUiState(rating)
                     )
                 ) ?: return@tryToExecute
 

@@ -229,11 +229,11 @@ class MyRequestCustomerViewModel(
         tryToExecute(
             execute = { scope ->
                 val craftsManDeferred = scope.async { getUserUseCase(craftsManId) }
-                val ratingDeferred = scope.async { getRatingForCraftsmanUseCase(craftsManId) }
+                val ratingDeferred = scope.async { getRatingForCraftsmanUseCase(craftsManId).first() }
 
                 craftsManDeferred.await() to ratingDeferred.await()
             },
-            onSuccess = { (craftsMan, ratingFlow) ->
+            onSuccess = { (craftsMan, rating) ->
                 Log.d("MyOfferCraftsmanViewModel", "Fetched craftsman details: $craftsMan")
                 val updatedRequests = when (listType) {
                     ListType.ONGOING -> screenState.value.myRequestCustomerUiState.ongoing.toMutableMap()
@@ -242,46 +242,38 @@ class MyRequestCustomerViewModel(
                 }
 
                 updatedRequests[requestId]?.let { request ->
-                    tryToObserve(
-                        observe = { ratingFlow },
-                        onEach = { rating ->
-                            updatedRequests[requestId] = request.copy(
-                                offer = request.offer.copy(
-                                    craftsMan = craftsMan.toCraftsManUiState(rating = rating)
-                                )
-                            )
-                            when (listType) {
-                                ListType.ONGOING -> updateState(
-                                    screenState.value.copy(
-                                        myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                                            ongoing = updatedRequests,
-                                        ),
-                                    )
-                                )
-                                ListType.COMPLETED -> updateState(
-                                    screenState.value.copy(
-                                        myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                                            completed = updatedRequests,
-                                        ),
-                                    )
-                                )
-                                ListType.CANCELED -> updateState(
-                                    screenState.value.copy(
-                                        myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                                            canceled = updatedRequests,
-                                        ),
-                                    )
-                                )
-                            }
-                        },
-                        onError = {
-                            Log.e(
-                                "MyOfferCraftsmanViewModel",
-                                "Error collecting rating for craftsman: ${it.message}"
-                            )
-                        }
+                    updatedRequests[requestId] = request.copy(
+                        offer = request.offer.copy(
+                            craftsMan = craftsMan.toCraftsManUiState(rating)
+                        )
                     )
                 } ?: return@tryToExecute
+
+                when (listType) {
+                    ListType.ONGOING -> updateState(
+                        screenState.value.copy(
+                            myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                                ongoing = updatedRequests,
+                            ),
+                        )
+                    )
+
+                    ListType.COMPLETED -> updateState(
+                        screenState.value.copy(
+                            myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                                completed = updatedRequests,
+                            ),
+                        )
+                    )
+
+                    ListType.CANCELED -> updateState(
+                        screenState.value.copy(
+                            myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                                canceled = updatedRequests,
+                            ),
+                        )
+                    )
+                }
             },
             onError = {
                 Log.e(

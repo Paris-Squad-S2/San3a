@@ -78,12 +78,12 @@ fun Offer?.toUiState(): OfferUiState? {
     }
 }
 
-fun User.toCraftsManUiState() : CraftsManUiState{
+fun User.toCraftsManUiState(rating: Float) : CraftsManUiState{
     return CraftsManUiState(
         profileUrl = this.profilePhoto.toUri(),
         name = this.fullName,
         review = 150,
-        rating = 5.0f,
+        rating = rating,
         phoneNumber = this.id,
         isVerify = this.nationalIdBackImage.isNotBlank() && this.nationalIdFrontImage.isNotBlank(),
     )
