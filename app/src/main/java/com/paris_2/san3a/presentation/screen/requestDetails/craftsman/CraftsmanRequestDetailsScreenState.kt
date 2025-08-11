@@ -56,10 +56,10 @@ data class RequestOfferUiState(
     val craftsmanId: String = "",
     val craftsmanImageUrl: String = "",
     val craftsmanName: String = "",
-    val craftsmanRate: Float = 3.5f,
+    val craftsmanRate: Float = 0f,
     val craftsmanReviewsNumber: Int = 150,
     val requestId: String = "",
-    val price: String = "0.0",
+    val price: Double = 0.0,
     val time: String = "Tomorrow at 10:00 AM",
     val postedTime: String = "1 hour ago", //TODO
     val messageToCustomer: String = "",
@@ -71,7 +71,7 @@ fun Offer.toOfferUiState(): RequestOfferUiState {
         id = this.id,
         craftsmanId = this.craftsmanId,
         requestId = this.requestId,
-        price = this.price.toString(),
+        price = this.price,
         time = "${this.preferredDate} ${this.preferredTime}",
         postedTime = "1 hour ago", // TODO: Replace with actual time logic
         messageToCustomer = this.messageToCustomer,
@@ -79,11 +79,12 @@ fun Offer.toOfferUiState(): RequestOfferUiState {
     )
 }
 
-fun User.toRequestOfferUiState(request: RequestOfferUiState): RequestOfferUiState {
+fun User.toRequestOfferUiState(request: RequestOfferUiState, craftsmanRate: Float): RequestOfferUiState {
     return request.copy(
         craftsmanId = this.id,
         craftsmanImageUrl = this.profilePhoto,
         craftsmanName = this.fullName,
+        craftsmanRate = craftsmanRate,
     )
 }
 
@@ -94,7 +95,7 @@ fun RequestOfferUiState.toOfferDetailsUIState(offerAccepted: Boolean = false): O
         rate = this.craftsmanRate,
         reviewsNumber = this.craftsmanReviewsNumber,
         description = this.messageToCustomer,
-        amount = this.price,
+        amount = this.price.toString(),
         time = this.time,
         postedTime = this.postedTime,
         status = if (offerAccepted) OfferStatus.YOUR_ACCEPTED_OFFER else if (this.isAccepted) OfferStatus.OFFER_ACCEPTED else OfferStatus.PENDING_OFFER,
@@ -117,6 +118,7 @@ data class RequestServiceUIState(
     val locationDetails: String = "Loading...",
     val time: String = "Loading...",
     val state: String = "Loading...",
+    val serviceId: String = "",
     val images: List<String> = emptyList(),
     val selectedCraftsmanId: String? = null,
 )
@@ -152,8 +154,8 @@ fun RequestServiceUIState.toRequestService(): RequestService {
         time = getCurrentDateTime(),
         state = this.state,
         image = this.images,
-        offers = listOf(),
-        selectedCraftsmanId = this.selectedCraftsmanId
+        selectedCraftsmanId = this.selectedCraftsmanId,
+        serviceId = this.serviceId
     )
 }
 
@@ -204,7 +206,7 @@ val offerList = listOf(
         craftsmanRate = 4.5f,
         craftsmanReviewsNumber = 200,
         requestId = "r1",
-        price = "150.0",
+        price = 150.0,
         time = "Tomorrow at 10:00 AM",
         postedTime = "2 hours ago",
         messageToCustomer = "Looking forward to working with you!",
@@ -218,7 +220,7 @@ val offerList = listOf(
         craftsmanRate = 4.8f,
         craftsmanReviewsNumber = 180,
         requestId = "r1",
-        price = "170.0",
+        price = 170.0,
         time = "Tomorrow at 11:00 AM",
         postedTime = "1 hour ago",
         messageToCustomer = "I can start right away.",

@@ -16,7 +16,7 @@ import com.paris_2.san3a.presentation.screen.register.registerScreen.RegisterVie
 import com.paris_2.san3a.presentation.screen.verification.VerificationViewModel
 import org.koin.core.module.dsl.viewModelOf
 import com.paris_2.san3a.presentation.screen.requests.customer.MyRequestCustomerViewModel
-import com.paris_2.san3a.presentation.screen.requests.craftsman.MyOfferCraftsmanViewModel
+import com.paris_2.san3a.presentation.screen.requests.craftsman.MyJobsCraftsmanViewModel
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.CraftsmanRequestDetailsViewModel
 import com.paris_2.san3a.presentation.screen.requestDetails.customer.CustomerRequestDetailsRequestDetailsViewModel
 import org.koin.dsl.module
@@ -38,7 +38,7 @@ val viewModelModule = module {
     viewModelOf(::MyServiceViewModel)
     viewModelOf(::LocationViewModel)
     viewModelOf(::MyRequestCustomerViewModel)
-    viewModelOf(::MyOfferCraftsmanViewModel)
+    viewModelOf(::MyJobsCraftsmanViewModel)
     viewModelOf(::CraftsmanRequestDetailsViewModel)
     viewModelOf(::CustomerRequestDetailsRequestDetailsViewModel)
 }

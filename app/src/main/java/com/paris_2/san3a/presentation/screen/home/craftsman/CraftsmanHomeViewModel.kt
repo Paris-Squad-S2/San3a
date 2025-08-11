@@ -108,13 +108,13 @@ class CraftsmanHomeViewModel(
     }
 
     private fun loadStats() {
-        tryToExecute(
-            execute = { getStatsUseCase(screenState.value.craftsmanHomeUiState.phoneNumber) },
-            onSuccess = {
+        tryToObserve(
+            observe = { getStatsUseCase(screenState.value.craftsmanHomeUiState.phoneNumber) },
+            onEach = {
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            stats = it
+                            stats = it.toStatsUiState()
                         )
                     )
                 )

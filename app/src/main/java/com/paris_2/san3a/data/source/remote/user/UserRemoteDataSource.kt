@@ -1,7 +1,6 @@
 package com.paris_2.san3a.data.source.remote.user
 
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
-import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
@@ -37,7 +36,32 @@ interface UserRemoteDataSource {
     suspend fun getUser(phone: String): User
 
     suspend fun getWorkMedia(phone: String): List<String>
-    suspend fun getStats(userId: String): StatsDto
-    suspend fun updateStats(userId: String, stats: StatsDto)
+
+    suspend fun addRatingForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        rating: Float
+    )
+
+    fun getRatingForCraftsman(craftsmanId: String): Flow<Float>
+
+    suspend fun getCustomerRatingOnCraftsman(
+        craftsmanId: String,
+        userId: String
+    ): Float?
+
+    suspend fun updateEarningsForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        requestId: String,
+        earnings: Double
+    )
+
+    fun getEarningsForCraftsman(craftsmanId: String): Flow<Double>
+
+    suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String)
+
+    fun getJobsDoneForCraftsman(craftsmanId: String): Flow<Int>
+
     fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>>
 }

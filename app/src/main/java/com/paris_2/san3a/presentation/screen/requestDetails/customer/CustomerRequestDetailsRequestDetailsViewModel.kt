@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
@@ -16,6 +17,8 @@ import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toRequestO
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toRequestServiceUIState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 
 class CustomerRequestDetailsRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
@@ -23,6 +26,7 @@ class CustomerRequestDetailsRequestDetailsViewModel(
     private val acceptOfferUseCase: AcceptOfferUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val createChatUseCase: CreateChatUseCase,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<CustomerRequestDetailsScreenState>(CustomerRequestDetailsScreenState()),
@@ -88,27 +92,27 @@ class CustomerRequestDetailsRequestDetailsViewModel(
 
     private fun loadCraftsMenInfo() {
         tryToExecute(
-            execute = {
+            execute = { scope ->
                 screenState.value.uiState.offers.forEach { offer ->
-                    getUserUseCase(offer.value.craftsmanId).also { user ->
-                        user.toRequestOfferUiState(offer.value).also { offerUiState ->
-                            Log.d("CraftsmanRequestDetailsVM", "Craftsman info: $offerUiState")
-                            updateState(
-                                screenState.value.copy(
-                                    uiState = screenState.value.uiState.copy(
-                                        offers = screenState.value.uiState.offers.toMutableMap()
-                                            .apply {
-                                                this[offer.key] = offerUiState
-                                            }
-                                    )
+                    val craftsmanId = offer.value.craftsmanId
+                    val userDeferred = scope.async { getUserUseCase(craftsmanId) }
+                    val ratingDeferred = scope.async { getRatingForCraftsmanUseCase(craftsmanId).first() }
+                    val user = userDeferred.await()
+                    val rating = ratingDeferred.await()
+                    user.toRequestOfferUiState(offer.value, rating).also { offerUiState ->
+                        Log.d("CraftsmanRequestDetailsVM", "Craftsman info: $offerUiState")
+                        updateState(
+                            screenState.value.copy(
+                                uiState = screenState.value.uiState.copy(
+                                    offers = screenState.value.uiState.offers.toMutableMap()
+                                        .apply {
+                                            this[offer.key] = offerUiState
+                                        }
                                 )
                             )
-                        }
+                        )
                     }
                 }
-            },
-            onSuccess = {
-
             },
             onError = {
                 updateState(
@@ -160,7 +164,9 @@ class CustomerRequestDetailsRequestDetailsViewModel(
 
     override fun onAcceptOfferClick(offerId: String, craftsmanId: String) {
         tryToExecute(
-            execute = { acceptOfferUseCase(offerId) },
+            execute = {
+                acceptOfferUseCase(offerId = offerId, craftsmanId = craftsmanId, requestId = requestId)
+            },
             onSuccess = {
                 addNotificationUseCase(
                     Notification(

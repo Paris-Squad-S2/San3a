@@ -7,7 +7,6 @@ import com.paris_2.san3a.data.service.firestore.SetOperation
 import com.paris_2.san3a.data.service.firestore.WriteOperation
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
-import com.paris_2.san3a.data.source.remote.user.dto.StatsDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
@@ -15,7 +14,10 @@ import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 
 class UserRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
@@ -186,38 +188,91 @@ class UserRemoteDataSourceImpl(
         return (userData["workMedia"] as? List<*>)?.filterIsInstance<String>() ?: emptyList()
     }
 
-    private suspend fun updateUserData(phone: String, data: Map<String, Any>) {
-        fireStoreService.updateDoc(path = "$USERS_COLLECTION/$phone", data = data)
-        Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
+    override suspend fun addRatingForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        rating: Float
+    ) {
+        val data = mapOf(
+            "rating" to rating
+        )
+        fireStoreService.setDoc(
+            path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION/$userId",
+            data = data
+        )
+        Log.d("AccountSetup", "Rating added successfully for craftsman $craftsmanId by user $userId")
     }
 
-    override suspend fun getStats(userId: String): StatsDto {
-        return try {
-            fireStoreService.getDoc(
-                path = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
-                fromJson = StatsDto::fromJson
-            ) ?: StatsDto(userId, 0, 0.0, 0.0)
-        } catch (_: Exception) {
-            addStats(
-                userId,
-                StatsDto(userId, 0, 0.0, 0.0)
-            )
-            StatsDto(userId, 0, 0.0, 0.0)
+    override fun getRatingForCraftsman(craftsmanId: String): Flow<Float> {
+        return fireStoreService.streamCollection(
+            path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION",
+            fromJson = { data, _ -> (data["rating"] as? Number)?.toFloat() }
+        ).filterNotNull().let { ratingsFlow ->
+            flow {
+                val ratings = ratingsFlow.firstOrNull() ?: emptyList()
+                val avg = if (ratings.isNotEmpty()) {
+                    ratings.mapNotNull { it }.average().toFloat()
+                } else 0f
+                emit(avg)
+            }
         }
     }
 
-    suspend fun addStats(userId: String, stats: StatsDto) {
-        fireStoreService.setDoc(
-            path = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
-            data = stats.toJson()
+    override suspend fun getCustomerRatingOnCraftsman(
+        craftsmanId: String,
+        userId: String
+    ): Float? {
+        return fireStoreService.getDoc(
+            path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION/$userId",
+            fromJson = { data, _ -> (data["rating"] as? Number)?.toFloat() }
         )
     }
 
-    override suspend fun updateStats(userId: String, stats: StatsDto) {
-        fireStoreService.updateDoc(
-            path = "$CRAFTSMAN_STATUS_COLLECTION/$userId",
-            data = stats.toJson()
+    override suspend fun updateEarningsForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        requestId: String,
+        earnings: Double
+    ) {
+        val data = mapOf(
+            "earnings" to earnings
         )
+        fireStoreService.setDoc(
+            path = "$USERS_COLLECTION/$craftsmanId/$EARNINGS_COLLECTION/$userId-$requestId",
+            data = data
+        )
+        Log.d("AccountSetup", "Earnings updated successfully for craftsman $craftsmanId for request $requestId by user $userId")
+    }
+
+    override fun getEarningsForCraftsman(craftsmanId: String): Flow<Double> {
+        val earnings = fireStoreService.streamCollection(
+            path = "$USERS_COLLECTION/$craftsmanId/$EARNINGS_COLLECTION",
+            fromJson = { data, _ -> (data["earnings"] as? Number)?.toDouble() }
+        )
+        return flow {
+            val earningsList = earnings.filterNotNull().firstOrNull() ?: emptyList()
+            val total = earningsList.sumOf { it ?: 0.0 }
+            emit(total)
+        }
+    }
+
+    override suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String) {
+        fireStoreService.setDoc(
+            path = "$USERS_COLLECTION/$craftsmanId/$JOBS_DONE_COLLECTION/$requestId",
+            data = mapOf("userId" to userId)
+        )
+        Log.d("AccountSetup", "Job done incremented successfully for craftsman $craftsmanId for request $requestId by user $userId")
+    }
+
+    override fun getJobsDoneForCraftsman(craftsmanId: String): Flow<Int> {
+        return fireStoreService.streamCountOfCollection(
+            path = "$USERS_COLLECTION/$craftsmanId/$JOBS_DONE_COLLECTION"
+        )
+    }
+
+    private suspend fun updateUserData(phone: String, data: Map<String, Any>) {
+        fireStoreService.updateDoc(path = "$USERS_COLLECTION/$phone", data = data)
+        Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
     }
 
     override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>> {
@@ -237,5 +292,8 @@ class UserRemoteDataSourceImpl(
         const val OFFERED_SERVICES_COLLECTION = "offeredServices"
         const val REQUESTED_SERVICES_PATH = "requestedServices"
         const val SERVICES_COLLECTION = "services"
+        const val RATINGS_COLLECTION = "ratings"
+        const val EARNINGS_COLLECTION = "earnings"
+        const val JOBS_DONE_COLLECTION = "jobs_done"
     }
 }

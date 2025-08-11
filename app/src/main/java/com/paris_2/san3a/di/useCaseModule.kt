@@ -1,6 +1,7 @@
 package com.paris_2.san3a.di
 
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.AddRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.AddUserUseCase
 import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
@@ -8,12 +9,15 @@ import com.paris_2.san3a.domain.usecase.GetAvailableJobsUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.GetCustomerRatingOnCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetRecentRelatedJobsUseCase
 import com.paris_2.san3a.domain.usecase.GetStatsUseCase
 import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.GetWorkMediaUseCase
+import com.paris_2.san3a.domain.usecase.IncrementJobsDoneForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.IsLoggedInUseCase
 import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
 import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
@@ -23,6 +27,7 @@ import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetOnboardingCompletedUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.domain.usecase.StreamNotificationsUseCase
+import com.paris_2.san3a.domain.usecase.UpdateEarningsForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.messages.DeleteChatByIdUseCase
@@ -91,4 +96,9 @@ val useCaseModule = module {
     factoryOf(::CancelRequestUseCase)
     factoryOf(::GetAcceptedOfferOnRequestUseCaseUseCase)
     factoryOf(::MarkRequestAsDoneUseCase)
+    factoryOf(::AddRatingForCraftsmanUseCase)
+    factoryOf(::GetRatingForCraftsmanUseCase)
+    factoryOf(::GetCustomerRatingOnCraftsmanUseCase)
+    factoryOf(::UpdateEarningsForCraftsmanUseCase)
+    factoryOf(::IncrementJobsDoneForCraftsmanUseCase)
 }

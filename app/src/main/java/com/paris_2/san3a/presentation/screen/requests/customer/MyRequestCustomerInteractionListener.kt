@@ -4,4 +4,9 @@ interface MyRequestCustomerInteractionListener {
     fun onRequestClick(requestId: String)
     fun onNotificationClick()
     fun onRetryClick()
+    fun onClickChat(phoneNumber: String)
+    fun onRatingClick(craftsmanId: String)
+    fun onRatingDismiss()
+    fun onRatingChange(rating: Float)
+    fun onRatingCraftsMan()
 }

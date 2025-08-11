@@ -32,7 +32,9 @@ data class JobUiState(
     val status: RequestStatus = RequestStatus.ONGOING,
     val time: String = "",
     val title: String = "",
+    val serviceId: String = "",
     val description: String = "",
+    val selectedCraftsmanId: String? = null,
     val offer: OfferUiState? = null,
 )
 
@@ -44,7 +46,9 @@ fun RequestService.toMyJobOfferUiState(): JobUiState {
         address = this.location + " " + this.locationDetails,
         status = this.requestStatus,
         time = this.time.toString(), //TODO
+        serviceId = this.serviceId,
         title = this.title,
+        selectedCraftsmanId = this.selectedCraftsmanId,
         description = this.description,
     )
 }
@@ -59,27 +63,6 @@ data class OfferUiState(
     val isAccepted: Boolean,
     val craftsMan: CraftsManUiState
 )
-
-fun User.toCraftsManUiState() : CraftsManUiState{
-    return CraftsManUiState(
-        profileUrl = this.profilePhoto.toUri(),
-        name = this.fullName,
-        review = 150,
-        rating = 5.0f,
-        phoneNumber = this.id,
-        isVerify = this.nationalIdBackImage.isNotBlank() && this.nationalIdFrontImage.isNotBlank(),
-    )
-}
-
-data class CraftsManUiState(
-    val profileUrl: Uri? = null,
-    val name: String = "",
-    val review: Int = 0,
-    val rating: Float = 0.0f,
-    val phoneNumber: String = "",
-    val isVerify: Boolean = false,
-)
-
 fun Offer?.toUiState(): OfferUiState? {
     return this?.let {
         OfferUiState(
@@ -95,9 +78,29 @@ fun Offer?.toUiState(): OfferUiState? {
     }
 }
 
+fun User.toCraftsManUiState(rating: Float) : CraftsManUiState{
+    return CraftsManUiState(
+        profileUrl = this.profilePhoto.toUri(),
+        name = this.fullName,
+        review = 150,
+        rating = rating,
+        phoneNumber = this.id,
+        isVerify = this.nationalIdBackImage.isNotBlank() && this.nationalIdFrontImage.isNotBlank(),
+    )
+}
+
+data class CraftsManUiState(
+    val profileUrl: Uri? = null,
+    val name: String = "",
+    val review: Int = 0,
+    val rating: Float = 0.0f,
+    val phoneNumber: String = "",
+    val isVerify: Boolean = false,
+)
+
+
 fun List<Offer>.toUiStateList(): List<OfferUiState?> = map { it.toUiState() }
 
 fun List<RequestService>.toMyJobOfferUiStateList(): List<JobUiState> {
     return this.map { it.toMyJobOfferUiState() }
 }
-

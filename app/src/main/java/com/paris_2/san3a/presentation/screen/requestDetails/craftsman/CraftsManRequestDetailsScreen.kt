@@ -37,7 +37,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.RequestStatus
-import com.paris_2.san3a.presentation.screen.requestDetails.components.AddOfferForm
+import com.paris_2.san3a.presentation.screen.requestDetails.components.addOfferSection.AddOfferForm
 import com.paris_2.san3a.presentation.screen.requestDetails.components.RequestInfoSection
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppButton
@@ -203,7 +203,7 @@ fun CraftsmanRequestDetailsContent(
                                 interactionListener.onCancelRequestClick(state.request.id)
                             },
                             onPrimaryButtonClick = {
-                                interactionListener.markAsDoneClick(state.request.id)
+                                interactionListener.markAsDoneClick(requestId = state.request.id, price = state.acceptedOffer.price)
                             },
                             forCraftsMan = true,
                         )
@@ -239,7 +239,7 @@ fun CraftsmanRequestDetailsContent(
                         interactionListener.onCancelRequestClick(state.request.id)
                     },
                     onPrimaryButtonClick = {
-                        interactionListener.markAsDoneClick(state.request.id)
+                        interactionListener.markAsDoneClick(requestId = state.request.id, price = state.yourOffer.price)
                     },
                     forCraftsMan = true,
                 )
@@ -284,7 +284,7 @@ fun CraftsmanRequestDetailsContent(
                         interactionListener.onCancelRequestClick(state.request.id)
                     },
                     onPrimaryButtonClick = {
-                        interactionListener.markAsDoneClick(state.request.id)
+                        interactionListener.markAsDoneClick(requestId = state.request.id, price = offer.price)
                     },
                     forCraftsMan = true,
                 )

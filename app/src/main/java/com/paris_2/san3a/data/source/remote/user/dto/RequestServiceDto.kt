@@ -12,8 +12,8 @@ data class RequestServiceDto(
     val time: String?,
     val state: String,
     val image: List<String>,
-    val offers: List<Double>,
     val userId: String,
+    val serviceId: String,
     val selectedCraftsmanId: String?,
     val requestStatus: String?
 ) {
@@ -29,9 +29,8 @@ data class RequestServiceDto(
                 time = data["time"] as? String,
                 state = data["state"] as? String ?: "",
                 image = (data["image"] as? List<*>)?.mapNotNull { it as? String } ?: emptyList(),
-                offers = (data["offers"] as? List<*>)?.mapNotNull { (it as? Number)?.toDouble() }
-                    ?: emptyList(),
                 userId = data["userId"] as? String ?: "",
+                serviceId = data["serviceId"] as? String ?: "",
                 selectedCraftsmanId = data["selectedCraftsmanId"] as? String,
                 requestStatus = data["requestStatus"] as? String
             )
@@ -46,8 +45,8 @@ data class RequestServiceDto(
             "location" to location,
             "locationDetails" to locationDetails,
             "image" to image,
-            "offers" to offers,
             "userId" to userId,
+            "serviceId" to serviceId,
             "state" to state,
         )
         if (selectedCraftsmanId != null) {

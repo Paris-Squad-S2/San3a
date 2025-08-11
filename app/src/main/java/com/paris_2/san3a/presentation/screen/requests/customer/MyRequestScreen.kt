@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.requests.customer
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.presentation.screen.requests.component.RatingBottomSheet
 import com.paris_2.san3a.presentation.screen.requests.component.RequestCard
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppTabBar
@@ -47,6 +49,18 @@ private fun MyRequestScreenContent(
     myRequestCustomerInteractionListener: MyRequestCustomerInteractionListener,
     modifier: Modifier = Modifier,
 ) {
+    RatingBottomSheet(
+        isVisible = state.myRequestCustomerUiState.isRatingVisible,
+        rating = state.myRequestCustomerUiState.rating,
+        onDismiss = myRequestCustomerInteractionListener::onRatingDismiss,
+        onRatingChange = { rating ->
+            myRequestCustomerInteractionListener.onRatingChange(rating)
+        },
+        onAddRating = {
+            myRequestCustomerInteractionListener.onRatingCraftsMan()
+        },
+    )
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -118,7 +132,10 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = ongoingRequests, interactionListener = myRequestCustomerInteractionListener)
+                                RequestList(
+                                    requests = ongoingRequests.values.toList(),
+                                    interactionListener = myRequestCustomerInteractionListener
+                                )
                             }
                         }
 
@@ -134,7 +151,10 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = completedRequests, interactionListener = myRequestCustomerInteractionListener)
+                                RequestList(
+                                    requests = completedRequests.values.toList(),
+                                    interactionListener = myRequestCustomerInteractionListener
+                                )
                             }
                         }
 
@@ -150,7 +170,10 @@ private fun MyRequestScreenContent(
                                     )
                                 }
                             } else {
-                                RequestList(requests = canceledRequests, interactionListener = myRequestCustomerInteractionListener)
+                                RequestList(
+                                    requests = canceledRequests.values.toList(),
+                                    interactionListener = myRequestCustomerInteractionListener
+                                )
                             }
                         }
                     }
@@ -162,13 +185,24 @@ private fun MyRequestScreenContent(
 }
 
 @Composable
-private fun RequestList(requests: List<MyRequestCustomerUi>, interactionListener: MyRequestCustomerInteractionListener) {
+private fun RequestList(
+    requests: List<MyRequestCustomerUi>,
+    interactionListener: MyRequestCustomerInteractionListener
+) {
     LazyColumn {
         items(requests) { request ->
             RequestCard(
                 requestUi = request,
                 onActionClick = {
-                    interactionListener.onRequestClick(request.id)
+                    if (request.status == RequestStatus.ONGOING && request.offer.craftsMan.phoneNumber.isBlank()) {
+                        interactionListener.onRequestClick(request.id)
+                    } else if (request.status == RequestStatus.COMPLETED) {
+                        interactionListener.onRatingClick(craftsmanId = request.offer.craftsMan.phoneNumber)
+                    } else if (request.status == RequestStatus.ONGOING) {
+                        interactionListener.onClickChat(request.offer.craftsMan.phoneNumber)
+                    } else {
+                        interactionListener.onRequestClick(request.id)
+                    }
                 },
             )
         }
@@ -182,32 +216,26 @@ fun MyRequestScreenPreview() {
         MyRequestScreenContent(
             state = MyRequestCustomerScreenState(
                 myRequestCustomerUiState = MyRequestCustomerUiState(
-                    ongoing = listOf(
-                        MyRequestCustomerUi(
-                            isCraftsmanVerified = true,
-                            status = RequestStatus.ONGOING,
-                            craftsmanURL = "",
-                            isAcceptedOffer = true
-                        ),
-                        MyRequestCustomerUi(),
-                        MyRequestCustomerUi(),
+                    ongoing = mapOf(
+                        "1" to MyRequestCustomerUi(),
+                        "2" to MyRequestCustomerUi(),
+                        "3" to MyRequestCustomerUi(),
                     ),
-                    completed = emptyList(),
-                    canceled = emptyList()
-                )
+                ),
             ),
             myRequestCustomerInteractionListener = object : MyRequestCustomerInteractionListener {
-                override fun onRequestClick(requestId: String) {
-                    // Handle request click
-                }
+                override fun onRequestClick(requestId: String) {}
 
-                override fun onNotificationClick() {
-                    TODO("Not yet implemented")
-                }
+                override fun onNotificationClick() {}
 
-                override fun onRetryClick() {
-                    TODO("Not yet implemented")
-                }
+                override fun onRetryClick() {}
+                override fun onClickChat(phoneNumber: String) {}
+                override fun onRatingClick(craftsmanId: String) {}
+                override fun onRatingDismiss() {}
+
+                override fun onRatingChange(rating: Float) {}
+
+                override fun onRatingCraftsMan() {}
             },
         )
     }

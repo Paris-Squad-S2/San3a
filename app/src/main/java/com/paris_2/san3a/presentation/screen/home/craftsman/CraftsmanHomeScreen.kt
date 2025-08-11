@@ -203,11 +203,11 @@ private fun Preview() {
                 currentUserName = "Muhammed",
                 relatedJob = "Plumbing",
                 location = "Cairo, Egypt",
-                stats = Stats(
+                stats = StatsUiState(
                     userId = "123",
                     jobsDone = 10,
                     earnings = 2500.0,
-                    rating = 4.7
+                    rating = 4.7f
                 ),
                 recentRelatedJobs = mapOf(
                     "1" to RequestServiceUiState(

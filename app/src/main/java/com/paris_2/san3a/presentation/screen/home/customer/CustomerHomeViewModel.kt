@@ -248,7 +248,7 @@ class CustomerHomeViewModel(
         onSearch(query)
     }
 
-    override fun createRequest(service: RequestServiceUiState, serviceId: String) {
+    override fun createRequest(service: RequestServiceUiState) {
         tryToExecute(
             execute = {
                 requestServicesUseCase(service.toRequestService())
@@ -261,7 +261,7 @@ class CustomerHomeViewModel(
                         )
                     )
                 )
-                updateNumOfRequests(serviceId)
+                updateNumOfRequests(service.serviceId)
             },
             onError = {
                 updateState(

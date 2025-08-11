@@ -53,7 +53,8 @@ fun MyJobOfferCard(
             Column {
                 ServiceTypeCard(
                     title = jobUiState.title,
-                    serviceType = jobUiState.serviceType
+                    serviceType = jobUiState.serviceType,
+                    serviceId = jobUiState.serviceId,
                 )
 
                 Row(Modifier.padding(top = 16.dp)) {

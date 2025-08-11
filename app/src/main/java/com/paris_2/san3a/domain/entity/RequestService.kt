@@ -6,6 +6,7 @@ data class RequestService(
     val id: String,
     val userId: String,
     val requestStatus: RequestStatus,
+    val serviceId: String,
     val title: String,
     val serviceType: String,
     val description: String,
@@ -14,7 +15,6 @@ data class RequestService(
     val time: LocalDateTime,
     val state: String,
     val image : List<String>,
-    val offers: List<Double>, // TODO: will be removed
     val selectedCraftsmanId: String?
 )
 

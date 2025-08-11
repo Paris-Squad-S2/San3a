@@ -1,28 +1,31 @@
 package com.paris_2.san3a.data.repository
 
-import android.R
-import android.R.attr.accountType
 import android.net.Uri
 import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
+import com.paris_2.san3a.domain.AddRatingForCraftsmanException
 import com.paris_2.san3a.domain.AddUserException
 import com.paris_2.san3a.domain.CompleteUserSetupException
 import com.paris_2.san3a.domain.GetAccountTypeException
+import com.paris_2.san3a.domain.GetCustomerRatingOnCraftsmanException
+import com.paris_2.san3a.domain.GetRatingForCraftsmanException
 import com.paris_2.san3a.domain.GetRecentRelatedJobsException
 import com.paris_2.san3a.domain.GetServicesException
 import com.paris_2.san3a.domain.GetStatsException
 import com.paris_2.san3a.domain.GetUserException
 import com.paris_2.san3a.domain.GetUserProgressException
 import com.paris_2.san3a.domain.GetUserWorkMediaException
+import com.paris_2.san3a.domain.IncrementJobsDoneForCraftsmanException
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.SaveAccountTypeException
 import com.paris_2.san3a.domain.SaveLocationException
 import com.paris_2.san3a.domain.SavePersonalInfoException
 import com.paris_2.san3a.domain.SaveServicesException
 import com.paris_2.san3a.domain.SaveWorkShowcaseException
+import com.paris_2.san3a.domain.UpdateEarningsForCraftsmanException
 import com.paris_2.san3a.domain.UploadNationalIdImagesException
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
@@ -34,6 +37,7 @@ import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
@@ -138,9 +142,90 @@ class UserRepositoryImpl(
             userRemoteDataSource.updateUserProgress(phone, step)
         }
 
-    override suspend fun getStats(userId: String): Stats {
-        return safeCall(GetStatsException()) {
-            userRemoteDataSource.getStats(userId).toEntity()
+    override fun getStats(userId: String): Flow<Stats> {
+        return combine(
+            userRemoteDataSource.getJobsDoneForCraftsman(userId),
+            userRemoteDataSource.getEarningsForCraftsman(userId),
+            userRemoteDataSource.getRatingForCraftsman(userId)
+        ) { jobsDone, earnings, rating ->
+            Stats(
+                userId = userId,
+                jobsDone = jobsDone,
+                earnings = earnings,
+                rating = rating
+            )
+        }.catch {
+            throw GetStatsException()
+        }
+    }
+
+    override suspend fun addRatingForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        rating: Float
+    ) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
+        safeCall(AddRatingForCraftsmanException()) {
+            userRemoteDataSource.addRatingForCraftsman(userId, craftsmanId, rating)
+        }
+    }
+
+    override fun getRatingForCraftsman(craftsmanId: String): Flow<Float> {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
+        return userRemoteDataSource.getRatingForCraftsman(craftsmanId)
+            .catch { throw GetRatingForCraftsmanException() }
+    }
+
+    override suspend fun getCustomerRatingOnCraftsman(
+        craftsmanId: String,
+        userId: String
+    ): Float? {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
+        return safeCall(GetCustomerRatingOnCraftsmanException()) {
+            userRemoteDataSource.getCustomerRatingOnCraftsman(craftsmanId, userId)
+        }
+    }
+
+    override suspend fun updateEarningsForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        requestId: String,
+        earnings: Double
+    ) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
+        safeCall(UpdateEarningsForCraftsmanException()) {
+            userRemoteDataSource.updateEarningsForCraftsman(
+                userId,
+                craftsmanId,
+                requestId,
+                earnings
+            )
+        }
+    }
+
+    override suspend fun incrementJobsDoneForCraftsman(
+        craftsmanId: String,
+        requestId: String,
+        userId: String
+    ) {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
+        safeCall(IncrementJobsDoneForCraftsmanException()) {
+            userRemoteDataSource.incrementJobsDoneForCraftsman(craftsmanId, requestId, userId)
         }
     }
 

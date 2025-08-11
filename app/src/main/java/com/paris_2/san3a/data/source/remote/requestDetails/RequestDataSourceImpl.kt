@@ -52,7 +52,7 @@ class RequestDataSourceImpl(
         fireStoreService.updateDoc(
             path = "$REQUEST_DETAILS_COLLECTION/$requestId",
             data = mapOf(
-                "craftsmanId" to craftsmanId
+                "selectedCraftsmanId" to craftsmanId
             )
         )
     }

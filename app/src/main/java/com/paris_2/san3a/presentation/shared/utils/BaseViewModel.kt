@@ -42,14 +42,14 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
         onSuccess: (suspend (T) -> Unit)? = null,
         onError: (Throwable) -> Unit,
         scope: CoroutineScope = viewModelScope,
-        execute: suspend () -> T,
+        execute: suspend (CoroutineScope) -> T,
     ): Job {
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             onError(throwable)
         }
         return scope.launch(exceptionHandler) {
             try {
-                val result = execute()
+                val result = execute(scope)
                 onSuccess?.invoke(result)
             } catch (e: Exception) {
                 Log.e("BaseViewModel", "tryToExecute: Error executing operation", e)

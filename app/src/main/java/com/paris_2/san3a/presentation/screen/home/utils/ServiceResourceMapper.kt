@@ -39,6 +39,6 @@ fun getResourceTint(id: String): Color {
         "VMuPvjaMBy7xZQB2om6l" -> Theme.colors.additional.primary.red
         "ig1I47LLgLUHg96d8ZwB" -> Theme.colors.additional.primary.green
         "keLsnqeGp8RKpZwWm7J0" -> Theme.colors.additional.primary.blue
-        else -> Theme.colors.additional.secondary.blue
+        else -> Theme.colors.additional.primary.blue
     }
 }

@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.more.moreScreen
 
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
@@ -9,6 +10,7 @@ import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
@@ -19,6 +21,7 @@ import com.paris_2.san3a.presentation.mapper.toUserUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -53,7 +56,7 @@ data class UserUiState(
     val imageUrl: Uri? = null,
     val name: String = "",
     val review: Int = 0,
-    val rating: Double = 0.0,
+    val rating: Float = 0.0f,
     val phoneNumber: String = "",
     val isVerify: Boolean = false,
     val isCraftsman: Boolean = true,
@@ -65,6 +68,7 @@ class MoreViewModel(
     private val setLoginUseCase: SetLoginUseCase,
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
     private val getVersionNameUseCase: GetVersionNameUseCase,
@@ -152,8 +156,17 @@ class MoreViewModel(
 
     private fun getUserInformation() {
         tryToExecute(
-            execute = { getUserUseCase(screenState.value.moreUiState.userUiState.phoneNumber) },
-            onSuccess = ::onGetUserInformationSuccess,
+            execute = { scope ->
+                val craftsManDeferred =
+                    scope.async { getUserUseCase(screenState.value.moreUiState.userUiState.phoneNumber) }
+
+                val ratingDeferred = scope.async {
+                    getRatingForCraftsmanUseCase(screenState.value.moreUiState.userUiState.phoneNumber)
+                }
+
+                craftsManDeferred.await() to ratingDeferred.await()
+            },
+            onSuccess = { (user, rating) -> onGetUserInformationSuccess(user, rating) },
             onError = ::onGetUserInformationError
         )
     }
@@ -192,22 +205,30 @@ class MoreViewModel(
         )
     }
 
-    private fun onGetUserInformationSuccess(user: User) {
-        val isVerify = user.nationalIdBackImage.isNotEmpty() &&
-                user.nationalIdFrontImage.isNotEmpty() &&
-                user.accountType == AccountType.CRAFTSMAN
-        updateState(
-            screenState.value.copy(
-                isLoading = false,
-                errorMessage = null,
-                isLoadingChangeAccount = false,
-                showSnackBarError = false,
-                isNoInternet = false,
-                moreUiState = screenState.value.moreUiState.copy(
-                    userUiState = user.toUserUiState()
-                        .copy(isVerify = isVerify),
+    private fun onGetUserInformationSuccess(user: User, rating: Flow<Float>) {
+        tryToObserve(
+            observe = { rating },
+            onEach = { userRating ->
+                val isVerify = user.nationalIdBackImage.isNotEmpty() &&
+                        user.nationalIdFrontImage.isNotEmpty() &&
+                        user.accountType == AccountType.CRAFTSMAN
+                updateState(
+                    screenState.value.copy(
+                        isLoading = false,
+                        errorMessage = null,
+                        isLoadingChangeAccount = false,
+                        showSnackBarError = false,
+                        isNoInternet = false,
+                        moreUiState = screenState.value.moreUiState.copy(
+                            userUiState = user.toUserUiState(rating = userRating)
+                                .copy(isVerify = isVerify),
+                        )
+                    )
                 )
-            )
+            },
+            onError = {
+                Log.d("MoreViewModel", "Error getting rating: ${it.message}")
+            }
         )
     }
 

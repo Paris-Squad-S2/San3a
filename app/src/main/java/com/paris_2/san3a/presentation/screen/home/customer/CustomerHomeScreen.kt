@@ -254,8 +254,8 @@ private fun CustomerHomeScreenContent(
                                     locationDetails = state.bottomSheetUiState.bottomSheetAddressDetails,
                                     image = state.bottomSheetUiState.bottomSheetImages,
                                     userId = state.customerUiState.id,
+                                    serviceId = state.bottomSheetUiState.bottomSheetServiceId,
                                 ),
-                                state.bottomSheetUiState.bottomSheetServiceId
                             )
                         },
                         onClickBack = { action.previousBottomSheetStep() },
@@ -415,8 +415,8 @@ private fun CustomerHomeScreenContent(
                                 ?: "",
                             tint = getResourceTint(service.id),
                             iconColor = getResourceColors(service.id),
-                            isLarge = false,
                             painter = painterResource(getResource(service.id)),
+                            isLarge = false,
                             modifier = Modifier
                                 .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
                             onclick = {

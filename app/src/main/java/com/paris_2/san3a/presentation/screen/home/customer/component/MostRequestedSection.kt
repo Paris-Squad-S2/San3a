@@ -50,8 +50,8 @@ fun MostRequestedServices(
                         ?: "",
                     tint = getResourceTint(service.id),
                     iconColor = getResourceColors(service.id),
-                    isLarge = true,
                     painter = painterResource(getResource(service.id)),
+                    isLarge = true,
                     onclick = {
                         action.onServiceClick(service.id)
                         onServiceClick(

@@ -27,7 +27,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun StatsContainer(
     jobsDone: Int,
     earnings: Double,
-    rating: Double,
+    rating: Float,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -138,7 +138,7 @@ private fun Preview(){
         StatsContainer(
             jobsDone = 24,
             earnings = 720000.0,
-            rating = 4.8,
+            rating = 4.8f,
         )
     }
 }
