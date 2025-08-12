@@ -84,8 +84,6 @@ private fun MoreScreenContent(
     onPickImageClick: () -> Unit,
 ) {
     val scroll = rememberScrollState()
-    val context = LocalContext.current
-
     AppScaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -211,13 +209,7 @@ private fun MoreScreenContent(
                                 isVisible = moreScreenState.showLanguageBottomSheet,
                                 onDismissRequest = moreInteractionListener::onCloseSelectedLanguageBottomSheet,
                                 selectedLanguage = moreScreenState.moreUiState.selectedLanguage,
-                                onLanguageSelected = { language ->
-                                    moreInteractionListener.onLanguageSelected(language)
-                                    val intent =
-                                        context.packageManager.getLaunchIntentForPackage(context.packageName)
-                                    intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    context.startActivities(arrayOf(intent))
-                                },
+                                onLanguageSelected =  moreInteractionListener::onLanguageSelected,
                             )
                         }
                     }
