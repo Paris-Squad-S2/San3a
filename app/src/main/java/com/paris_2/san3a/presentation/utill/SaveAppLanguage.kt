@@ -1,15 +1,17 @@
 package com.paris_2.san3a.presentation.utill
 
 import android.content.Context
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Build
+import android.os.LocaleList
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.core.os.LocaleListCompat
 import com.paris_2.san3a.presentation.screen.main.MainViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.withContext
 import org.koin.compose.viewmodel.koinViewModel
-import java.util.Locale
 
 @Composable
 fun InstallSavedAppLanguage(
@@ -17,24 +19,24 @@ fun InstallSavedAppLanguage(
     mainViewModel: MainViewModel = koinViewModel()
 ){
 
-    LaunchedEffect(key1 = Unit){
-        mainViewModel.getLastSelectedAppLanguage().collectLatest {language ->
-            updateResources(context = context, localeLanguage = Locale(language))
+    LaunchedEffect(key1 = Unit) {
+        mainViewModel.getLastSelectedAppLanguage().collectLatest { language ->
+            withContext(Dispatchers.Main) {
+                changeAppLanguage(
+                    context = context,
+                    language
+                )
+            }
         }
     }
 }
 
-fun updateResources(context: Context, localeLanguage: Locale) {
-    Locale.setDefault(localeLanguage)
-    val resources: Resources = context.resources
-    val config = Configuration(resources.configuration)
-    config.setLocale(localeLanguage)
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-        config.setLayoutDirection(localeLanguage)
+private fun changeAppLanguage(context: Context, languageCode: String) {
+    val localeListCompat = LocaleListCompat.forLanguageTags(languageCode)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val localeManager = context.getSystemService(android.app.LocaleManager::class.java)
+        localeManager?.applicationLocales = LocaleList.forLanguageTags(languageCode)
+    } else {
+        AppCompatDelegate.setApplicationLocales(localeListCompat)
     }
-
-    context.createConfigurationContext(config)
-    @Suppress("DEPRECATION")
-    resources.updateConfiguration(config, resources.displayMetrics)
 }
