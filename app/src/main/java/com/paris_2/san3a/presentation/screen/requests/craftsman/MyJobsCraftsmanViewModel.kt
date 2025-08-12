@@ -121,7 +121,7 @@ class MyJobsCraftsmanViewModel(
                 )
             )
         } else {
-            Log.d("abcc123", "$throwable")
+            Log.d("MyJobsCraftsmanViewModel", "$throwable")
             updateState(
                 MyJobsCraftsmanScreenState(
                     isLoading = false,
