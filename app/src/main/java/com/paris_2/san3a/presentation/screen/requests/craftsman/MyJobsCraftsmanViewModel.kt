@@ -1,8 +1,13 @@
 package com.paris_2.san3a.presentation.screen.requests.craftsman
 
 import android.util.Log
+import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.Notification
+import com.paris_2.san3a.domain.entity.Offer
+import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
@@ -41,23 +46,34 @@ class MyJobsCraftsmanViewModel(
                 )
                 getPhoneNumberUseCase()
             },
-            onSuccess = { phoneNumber: String ->
-                updateState(
-                    screenState.value.copy(
-                        myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            craftsManId = phoneNumber
-                        )
-                    )
+            onSuccess = ::onGetCraftsManPhoneSuccess,
+            onError = ::onGetCraftsManPhoneError
+        )
+    }
+
+    private fun onGetCraftsManPhoneSuccess(phoneNumber: String) {
+        updateState(
+            screenState.value.copy(
+                isNoInternet = false,
+                errorMessage = null,
+                showSnackBarError = false,
+                isLoading = false,
+                myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                    craftsManId = phoneNumber
                 )
-                getCraftsManOfferOnRequest()
-            },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = "Failed to fetch phone number"
-                    )
-                )
-            }
+            )
+        )
+        getCraftsManOfferOnRequest()
+    }
+
+    private fun onGetCraftsManPhoneError(throwable: Throwable) {
+        updateState(
+            screenState.value.copy(
+                isNoInternet = false,
+                errorMessage = R.string.phone_number_not_found,
+                showSnackBarError = true,
+                isLoading = false
+            )
         )
     }
 
@@ -66,31 +82,56 @@ class MyJobsCraftsmanViewModel(
             observe = {
                 getCraftsManRequestsUseCase(screenState.value.myOffersCraftsmanUiState.craftsManId)
             },
-            onEach = { result ->
-                Log.d("MyOfferCraftsmanViewModel", "Fetched requests: $result")
-                val filteredResult = result.filter { it.selectedCraftsmanId.isNullOrBlank() || it.selectedCraftsmanId == screenState.value.myOffersCraftsmanUiState.craftsManId }
-                Log.d("MyOfferCraftsmanViewModel", "Filtered requests: $filteredResult")
-                updateState(
-                    MyJobsCraftsmanScreenState(
-                        isLoading = false,
-                        myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            ongoing = filteredResult.filter { it.requestStatus == RequestStatus.ONGOING }.toMyJobOfferUiStateMap(),
-                            completed = filteredResult.filter { it.requestStatus == RequestStatus.COMPLETED }.toMyJobOfferUiStateMap(),
-                            canceled = filteredResult.filter { it.requestStatus == RequestStatus.CANCELLED }.toMyJobOfferUiStateMap()
-                        )
-                    )
-                )
-                getOffersForRequests()
-            },
-            onError = {
-                updateState(
-                    MyJobsCraftsmanScreenState(
-                        isLoading = false,
-                        errorMessage = it.message
-                    )
-                )
-            }
+            onEach = ::onGetCraftsManOfferOnRequestEach,
+            onError = ::onGetCraftsManOfferOnRequestError
         )
+    }
+
+    private fun onGetCraftsManOfferOnRequestEach(result: List<RequestService>) {
+        Log.d("MyOfferCraftsmanViewModel", "Fetched requests: $result")
+        val filteredResult =
+            result.filter { it.selectedCraftsmanId.isNullOrBlank() || it.selectedCraftsmanId == screenState.value.myOffersCraftsmanUiState.craftsManId }
+        Log.d("MyOfferCraftsmanViewModel", "Filtered requests: $filteredResult")
+        updateState(
+            MyJobsCraftsmanScreenState(
+                isLoading = false,
+                errorMessage = null,
+                showSnackBarError = false,
+                myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                    ongoing = filteredResult.filter { it.requestStatus == RequestStatus.ONGOING }
+                        .toMyJobOfferUiStateMap(),
+                    completed = filteredResult.filter { it.requestStatus == RequestStatus.COMPLETED }
+                        .toMyJobOfferUiStateMap(),
+                    canceled = filteredResult.filter { it.requestStatus == RequestStatus.CANCELLED }
+                        .toMyJobOfferUiStateMap()
+                )
+            )
+        )
+        getOffersForRequests()
+    }
+
+    private fun onGetCraftsManOfferOnRequestError(throwable: Throwable) {
+        if (throwable is NoInternetConnectionException) {
+            updateState(
+                screenState.value.copy(
+                    isNoInternet = true,
+                    isLoading = false,
+                    errorMessage = null,
+                    showSnackBarError = false
+                )
+            )
+        } else {
+            Log.d("abcc123", "$throwable")
+            updateState(
+                MyJobsCraftsmanScreenState(
+                    isLoading = false,
+                    isNoInternet = false,
+                    errorMessage = R.string.occurred_while_fetching_requests,
+                    showSnackBarError = true
+                )
+            )
+        }
+
     }
 
     private fun getOffersForRequests() {
@@ -106,15 +147,20 @@ class MyJobsCraftsmanViewModel(
                     updateRequestOffer(requestId = mapEntry.key, listType = ListType.CANCELED)
                 }
             },
-            onError = {
-                Log.e("MyOfferCraftsmanViewModel", "Error fetching offers: ${it.message}")
-            }
+            onError = ::onGetOffersForRequestsError
         )
     }
 
-    enum class ListType {
-        ONGOING, COMPLETED, CANCELED
+    private fun onGetOffersForRequestsError(throwable: Throwable) {
+        updateState(
+            screenState.value.copy(
+                isLoading = false,
+                errorMessage = R.string.error_fetching_offers,
+                showSnackBarError = true
+            )
+        )
     }
+
     private fun updateRequestOffer(requestId: String, listType: ListType) = tryToObserve(
         observe = {
             getCraftManOfferOnRequestUseCase(
@@ -122,51 +168,87 @@ class MyJobsCraftsmanViewModel(
                 craftsManId = screenState.value.myOffersCraftsmanUiState.craftsManId
             )
         },
-        onEach = { offer ->
-            if (offer == null) {
-                Log.d("MyOfferCraftsmanViewModel", "No offer found for request $requestId")
-                return@tryToObserve
-            }
+        onEach = { onUpdateRequestOfferEach(it, requestId, listType) },
+        onError = ::onUpdateRequestOfferError,
+    )
 
-            val updatedRequests = when(listType) {
-                ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.ongoing.toMutableMap()
-                ListType.COMPLETED -> screenState.value.myOffersCraftsmanUiState.completed.toMutableMap()
-                ListType.CANCELED -> screenState.value.myOffersCraftsmanUiState.canceled.toMutableMap()
-            }
-
-            Log.d("MyOfferCraftsmanViewModel", "Updating request $requestId with offer: $offer")
-
-            updatedRequests[requestId] = updatedRequests[requestId]?.copy(
-                offer = offer.toUiState()
-            ) ?: return@tryToObserve
-
-            Log.d("MyOfferCraftsmanViewModel", "Updated request $requestId: ${updatedRequests[requestId]}")
-
-            val updatedState = when (listType) {
-                ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.copy(ongoing = updatedRequests)
-                ListType.COMPLETED -> screenState.value.myOffersCraftsmanUiState.copy(completed = updatedRequests)
-                ListType.CANCELED -> screenState.value.myOffersCraftsmanUiState.copy(canceled = updatedRequests)
-            }
-
+    private fun onUpdateRequestOfferError(throwable: Throwable) {
+        Log.e(
+            "MyOfferCraftsmanViewModel",
+            "Error fetching offer for request"
+        )
+        if (throwable is NoInternetConnectionException) {
             updateState(
                 screenState.value.copy(
-                    myOffersCraftsmanUiState = updatedState
+                    isNoInternet = true,
+                    isLoading = false,
+                    errorMessage = null,
+                    showSnackBarError = false
                 )
             )
-
-            getCraftsManDetails(requestId = requestId, craftsManId = offer.craftsmanId, listType = listType)
-
-        },
-        onError = {
-            Log.e("MyOfferCraftsmanViewModel", "Error fetching offer for request $requestId: ${it.message}")
+        } else {
             updateState(
                 screenState.value.copy(
                     isLoading = false,
-                    errorMessage = it.message ?: "Failed to load offers for request $requestId"
+                    isNoInternet = false,
+                    showSnackBarError = true,
+                    errorMessage = R.string.failed_to_load_offers_for_request
                 )
             )
-        },
-    )
+        }
+
+    }
+
+    private fun onUpdateRequestOfferEach(offer: Offer?, requestId: String, listType: ListType) {
+        if (offer == null) {
+            Log.d("MyOfferCraftsmanViewModel", "No offer found for request $requestId")
+            updateState(
+                screenState.value.copy(
+                    isLoading = false,
+                    errorMessage = R.string.no_offer_found_for_request,
+                    showSnackBarError = true
+                )
+            )
+        }
+
+        val updatedRequests = when (listType) {
+            ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.ongoing.toMutableMap()
+            ListType.COMPLETED -> screenState.value.myOffersCraftsmanUiState.completed.toMutableMap()
+            ListType.CANCELED -> screenState.value.myOffersCraftsmanUiState.canceled.toMutableMap()
+        }
+
+        Log.d("MyOfferCraftsmanViewModel", "Updating request $requestId with offer: $offer")
+
+        updatedRequests[requestId]?.copy(
+            offer = offer.toUiState()
+        )
+
+        Log.d(
+            "MyOfferCraftsmanViewModel",
+            "Updated request $requestId: ${updatedRequests[requestId]}"
+        )
+
+        val updatedState = when (listType) {
+            ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.copy(ongoing = updatedRequests)
+            ListType.COMPLETED -> screenState.value.myOffersCraftsmanUiState.copy(completed = updatedRequests)
+            ListType.CANCELED -> screenState.value.myOffersCraftsmanUiState.copy(canceled = updatedRequests)
+        }
+
+        updateState(
+            screenState.value.copy(
+                myOffersCraftsmanUiState = updatedState
+            )
+        )
+
+        offer?.let {
+            getCraftsManDetails(
+                requestId = requestId,
+                craftsManId = it.craftsmanId,
+                listType = listType
+            )
+        }
+
+    }
 
     private fun getCraftsManDetails(
         requestId: String,
@@ -176,46 +258,85 @@ class MyJobsCraftsmanViewModel(
         tryToExecute(
             execute = { scope ->
                 val craftsManDeferred = scope.async { getUserUseCase(craftsManId) }
-                val ratingDeferred = scope.async { getRatingForCraftsmanUseCase(craftsManId).first() }
+                val ratingDeferred =
+                    scope.async { getRatingForCraftsmanUseCase(craftsManId).first() }
 
                 craftsManDeferred.await() to ratingDeferred.await()
             },
             onSuccess = { (craftsMan, rating) ->
-                Log.d("MyOfferCraftsmanViewModel", "Fetched craftsman details: $craftsMan")
-                val updatedRequests = when (listType) {
-                    ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.ongoing.toMutableMap()
-                    ListType.COMPLETED -> screenState.value.myOffersCraftsmanUiState.completed.toMutableMap()
-                    ListType.CANCELED -> screenState.value.myOffersCraftsmanUiState.canceled.toMutableMap()
-                }
-
-                updatedRequests[requestId] = updatedRequests[requestId]?.copy(
-                    offer = updatedRequests[requestId]?.offer?.copy(
-                        craftsMan = craftsMan.toCraftsManUiState(rating)
-                    )
-                ) ?: return@tryToExecute
-
-                when (listType) {
-                    ListType.ONGOING -> updateState(
-                        screenState.value.copy(
-                            myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(ongoing = updatedRequests)
-                        )
-                    )
-                    ListType.COMPLETED -> updateState(
-                        screenState.value.copy(
-                            myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(completed = updatedRequests)
-                        )
-                    )
-                    ListType.CANCELED -> updateState(
-                        screenState.value.copy(
-                            myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(canceled = updatedRequests)
-                        )
-                    )
-                }
+                onGetCraftsManDetailsSuccess(craftsMan, rating, listType, requestId)
             },
-            onError = {
-                Log.e("MyOfferCraftsmanViewModel", "Error fetching craftsman details: ${it.message}")
-            }
+            onError = ::onGetCraftsManDetailsError
         )
+    }
+
+    private fun onGetCraftsManDetailsError(throwable: Throwable) {
+        if (throwable is NoInternetConnectionException) {
+            updateState(
+                screenState.value.copy(
+                    isNoInternet = true,
+                    isLoading = false,
+                    errorMessage = null,
+                    showSnackBarError = false
+                )
+            )
+        } else {
+            updateState(
+                screenState.value.copy(
+                    isLoading = false,
+                    isNoInternet = false,
+                    showSnackBarError = true,
+                    errorMessage = R.string.error_fetching_craftsman_details
+                )
+            )
+        }
+
+    }
+
+    private fun onGetCraftsManDetailsSuccess(
+        craftsMan: User,
+        rating: Float,
+        listType: ListType,
+        requestId: String
+    ) {
+        Log.d("MyOfferCraftsmanViewModel", "Fetched craftsman details: $craftsMan")
+        val updatedRequests = when (listType) {
+            ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.ongoing.toMutableMap()
+            ListType.COMPLETED -> screenState.value.myOffersCraftsmanUiState.completed.toMutableMap()
+            ListType.CANCELED -> screenState.value.myOffersCraftsmanUiState.canceled.toMutableMap()
+        }
+
+        updatedRequests[requestId] = updatedRequests[requestId]?.copy(
+            offer = updatedRequests[requestId]?.offer?.copy(
+                craftsMan = craftsMan.toCraftsManUiState(rating)
+            )
+        ) ?: return
+
+        when (listType) {
+            ListType.ONGOING -> updateState(
+                screenState.value.copy(
+                    myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                        ongoing = updatedRequests
+                    )
+                )
+            )
+
+            ListType.COMPLETED -> updateState(
+                screenState.value.copy(
+                    myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                        completed = updatedRequests
+                    )
+                )
+            )
+
+            ListType.CANCELED -> updateState(
+                screenState.value.copy(
+                    myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                        canceled = updatedRequests
+                    )
+                )
+            )
+        }
     }
 
 
@@ -225,6 +346,38 @@ class MyJobsCraftsmanViewModel(
                 markRequestAsDoneUseCase(requestId)
             },
             onSuccess = {
+                onMarkAsDoneSuccess(requestTitle, customerId)
+            },
+            onError = ::onMarkAsDoneError
+
+        )
+    }
+
+    private fun onMarkAsDoneError(throwable: Throwable) {
+        if (throwable is NoInternetConnectionException) {
+            updateState(
+                screenState.value.copy(
+                    isNoInternet = true,
+                    isLoading = false,
+                    errorMessage = null,
+                    showSnackBarError = false
+                )
+            )
+        } else {
+            updateState(
+                screenState.value.copy(
+                    isLoading = false,
+                    isNoInternet = false,
+                    showSnackBarError = true,
+                    errorMessage = R.string.error_marking_request_as_done
+                )
+            )
+        }
+    }
+
+    private fun onMarkAsDoneSuccess(requestTitle: String, customerId: String) {
+        tryToExecute(
+            execute = {
                 addNotificationUseCase(
                     Notification(
                         id = "",
@@ -235,10 +388,31 @@ class MyJobsCraftsmanViewModel(
                     )
                 )
             },
-            onError = {
-                //todo show snack bar
-            }
+            onError = ::onAddNotificationError
         )
+
+    }
+
+    private fun onAddNotificationError(throwable: Throwable) {
+        if (throwable is NoInternetConnectionException) {
+            updateState(
+                screenState.value.copy(
+                    isNoInternet = true,
+                    isLoading = false,
+                    errorMessage = null,
+                    showSnackBarError = false
+                )
+            )
+        } else {
+            updateState(
+                screenState.value.copy(
+                    isLoading = false,
+                    isNoInternet = false,
+                    showSnackBarError = true,
+                    errorMessage = R.string.some_error_happened
+                )
+            )
+        }
     }
 
     override fun onSendMessageClick(phoneNumber: String) {
@@ -249,18 +423,42 @@ class MyJobsCraftsmanViewModel(
                 )
             },
             onSuccess = { chatId ->
-                navigate(
-                    Destinations.MessageDetails(
-                        chatId = chatId,
-                        currentUserId = screenState.value.myOffersCraftsmanUiState.craftsManId,
-                        otherUserId = phoneNumber
-                    )
-                )
+                onSendMessageClickSuccess(chatId, phoneNumber)
             },
-            onError = {
-                //todo show snack bar
-            }
+            onError = ::onSendMessageClickError
         )
+    }
+
+    private fun onSendMessageClickSuccess(chatId: String, phoneNumber: String) {
+        navigate(
+            Destinations.MessageDetails(
+                chatId = chatId,
+                currentUserId = screenState.value.myOffersCraftsmanUiState.craftsManId,
+                otherUserId = phoneNumber
+            )
+        )
+    }
+
+    private fun onSendMessageClickError(throwable: Throwable) {
+        if (throwable is NoInternetConnectionException) {
+            updateState(
+                screenState.value.copy(
+                    isNoInternet = true,
+                    isLoading = false,
+                    errorMessage = null,
+                    showSnackBarError = false
+                )
+            )
+        } else {
+            updateState(
+                screenState.value.copy(
+                    isLoading = false,
+                    isNoInternet = false,
+                    showSnackBarError = true,
+                    errorMessage = R.string.occurred_while_sending_message_to_customer
+                )
+            )
+        }
     }
 
     override fun onViewRequestDetails(requestId: String) {
@@ -277,6 +475,23 @@ class MyJobsCraftsmanViewModel(
     }
 
     override fun onRetryClick() {
-        getCraftsManPhone()
+        updateState(
+            screenState.value.copy(
+                isLoading = true,
+                isNoInternet = false,
+                errorMessage = null,
+                showSnackBarError = false
+            )
+        )
+        getCraftsManOfferOnRequest()
+    }
+
+    override fun onDismissSnackBar() {
+        updateState(
+            screenState.value.copy(
+                showSnackBarError = false,
+                errorMessage = null,
+            )
+        )
     }
 }

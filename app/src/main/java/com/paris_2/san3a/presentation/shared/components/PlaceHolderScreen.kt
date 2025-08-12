@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -52,7 +53,7 @@ fun PlaceHolderScreen(
             Text(
                 text = stringResource(description),
                 style = Theme.textStyle.body.medium.regular,
-                modifier = Modifier.padding(bottom = 24.dp),
+                modifier = Modifier.width(280.dp).padding(bottom = 24.dp),
                 textAlign = TextAlign.Center,
                 color = Theme.colors.shade.secondary
             )

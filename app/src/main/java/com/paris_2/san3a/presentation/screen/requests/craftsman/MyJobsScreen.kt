@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.requests.craftsman
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,6 +32,7 @@ import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.AppTabBar
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
+import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
@@ -58,12 +61,14 @@ private fun MyRequestScreenContent(
         topBar = {
             AppBar(
                 modifier = modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .background(Theme.colors.background.card)
+                    .padding(start = 16.dp),
                 title = stringResource(R.string.my_jobs),
                 actionIcon = {
                     Icon(
                         modifier = Modifier
-                            .padding(end = 8.dp)
+                            .padding(end = 16.dp)
                             .clickable(onClick = myJobCraftsmanInteractionListener::onNotificationClick),
                         painter = painterResource(R.drawable.ic_notification_outline),
                         contentDescription = "Request Icon",
@@ -79,7 +84,7 @@ private fun MyRequestScreenContent(
                 LoadingScreen(modifier = Modifier.fillMaxSize())
             }
 
-            uiState.errorMessage != null -> {
+            uiState.isNoInternet -> {
                 PlaceHolderScreen(
                     modifier = Modifier
                         .fillMaxSize()
@@ -134,7 +139,7 @@ private fun MyRequestScreenContent(
                             if (completedRequests.isEmpty()) {
                                 Box(Modifier.fillMaxSize()) {
                                     PlaceHolderScreen(
-                                        Modifier.align(Alignment.Center),
+                                        modifier = Modifier.fillMaxWidth().height(192.dp).align(Alignment.Center).padding(horizontal = 32.dp),
                                         image = R.drawable.img_placeholder_lllustration1,
                                         title = R.string.no_service_requests_yet,
                                         description = R.string.start_by_choosing_a_service_and_submitting_your_first_request
@@ -170,6 +175,25 @@ private fun MyRequestScreenContent(
                 }
             }
         }
+
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            AnimatedVisibility(uiState.showSnackBarError) {
+                uiState.errorMessage?.let {
+                    SnackBar(
+                        text = it,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding()
+                            .padding(horizontal = 12.dp, vertical = 16.dp)
+                            .align(Alignment.TopCenter),
+                        onClick = myJobCraftsmanInteractionListener::onDismissSnackBar
+                    )
+                }
+            }
+
+        }
     }
 }
 
@@ -200,6 +224,8 @@ fun MyRequestScreenPreview() {
         MyRequestScreenContent(
             myJobCraftsmanInteractionListener = object : MyJobCraftsmanInteractionListener {
                 override fun onRetryClick() {}
+                override fun onDismissSnackBar() {}
+
                 override fun onMarkAsDone(
                     requestId: String,
                     requestTitle: String,

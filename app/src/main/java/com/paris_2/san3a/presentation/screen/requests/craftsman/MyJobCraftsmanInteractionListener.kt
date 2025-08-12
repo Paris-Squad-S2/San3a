@@ -6,4 +6,5 @@ interface MyJobCraftsmanInteractionListener {
     fun onViewRequestDetails(requestId: String)
     fun onNotificationClick()
     fun onRetryClick()
+    fun onDismissSnackBar()
 }
