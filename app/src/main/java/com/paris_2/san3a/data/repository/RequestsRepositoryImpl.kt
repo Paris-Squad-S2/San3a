@@ -1,5 +1,6 @@
 package com.paris_2.san3a.data.repository
 
+import android.util.Log
 import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.requestDetails.RequestDataSource
@@ -10,6 +11,7 @@ import com.paris_2.san3a.domain.CancelRequestException
 import com.paris_2.san3a.domain.GetAcceptedOfferOnRequestException
 import com.paris_2.san3a.domain.GetCraftsmanOfferOnRequestException
 import com.paris_2.san3a.domain.GetCraftsmanOffersException
+import com.paris_2.san3a.domain.GetCraftsmanRequestsException
 import com.paris_2.san3a.domain.GetCustomerRequestsException
 import com.paris_2.san3a.domain.GetOffersCountException
 import com.paris_2.san3a.domain.GetOffersException
@@ -94,7 +96,7 @@ class RequestsRepositoryImpl(
         }
         return requestDataSource.getCraftsManRequests(userId)
             .map { list -> list.map { it.toEntity() } }
-            .catch { emit(emptyList()) }
+            .catch { throw GetCraftsmanRequestsException() }
     }
 
     override fun getCraftManOfferOnRequestUseCase(

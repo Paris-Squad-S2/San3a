@@ -123,13 +123,17 @@ class RequestDataSourceImpl(
             }
         ).flatMapLatest { offers ->
             val requestIds = offers.map { it.requestId }
-            fireStoreService.streamCollection(
-                path = REQUEST_DETAILS_COLLECTION,
-                fromJson = RequestServiceDto::fromJson,
-                queryBuilder = { query ->
-                    query.whereIn(FieldPath.documentId(), requestIds)
-                }
-            )
+            if (requestIds.isEmpty()) {
+                flow { emit(emptyList()) }
+            } else {
+                fireStoreService.streamCollection(
+                    path = REQUEST_DETAILS_COLLECTION,
+                    fromJson = RequestServiceDto::fromJson,
+                    queryBuilder = { query ->
+                        query.whereIn(FieldPath.documentId(), requestIds)
+                    }
+                )
+            }
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)

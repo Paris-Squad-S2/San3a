@@ -20,8 +20,8 @@ data class ChatUI(
     val lastMessageReceiverId: String,
     val lastMessage: String,
     val theOtherUserId: String,
-    val theOtherUserName: String? = null,
-    val theOtherProfilePhoto: String? = null,
+    val theOtherUserName: String = "Unknown User",
+    val theOtherProfilePhoto: String = "",
 )
 
 fun MessageContent.toMessageContentUI(): String {
@@ -56,7 +56,7 @@ private fun formatLastMessageTime(time: LocalDateTime?): String {
         } catch (e: Exception) {
             ""
         }
-    }.toString()
+    }.orEmpty()
 }
 
 fun List<Chat>.toChatUIMap(userId: String): Map<String, ChatUI> {
