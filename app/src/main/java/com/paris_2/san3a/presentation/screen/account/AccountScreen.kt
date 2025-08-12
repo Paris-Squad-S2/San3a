@@ -132,6 +132,8 @@ fun AccountScreenContent(
             .background(Theme.colors.background.screen)
             .safeContentPadding()
             .padding(top = 16.dp, bottom = 16.dp)
+            .padding(horizontal = 16.dp)
+
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -149,7 +151,7 @@ fun AccountScreenContent(
             text = title,
             color = Theme.colors.shade.primary,
             style = Theme.textStyle.display.xLarge,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         )
         Text(
             text = description,
