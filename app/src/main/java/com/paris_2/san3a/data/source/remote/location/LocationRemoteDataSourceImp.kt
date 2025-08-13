@@ -12,7 +12,7 @@ class LocationRemoteDataSourceImp(
     LocationRemoteDataSource {
 
     override suspend fun getGovernmentsInCountry(countryName: String): StatesDto {
-        val c = Coutry()
+        val c = Country()
         Log.d(
             "TAG",
             "getGovernments: in Remote Data Source ${locationService.getStates(c).data?.states} "
@@ -25,6 +25,6 @@ class LocationRemoteDataSourceImp(
 
 }
 
-data class Coutry(
+data class Country(
     val country: String ="Egypt"
 )

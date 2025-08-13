@@ -24,6 +24,8 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
 import androidx.navigation.NavOptions
+import com.paris_2.san3a.domain.entity.City
+import com.paris_2.san3a.domain.entity.Governorate
 
 class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
@@ -148,13 +150,7 @@ class AccountViewModel(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
                             userType = UserType.valueOf(user.accountType.name),
-                            locationUiState = user.location.let {
-                                LocationUiState(
-                                    government = it.government,
-                                    city = it.cityName,
-                                    addressInDetails = it.addressInDetails
-                                )
-                            },
+                            locationUiState = user.location.toUiState(),
                             customerName = user.fullName,
                             customerProfilePhotoUri = if (user.profilePhoto.isNotBlank()) user.profilePhoto.toUri() else null,
                             frontOfNationalIdUri = if (user.nationalIdFrontImage.isNotBlank()) user.nationalIdFrontImage.toUri() else null,
@@ -542,12 +538,12 @@ class AccountViewModel(
 
     private fun getGovernments() {
         tryToExecute(
-            execute = { getLocationInfoUseCase.getGovernments(countryName = "Egypt") },
+            execute = { getLocationInfoUseCase.getGovernments() },
             onSuccess = { governments ->
                 updateState(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
-                            governments = governments.names
+                            governments = governments
                         )
                     )
                 )
@@ -563,19 +559,16 @@ class AccountViewModel(
         )
     }
 
-    fun getCities(stateName: String) {
+    fun getCities(governorateId: Int) {
         tryToExecute(
             execute = {
-                getLocationInfoUseCase.getCities(
-                    countryName = "Egypt",
-                    stateName = stateName
-                )
+                getLocationInfoUseCase.getCities(governorateId)
             },
             onSuccess = { cities ->
                 updateState(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
-                            cities = cities.names,
+                            cities = cities,
                             locationType = LocationBottomSheetContentType.CITY
                         )
                     )
@@ -592,25 +585,25 @@ class AccountViewModel(
         )
     }
 
-    fun updateGovernmentLocation(government: String) {
+    fun updateGovernmentLocation(governorate: Governorate) {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
                     locationUiState = screenState.value.accountUiState.locationUiState.copy(
-                        government = government
+                        government = governorate
                     )
                 )
             )
         )
     }
 
-    override fun onGovernmentSelected(government: String) {
-        getCities(government)
+    override fun onGovernmentSelected(governorate: Governorate) {
+        getCities(governorate.id)
         onCitiesBottomSheetVisibilityToggled()
-        updateGovernmentLocation(government)
+        updateGovernmentLocation(governorate)
     }
 
-    override fun onCitiesSelected(city: String) {
+    override fun onCitiesSelected(city: City) {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(

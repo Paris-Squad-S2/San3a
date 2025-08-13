@@ -26,7 +26,7 @@ class LocationViewModel(
 
         tryToExecute(
             execute = {
-                getLocationInfoUseCase.getGovernments("Egypt")
+                getLocationInfoUseCase.getGovernments()
             },
 
             onSuccess = { result ->
@@ -34,7 +34,7 @@ class LocationViewModel(
                     screenState.value.copy(
                         isLoading = false,
                         locationUiState = screenState.value.locationUiState.copy(
-                            governorates = result.names
+                            governorates = result
                         )
                     )
                 )
@@ -50,7 +50,7 @@ class LocationViewModel(
 
         tryToExecute(
             execute = {
-                getLocationInfoUseCase.getCities("Egypt", governorate)
+                getLocationInfoUseCase.getCities(governorate)
             },
             onSuccess = { cities ->
                 updateState(

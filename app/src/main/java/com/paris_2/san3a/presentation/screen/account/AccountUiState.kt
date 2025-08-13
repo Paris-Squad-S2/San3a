@@ -1,6 +1,8 @@
 package com.paris_2.san3a.presentation.screen.account
 
 import android.net.Uri
+import com.paris_2.san3a.domain.entity.City
+import com.paris_2.san3a.domain.entity.Governorate
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -17,8 +19,8 @@ data class AccountUiState(
     val userType: UserType? = null,
     val serviceUiState: List<ServiceUiState> = emptyList(),
     val locationUiState: LocationUiState = LocationUiState(),
-    val governments: List<String> = emptyList(),
-    val cities: List<String> = emptyList(),
+    val governments: List<Governorate> = emptyList(),
+    val cities: List<City> = emptyList(),
     val isGovernmentBottomSheetShowed: Boolean = false,
     val isCitiesBottomSheetShowed: Boolean = false,
     val customerName: String = "",
@@ -48,15 +50,28 @@ data class ServiceUiState(
 )
 
 data class LocationUiState(
-    val government: String = "",
-    val city: String = "",
+    val government: Governorate? = null,
+    val city: City? = null,
     val addressInDetails: String = "",
 )
 
 fun LocationUiState.toEntity(): Location {
     return Location(
-        government = this.government,
-        cityName = this.city,
+        government = this.government?.name ?: "", //TODO
+        cityName = this.city?.name ?: "",
+        addressInDetails = this.addressInDetails
+    )
+}
+
+fun Location.toUiState(): LocationUiState { //TODO
+//    return LocationUiState(
+//        government = this.government,
+//        city = this.cityName,
+//        addressInDetails = this.addressInDetails
+//    )
+    return LocationUiState(
+        government = Governorate(id = 0, name = this.government),
+        city = City(id = 0, name = this.cityName, governorateId = 0),
         addressInDetails = this.addressInDetails
     )
 }
