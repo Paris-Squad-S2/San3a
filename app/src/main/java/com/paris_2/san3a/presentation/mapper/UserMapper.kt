@@ -9,6 +9,7 @@ fun User.toUserUiState(rating: Float): UserUiState {
     return UserUiState(
         phoneNumber = this.phone,
         name = this.fullName,
+        previousText = this.fullName,
         rating = rating,
         isCraftsman = this.accountType == AccountType.CRAFTSMAN,
         imageUrl = this.profilePhoto.toUri(),
