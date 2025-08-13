@@ -71,12 +71,12 @@ class MyRequestCustomerViewModel(
                 updateState(
                     MyRequestCustomerScreenState(
                         myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                            ongoing = result.filter { it.requestStatus == RequestStatus.ONGOING }
-                                .toRequestServiceUiStateMap(),
-                            completed = result.filter { it.requestStatus == RequestStatus.COMPLETED }
-                                .toRequestServiceUiStateMap(),
-                            canceled = result.filter { it.requestStatus == RequestStatus.CANCELLED }
-                                .toRequestServiceUiStateMap(),
+                            ongoing = result?.filter { it.requestStatus == RequestStatus.ONGOING }
+                                ?.toRequestServiceUiStateMap() ?: emptyMap(),
+                            completed = result?.filter { it.requestStatus == RequestStatus.COMPLETED }
+                                ?.toRequestServiceUiStateMap() ?: emptyMap(),
+                            canceled = result?.filter { it.requestStatus == RequestStatus.CANCELLED }
+                                ?.toRequestServiceUiStateMap() ?: emptyMap(),
                         ),
                     )
                 )

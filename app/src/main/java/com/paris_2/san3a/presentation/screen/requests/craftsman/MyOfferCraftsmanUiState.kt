@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.requests.craftsman
 
+import androidx.annotation.StringRes
 import coil3.Uri
 import coil3.toUri
 import com.paris_2.san3a.domain.entity.Offer
@@ -10,7 +11,9 @@ import com.paris_2.san3a.domain.entity.User
 data class MyJobsCraftsmanScreenState(
     val isLoading: Boolean = false,
     val myOffersCraftsmanUiState: MyOfferCraftsmanUiState = MyOfferCraftsmanUiState(),
-    val errorMessage: String? = null
+    @StringRes val errorMessage: Int? = null,
+    val isNoInternet: Boolean = false,
+    val showSnackBarError: Boolean = false,
 )
 
 data class MyOfferCraftsmanUiState(
@@ -103,4 +106,8 @@ fun List<Offer>.toUiStateList(): List<OfferUiState?> = map { it.toUiState() }
 
 fun List<RequestService>.toMyJobOfferUiStateList(): List<JobUiState> {
     return this.map { it.toMyJobOfferUiState() }
+}
+
+enum class ListType {
+    ONGOING, COMPLETED, CANCELED
 }

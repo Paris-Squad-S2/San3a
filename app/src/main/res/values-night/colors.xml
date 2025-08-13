@@ -2,4 +2,5 @@
 <resources>
     <color name="logo_fill">#121321</color>
     <color name="Transparent">#00000000</color>
+    <color name="ic_launcher_background">@color/black</color>
 </resources>

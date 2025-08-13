@@ -39,9 +39,9 @@ class CraftsmanHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            userServices = services.map {
+                            userServices = services?.map {
                                 it.title[currentLocale] ?: it.title.values.firstOrNull() ?: ""
-                            },
+                            } ?: emptyList(),
                         )
                     )
                 )
@@ -114,7 +114,7 @@ class CraftsmanHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            stats = it.toStatsUiState()
+                            stats = it?.toStatsUiState() ?: StatsUiState()
                         )
                     )
                 )
@@ -136,7 +136,7 @@ class CraftsmanHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            recentRelatedJobs = it.toRequestServiceUiStateMap()
+                            recentRelatedJobs = it?.toRequestServiceUiStateMap() ?: emptyMap()
                         )
                     )
                 )
@@ -162,7 +162,7 @@ class CraftsmanHomeViewModel(
                     getOffersCountUseCase(id)
                 },
                 onEach = { offersCount ->
-                    val updatedJob = job.copy(offersCount = offersCount)
+                    val updatedJob = job.copy(offersCount = offersCount ?: 0)
                     updateState(
                         screenState.value.copy(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
@@ -187,7 +187,7 @@ class CraftsmanHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            availableJobs = it.toRequestServiceUiStateMap()
+                            availableJobs = it?.toRequestServiceUiStateMap() ?: emptyMap()
                         )
                     )
                 )
@@ -213,7 +213,7 @@ class CraftsmanHomeViewModel(
                     getOffersCountUseCase(id)
                 },
                 onEach = { offersCount ->
-                    val updatedJob = job.copy(offersCount = offersCount)
+                    val updatedJob = job.copy(offersCount = offersCount ?: 0)
                     updateState(
                         screenState.value.copy(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
