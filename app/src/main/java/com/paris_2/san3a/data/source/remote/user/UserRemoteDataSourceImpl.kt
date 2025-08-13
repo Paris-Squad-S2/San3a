@@ -7,6 +7,7 @@ import com.paris_2.san3a.data.service.firestore.SetOperation
 import com.paris_2.san3a.data.service.firestore.WriteOperation
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
+import com.paris_2.san3a.data.utils.roundFloat
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
@@ -215,12 +216,15 @@ class UserRemoteDataSourceImpl(
             flow {
                 val ratings = ratingsFlow.firstOrNull() ?: emptyList()
                 val avg = if (ratings.isNotEmpty()) {
-                    ratings.mapNotNull { it }.average().toFloat()
+                    ratings.mapNotNull { it?.roundFloat() }
+                        .average()
+                        .toFloat()
                 } else 0f
                 emit(avg)
             }
         }
     }
+
 
     override suspend fun getCustomerRatingOnCraftsman(
         craftsmanId: String,
