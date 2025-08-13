@@ -9,9 +9,6 @@ import com.paris_2.san3a.data.source.remote.messages.dto.ChatDto
 import com.paris_2.san3a.data.source.remote.messages.dto.MessageDto
 import com.paris_2.san3a.data.utils.toLong
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -110,13 +107,13 @@ class MessagesRemoteDataSourceImp(
         ) ?: throw DocumentNotFoundException("$CHATS_COLLECTION/$chatId")
     }
 
-    suspend fun getChatByParticipants(participants: List<String>): ChatDto? {
+    suspend fun getChatByParticipants(sortedParticipants: List<String>): ChatDto? {
         return fireStoreService.getCollection(
             path = CHATS_COLLECTION,
             fromJson = ChatDto::fromJson,
             queryBuilder = { query ->
-                query.whereArrayContains("participants", participants.first())
-                    .whereEqualTo("participants", participants)
+                query.whereArrayContains("participants", sortedParticipants.first())
+                    .whereEqualTo("participants", sortedParticipants)
             }
         ).firstOrNull()
     }
