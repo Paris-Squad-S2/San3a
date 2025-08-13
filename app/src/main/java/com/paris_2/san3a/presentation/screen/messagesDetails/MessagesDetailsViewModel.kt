@@ -81,7 +81,7 @@ class MessagesDetailsViewModel(
             },
             onEach = { messages ->
                 val messageUis =
-                    messages.map { it.toMessageUi(screenState.value.profilePhoto, currentUserId) }
+                    messages?.map { it.toMessageUi(screenState.value.profilePhoto, currentUserId) } ?: emptyList()
                 val groupedMessages = messageUis
                     .groupBy { it.date }
                     .toSortedMap(compareBy { it })

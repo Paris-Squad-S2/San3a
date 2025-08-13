@@ -87,10 +87,11 @@ class MyJobsCraftsmanViewModel(
         )
     }
 
-    private fun onGetCraftsManOfferOnRequestEach(result: List<RequestService>) {
+    private fun onGetCraftsManOfferOnRequestEach(result: List<RequestService>?) {
         Log.d("MyOfferCraftsmanViewModel", "Fetched requests: $result")
         val filteredResult =
-            result.filter { it.selectedCraftsmanId.isNullOrBlank() || it.selectedCraftsmanId == screenState.value.myOffersCraftsmanUiState.craftsManId }
+            result?.filter { it.selectedCraftsmanId.isNullOrBlank() || it.selectedCraftsmanId == screenState.value.myOffersCraftsmanUiState.craftsManId }
+                ?: emptyList()
         Log.d("MyOfferCraftsmanViewModel", "Filtered requests: $filteredResult")
         updateState(
             MyJobsCraftsmanScreenState(

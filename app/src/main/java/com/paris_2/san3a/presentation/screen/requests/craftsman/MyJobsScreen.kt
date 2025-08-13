@@ -63,12 +63,12 @@ private fun MyRequestScreenContent(
                 modifier = modifier
                     .fillMaxWidth()
                     .background(Theme.colors.background.card)
-                    .padding(start = 16.dp),
+                    .padding(start = 8.dp),
                 title = stringResource(R.string.my_jobs),
                 actionIcon = {
                     Icon(
                         modifier = Modifier
-                            .padding(end = 16.dp)
+                            .padding(end = 8.dp)
                             .clickable(onClick = myJobCraftsmanInteractionListener::onNotificationClick),
                         painter = painterResource(R.drawable.ic_notification_outline),
                         contentDescription = "Request Icon",

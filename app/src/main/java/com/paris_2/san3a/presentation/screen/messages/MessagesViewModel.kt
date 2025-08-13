@@ -42,7 +42,7 @@ class MessagesViewModel(
             onEach = { chats ->
                 updateState(
                     screenState.value.copy(
-                        chatsMap = chats.toChatUIMap(screenState.value.currentUserId),
+                        chatsMap = chats?.toChatUIMap(screenState.value.currentUserId) ?: emptyMap(),
                         isLoading = false,
                         error = null
                     )
