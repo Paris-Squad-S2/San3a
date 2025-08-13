@@ -88,15 +88,15 @@ fun MessageTextField(
                             .padding(end = 30.dp)
                             .clickable(onClick = onImageClick)
                     )
-
-                    Icon(
-                        painter = voiceIcon,
-                        tint = Theme.colors.shade.secondary,
-                        contentDescription = stringResource(R.string.voice_icon),
-                        modifier = Modifier
-                            .padding(end = 19.dp)
-                            .clickable(onClick = onVoiceClick)
-                    )
+// Todo( feature voice )
+//                    Icon(
+//                        painter = voiceIcon,
+//                        tint = Theme.colors.shade.secondary,
+//                        contentDescription = stringResource(R.string.voice_icon),
+//                        modifier = Modifier
+//                            .padding(end = 19.dp)
+//                            .clickable(onClick = onVoiceClick)
+//                    )
 
                 } else {
                     Box(
