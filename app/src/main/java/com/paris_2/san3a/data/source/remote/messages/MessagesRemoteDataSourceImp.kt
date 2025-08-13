@@ -9,9 +9,6 @@ import com.paris_2.san3a.data.source.remote.messages.dto.ChatDto
 import com.paris_2.san3a.data.source.remote.messages.dto.MessageDto
 import com.paris_2.san3a.data.utils.toLong
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -110,8 +107,7 @@ class MessagesRemoteDataSourceImp(
         ) ?: throw DocumentNotFoundException("$CHATS_COLLECTION/$chatId")
     }
 
-    suspend fun getChatByParticipants(participants: List<String>): ChatDto? {
-        val sortedParticipants = participants.sorted()
+    suspend fun getChatByParticipants(sortedParticipants: List<String>): ChatDto? {
         return fireStoreService.getCollection(
             path = CHATS_COLLECTION,
             fromJson = ChatDto::fromJson,
@@ -123,10 +119,11 @@ class MessagesRemoteDataSourceImp(
     }
 
     override suspend fun addChat(participants: List<String>): String {
-        val existingChat = getChatByParticipants(participants)
+        val sortedParticipants = participants.sorted()
+        val existingChat = getChatByParticipants(sortedParticipants)
         if (existingChat != null) return existingChat.id
 
-        val chatData = ChatDto(id = "", participants = participants).toJson()
+        val chatData = ChatDto(id = "", participants = sortedParticipants).toJson()
         val chatId = fireStoreService.addToCollection(CHATS_COLLECTION, chatData)
         return chatId
     }

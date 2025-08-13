@@ -137,7 +137,7 @@ class LocationViewModel(
                     selectedGovernorate = area,
                     selectedStreet = "",
                     streets = emptyList(),
-                    activeBottomSheet = LocationBottomSheetType.STREET,
+                    activeBottomSheet = LocationBottomSheetType.CITY,
                 ),
                 locationButtonState = AppButtonState.Enable,
             )
@@ -150,38 +150,29 @@ class LocationViewModel(
             screenState.value.copy(
                 locationUiState = screenState.value.locationUiState.copy(
                     selectedStreet = street,
-                    activeBottomSheet = LocationBottomSheetType.NONE
+                    activeBottomSheet = null
                 ),
                 locationButtonState = AppButtonState.Enable,
-                )
+            )
         )
     }
 
-    override fun onShowGovernorateBottomSheet() {
+    override fun onShowBottomSheet(type: LocationBottomSheetType) {
         updateState(
             screenState.value.copy(
                 locationUiState = screenState.value.locationUiState.copy(
-                    activeBottomSheet = LocationBottomSheetType.GOVERNORATE
+                    activeBottomSheet = type
                 )
             )
         )
     }
 
-    override fun onShowStreetBottomSheet() {
-        updateState(
-            screenState.value.copy(
-                locationUiState = screenState.value.locationUiState.copy(
-                    activeBottomSheet = LocationBottomSheetType.STREET
-                )
-            )
-        )
-    }
 
     override fun onDismissBottomSheet() {
         updateState(
             screenState.value.copy(
                 locationUiState = screenState.value.locationUiState.copy(
-                    activeBottomSheet = LocationBottomSheetType.NONE
+                    activeBottomSheet = null
                 )
             )
         )

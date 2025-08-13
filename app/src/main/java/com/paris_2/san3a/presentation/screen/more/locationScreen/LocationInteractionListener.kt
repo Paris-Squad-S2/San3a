@@ -6,7 +6,6 @@ interface LocationInteractionListener {
     fun onClickSave()
     fun onClickRetry()
     fun onNavigateBack()
-    fun onShowGovernorateBottomSheet()
-    fun onShowStreetBottomSheet()
+    fun onShowBottomSheet(type: LocationBottomSheetType)
     fun onDismissBottomSheet()
 }
