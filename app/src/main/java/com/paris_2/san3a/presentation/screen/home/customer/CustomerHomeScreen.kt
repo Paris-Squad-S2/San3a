@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -7,8 +8,10 @@ import android.speech.RecognizerIntent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,6 +56,7 @@ import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
 import com.paris_2.san3a.presentation.shared.components.RequestDescriptionContent
 import com.paris_2.san3a.presentation.shared.components.RequestTitleContent
 import com.paris_2.san3a.presentation.shared.components.SearchBar
+import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
@@ -130,7 +134,6 @@ private fun CustomerHomeScreenContent(
             }
             voiceLauncher.launch(intent)
         }
-
     }
 
     val servicesToDisplay = if (state.customerUiState.searchQuery.isNotEmpty())
@@ -211,9 +214,7 @@ private fun CustomerHomeScreenContent(
                             addressInDetails = state.bottomSheetUiState.bottomSheetAddressDetails,
                             onAddressDetailsChange = { action.setBottomSheetAddressDetails(it) },
                             isGovernmentSheetShowed = state.bottomSheetUiState.isGovernmentSheetVisible,
-                            isCitiesSheetShowed = state.bottomSheetUiState.isCitySheetVisible,
                             onGovernmentDismissRequest = { action.showGovernmentSheet(false) },
-                            onCitiesDismissRequest = { action.showCitySheet(false) },
                             onGovernmentSelected = {
                                 action.setBottomSheetSelectedGovernment(it)
                             },
@@ -259,7 +260,8 @@ private fun CustomerHomeScreenContent(
                             )
                         },
                         onClickBack = { action.previousBottomSheetStep() },
-                        onExitClick = { action.onDismissBottomSheet() }
+                        onExitClick = { action.onDismissBottomSheet() },
+                        requestButtonState = state.buttonSheetState
                     ) {
                         if (state.bottomSheetUiState.bottomSheetImages.isEmpty()) {
                             AddPhotosContent(
@@ -359,11 +361,11 @@ private fun CustomerHomeScreenContent(
 
                             if (ContextCompat.checkSelfPermission(
                                     context,
-                                    android.Manifest.permission.RECORD_AUDIO
+                                    Manifest.permission.RECORD_AUDIO
                                 ) == PackageManager.PERMISSION_GRANTED) {
                                 action.onMicClick()
                             } else {
-                                permissionLauncher.launch(android.Manifest.permission.RECORD_AUDIO)
+                                permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
                             }
                         },
                         modifier = Modifier
@@ -441,6 +443,36 @@ private fun CustomerHomeScreenContent(
             }
         }
     )
+
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        AnimatedVisibility(state.showSnackBarError) {
+            state.errorMessage?.let {
+                SnackBar(
+                    text = R.string.error_occur_when_creating_request,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(horizontal = 12.dp, vertical = 16.dp)
+                        .align(Alignment.TopCenter),
+                    onClick = action::onDismissSnackBar
+                )
+            }
+        }
+        AnimatedVisibility(state.showSnackBarSuccess) {
+                SnackBar(
+                    text = R.string.service_request_send_successfully,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(horizontal = 12.dp, vertical = 16.dp)
+                        .align(Alignment.TopCenter),
+                    onClick = action::onDismissSnackBar
+                )
+
+        }
+    }
 }
 
 const val ARABIC_NAME = "arabicName"

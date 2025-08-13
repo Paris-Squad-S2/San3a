@@ -40,7 +40,7 @@ fun Message.toMessageUi(imageUserUrl: String, currentUserId: String) = MessageUi
     anotherUserImage = imageUserUrl,
     time = formatChatTime(this.time.time),
     date = formatDateHeader(this.time.date),
-    isReceived = this.receiverId == currentUserId,
+    isReceived = this.senderId != currentUserId,
     isSeen = this.seen,
 )
 
