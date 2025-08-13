@@ -232,7 +232,7 @@ class UserRemoteDataSourceImpl(
     ): Float? {
         return fireStoreService.getDoc(
             path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION/$userId",
-            fromJson = { data, _ -> (data["rating"] as? Number)?.toFloat() }
+            fromJson = { data, _ -> (data["rating"] as? Number)?.toFloat()?.roundFloat() }
         )
     }
 

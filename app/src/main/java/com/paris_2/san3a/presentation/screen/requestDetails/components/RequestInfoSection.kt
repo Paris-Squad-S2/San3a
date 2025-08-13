@@ -111,6 +111,7 @@ fun RequestInfoSection(
                         model = image,
                         contentDescription = null,
                         modifier = Modifier
+                            .padding(bottom = 24.dp)
                             .size(120.dp)
                             .clip(androidx.compose.foundation.shape.RoundedCornerShape(Theme.radius.extraLarge))
                             .background(Theme.colors.background.card),
