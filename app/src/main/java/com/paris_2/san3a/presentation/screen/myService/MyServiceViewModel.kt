@@ -60,7 +60,7 @@ class MyServiceViewModel(
                 )
             },
             onEach = { services ->
-                val serviceUiStates = mapServiceToUiState(services)
+                val serviceUiStates = mapServiceToUiState(services ?: emptyList())
                 updateState(
                     screenState.value.copy(
                         myServiceUiState = screenState.value.myServiceUiState.map { service ->

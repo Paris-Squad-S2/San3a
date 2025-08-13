@@ -221,7 +221,7 @@ class MoreViewModel(
                         showSnackBarError = false,
                         isNoInternet = false,
                         moreUiState = screenState.value.moreUiState.copy(
-                            userUiState = user.toUserUiState(rating = userRating)
+                            userUiState = user.toUserUiState(rating = userRating ?: 0.0f)
                                 .copy(isVerify = isVerify),
                         )
                     )

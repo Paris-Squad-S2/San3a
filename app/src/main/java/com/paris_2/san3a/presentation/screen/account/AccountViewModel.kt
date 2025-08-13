@@ -114,7 +114,7 @@ class AccountViewModel(
                 )
             },
             onEach = { services ->
-                val serviceUiStates = mapServiceToUiState(services)
+                val serviceUiStates = mapServiceToUiState(services ?: emptyList())
                 updateState(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(

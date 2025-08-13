@@ -54,8 +54,7 @@ fun MessageTextField(
         modifier = modifier
             .navigationBarsPadding()
             .fillMaxWidth()
-            .heightIn(min = 72.dp)
-            .animateContentSize()
+            .heightIn(min = 72.dp, 300.dp)
             .background(
                 Theme.colors.background.card,
                 RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
@@ -64,8 +63,7 @@ fun MessageTextField(
                 color = Theme.colors.stroke.primary,
                 width = 1.dp,
                 shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
-            )
-        ,
+            ),
         decorationBox = { innerTextField ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,

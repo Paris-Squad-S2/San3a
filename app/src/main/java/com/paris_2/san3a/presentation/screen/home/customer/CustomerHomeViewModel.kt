@@ -385,7 +385,7 @@ class CustomerHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         customerUiState = screenState.value.customerUiState.copy(
-                            mostRequestedServices = mostRequestedServices
+                            mostRequestedServices = mostRequestedServices ?: emptyList()
                         )
                     )
                 )

@@ -28,7 +28,7 @@ class NotificationViewModel(
             onEach = { notifications ->
                 updateState(
                     screenState.value.copy(
-                        notifications = notifications.toUiModelList(),
+                        notifications = notifications?.toUiModelList() ?: emptyList(),
                         isLoading = false,
                         error = null
                     )

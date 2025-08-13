@@ -63,9 +63,12 @@ class MessagesDetailsViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message
+                        chatTitle = FAKE_USER_NAME,
+                        profilePhoto = FAKE_IMAGE_URL,
                     )
                 )
+                Log.d("MessagesDetailsViewModel", "getTheOtherUserData error: ${it.message}", it)
+                loadMessages(chatId)
             }
         )
     }
@@ -78,17 +81,18 @@ class MessagesDetailsViewModel(
             },
             onEach = { messages ->
                 val messageUis =
-                    messages.map { it.toMessageUi(screenState.value.profilePhoto, currentUserId) }
+                    messages?.map { it.toMessageUi(screenState.value.profilePhoto, currentUserId) } ?: emptyList()
                 val groupedMessages = messageUis
                     .groupBy { it.date }
                     .toSortedMap(compareBy { it })
 
                 updateState(
                     screenState.value.copy(
-                        messages = messageUis,
+                        messagesSize = messageUis.size,
                         groupedMessages = groupedMessages,
                         chatTitle = screenState.value.chatTitle,
-                        isLoading = false
+                        isLoading = false,
+                        sendingMessage = null,
                     )
                 )
                 markMessagesAsSeen()
@@ -108,24 +112,31 @@ class MessagesDetailsViewModel(
     fun sendMessage() {
         tryToExecute(
             execute = {
-                val oldMessage = screenState.value.textMessage
-                updateState(
-                    screenState.value.copy(
-                        sendButtonState = AppButtonState.Disabled,
-                        textMessage = ""
-                    )
-                )
-                sendMessageUseCase(
+                screenState.value.textMessage.trim().let { message ->
+                    if (message.isBlank()) return@tryToExecute
                     Message(
                         senderId = currentUserId,
                         receiverId = otherUserId,
                         chatId = chatId,
                         messageContent = MessageContent.Text(
-                            content = oldMessage
+                            content = message
                         ),
                         seen = false
-                    )
-                )
+                    ).let { message ->
+                        updateState(
+                            screenState.value.copy(
+                                sendButtonState = AppButtonState.Disabled,
+                                textMessage = "",
+                                sendingMessage = message.toMessageUi(
+                                    imageUserUrl = "",
+                                    currentUserId = currentUserId
+                                ),
+                                messagesSize = screenState.value.messagesSize + 1,
+                            )
+                        )
+                        sendMessageUseCase(message)
+                    }
+                }
             },
             onSuccess = {
                 updateState(
@@ -247,7 +258,7 @@ class MessagesDetailsViewModel(
         const val IMAGE_TYPE = "image/*"
         const val FAKE_IMAGE_URL =
             "https://firebasestorage.googleapis.com/v0/b/cell-monitor21.appspot.com/o/user2%2Fchat8%2F1000179245.jpg?alt=media&token=714e333b-7fc6-4be3-83a6-30d6b7f7fd4e"
-        const val FAKE_USER_NAME = "CraftsMan"
+        const val FAKE_USER_NAME = "Unknown User"
     }
 
 }
