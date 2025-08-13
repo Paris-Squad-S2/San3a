@@ -111,22 +111,22 @@ class MessagesRemoteDataSourceImp(
     }
 
     suspend fun getChatByParticipants(participants: List<String>): ChatDto? {
-        val sortedParticipants = participants.sorted()
         return fireStoreService.getCollection(
             path = CHATS_COLLECTION,
             fromJson = ChatDto::fromJson,
             queryBuilder = { query ->
-                query.whereArrayContains("participants", sortedParticipants.first())
-                    .whereEqualTo("participants", sortedParticipants)
+                query.whereArrayContains("participants", participants.first())
+                    .whereEqualTo("participants", participants)
             }
         ).firstOrNull()
     }
 
     override suspend fun addChat(participants: List<String>): String {
-        val existingChat = getChatByParticipants(participants)
+        val sortedParticipants = participants.sorted()
+        val existingChat = getChatByParticipants(sortedParticipants)
         if (existingChat != null) return existingChat.id
 
-        val chatData = ChatDto(id = "", participants = participants).toJson()
+        val chatData = ChatDto(id = "", participants = sortedParticipants).toJson()
         val chatId = fireStoreService.addToCollection(CHATS_COLLECTION, chatData)
         return chatId
     }
