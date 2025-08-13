@@ -85,18 +85,9 @@ fun MessageTextField(
                         tint = Theme.colors.shade.secondary,
                         contentDescription = stringResource(R.string.add_images),
                         modifier = Modifier
-                            .padding(end = 30.dp)
+                            .padding(end = 19.dp)
                             .clickable(onClick = onImageClick)
                     )
-// Todo( feature voice )
-//                    Icon(
-//                        painter = voiceIcon,
-//                        tint = Theme.colors.shade.secondary,
-//                        contentDescription = stringResource(R.string.voice_icon),
-//                        modifier = Modifier
-//                            .padding(end = 19.dp)
-//                            .clickable(onClick = onVoiceClick)
-//                    )
 
                 } else {
                     Box(
