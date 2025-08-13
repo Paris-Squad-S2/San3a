@@ -160,17 +160,19 @@ class MessagesDetailsViewModel(
     fun saveImages(uris: List<Uri>) {
         tryToExecute(
             execute = {
-                sendMessageUseCase(
-                    Message(
-                        senderId = currentUserId,
-                        receiverId = otherUserId,
-                        chatId = chatId,
-                        messageContent = MessageContent.Image(
-                            uris = uris.map { it.toString() }
-                        ),
-                        seen = false
+                if (uris.isNotEmpty()) {
+                    sendMessageUseCase(
+                        Message(
+                            senderId = currentUserId,
+                            receiverId = otherUserId,
+                            chatId = chatId,
+                            messageContent = MessageContent.Image(
+                                uris = uris.map { it.toString() }
+                            ),
+                            seen = false
+                        )
                     )
-                )
+                }
             },
             onError = {
                 updateState(
