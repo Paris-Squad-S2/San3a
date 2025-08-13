@@ -211,9 +211,7 @@ private fun CustomerHomeScreenContent(
                             addressInDetails = state.bottomSheetUiState.bottomSheetAddressDetails,
                             onAddressDetailsChange = { action.setBottomSheetAddressDetails(it) },
                             isGovernmentSheetShowed = state.bottomSheetUiState.isGovernmentSheetVisible,
-                            isCitiesSheetShowed = state.bottomSheetUiState.isCitySheetVisible,
                             onGovernmentDismissRequest = { action.showGovernmentSheet(false) },
-                            onCitiesDismissRequest = { action.showCitySheet(false) },
                             onGovernmentSelected = {
                                 action.setBottomSheetSelectedGovernment(it)
                             },

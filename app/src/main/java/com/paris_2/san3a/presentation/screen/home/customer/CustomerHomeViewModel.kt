@@ -53,8 +53,7 @@ class CustomerHomeViewModel(
                     bottomSheetSelectedCity = "",
                     bottomSheetAddressDetails = "",
                     isGovernmentSheetVisible = false,
-                    isCitySheetVisible = false
-                )
+                    )
             )
         )
     }
@@ -185,7 +184,6 @@ class CustomerHomeViewModel(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetSelectedCity = city,
                     isGovernmentSheetVisible = false,
-                    isCitySheetVisible = false
                 )
             )
         )
@@ -207,17 +205,6 @@ class CustomerHomeViewModel(
         )
     }
 
-
-    override fun showCitySheet(show: Boolean) {
-        updateState(
-            screenState.value.copy(
-                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                    isCitySheetVisible = show
-                )
-            )
-        )
-    }
-
     override fun resetBottomSheetState() {
         updateState(
             screenState.value.copy(
@@ -234,7 +221,6 @@ class CustomerHomeViewModel(
                     bottomSheetSelectedCity = "",
                     bottomSheetAddressDetails = "",
                     isGovernmentSheetVisible = false,
-                    isCitySheetVisible = false
                 )
             )
         )

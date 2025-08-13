@@ -50,7 +50,6 @@ data class BottomSheetUiState(
     val bottomSheetSelectedCity: String = "",
     val bottomSheetAddressDetails: String = "",
     val isGovernmentSheetVisible: Boolean = false,
-    val isCitySheetVisible: Boolean = false,
     val locationBottomSheetType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
 
 )
