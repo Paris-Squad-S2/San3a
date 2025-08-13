@@ -12,7 +12,9 @@ import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import java.util.Locale
@@ -237,6 +239,11 @@ class CustomerHomeViewModel(
     override fun createRequest(service: RequestServiceUiState) {
         tryToExecute(
             execute = {
+                updateState(
+                    screenState.value.copy(
+                        buttonSheetState = AppButtonState.Loading
+                    )
+                )
                 requestServicesUseCase(service.toRequestService())
             },
             onSuccess = {
@@ -244,7 +251,10 @@ class CustomerHomeViewModel(
                     screenState.value.copy(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                             bottomSheetState = false
-                        )
+                        ),
+                        buttonSheetState = AppButtonState.Enable,
+                        showSnackBarSuccess = true,
+
                     )
                 )
                 updateNumOfRequests(service.serviceId)
@@ -252,7 +262,9 @@ class CustomerHomeViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message ?: UNKNOWN_ERROR
+                        errorMessage = it.message ?: UNKNOWN_ERROR,
+                        buttonSheetState = AppButtonState.Enable,
+                        showSnackBarError = true
                     )
                 )
             }
@@ -467,6 +479,17 @@ class CustomerHomeViewModel(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetState = false
                 )
+            )
+        )
+    }
+
+    override fun onDismissSnackBar() {
+        updateState(
+            screenState.value.copy(
+                showSnackBarError = false,
+                showSnackBarSuccess = false,
+                errorMessage = null,
+                successSnackBarMessage = null
             )
         )
     }

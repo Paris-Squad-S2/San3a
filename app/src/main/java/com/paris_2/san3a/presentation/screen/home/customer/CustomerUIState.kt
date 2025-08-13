@@ -5,13 +5,18 @@ import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 
 data class CustomerHomeUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val customerUiState: CustomerUiState = CustomerUiState(),
-    val bottomSheetUiState: BottomSheetUiState = BottomSheetUiState()
+    val bottomSheetUiState: BottomSheetUiState = BottomSheetUiState(),
+    val showSnackBarError: Boolean = false,
+    val showSnackBarSuccess: Boolean = false,
+    val successSnackBarMessage: String? = null,
+    val buttonSheetState: AppButtonState = AppButtonState.Enable
 )
 
 data class CustomerUiState(

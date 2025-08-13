@@ -320,4 +320,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="view_request_details">View Request Details</string>
     <string name="waiting_for_the_approval">Waiting for the approval</string>
     <string name="cancel_request">Cancel Request</string>
+    <string name="service_request_send_successfully">service request send successfully</string>
+    <string name="error_occur_when_creating_request">Error occur when creating request</string>
 </resources>

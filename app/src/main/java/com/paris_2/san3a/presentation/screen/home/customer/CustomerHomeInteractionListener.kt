@@ -24,5 +24,5 @@ interface CustomerHomeInteractionListener {
     fun resetBottomSheetState()
     fun onMicClick()
     fun onSpeechRecognized(query: String)
-
+    fun onDismissSnackBar()
 }
