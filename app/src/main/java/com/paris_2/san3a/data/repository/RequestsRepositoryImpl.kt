@@ -1,6 +1,5 @@
 package com.paris_2.san3a.data.repository
 
-import android.util.Log
 import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.source.remote.requestDetails.RequestDataSource
