@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="logo_fill">#F7F7F7</color>
     <color name="Transparent">#00000000</color>
+    <color name="ic_launcher_background">@color/white</color>
 </resources>

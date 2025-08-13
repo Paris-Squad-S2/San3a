@@ -59,23 +59,31 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
     }
     protected fun <T> tryToObserve(
         observe: () -> Flow<T>,
-        onEach: suspend (T) -> Unit,
+        onEach: suspend (T?) -> Unit,
         onError: (Throwable) -> Unit = {},
         onStart: () -> Unit = {},
         scope: CoroutineScope = viewModelScope,
     ): Job {
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            Log.e("BaseViewModel", "tryToObserve: Error in flow collection", throwable)
             onError(throwable)
         }
 
         return scope.launch(exceptionHandler) {
+            var emitted = false
             observe()
                 .onStart { onStart() }
                 .catch {
                     Log.e("BaseViewModel", "tryToObserve: Error executing operation", it)
                     onError(it)
                 }
-                .collect { onEach(it) }
+                .collect {
+                    emitted = true
+                    onEach(it)
+                }
+            if (!emitted) {
+                onEach(null)
+            }
         }
     }
 

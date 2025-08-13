@@ -14,11 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -29,6 +31,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.messagesDetails.components.DeleteChatBottomSheet
 import com.paris_2.san3a.presentation.screen.messagesDetails.components.Message
@@ -117,9 +122,19 @@ fun MessageDetailsContent(
                             tint = Theme.colors.shade.primary
                         )
                     },
+                    leadingIcon = {
+                        AsyncImage(
+                            model = state.profilePhoto,
+                            contentScale = ContentScale.Crop,
+                            contentDescription = stringResource(R.string.profile_image),
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                                .size(40.dp)
+                                .clip(CircleShape)
+                        )
+                    },
                     onBackClick = messageInteractionListener::onBackClick
                 )
-
             },
         ) {
             Box(
@@ -128,7 +143,7 @@ fun MessageDetailsContent(
                     .background(Theme.colors.background.screen)
                     .statusBarsPadding(),
             ) {
-                if (state.messages.isEmpty()) {
+                if (state.groupedMessages.isEmpty()) {
                     PlaceHolderScreen(
                         modifier = Modifier
                             .fillMaxSize()
@@ -140,8 +155,9 @@ fun MessageDetailsContent(
                     )
                 } else {
                     MessageList(
-                        messages = state.messages,
+                        messagesSize = state.messagesSize,
                         groupedMessages = state.groupedMessages,
+                        sendingMessage = state.sendingMessage,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 16.dp)
@@ -203,15 +219,16 @@ fun MessageDetailsContent(
 
 @Composable
 fun MessageList(
-    messages: List<MessageUi>,
+    messagesSize: Int,
     groupedMessages: Map<String, List<MessageUi>>,
     modifier: Modifier,
+    sendingMessage: MessageUi?,
 ) {
-    val listState = rememberLazyListState()
+    val listState = rememberLazyListState(messagesSize)
 
-    LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty()) {
-            listState.animateScrollToItem(messages.lastIndex)
+    LaunchedEffect(messagesSize) {
+        if (messagesSize > 0) {
+            listState.scrollToItem(messagesSize - 1)
         }
     }
 
@@ -252,6 +269,26 @@ fun MessageList(
                     )
                 }
                 Spacer(modifier = Modifier.width(10.dp))
+            }
+            sendingMessage?.let { message ->
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Message(
+                            images = message.images,
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .animateItem(),
+                            text = message.text,
+                            isReceived = message.isReceived,
+                            isSeen = null,
+                            time = message.time,
+                            profileImageUrl = null,
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(10.dp))
+                }
             }
         }
     }

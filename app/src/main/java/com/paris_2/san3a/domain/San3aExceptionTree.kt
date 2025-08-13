@@ -59,6 +59,7 @@ class GetCraftsmanOffersException() : San3aException("Failed to get craftsman of
 class AssignRequestToCraftsmanException() : San3aException("Failed to assign request to craftsman")
 class AcceptOfferException() : San3aException("Failed to accept offer")
 class GetCustomerRequestsException() : San3aException("Failed to get customer requests")
+class GetCraftsmanRequestsException() : San3aException("Failed to get craftsman requests")
 class GetCraftsmanOfferOnRequestException() : San3aException("Failed to get craftsman offer on request")
 class CancelRequestException() : San3aException("Failed to cancel request")
 class MarkRequestAsDoneException() : San3aException("Failed to mark request as done")

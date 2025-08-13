@@ -40,17 +40,17 @@ class MessagesViewModel(
                 getChatsByUserIdUseCase(userId = screenState.value.currentUserId)
             },
             onEach = { chats ->
-                    updateState(
-                        screenState.value.copy(
-                            chatsMap = chats.toChatUIMap(screenState.value.currentUserId),
-                            isLoading = false,
-                            error = null
-                        )
+                updateState(
+                    screenState.value.copy(
+                        chatsMap = chats?.toChatUIMap(screenState.value.currentUserId) ?: emptyMap(),
+                        isLoading = false,
+                        error = null
                     )
-                    getUserChatsInfo(screenState.value.chatsMap)
+                )
+                getUserChatsInfo(screenState.value.chatsMap)
             },
             onError = { exception ->
-                updateState(screenState.value.copy(error = exception.message))
+                updateState(screenState.value.copy(error = exception.message, isLoading = false))
             },
         )
     }
@@ -74,6 +74,16 @@ class MessagesViewModel(
                     )
                 },
                 onError = { exception ->
+                    updateState(
+                        screenState.value.copy(
+                            chatsMap = screenState.value.chatsMap.toMutableMap().apply {
+                                this[chatId] = chatUI.copy(
+                                    theOtherUserName = "Unknown User",
+                                    theOtherProfilePhoto = FAKE_IMAGE_URL,
+                                )
+                            }
+                        )
+                    )
                     Log.e(
                         "MessagesViewModel",
                         "Error fetching user for chat $chatId: ${exception.message}",
@@ -100,4 +110,9 @@ class MessagesViewModel(
         )
     }
 
+    companion object {
+        const val FAKE_IMAGE_URL =
+            "https://firebasestorage.googleapis.com/v0/b/cell-monitor21.appspot.com/o/user2%2Fchat8%2F1000179245.jpg?alt=media&token=714e333b-7fc6-4be3-83a6-30d6b7f7fd4e"
+
+    }
 }

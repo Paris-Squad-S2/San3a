@@ -86,13 +86,17 @@ class UserRemoteDataSourceImpl(
             fromJson = ::getServices
         ).let { docsFlow ->
             docsFlow.flatMapLatest { docsList ->
-                fireStoreService.streamCollection(
-                    path = SERVICES_COLLECTION,
-                    fromJson = ServiceDto::fromJson,
-                    queryBuilder = { query ->
-                        query.whereIn(FieldPath.documentId(), docsList)
-                    }
-                )
+                if (docsList.isNotEmpty()) {
+                    fireStoreService.streamCollection(
+                        path = SERVICES_COLLECTION,
+                        fromJson = ServiceDto::fromJson,
+                        queryBuilder = { query ->
+                            query.whereIn(FieldPath.documentId(), docsList)
+                        }
+                    )
+                } else {
+                    flow { emit(emptyList()) }
+                }
             }
         }
     }
@@ -276,6 +280,9 @@ class UserRemoteDataSourceImpl(
     }
 
     override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>> {
+        if (relatedJobs.isEmpty()) {
+            return flow { emit(emptyList()) }
+        }
         return fireStoreService.streamCollection(
             path = SERVICE_REQUESTS_COLLECTION,
             fromJson = RequestServiceDto::fromJson,

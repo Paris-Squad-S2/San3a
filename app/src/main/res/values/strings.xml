@@ -320,6 +320,13 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="view_request_details">View Request Details</string>
     <string name="waiting_for_the_approval">Waiting for the approval</string>
     <string name="cancel_request">Cancel Request</string>
+    <string name="occurred_while_fetching_requests">occurred while fetching requests</string>
+    <string name="error_fetching_offers">Error fetching offers</string>
+    <string name="no_offer_found_for_request">No offer found for request</string>
+    <string name="failed_to_load_offers_for_request">Failed to load offers for request</string>
+    <string name="error_fetching_craftsman_details">Error fetching craftsman details</string>
+    <string name="error_marking_request_as_done">error_marking_request_as_done</string>
+    <string name="occurred_while_sending_message_to_customer">occurred while sending message to customer</string>
     <string name="service_request_send_successfully">service request send successfully</string>
     <string name="error_occur_when_creating_request">Error occur when creating request</string>
 </resources>

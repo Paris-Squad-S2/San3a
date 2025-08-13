@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
 
 data class MessageDetailsUiState(
     val textMessage: String = "",
-    val messages: List<MessageUi> = emptyList(),
+    val messagesSize: Int = 0,
     val chatTitle: String = "",
     val profilePhoto: String = "",
     val showDropMenu: Boolean = false,
@@ -21,6 +21,7 @@ data class MessageDetailsUiState(
     val sendButtonState: AppButtonState = AppButtonState.Enable,
     val errorMessage: String? = null,
     val isLoading: Boolean = false,
+    val sendingMessage : MessageUi? = null,
 )
 
 data class MessageUi(

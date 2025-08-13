@@ -74,7 +74,8 @@ class CustomerRequestDetailsRequestDetailsViewModel(
                         isLoading = false,
                         error = null,
                         uiState = screenState.value.uiState.copy(
-                            offers = offers.sortedByDescending { it.isAccepted }.toOfferUiStateMap()
+                            offers = offers?.sortedByDescending { it.isAccepted }?.toOfferUiStateMap()
+                                ?: emptyMap(),
                         )
                     )
                 )

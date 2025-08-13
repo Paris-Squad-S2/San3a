@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.messages
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -93,8 +94,7 @@ private fun MessagesScreenContent(
                 ChatList(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Theme.colors.background.screen)
-                        .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                        .background(Theme.colors.background.screen),
                     chatsMap = state.chatsMap,
                     messagesInteractionListener = messagesInteractionListener
                 )
@@ -112,14 +112,15 @@ fun ChatList(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(16.dp)
     ) {
         items(chatsMap.size) { item ->
             chatsMap.keys.elementAt(item).let { chatId ->
                 chatsMap[chatId]?.let { chatUI ->
                     ChatCard(
                         onChatClick = { messagesInteractionListener.onChatClick(chatUI.chatId, chatUI.theOtherUserId) },
-                        name = chatUI.theOtherUserName ?: "Unknown User",
-                        imageUrl = chatUI.theOtherProfilePhoto ?: "https://example.com/default_image.png",
+                        name = chatUI.theOtherUserName,
+                        imageUrl = chatUI.theOtherProfilePhoto,
                         lastMessage = chatUI.lastMessage,
                         unreadMessagesCount = chatUI.unreadMessagesCount,
                         dateTime = chatUI.lastMessageTime,

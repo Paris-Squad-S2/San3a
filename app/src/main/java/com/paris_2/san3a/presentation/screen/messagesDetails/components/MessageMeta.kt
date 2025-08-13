@@ -43,7 +43,13 @@ fun MessageMeta(
         }
         if (!isReceived) {
             Icon(
-                painter = painterResource(if (isSeen == true) R.drawable.ic_check_read else R.drawable.ic_check_unread),
+                painter = painterResource(
+                    when (isSeen) {
+                        true -> R.drawable.ic_check_read
+                        false -> R.drawable.ic_check_unread
+                        null -> R.drawable.ic_clock_unseen
+                    }
+                ),
                 contentDescription = stringResource(R.string.seen_icon),
                 tint = Theme.colors.additional.primary.blue,
                 modifier = Modifier.size(16.dp)

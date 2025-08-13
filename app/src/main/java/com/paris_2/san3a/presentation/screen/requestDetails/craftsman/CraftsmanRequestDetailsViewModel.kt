@@ -75,13 +75,13 @@ class CraftsmanRequestDetailsViewModel(
         tryToObserve(
             observe = { getOffersUseCase(requestId) },
             onEach = {
-                it.forEach { offer ->
+                it?.forEach { offer ->
                     Log.d("CraftsmanRequestDetailsVM", "Offer: ${offer.toOfferUiState()}")
                 }
                 updateState(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
-                            offers = it.toOfferUiStateMap()
+                            offers = it?.toOfferUiStateMap() ?: emptyMap()
                         ),
                     )
                 )
