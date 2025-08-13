@@ -8,6 +8,7 @@ import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import java.util.Collections.emptyList
 
 class LocationViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
@@ -137,7 +138,7 @@ class LocationViewModel(
                     selectedGovernorate = area,
                     selectedStreet = "",
                     streets = emptyList(),
-                    activeBottomSheet = LocationBottomSheetType.STREET,
+                    activeBottomSheet = LocationBottomSheetType.CITY,
                 ),
                 locationButtonState = AppButtonState.Enable,
             )
@@ -153,29 +154,20 @@ class LocationViewModel(
                     activeBottomSheet = LocationBottomSheetType.NONE
                 ),
                 locationButtonState = AppButtonState.Enable,
-                )
+            )
         )
     }
 
-    override fun onShowGovernorateBottomSheet() {
+    override fun onShowBottomSheet(type: LocationBottomSheetType) {
         updateState(
             screenState.value.copy(
                 locationUiState = screenState.value.locationUiState.copy(
-                    activeBottomSheet = LocationBottomSheetType.GOVERNORATE
+                    activeBottomSheet = type
                 )
             )
         )
     }
 
-    override fun onShowStreetBottomSheet() {
-        updateState(
-            screenState.value.copy(
-                locationUiState = screenState.value.locationUiState.copy(
-                    activeBottomSheet = LocationBottomSheetType.STREET
-                )
-            )
-        )
-    }
 
     override fun onDismissBottomSheet() {
         updateState(

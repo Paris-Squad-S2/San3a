@@ -40,6 +40,7 @@ import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
+import java.util.Collections.emptyList
 
 @Composable
 fun LocationScreen(viewModel: LocationViewModel = koinViewModel()) {
@@ -100,7 +101,9 @@ fun LocationScreenContent(
                         .fillMaxWidth()
                         .clickable(
                             onClick = {
-                                locationInteractionListener.onShowGovernorateBottomSheet()
+                                locationInteractionListener.onShowBottomSheet(
+                                    LocationBottomSheetType.GOVERNORATE
+                                )
                             },
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
@@ -139,7 +142,9 @@ fun LocationScreenContent(
                         .fillMaxWidth()
                         .clickable(
                             onClick = {
-                                locationInteractionListener.onShowStreetBottomSheet()
+                                locationInteractionListener.onShowBottomSheet(
+                                    LocationBottomSheetType.CITY
+                                )
                             },
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
@@ -167,7 +172,7 @@ fun LocationScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 24.dp),
-                    state =state.locationButtonState ,
+                    state = state.locationButtonState,
                     loadingIcon = {
                         LoadingScreen(Modifier.size(16.dp), background = Theme.colors.brand.primary)
                     }
@@ -176,34 +181,48 @@ fun LocationScreenContent(
         }
     )
 
-    when (state.locationUiState.activeBottomSheet) {
-        LocationBottomSheetType.GOVERNORATE -> {
-            SelectionBottomSheet(
-                title = stringResource(R.string.choose_governorate),
-                isVisible = true,
-                items = state.locationUiState.governorates.map {
-                    SelectionItemData(it, showIcon = true)
-                },
-                onDismiss = locationInteractionListener::onDismissBottomSheet,
-                onItemClick = { locationInteractionListener.onAreaSelected(it) }
-            )
-        }
 
-        LocationBottomSheetType.STREET -> {
-            SelectionBottomSheet(
-                title = stringResource(R.string.choose_district),
-                isVisible = true,
-                items = state.locationUiState.streets.map {
-                    SelectionItemData(it, showIcon = false)
-                },
-                onDismiss = locationInteractionListener::onDismissBottomSheet,
-                onItemClick = { locationInteractionListener.onStreetChanged(it) }
-            )
-        }
+    val bottomSheetContent = getBottomSheetContent(
+        state = state.locationUiState,
+        locationInteractionListener = locationInteractionListener,
+        stringResProvider = { id -> stringResource(id) }
+    )
 
-        LocationBottomSheetType.NONE -> Unit
+    SelectionBottomSheet(
+        title = bottomSheetContent.title,
+        isVisible = state.locationUiState.activeBottomSheet != LocationBottomSheetType.NONE,
+        items = bottomSheetContent.items,
+        onDismiss = locationInteractionListener::onDismissBottomSheet,
+        onItemClick = bottomSheetContent.onClick
+    )
+
+
+}
+
+
+@Composable
+private fun getBottomSheetContent(
+    state: LocationUiState,
+    locationInteractionListener: LocationInteractionListener,
+    stringResProvider: @Composable (Int) -> String,
+): BottomSheetContent {
+    return when (state.activeBottomSheet) {
+        LocationBottomSheetType.GOVERNORATE -> BottomSheetContent(
+            title = stringResProvider(R.string.choose_governorate),
+            items = state.governorates.map { SelectionItemData(it, showIcon = true) },
+            onClick = { selected -> locationInteractionListener.onAreaSelected(selected) }
+        )
+
+        LocationBottomSheetType.CITY -> BottomSheetContent(
+            title = stringResProvider(R.string.choose_district),
+            items = state.streets.map { SelectionItemData(it, showIcon = false) },
+            onClick = { selected -> locationInteractionListener.onStreetChanged(selected) }
+        )
+
+        LocationBottomSheetType.NONE -> BottomSheetContent("", emptyList(), {})
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -217,8 +236,7 @@ fun LocationScreenPreview() {
                 override fun onClickSave() {}
                 override fun onClickRetry() {}
                 override fun onNavigateBack() {}
-                override fun onShowGovernorateBottomSheet() {}
-                override fun onShowStreetBottomSheet() {}
+                override fun onShowBottomSheet(type: LocationBottomSheetType) {}
                 override fun onDismissBottomSheet() {}
             }
         )
