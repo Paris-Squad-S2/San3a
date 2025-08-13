@@ -138,15 +138,16 @@ fun RequestBottomSheetContent(
                             style = Theme.textStyle.body.medium.medium,
                             color = Theme.colors.button.onPrimary,
                         )
-                        Spacer(Modifier.width(8.dp))
-
                         AnimatedVisibility(
                             visible = requestButtonState == AppButtonState.Loading
                         ) {
-                            LoadingScreen(
-                                modifier = modifier.size(20.dp),
-                                background = Theme.colors.button.primary
-                            )
+                            Row {
+                                Spacer(Modifier.width(8.dp))
+                                LoadingScreen(
+                                    modifier = modifier.size(20.dp),
+                                    background = Theme.colors.button.primary
+                                )
+                            }
                         }
                     }
                 }
