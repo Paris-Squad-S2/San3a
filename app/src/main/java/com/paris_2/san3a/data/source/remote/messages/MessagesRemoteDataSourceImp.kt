@@ -111,12 +111,13 @@ class MessagesRemoteDataSourceImp(
     }
 
     suspend fun getChatByParticipants(participants: List<String>): ChatDto? {
+        val sortedParticipants = participants.sorted()
         return fireStoreService.getCollection(
             path = CHATS_COLLECTION,
             fromJson = ChatDto::fromJson,
             queryBuilder = { query ->
-                query.whereArrayContains("participants", participants.first())
-                    .whereEqualTo("participants", participants)
+                query.whereArrayContains("participants", sortedParticipants.first())
+                    .whereEqualTo("participants", sortedParticipants)
             }
         ).firstOrNull()
     }
