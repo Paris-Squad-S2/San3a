@@ -209,13 +209,13 @@ private fun getBottomSheetContent(
     return when (state.activeBottomSheet) {
         LocationBottomSheetType.GOVERNORATE -> BottomSheetContent(
             title = stringResProvider(R.string.choose_governorate),
-            items = state.governorates.map { SelectionItemData(it, showIcon = true) },
+            items = state.governorates.map { SelectionItemData(it.name, showIcon = true) },
             onClick = { selected -> locationInteractionListener.onAreaSelected(selected) }
         )
 
         LocationBottomSheetType.CITY -> BottomSheetContent(
             title = stringResProvider(R.string.choose_district),
-            items = state.streets.map { SelectionItemData(it, showIcon = false) },
+            items = state.cities.map { SelectionItemData(it.name, showIcon = false) },
             onClick = { selected -> locationInteractionListener.onStreetChanged(selected) }
         )
 

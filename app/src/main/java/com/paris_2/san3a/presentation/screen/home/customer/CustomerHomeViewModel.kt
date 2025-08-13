@@ -286,12 +286,12 @@ class CustomerHomeViewModel(
 
     private fun getGovernments() {
         tryToExecute(
-            execute = { getLocationInfoUseCase.getGovernments(countryName = COUNTRY_NAME) },
+            execute = { getLocationInfoUseCase.getGovernments() },
             onSuccess = { governments ->
                 updateState(
                     screenState.value.copy(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                            bottomSheetGovernments = governments.names,
+                            bottomSheetGovernments = governments,
                             bottomSheetSelectedGovernment = ""
                         ),
                         customerUiState = screenState.value.customerUiState.copy(
@@ -317,15 +317,14 @@ class CustomerHomeViewModel(
         tryToExecute(
             execute = {
                 getLocationInfoUseCase.getCities(
-                    countryName = COUNTRY_NAME,
-                    stateName = stateName
+                    governorateId = 1 //TODO
                 )
             },
             onSuccess = { cities ->
                 updateState(
                     screenState.value.copy(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                            bottomSheetCities = cities.names,
+                            bottomSheetCities = cities,
                             bottomSheetSelectedCity = "",
                         ),
                         customerUiState = screenState.value.customerUiState.copy(

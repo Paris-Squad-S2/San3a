@@ -1,5 +1,7 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
+import com.paris_2.san3a.domain.entity.City
+import com.paris_2.san3a.domain.entity.Governorate
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
@@ -49,8 +51,8 @@ data class BottomSheetUiState(
     val bottomSheetDescription: String = "",
     val bottomSheetImages: List<String> = emptyList(),
     val bottomSheetSelectedSuggestion: String? = null,
-    val bottomSheetGovernments: List<String> = emptyList(),
-    val bottomSheetCities: List<String> = emptyList(),
+    val bottomSheetGovernments: List<Governorate> = emptyList(),
+    val bottomSheetCities: List<City> = emptyList(),
     val bottomSheetSelectedGovernment: String = "",
     val bottomSheetSelectedCity: String = "",
     val bottomSheetAddressDetails: String = "",

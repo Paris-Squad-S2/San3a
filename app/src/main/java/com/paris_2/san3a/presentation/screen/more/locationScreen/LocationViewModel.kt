@@ -50,14 +50,14 @@ class LocationViewModel(
 
         tryToExecute(
             execute = {
-                getLocationInfoUseCase.getCities(governorate)
+                getLocationInfoUseCase.getCities(1) //TODO
             },
             onSuccess = { cities ->
                 updateState(
                     screenState.value.copy(
                         isLoading = false,
                         locationUiState = screenState.value.locationUiState.copy(
-                            streets = cities.names
+                            cities = cities
                         )
                     )
                 )
@@ -136,7 +136,7 @@ class LocationViewModel(
                 locationUiState = screenState.value.locationUiState.copy(
                     selectedGovernorate = area,
                     selectedStreet = "",
-                    streets = emptyList(),
+                    cities = emptyList(),
                     activeBottomSheet = LocationBottomSheetType.CITY,
                 ),
                 locationButtonState = AppButtonState.Enable,

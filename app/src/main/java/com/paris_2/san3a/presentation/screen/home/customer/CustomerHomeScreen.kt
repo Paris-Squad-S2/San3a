@@ -216,10 +216,10 @@ private fun CustomerHomeScreenContent(
                             isGovernmentSheetShowed = state.bottomSheetUiState.isGovernmentSheetVisible,
                             onGovernmentDismissRequest = { action.showGovernmentSheet(false) },
                             onGovernmentSelected = {
-                                action.setBottomSheetSelectedGovernment(it)
+                                action.setBottomSheetSelectedGovernment(it.name) //TODO
                             },
                             onCitiesSelected = {
-                                action.setBottomSheetSelectedCity(it)
+                                action.setBottomSheetSelectedCity(it.name) //TODO
                             },
                             government = state.bottomSheetUiState.bottomSheetSelectedGovernment,
                             city = state.bottomSheetUiState.bottomSheetSelectedCity,

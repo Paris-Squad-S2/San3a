@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.more.locationScreen
 import androidx.annotation.StringRes
+import com.paris_2.san3a.domain.entity.City
 import com.paris_2.san3a.domain.entity.Governorate
 import com.paris_2.san3a.presentation.screen.more.components.SelectionItemData
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -20,7 +21,7 @@ data class LocationScreenState(
 data class LocationUiState(
     val governorates: List<Governorate> = emptyList(),
     val selectedGovernorate: String = "",
-    val streets: List<String> = emptyList(),
+    val cities: List<City> = emptyList(),
     val selectedStreet: String = "",
     val activeBottomSheet: LocationBottomSheetType? = null,
 )
