@@ -40,7 +40,6 @@ import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
-import java.util.Collections.emptyList
 
 @Composable
 fun LocationScreen(viewModel: LocationViewModel = koinViewModel()) {
@@ -187,14 +186,15 @@ fun LocationScreenContent(
         locationInteractionListener = locationInteractionListener,
         stringResProvider = { id -> stringResource(id) }
     )
-
-    SelectionBottomSheet(
-        title = bottomSheetContent.title,
-        isVisible = state.locationUiState.activeBottomSheet != LocationBottomSheetType.NONE,
-        items = bottomSheetContent.items,
-        onDismiss = locationInteractionListener::onDismissBottomSheet,
-        onItemClick = bottomSheetContent.onClick
-    )
+    bottomSheetContent?.let { bottomContent ->
+        SelectionBottomSheet(
+            title = bottomContent.title,
+            isVisible = state.locationUiState.activeBottomSheet != null,
+            items = bottomContent.items,
+            onDismiss = locationInteractionListener::onDismissBottomSheet,
+            onItemClick = bottomContent.onClick
+        )
+    }
 
 
 }
@@ -205,7 +205,7 @@ private fun getBottomSheetContent(
     state: LocationUiState,
     locationInteractionListener: LocationInteractionListener,
     stringResProvider: @Composable (Int) -> String,
-): BottomSheetContent {
+): BottomSheetContent? {
     return when (state.activeBottomSheet) {
         LocationBottomSheetType.GOVERNORATE -> BottomSheetContent(
             title = stringResProvider(R.string.choose_governorate),
@@ -219,7 +219,7 @@ private fun getBottomSheetContent(
             onClick = { selected -> locationInteractionListener.onStreetChanged(selected) }
         )
 
-        LocationBottomSheetType.NONE -> BottomSheetContent("", emptyList(), {})
+        null -> null
     }
 }
 

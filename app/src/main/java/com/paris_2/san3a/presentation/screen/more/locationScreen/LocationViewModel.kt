@@ -8,7 +8,6 @@ import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import java.util.Collections.emptyList
 
 class LocationViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
@@ -151,7 +150,7 @@ class LocationViewModel(
             screenState.value.copy(
                 locationUiState = screenState.value.locationUiState.copy(
                     selectedStreet = street,
-                    activeBottomSheet = LocationBottomSheetType.NONE
+                    activeBottomSheet = null
                 ),
                 locationButtonState = AppButtonState.Enable,
             )
@@ -173,7 +172,7 @@ class LocationViewModel(
         updateState(
             screenState.value.copy(
                 locationUiState = screenState.value.locationUiState.copy(
-                    activeBottomSheet = LocationBottomSheetType.NONE
+                    activeBottomSheet = null
                 )
             )
         )
