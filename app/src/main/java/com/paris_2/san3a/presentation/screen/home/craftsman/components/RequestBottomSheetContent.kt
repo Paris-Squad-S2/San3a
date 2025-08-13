@@ -47,7 +47,7 @@ fun RequestBottomSheetContent(
     onExitClick: () -> Unit,
     containImg: Boolean = false,
     requestButtonState: AppButtonState = AppButtonState.Enable,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -143,12 +143,10 @@ fun RequestBottomSheetContent(
                         AnimatedVisibility(
                             visible = requestButtonState == AppButtonState.Loading
                         ) {
-                            if (requestButtonState == AppButtonState.Loading) {
-                                LoadingScreen(
-                                    modifier = modifier.size(20.dp),
-                                    background = Theme.colors.button.primary
-                                )
-                            }
+                            LoadingScreen(
+                                modifier = modifier.size(20.dp),
+                                background = Theme.colors.button.primary
+                            )
                         }
                     }
                 }
