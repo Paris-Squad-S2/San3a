@@ -4,8 +4,8 @@ import com.paris_2.san3a.data.source.local.location.dto.CityDto
 import com.paris_2.san3a.data.source.local.location.dto.GovernorateDto
 
 interface LocationLocalDataSource {
-    fun getGovernorates(): List<GovernorateDto>
-    fun getCities(governorateId: Int): List<CityDto>
-    fun getGovernorateById(governorateId: Int): GovernorateDto?
-    fun getCityById(cityId: Int): CityDto?
+    suspend fun getGovernorates(): List<GovernorateDto>
+    suspend fun getCities(governorateId: Int): List<CityDto>
+    suspend fun getGovernorateById(governorateId: Int): GovernorateDto?
+    suspend fun getCityById(cityId: Int): CityDto?
 }

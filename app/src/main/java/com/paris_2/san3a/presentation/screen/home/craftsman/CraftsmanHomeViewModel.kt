@@ -88,13 +88,17 @@ class CraftsmanHomeViewModel(
         tryToExecute(
             execute = { getUserUseCase(screenState.value.craftsmanHomeUiState.phoneNumber) },
             onSuccess = { user ->
-                val government = getLocationInfoUseCase.getGovernorateById(user.location.governmentId)
+                val government =
+                    getLocationInfoUseCase.getGovernorateById(user.location.governmentId)
                 val city = getLocationInfoUseCase.getCityById(user.location.cityId)
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
                             currentUserName = user.fullName,
-                            location = listOfNotNull(government?.name, city?.name).joinToString(", "),
+                            location = listOfNotNull(
+                                government?.name,
+                                city?.name
+                            ).joinToString(", "),
                         )
                     )
                 )
@@ -136,15 +140,23 @@ class CraftsmanHomeViewModel(
     fun loadRecentRelatedJobs() {
         tryToObserve(
             observe = { getRecentRelatedJobsUseCase(screenState.value.craftsmanHomeUiState.userServices) },
-            onEach = {
-                updateState(
-                    screenState.value.copy(
-                        craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            recentRelatedJobs = it?.toRequestServiceUiStateMap() ?: emptyMap()
+            onEach = { jobs ->
+                jobs?.map { job ->
+                    val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
+                    val city = getLocationInfoUseCase.getCityById(job.cityId)
+                    job.toRequestServiceUiState(location = governorate?.name.orEmpty() + ", " + city?.name.orEmpty())
+                }.also { mappedJobs ->
+                    updateState(
+                        screenState.value.copy(
+                            craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                                recentRelatedJobs = mappedJobs?.associate { requestService ->
+                                    requestService.id to requestService
+                                } ?: emptyMap()
+                            )
                         )
                     )
-                )
-                getOffersCountForRecentJobs()
+                    getOffersCountForRecentJobs()
+                }
             },
             onError = {
                 updateState(
@@ -170,9 +182,10 @@ class CraftsmanHomeViewModel(
                     updateState(
                         screenState.value.copy(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                                recentRelatedJobs = screenState.value.craftsmanHomeUiState.recentRelatedJobs.toMutableMap().apply {
-                                    this[id] = updatedJob
-                                }
+                                recentRelatedJobs = screenState.value.craftsmanHomeUiState.recentRelatedJobs.toMutableMap()
+                                    .apply {
+                                        this[id] = updatedJob
+                                    }
                             )
                         )
                     )
@@ -188,14 +201,23 @@ class CraftsmanHomeViewModel(
         tryToObserve(
             observe = getAvailableJobsUseCase::invoke,
             onEach = {
-                updateState(
-                    screenState.value.copy(
-                        craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            availableJobs = it?.toRequestServiceUiStateMap() ?: emptyMap()
+                    jobs ->
+                jobs?.map { job ->
+                    val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
+                    val city = getLocationInfoUseCase.getCityById(job.cityId)
+                    job.toRequestServiceUiState(location = governorate?.name.orEmpty() + ", " + city?.name.orEmpty())
+                }.also { mappedJobs ->
+                    updateState(
+                        screenState.value.copy(
+                            craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                                availableJobs = mappedJobs?.associate { requestService ->
+                                    requestService.id to requestService
+                                } ?: emptyMap()
+                            )
                         )
                     )
-                )
-                getOffersCountForAvailableJobs()
+                    getOffersCountForAvailableJobs()
+                }
             },
             onError = {
                 updateState(
@@ -221,9 +243,10 @@ class CraftsmanHomeViewModel(
                     updateState(
                         screenState.value.copy(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                                availableJobs = screenState.value.craftsmanHomeUiState.availableJobs.toMutableMap().apply {
-                                    this[id] = updatedJob
-                                }
+                                availableJobs = screenState.value.craftsmanHomeUiState.availableJobs.toMutableMap()
+                                    .apply {
+                                        this[id] = updatedJob
+                                    }
                             )
                         )
                     )
