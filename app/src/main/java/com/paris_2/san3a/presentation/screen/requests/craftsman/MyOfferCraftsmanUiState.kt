@@ -38,7 +38,7 @@ data class JobUiState(
     val offer: OfferUiState? = null,
 )
 
-fun RequestService.toMyJobOfferUiState(location: String): JobUiState {
+fun RequestService.toMyJobOfferUiState(location: String, serviceImage: String?): JobUiState {
     return JobUiState(
         id = this.id,
         customerPhone = this.userId,
@@ -49,7 +49,7 @@ fun RequestService.toMyJobOfferUiState(location: String): JobUiState {
         status = this.requestStatus,
         time = this.time.toString(), //TODO
         serviceId = this.serviceId,
-        serviceImage = "",
+        serviceImage = serviceImage ?: "",
         title = this.title,
         selectedCraftsmanId = this.selectedCraftsmanId,
         description = this.description,
