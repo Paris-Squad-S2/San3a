@@ -270,25 +270,25 @@ fun MessageList(
                 }
                 Spacer(modifier = Modifier.width(10.dp))
             }
-            sendingMessage?.let { message ->
-                item {
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Message(
-                            images = message.images,
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .animateItem(),
-                            text = message.text,
-                            isReceived = message.isReceived,
-                            isSeen = null,
-                            time = message.time,
-                            profileImageUrl = null,
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
+        }
+        sendingMessage?.let { message ->
+            item {
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Message(
+                        images = message.images,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .animateItem(),
+                        text = message.text,
+                        isReceived = message.isReceived,
+                        isSeen = null,
+                        time = message.time,
+                        profileImageUrl = null,
+                    )
                 }
+                Spacer(modifier = Modifier.width(10.dp))
             }
         }
     }

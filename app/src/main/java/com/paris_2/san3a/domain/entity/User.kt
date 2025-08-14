@@ -25,7 +25,7 @@ data class User(
                 accountType = AccountType.entries.find {
                     it.name == data["accountType"]?.toString()
                 } ?: AccountType.CUSTOMER,
-                location = Location.fromJson(data["location"] as Map<String, Any>)
+                location = Location.fromJson(data["location"] as? Map<String, Any> ?: emptyMap())
             )
         }
     }
