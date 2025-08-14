@@ -14,7 +14,6 @@ import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSh
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import java.util.Locale
@@ -51,11 +50,11 @@ class CustomerHomeViewModel(
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
-                    bottomSheetSelectedGovernment = "",
-                    bottomSheetSelectedCity = "",
+                    bottomSheetSelectedGovernmentName = "",
+                    bottomSheetSelectedCityName = "",
                     bottomSheetAddressDetails = "",
                     isGovernmentSheetVisible = false,
-                    )
+                )
             )
         )
     }
@@ -167,27 +166,55 @@ class CustomerHomeViewModel(
         )
     }
 
-    override fun setBottomSheetSelectedGovernment(government: String) {
-        updateState(
-            screenState.value.copy(
-                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                    bottomSheetSelectedGovernment = government,
-                    isGovernmentSheetVisible = true,
-                    locationBottomSheetType = LocationBottomSheetContentType.CITY
+    override fun setBottomSheetSelectedGovernment(governmentId: Int) {
+        tryToExecute(
+            execute = { getLocationInfoUseCase.getGovernorateById(governmentId) },
+            onSuccess = { government ->
+                government?.let {
+                    updateState(
+                        screenState.value.copy(
+                            bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                                bottomSheetSelectedGovernmentName = government.name,
+                                bottomSheetSelectedGovernmentId = government.id,
+                                bottomSheetSelectedCityName = "",
+                                bottomSheetSelectedCityId = null,
+                            )
+                        )
+                    )
+                    getCities(government.id)
+                }
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it.message ?: UNKNOWN_ERROR
+                    )
                 )
-            )
+            }
         )
-        getCities(government)
     }
 
-    override fun setBottomSheetSelectedCity(city: String) {
-        updateState(
-            screenState.value.copy(
-                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                    bottomSheetSelectedCity = city,
-                    isGovernmentSheetVisible = false,
+    override fun setBottomSheetSelectedCity(cityId: Int) {
+        tryToExecute(
+            execute = { getLocationInfoUseCase.getCityById(cityId) },
+            onSuccess = { city ->
+                updateState(
+                    screenState.value.copy(
+                        bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                            bottomSheetSelectedCityName = city?.name.orEmpty(),
+                            bottomSheetSelectedCityId = city?.id,
+                            isGovernmentSheetVisible = false
+                        )
+                    )
                 )
-            )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = it.message ?: UNKNOWN_ERROR
+                    )
+                )
+            }
         )
     }
 
@@ -219,8 +246,8 @@ class CustomerHomeViewModel(
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
-                    bottomSheetSelectedGovernment = "",
-                    bottomSheetSelectedCity = "",
+                    bottomSheetSelectedGovernmentName = "",
+                    bottomSheetSelectedCityName = "",
                     bottomSheetAddressDetails = "",
                     isGovernmentSheetVisible = false,
                 )
@@ -236,7 +263,32 @@ class CustomerHomeViewModel(
         onSearch(query)
     }
 
-    override fun createRequest(service: RequestServiceUiState) {
+    override fun createRequest() {
+        if (screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId == null
+            || screenState.value.bottomSheetUiState.bottomSheetSelectedCityId == null
+        ) {
+            updateState(
+                screenState.value.copy(
+                    errorMessage = "Please select a government and city",
+                    buttonSheetState = AppButtonState.Enable,
+                    showSnackBarError = true
+                )
+            )
+            return
+        }
+
+        val request = RequestServiceUiState(
+            serviceType = screenState.value.bottomSheetUiState.bottomSheetServiceTitle,
+            title = screenState.value.bottomSheetUiState.bottomSheetSubtitle,
+            description = screenState.value.bottomSheetUiState.bottomSheetDescription,
+            governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId
+                ?: 0,
+            cityId = screenState.value.bottomSheetUiState.bottomSheetSelectedCityId ?: 0,
+            locationDetails = screenState.value.bottomSheetUiState.bottomSheetAddressDetails,
+            image = screenState.value.bottomSheetUiState.bottomSheetImages,
+            userId = screenState.value.customerUiState.id,
+            serviceId = screenState.value.bottomSheetUiState.bottomSheetServiceId,
+        )
         tryToExecute(
             execute = {
                 updateState(
@@ -244,7 +296,7 @@ class CustomerHomeViewModel(
                         buttonSheetState = AppButtonState.Loading
                     )
                 )
-                requestServicesUseCase(service.toRequestService())
+                requestServicesUseCase(request.toRequestService())
             },
             onSuccess = {
                 updateState(
@@ -255,9 +307,9 @@ class CustomerHomeViewModel(
                         buttonSheetState = AppButtonState.Enable,
                         showSnackBarSuccess = true,
 
-                    )
+                        )
                 )
-                updateNumOfRequests(service.serviceId)
+                updateNumOfRequests(request.serviceId)
             },
             onError = {
                 updateState(
@@ -286,18 +338,14 @@ class CustomerHomeViewModel(
 
     private fun getGovernments() {
         tryToExecute(
-            execute = { getLocationInfoUseCase.getGovernments(countryName = COUNTRY_NAME) },
+            execute = { getLocationInfoUseCase.getGovernments() },
             onSuccess = { governments ->
                 updateState(
                     screenState.value.copy(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                            bottomSheetGovernments = governments.names,
-                            bottomSheetSelectedGovernment = ""
-                        ),
-                        customerUiState = screenState.value.customerUiState.copy(
-                            locationUiState = screenState.value.customerUiState.locationUiState.copy(
-                                government = ""
-                            ),
+                            bottomSheetGovernments = governments,
+                            bottomSheetSelectedGovernmentName = "",
+                            locationBottomSheetType = LocationBottomSheetContentType.GOVERNMENT,
                         ),
                     )
                 )
@@ -313,28 +361,25 @@ class CustomerHomeViewModel(
         )
     }
 
-    private fun getCities(stateName: String) {
+    private fun getCities(governmentId: Int) {
         tryToExecute(
             execute = {
                 getLocationInfoUseCase.getCities(
-                    countryName = COUNTRY_NAME,
-                    stateName = stateName
+                    governorateId = governmentId
                 )
             },
             onSuccess = { cities ->
-                updateState(
-                    screenState.value.copy(
-                        bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                            bottomSheetCities = cities.names,
-                            bottomSheetSelectedCity = "",
-                        ),
-                        customerUiState = screenState.value.customerUiState.copy(
-                            locationUiState = screenState.value.customerUiState.locationUiState.copy(
-                                city = ""
+                if (cities.isNotEmpty()) {
+                    updateState(
+                        screenState.value.copy(
+                            bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                                bottomSheetCities = cities,
+                                bottomSheetSelectedCityName = "",
+                                locationBottomSheetType = LocationBottomSheetContentType.CITY,
                             ),
-                        ),
+                        )
                     )
-                )
+                }
             },
             onError = { errorMessage ->
                 updateState(
@@ -402,13 +447,16 @@ class CustomerHomeViewModel(
         tryToExecute(
             execute = { getUserUseCase(getPhoneNumberUseCase()) },
             onSuccess = {
+                val governorate =
+                    getLocationInfoUseCase.getGovernorateById(it.location.governmentId)
+                val city = getLocationInfoUseCase.getCityById(it.location.cityId)
                 updateState(
                     screenState.value.copy(
                         customerUiState = screenState.value.customerUiState.copy(
                             id = it.id,
                             currentUserName = it.fullName,
-                            government = it.location.government,
-                            city = it.location.cityName,
+                            government = governorate?.name.orEmpty(),
+                            city = city?.name.orEmpty(),
                         )
                     )
                 )
@@ -502,6 +550,5 @@ class CustomerHomeViewModel(
         const val ENGLISH_DESCRIPTION = "englishDescription"
         const val ARABIC_LANGUAGE = "ar"
         const val UNKNOWN_ERROR = "Unknown Error"
-        const val COUNTRY_NAME = "Egypt"
     }
 }

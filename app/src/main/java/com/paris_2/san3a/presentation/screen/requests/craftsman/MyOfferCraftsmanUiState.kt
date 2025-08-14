@@ -23,10 +23,6 @@ data class MyOfferCraftsmanUiState(
     val canceled: Map<String, JobUiState> = emptyMap(),
 )
 
-fun List<RequestService>.toMyJobOfferUiStateMap(): Map<String, JobUiState> {
-    return this.associateBy { it.id }.mapValues { it.value.toMyJobOfferUiState() }
-}
-
 data class JobUiState(
     val id: String = "",
     val customerPhone: String = "",
@@ -41,12 +37,14 @@ data class JobUiState(
     val offer: OfferUiState? = null,
 )
 
-fun RequestService.toMyJobOfferUiState(): JobUiState {
+fun RequestService.toMyJobOfferUiState(location: String): JobUiState {
     return JobUiState(
         id = this.id,
         customerPhone = this.userId,
         serviceType = this.serviceType,
-        address = this.location + " " + this.locationDetails,
+        address = listOf(location, this.locationDetails)
+            .filter { it.isNotBlank() }
+            .joinToString(", "),
         status = this.requestStatus,
         time = this.time.toString(), //TODO
         serviceId = this.serviceId,
@@ -66,6 +64,7 @@ data class OfferUiState(
     val isAccepted: Boolean,
     val craftsMan: CraftsManUiState
 )
+
 fun Offer?.toUiState(): OfferUiState? {
     return this?.let {
         OfferUiState(
@@ -81,7 +80,7 @@ fun Offer?.toUiState(): OfferUiState? {
     }
 }
 
-fun User.toCraftsManUiState(rating: Float) : CraftsManUiState{
+fun User.toCraftsManUiState(rating: Float): CraftsManUiState {
     return CraftsManUiState(
         profileUrl = this.profilePhoto.toUri(),
         name = this.fullName,
@@ -100,13 +99,6 @@ data class CraftsManUiState(
     val phoneNumber: String = "",
     val isVerify: Boolean = false,
 )
-
-
-fun List<Offer>.toUiStateList(): List<OfferUiState?> = map { it.toUiState() }
-
-fun List<RequestService>.toMyJobOfferUiStateList(): List<JobUiState> {
-    return this.map { it.toMyJobOfferUiState() }
-}
 
 enum class ListType {
     ONGOING, COMPLETED, CANCELED

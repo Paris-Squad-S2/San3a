@@ -23,7 +23,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun LocationCard(
     modifier: Modifier = Modifier,
     title: String,
-    onClick: (String) -> Unit = {},
+    onClick: () -> Unit = {},
     showTrailingIcon: Boolean = false,
 ) {
     Card(
@@ -31,9 +31,8 @@ fun LocationCard(
             .fillMaxWidth()
             .padding(vertical = 4.dp)
             .clickable(
-                enabled = true, onClick = {
-                    onClick(title)
-                }, interactionSource = remember { MutableInteractionSource() }, indication = null
+                onClick = onClick,
+                interactionSource = remember { MutableInteractionSource() }, indication = null
             ),
         colors = CardDefaults.cardColors(containerColor = Theme.colors.background.bottomSheetCard)
     ) {

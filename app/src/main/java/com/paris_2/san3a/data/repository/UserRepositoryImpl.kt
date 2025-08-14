@@ -196,8 +196,8 @@ class UserRepositoryImpl(
     }
 
     override suspend fun updateEarningsForCraftsman(
-        userId: String,
         craftsmanId: String,
+        userId: String,
         requestId: String,
         earnings: Double
     ) {
@@ -207,10 +207,10 @@ class UserRepositoryImpl(
 
         safeCall(UpdateEarningsForCraftsmanException()) {
             userRemoteDataSource.updateEarningsForCraftsman(
-                userId,
-                craftsmanId,
-                requestId,
-                earnings
+                craftsmanId = craftsmanId,
+                userId = userId,
+                requestId = requestId,
+                earnings = earnings
             )
         }
     }
