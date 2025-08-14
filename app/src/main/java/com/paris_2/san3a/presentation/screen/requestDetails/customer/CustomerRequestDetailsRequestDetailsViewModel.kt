@@ -54,7 +54,13 @@ class CustomerRequestDetailsRequestDetailsViewModel(
                         isLoading = false,
                         error = null,
                         uiState = screenState.value.uiState.copy(
-                            request = request.toRequestServiceUIState(location = "${governorate?.name.orEmpty()}, ${city?.name.orEmpty()}"),
+                            request = request.toRequestServiceUIState(
+                                location =
+                                    listOfNotNull(
+                                        governorate?.name,
+                                        city?.name
+                                    ).joinToString(", ")
+                            ),
                         ),
                     )
                 )
@@ -78,7 +84,8 @@ class CustomerRequestDetailsRequestDetailsViewModel(
                         isLoading = false,
                         error = null,
                         uiState = screenState.value.uiState.copy(
-                            offers = offers?.sortedByDescending { it.isAccepted }?.toOfferUiStateMap()
+                            offers = offers?.sortedByDescending { it.isAccepted }
+                                ?.toOfferUiStateMap()
                                 ?: emptyMap(),
                         )
                     )
@@ -101,7 +108,8 @@ class CustomerRequestDetailsRequestDetailsViewModel(
                 screenState.value.uiState.offers.forEach { offer ->
                     val craftsmanId = offer.value.craftsmanId
                     val userDeferred = scope.async { getUserUseCase(craftsmanId) }
-                    val ratingDeferred = scope.async { getRatingForCraftsmanUseCase(craftsmanId).first() }
+                    val ratingDeferred =
+                        scope.async { getRatingForCraftsmanUseCase(craftsmanId).first() }
                     val user = userDeferred.await()
                     val rating = ratingDeferred.await()
                     user.toRequestOfferUiState(offer.value, rating).also { offerUiState ->
@@ -170,7 +178,11 @@ class CustomerRequestDetailsRequestDetailsViewModel(
     override fun onAcceptOfferClick(offerId: String, craftsmanId: String) {
         tryToExecute(
             execute = {
-                acceptOfferUseCase(offerId = offerId, craftsmanId = craftsmanId, requestId = requestId)
+                acceptOfferUseCase(
+                    offerId = offerId,
+                    craftsmanId = craftsmanId,
+                    requestId = requestId
+                )
             },
             onSuccess = {
                 addNotificationUseCase(

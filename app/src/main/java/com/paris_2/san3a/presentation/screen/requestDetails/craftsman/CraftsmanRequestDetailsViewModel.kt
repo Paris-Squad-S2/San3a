@@ -59,7 +59,13 @@ class CraftsmanRequestDetailsViewModel(
                 updateState(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
-                            request = it.toRequestServiceUIState(location = "${governorate?.name.orEmpty()}, ${city?.name.orEmpty()}"),
+                            request = it.toRequestServiceUIState(
+                                location =
+                                    listOfNotNull(
+                                        governorate?.name,
+                                        city?.name
+                                    ).joinToString(", ")
+                            ),
                         ),
                     )
                 )
