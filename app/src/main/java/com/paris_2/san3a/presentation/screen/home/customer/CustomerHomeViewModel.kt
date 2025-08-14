@@ -54,7 +54,7 @@ class CustomerHomeViewModel(
                     bottomSheetSelectedCityName = "",
                     bottomSheetAddressDetails = "",
                     isGovernmentSheetVisible = false,
-                    )
+                )
             )
         )
     }
@@ -170,17 +170,19 @@ class CustomerHomeViewModel(
         tryToExecute(
             execute = { getLocationInfoUseCase.getGovernorateById(governmentId) },
             onSuccess = { government ->
-                updateState(
-                    screenState.value.copy(
-                        bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                            bottomSheetSelectedGovernmentName = government?.name.orEmpty(),
-                            bottomSheetSelectedGovernmentId = government?.id,
-                            bottomSheetSelectedCityName = "",
-                            bottomSheetSelectedCityId = null,
+                government?.let {
+                    updateState(
+                        screenState.value.copy(
+                            bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                                bottomSheetSelectedGovernmentName = government.name,
+                                bottomSheetSelectedGovernmentId = government.id,
+                                bottomSheetSelectedCityName = "",
+                                bottomSheetSelectedCityId = null,
+                            )
                         )
                     )
-                )
-                getCities(government?.name.orEmpty())
+                    getCities(government.id)
+                }
             },
             onError = {
                 updateState(
@@ -201,6 +203,7 @@ class CustomerHomeViewModel(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                             bottomSheetSelectedCityName = city?.name.orEmpty(),
                             bottomSheetSelectedCityId = city?.id,
+                            isGovernmentSheetVisible = false
                         )
                     )
                 )
@@ -262,7 +265,8 @@ class CustomerHomeViewModel(
 
     override fun createRequest() {
         if (screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId == null
-            || screenState.value.bottomSheetUiState.bottomSheetSelectedCityId == null){
+            || screenState.value.bottomSheetUiState.bottomSheetSelectedCityId == null
+        ) {
             updateState(
                 screenState.value.copy(
                     errorMessage = "Please select a government and city",
@@ -277,7 +281,8 @@ class CustomerHomeViewModel(
             serviceType = screenState.value.bottomSheetUiState.bottomSheetServiceTitle,
             title = screenState.value.bottomSheetUiState.bottomSheetSubtitle,
             description = screenState.value.bottomSheetUiState.bottomSheetDescription,
-            governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId ?: 0,
+            governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId
+                ?: 0,
             cityId = screenState.value.bottomSheetUiState.bottomSheetSelectedCityId ?: 0,
             locationDetails = screenState.value.bottomSheetUiState.bottomSheetAddressDetails,
             image = screenState.value.bottomSheetUiState.bottomSheetImages,
@@ -302,7 +307,7 @@ class CustomerHomeViewModel(
                         buttonSheetState = AppButtonState.Enable,
                         showSnackBarSuccess = true,
 
-                    )
+                        )
                 )
                 updateNumOfRequests(request.serviceId)
             },
@@ -339,7 +344,8 @@ class CustomerHomeViewModel(
                     screenState.value.copy(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                             bottomSheetGovernments = governments,
-                            bottomSheetSelectedGovernmentName = ""
+                            bottomSheetSelectedGovernmentName = "",
+                            locationBottomSheetType = LocationBottomSheetContentType.GOVERNMENT,
                         ),
                     )
                 )
@@ -355,22 +361,25 @@ class CustomerHomeViewModel(
         )
     }
 
-    private fun getCities(stateName: String) {
+    private fun getCities(governmentId: Int) {
         tryToExecute(
             execute = {
                 getLocationInfoUseCase.getCities(
-                    governorateId = 1 //TODO
+                    governorateId = governmentId
                 )
             },
             onSuccess = { cities ->
-                updateState(
-                    screenState.value.copy(
-                        bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                            bottomSheetCities = cities,
-                            bottomSheetSelectedCityName = "",
-                        ),
+                if (cities.isNotEmpty()) {
+                    updateState(
+                        screenState.value.copy(
+                            bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                                bottomSheetCities = cities,
+                                bottomSheetSelectedCityName = "",
+                                locationBottomSheetType = LocationBottomSheetContentType.CITY,
+                            ),
+                        )
                     )
-                )
+                }
             },
             onError = { errorMessage ->
                 updateState(
@@ -438,7 +447,8 @@ class CustomerHomeViewModel(
         tryToExecute(
             execute = { getUserUseCase(getPhoneNumberUseCase()) },
             onSuccess = {
-                val governorate = getLocationInfoUseCase.getGovernorateById(it.location.governmentId)
+                val governorate =
+                    getLocationInfoUseCase.getGovernorateById(it.location.governmentId)
                 val city = getLocationInfoUseCase.getCityById(it.location.cityId)
                 updateState(
                     screenState.value.copy(

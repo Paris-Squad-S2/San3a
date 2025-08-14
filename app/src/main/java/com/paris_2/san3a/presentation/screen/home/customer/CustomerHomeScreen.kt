@@ -226,11 +226,7 @@ private fun CustomerHomeScreenContent(
                             onGetLocationClicked = {
                                 action.showGovernmentSheet(true)
                             },
-                            locationBottomSheetContentType = if (state.bottomSheetUiState.bottomSheetSelectedGovernmentName.isNotEmpty()) {
-                                LocationBottomSheetContentType.CITY
-                            } else {
-                                LocationBottomSheetContentType.GOVERNMENT
-                            }
+                            locationBottomSheetContentType = state.bottomSheetUiState.locationBottomSheetType
                         )
                     }
                 }
