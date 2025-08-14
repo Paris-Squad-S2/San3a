@@ -42,7 +42,9 @@ fun RequestService.toMyJobOfferUiState(location: String): JobUiState {
         id = this.id,
         customerPhone = this.userId,
         serviceType = this.serviceType,
-        address = location + " " + this.locationDetails,
+        address = listOf(location, this.locationDetails)
+            .filter { it.isNotBlank() }
+            .joinToString(", "),
         status = this.requestStatus,
         time = this.time.toString(), //TODO
         serviceId = this.serviceId,
