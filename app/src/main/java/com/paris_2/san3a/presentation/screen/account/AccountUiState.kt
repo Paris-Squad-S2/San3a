@@ -44,6 +44,7 @@ data class ServiceUiState(
     val id: String = "",
     val serviceTitle: String = "",
     val serviceDescription: String = "",
+    val serviceImage: String = "",
     val isSelected: Boolean = false,
 )
 

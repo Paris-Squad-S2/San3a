@@ -12,7 +12,8 @@ fun mapServiceToUiState(services: List<Service>): List<ServiceUiState> {
                 serviceTitle = it.title[currentLocale] ?: it.title.values.firstOrNull() ?: "",
                 serviceDescription = it.description[currentLocale]
                     ?: it.description.values.firstOrNull() ?: "",
-                isSelected = false
+                isSelected = false,
+                serviceImage = it.imageUrl
             )
         }
     }

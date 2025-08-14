@@ -54,7 +54,7 @@ fun MyJobOfferCard(
                 ServiceTypeCard(
                     title = jobUiState.title,
                     serviceType = jobUiState.serviceType,
-                    serviceId = jobUiState.serviceId,
+                    serviceImageUrl = jobUiState.serviceImage,
                 )
 
                 Row(Modifier.padding(top = 16.dp)) {

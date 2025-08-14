@@ -9,6 +9,7 @@ import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
@@ -31,6 +32,7 @@ class MyJobsCraftsmanViewModel(
     private val addNotificationUseCase: AddNotificationUseCase,
     private val getCraftManOfferOnRequestUseCase: GetCraftManOfferOnRequestUseCase,
     private val createChatUseCase: CreateChatUseCase,
+    private val getAllServicesUseCase: GetAllServicesUseCase,
 ) : BaseViewModel<MyJobsCraftsmanScreenState>(MyJobsCraftsmanScreenState()),
     MyJobCraftsmanInteractionListener {
 
@@ -63,6 +65,7 @@ class MyJobsCraftsmanViewModel(
                 )
             )
         )
+        getUserServices()
         getCraftsManOfferOnRequest()
     }
 
@@ -93,18 +96,32 @@ class MyJobsCraftsmanViewModel(
             result?.filter { it.selectedCraftsmanId.isNullOrBlank() || it.selectedCraftsmanId == screenState.value.myOffersCraftsmanUiState.craftsManId }
                 ?: emptyList()
         Log.d("MyOfferCraftsmanViewModel", "Filtered requests: $filteredResult")
+        val ongoing = filteredResult.filter { it.requestStatus == RequestStatus.ONGOING }
+            .toMyJobOfferUiStateMap()
+        val completed = filteredResult.filter { it.requestStatus == RequestStatus.COMPLETED }
+            .toMyJobOfferUiStateMap()
+        val canceled = filteredResult.filter { it.requestStatus == RequestStatus.CANCELLED }
+            .toMyJobOfferUiStateMap()
+
+        val updatedOngoing = ongoing.mapValues { (_, ui) ->
+            ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+        }
+        val updatedCompleted = completed.mapValues { (_, ui) ->
+            ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+        }
+        val updatedCanceled = canceled.mapValues { (_, ui) ->
+            ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+        }
+
         updateState(
             MyJobsCraftsmanScreenState(
                 isLoading = false,
                 errorMessage = null,
                 showSnackBarError = false,
                 myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                    ongoing = filteredResult.filter { it.requestStatus == RequestStatus.ONGOING }
-                        .toMyJobOfferUiStateMap(),
-                    completed = filteredResult.filter { it.requestStatus == RequestStatus.COMPLETED }
-                        .toMyJobOfferUiStateMap(),
-                    canceled = filteredResult.filter { it.requestStatus == RequestStatus.CANCELLED }
-                        .toMyJobOfferUiStateMap()
+                    ongoing = updatedOngoing,
+                    completed = updatedCompleted,
+                    canceled = updatedCanceled
                 )
             )
         )
@@ -220,27 +237,35 @@ class MyJobsCraftsmanViewModel(
 
         Log.d("MyOfferCraftsmanViewModel", "Updating request $requestId with offer: $offer")
 
-        updatedRequests[requestId]?.copy(
+        updatedRequests[requestId] = updatedRequests[requestId]?.copy(
             offer = offer.toUiState()
-        )
+        ) ?: return
 
-        Log.d(
-            "MyOfferCraftsmanViewModel",
-            "Updated request $requestId: ${updatedRequests[requestId]}"
-        )
-
-        val updatedState = when (listType) {
-            ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.copy(ongoing = updatedRequests)
-            ListType.COMPLETED -> screenState.value.myOffersCraftsmanUiState.copy(completed = updatedRequests)
-            ListType.CANCELED -> screenState.value.myOffersCraftsmanUiState.copy(canceled = updatedRequests)
-        }
-
-        updateState(
-            screenState.value.copy(
-                myOffersCraftsmanUiState = updatedState
+        when (listType) {
+            ListType.ONGOING -> updateState(
+                screenState.value.copy(
+                    myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                        ongoing = updatedRequests
+                    )
+                )
             )
-        )
 
+            ListType.COMPLETED -> updateState(
+                screenState.value.copy(
+                    myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                        completed = updatedRequests
+                    )
+                )
+            )
+
+            ListType.CANCELED -> updateState(
+                screenState.value.copy(
+                    myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                        canceled = updatedRequests
+                    )
+                )
+            )
+        }
         offer?.let {
             getCraftsManDetails(
                 requestId = requestId,
@@ -340,6 +365,38 @@ class MyJobsCraftsmanViewModel(
         }
     }
 
+    private var serviceIdToImage: Map<String, String> = emptyMap()
+
+    private fun getUserServices() {
+        tryToObserve(
+            observe = getAllServicesUseCase::invoke,
+            onEach = { servicesList ->
+                serviceIdToImage = (servicesList ?: emptyList()).associate { it.id to it.imageUrl }
+
+                // Update only the serviceImage fields for current items
+                val current = screenState.value.myOffersCraftsmanUiState
+                val updatedOngoing = current.ongoing.mapValues { (_, ui) ->
+                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                }
+                val updatedCompleted = current.completed.mapValues { (_, ui) ->
+                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                }
+                val updatedCanceled = current.canceled.mapValues { (_, ui) ->
+                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                }
+
+                updateState(
+                    screenState.value.copy(
+                        myOffersCraftsmanUiState = current.copy(
+                            ongoing = updatedOngoing,
+                            completed = updatedCompleted,
+                            canceled = updatedCanceled,
+                        )
+                    )
+                )
+            }
+        )
+    }
 
     override fun onMarkAsDone(requestId: String, requestTitle: String, customerId: String) {
         tryToExecute(
@@ -484,6 +541,7 @@ class MyJobsCraftsmanViewModel(
                 showSnackBarError = false
             )
         )
+        getUserServices()
         getCraftsManOfferOnRequest()
     }
 

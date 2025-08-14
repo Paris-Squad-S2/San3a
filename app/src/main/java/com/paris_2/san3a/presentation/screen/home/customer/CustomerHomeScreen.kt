@@ -41,9 +41,6 @@ import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSh
 import com.paris_2.san3a.presentation.screen.account.components.LocationContent
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.RequestBottomSheetContent
 import com.paris_2.san3a.presentation.screen.home.customer.component.MostRequestedServices
-import com.paris_2.san3a.presentation.screen.home.utils.getResource
-import com.paris_2.san3a.presentation.screen.home.utils.getResourceColors
-import com.paris_2.san3a.presentation.screen.home.utils.getResourceTint
 import com.paris_2.san3a.presentation.screen.home.utils.getSuggestions
 import com.paris_2.san3a.presentation.shared.components.AdCard
 import com.paris_2.san3a.presentation.shared.components.AddPhotos
@@ -150,7 +147,7 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.SELECT_SERVICE -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        icon = state.bottomSheetUiState.bottomSheetIconRes,
+                        imageUrl = state.bottomSheetUiState.bottomSheetServiceImageUrl,
                         color = Theme.colors.additional.primary.blue,
                         subTitle = stringResource(R.string.what_do_you_need_help_with),
                         buttonTitle = stringResource(R.string.next),
@@ -177,7 +174,7 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.PROBLEM_DESCRIPTION -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        icon = state.bottomSheetUiState.bottomSheetIconRes,
+                        imageUrl = state.bottomSheetUiState.bottomSheetServiceImageUrl,
                         color = Theme.colors.additional.primary.blue,
                         subTitle = stringResource(R.string.describe_the_problem_in_detail),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetDescription.isNotEmpty(),
@@ -198,7 +195,7 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.SELECT_LOCATION -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        icon = state.bottomSheetUiState.bottomSheetIconRes,
+                        imageUrl = state.bottomSheetUiState.bottomSheetServiceImageUrl,
                         color = Theme.colors.additional.primary.blue,
                         subTitle = stringResource(R.string.where_are_you_from),
                         buttonTitle = stringResource(R.string.next),
@@ -238,7 +235,7 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.IMAGE_UPLOAD -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        icon = state.bottomSheetUiState.bottomSheetIconRes,
+                        imageUrl = state.bottomSheetUiState.bottomSheetServiceImageUrl,
                         color = Theme.colors.additional.primary.blue,
                         subTitle = stringResource(R.string.add_some_photos),
                         optionalText = stringResource(R.string.optional),
@@ -362,7 +359,8 @@ private fun CustomerHomeScreenContent(
                             if (ContextCompat.checkSelfPermission(
                                     context,
                                     Manifest.permission.RECORD_AUDIO
-                                ) == PackageManager.PERMISSION_GRANTED) {
+                                ) == PackageManager.PERMISSION_GRANTED
+                            ) {
                                 action.onMicClick()
                             } else {
                                 permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
@@ -380,8 +378,7 @@ private fun CustomerHomeScreenContent(
                             isArabic = isArabic,
                             action = action
                         ) { selectedTitle, selectedServiceId ->
-                            val iconRes = getResource(selectedServiceId)
-                            action.initBottomSheet(selectedTitle, selectedServiceId, iconRes)
+                            action.initBottomSheet(selectedTitle, selectedServiceId)
                         }
                     }
                 }
@@ -415,9 +412,7 @@ private fun CustomerHomeScreenContent(
                                 ?: "",
                             description = service.description[if (isArabic) ARABIC_DESCRIPTION else ENGLISH_DESCRIPTION]
                                 ?: "",
-                            tint = getResourceTint(service.id),
-                            iconColor = getResourceColors(service.id),
-                            painter = painterResource(getResource(service.id)),
+                            serviceImageUrl = service.imageUrl,
                             isLarge = false,
                             modifier = Modifier
                                 .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
@@ -461,15 +456,15 @@ private fun CustomerHomeScreenContent(
             }
         }
         AnimatedVisibility(state.showSnackBarSuccess) {
-                SnackBar(
-                    text = R.string.service_request_send_successfully,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .padding(horizontal = 12.dp, vertical = 16.dp)
-                        .align(Alignment.TopCenter),
-                    onClick = action::onDismissSnackBar
-                )
+            SnackBar(
+                text = R.string.service_request_send_successfully,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(horizontal = 12.dp, vertical = 16.dp)
+                    .align(Alignment.TopCenter),
+                onClick = action::onDismissSnackBar
+            )
 
         }
     }

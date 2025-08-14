@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -15,14 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.paris_2.san3a.R
+import coil3.compose.AsyncImage
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
@@ -30,31 +28,25 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun CategoryItem(
     title: String,
     description: String,
-    tint: Color,
-    iconColor: Color,
+    serviceImageUrl: String,
     modifier: Modifier = Modifier,
     isLarge: Boolean = true,
-    painter: Painter,
     onclick: () -> Unit
 ){
     if (isLarge){
         CategoryItemLarge(
             title = title,
             description = description,
-            tint = tint,
-            iconColor = iconColor,
             modifier = modifier,
-            painter = painter,
+            serviceImageUrl = serviceImageUrl,
             onclick = onclick
         )
     }else{
         CategoryItemSmall(
             title = title,
             description = description,
-            tint = tint,
-            iconColor = iconColor,
             modifier = modifier,
-            painter = painter,
+            serviceImageUrl = serviceImageUrl,
             onclick = onclick
         )
     }
@@ -65,10 +57,8 @@ fun CategoryItem(
 fun CategoryItemLarge(
     title: String,
     description: String,
-    tint: Color,
-    iconColor: Color,
     modifier: Modifier = Modifier,
-    painter: Painter,
+    serviceImageUrl: String,
     onclick: () -> Unit
 ){
     Box(
@@ -82,11 +72,13 @@ fun CategoryItemLarge(
             modifier = Modifier
                 .padding(start = 16.dp , top = 16.dp , bottom = 16.dp)
         ) {
-            CategoryIconBox(
-                painter = painter,
-                iconColor = iconColor,
-                tint = tint,
-                modifier = Modifier.padding(bottom = 12.dp)
+            AsyncImage(
+                modifier = Modifier
+                    .size(54.dp)
+                    .clip(RoundedCornerShape(Theme.radius.extraLarge))
+                    .padding(bottom = 12.dp),
+                model = serviceImageUrl,
+                contentDescription = null
             )
             Text(
                 text = title,
@@ -109,10 +101,8 @@ fun CategoryItemLarge(
 fun CategoryItemSmall(
     title: String,
     description: String,
-    tint: Color,
-    iconColor: Color,
     modifier: Modifier = Modifier,
-    painter: Painter,
+    serviceImageUrl: String,
     onclick: () -> Unit
 ){
     Box(
@@ -129,12 +119,13 @@ fun CategoryItemSmall(
                 .padding(start = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ){
-            CategoryIconBox(
-                painter = painter,
-                iconColor = iconColor,
-                tint = tint
+            AsyncImage(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(Theme.radius.extraLarge)),
+                model =serviceImageUrl,
+                contentDescription = null
             )
-
             Column(
                 modifier = Modifier.padding(start = 12.dp)
             ) {
@@ -162,9 +153,7 @@ private fun Preview(){
         CategoryItem(
             title = "Title",
             description = "Description",
-            tint = Theme.colors.additional.primary.blue,
-            iconColor = Theme.colors.additional.secondary.blue,
-            painter = painterResource(R.drawable.ic_conditioner_bold),
+            serviceImageUrl = "",
             onclick = {}
         )
     }
@@ -178,10 +167,8 @@ private fun PreviewSmall(){
         CategoryItem(
             title = "Title",
             description = "Description",
-            tint = Theme.colors.additional.primary.blue,
-            iconColor = Theme.colors.additional.secondary.blue,
             isLarge = false,
-            painter = painterResource(R.drawable.ic_conditioner_bold),
+            serviceImageUrl = "",
             onclick = {}
         )
     }
@@ -195,9 +182,7 @@ private fun PreviewLargeAC(){
         CategoryItem(
             title = "Title",
             description = "Description",
-            tint = Theme.colors.additional.primary.red,
-            iconColor = Theme.colors.additional.secondary.red,
-            painter = painterResource(R.drawable.ic_washing_machine_bold),
+            serviceImageUrl = "",
             onclick = {}
         )
     }
@@ -211,10 +196,8 @@ private fun PreviewSmallAC(){
         CategoryItem(
             title = "Title",
             description = "Description",
-            tint = Theme.colors.additional.primary.red,
-            iconColor = Theme.colors.additional.secondary.red,
             isLarge = false,
-            painter = painterResource(R.drawable.ic_washing_machine_bold),
+            serviceImageUrl = "",
             onclick = {}
         )
     }

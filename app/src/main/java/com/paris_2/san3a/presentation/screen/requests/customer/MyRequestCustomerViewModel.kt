@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.requests.customer
 import android.util.Log
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.usecase.AddRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetCustomerRatingOnCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
@@ -27,11 +28,51 @@ class MyRequestCustomerViewModel(
     private val getCustomerRatingOnCraftsmanUseCase: GetCustomerRatingOnCraftsmanUseCase,
     private val addRatingForCraftsmanUseCase: AddRatingForCraftsmanUseCase,
     private val createChatUseCase: CreateChatUseCase,
+    private val getAllServicesUseCase: GetAllServicesUseCase,
 ) : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState()),
     MyRequestCustomerInteractionListener {
 
     init {
         getCustomerPhone()
+    }
+
+    private fun getUserServices() {
+        tryToObserve(
+            observe = { getAllServicesUseCase() },
+            onEach = { servicesList ->
+                val idToImage = (servicesList ?: emptyList()).associate { it.id to it.imageUrl }
+
+                val current = screenState.value.myRequestCustomerUiState
+
+                val updatedOngoing = current.ongoing.mapValues { (_, req) ->
+                    req.copy(serviceImage = idToImage[req.serviceId] ?: req.serviceImage)
+                }
+                val updatedCompleted = current.completed.mapValues { (_, req) ->
+                    req.copy(serviceImage = idToImage[req.serviceId] ?: req.serviceImage)
+                }
+                val updatedCanceled = current.canceled.mapValues { (_, req) ->
+                    req.copy(serviceImage = idToImage[req.serviceId] ?: req.serviceImage)
+                }
+
+                updateState(
+                    screenState.value.copy(
+                        myRequestCustomerUiState = current.copy(
+                            services = idToImage,
+                            ongoing = updatedOngoing,
+                            completed = updatedCompleted,
+                            canceled = updatedCanceled,
+                        )
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = "Failed to fetch services",
+                    )
+                )
+            }
+        )
     }
 
     private fun getCustomerPhone() {
@@ -50,6 +91,7 @@ class MyRequestCustomerViewModel(
                         ),
                     )
                 )
+                getUserServices()
                 getRequests()
             },
             onError = {
@@ -72,11 +114,11 @@ class MyRequestCustomerViewModel(
                     MyRequestCustomerScreenState(
                         myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
                             ongoing = result?.filter { it.requestStatus == RequestStatus.ONGOING }
-                                ?.toRequestServiceUiStateMap() ?: emptyMap(),
+                                ?.toRequestServiceUiStateMap(screenState.value.myRequestCustomerUiState.services) ?: emptyMap(),
                             completed = result?.filter { it.requestStatus == RequestStatus.COMPLETED }
-                                ?.toRequestServiceUiStateMap() ?: emptyMap(),
+                                ?.toRequestServiceUiStateMap(screenState.value.myRequestCustomerUiState.services) ?: emptyMap(),
                             canceled = result?.filter { it.requestStatus == RequestStatus.CANCELLED }
-                                ?.toRequestServiceUiStateMap() ?: emptyMap(),
+                                ?.toRequestServiceUiStateMap(screenState.value.myRequestCustomerUiState.services) ?: emptyMap(),
                         ),
                     )
                 )

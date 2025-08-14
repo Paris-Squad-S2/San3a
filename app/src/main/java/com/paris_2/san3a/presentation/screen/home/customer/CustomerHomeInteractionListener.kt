@@ -8,7 +8,7 @@ interface CustomerHomeInteractionListener {
     fun onDismissBottomSheet()
     fun createRequest(service: RequestServiceUiState)
     fun updateNumOfRequests(serviceId: String)
-    fun initBottomSheet(serviceTitle: String, serviceId: String, iconRes: Int)
+    fun initBottomSheet(serviceTitle: String, serviceId: String)
     fun updateBottomSheetStep(step: BottomSheetStep)
     fun nextBottomSheetStep()
     fun previousBottomSheetStep()

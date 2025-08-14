@@ -6,7 +6,8 @@ data class ServiceDto(
     @DocumentId
     val id: String ,
     val title: Map<String, String>,
-    val description: Map<String, String>
+    val description: Map<String, String>,
+    val imageUrl: String
 ){
     companion object{
         fun fromJson(data: Map<String, Any>, id: String): ServiceDto {
@@ -22,10 +23,13 @@ data class ServiceDto(
                 if (key != null && value != null) key to value else null
             }?.toMap() ?: emptyMap()
 
+            val imageUrl = data["imgUrl"] as? String ?: ""
+
             return ServiceDto(
                 id = id,
                 title = titleMap,
-                description = descriptionMap
+                description = descriptionMap,
+                imageUrl = imageUrl
             )
         }
     }

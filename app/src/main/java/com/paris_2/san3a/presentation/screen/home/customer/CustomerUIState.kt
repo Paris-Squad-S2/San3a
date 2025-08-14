@@ -45,7 +45,7 @@ data class BottomSheetUiState(
     val bottomSheetServiceTitle: String = "",
     val bottomSheetSubtitle: String = "",
     val bottomSheetServiceId: String = "",
-    val bottomSheetIconRes: Int = 0,
+    val bottomSheetServiceImageUrl: String = "",
     val bottomSheetDescription: String = "",
     val bottomSheetImages: List<String> = emptyList(),
     val bottomSheetSelectedSuggestion: String? = null,

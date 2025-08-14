@@ -11,10 +11,8 @@ import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
-import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import java.util.Locale
@@ -39,7 +37,8 @@ class CustomerHomeViewModel(
         getGovernments()
     }
 
-    override fun initBottomSheet(serviceTitle: String, serviceId: String, iconRes: Int) {
+    override fun initBottomSheet(serviceTitle: String, serviceId: String) {
+        val imageUrl = findServiceImageUrl(serviceId)
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
@@ -47,7 +46,7 @@ class CustomerHomeViewModel(
                     bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
                     bottomSheetServiceTitle = serviceTitle,
                     bottomSheetServiceId = serviceId,
-                    bottomSheetIconRes = iconRes,
+                    bottomSheetServiceImageUrl = imageUrl,
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
@@ -55,9 +54,15 @@ class CustomerHomeViewModel(
                     bottomSheetSelectedCity = "",
                     bottomSheetAddressDetails = "",
                     isGovernmentSheetVisible = false,
-                    )
+                )
             )
         )
+    }
+
+    private fun findServiceImageUrl(serviceId: String): String {
+        val services = screenState.value.customerUiState.services
+        val mostRequested = screenState.value.customerUiState.mostRequestedServices
+        return (services + mostRequested).find { it.id == serviceId }?.imageUrl ?: ""
     }
 
     override fun updateBottomSheetStep(step: BottomSheetStep) {
@@ -215,7 +220,7 @@ class CustomerHomeViewModel(
                     bottomSheetServiceTitle = "",
                     bottomSheetSubtitle = "",
                     bottomSheetServiceId = "",
-                    bottomSheetIconRes = 0,
+                    bottomSheetServiceImageUrl = "",
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
@@ -464,8 +469,7 @@ class CustomerHomeViewModel(
         } else {
             selectedService?.title?.get(ENGLISH_NAME)
         } ?: ""
-        val iconRes = getResource(serviceId)
-        initBottomSheet(serviceTitle, serviceId, iconRes)
+        initBottomSheet(serviceTitle, serviceId)
     }
 
     override fun onBecomeCraftsmanClick() {

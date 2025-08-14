@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
@@ -34,7 +35,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 @Composable
 fun RequestBottomSheetContent(
     title: String,
-    icon: Int,
+    imageUrl: String,
     color: Color,
     subTitle: String,
     optionalText: String? = null,
@@ -60,15 +61,14 @@ fun RequestBottomSheetContent(
             Row(
                 modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically,
-
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                Icon(
-                    painter = painterResource(id = icon),
+                AsyncImage(
+                    model = imageUrl,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(16.dp)
-                        .padding(end = 4.dp),
-                    tint = color
+                        .size(18.dp)
+                        ,
                 )
                 Text(
                     text = title,
@@ -176,7 +176,7 @@ fun RequestBottomSheetContent(
 private fun Preview() {
     RequestBottomSheetContent(
         title = "Plumping Request",
-        icon = R.drawable.ic_waterdrops_bold,
+        imageUrl = "https://example.com/image.png",
         color = Theme.colors.shade.primary,
         subTitle = "What do you need help with?",
         optionalText = "(Optional)",

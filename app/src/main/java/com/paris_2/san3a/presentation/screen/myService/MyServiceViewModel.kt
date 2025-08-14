@@ -12,7 +12,6 @@ import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.ServiceUiState
-import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
@@ -140,7 +139,8 @@ class MyServiceViewModel(
                     Service(
                         id = serviceUiState.id,
                         title = mapOf(currentLocale to serviceUiState.serviceTitle),
-                        description = mapOf(currentLocale to serviceUiState.serviceDescription)
+                        description = mapOf(currentLocale to serviceUiState.serviceDescription),
+                        imageUrl = serviceUiState.serviceImage
                     )
                 }
                 setUpAccountUseCase.saveServices(
