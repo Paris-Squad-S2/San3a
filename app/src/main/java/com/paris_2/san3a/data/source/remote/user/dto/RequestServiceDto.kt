@@ -16,7 +16,8 @@ data class RequestServiceDto(
     val userId: String,
     val serviceId: String,
     val selectedCraftsmanId: String?,
-    val requestStatus: String?
+    val requestStatus: String?,
+    val createdAt: Long = System.currentTimeMillis(),
 ) {
     companion object {
         fun fromJson(data: Map<String, Any>, id: String): RequestServiceDto {
@@ -34,7 +35,8 @@ data class RequestServiceDto(
                 userId = data["userId"] as? String ?: "",
                 serviceId = data["serviceId"] as? String ?: "",
                 selectedCraftsmanId = data["selectedCraftsmanId"] as? String,
-                requestStatus = data["requestStatus"] as? String
+                requestStatus = data["requestStatus"] as? String,
+                createdAt = (data["createdAt"] as? Number)?.toLong() ?: System.currentTimeMillis()
             )
         }
     }
@@ -51,6 +53,7 @@ data class RequestServiceDto(
             "userId" to userId,
             "serviceId" to serviceId,
             "state" to state,
+            "createdAt" to createdAt
         )
         if (selectedCraftsmanId != null) {
             map["selectedCraftsmanId"] = selectedCraftsmanId
