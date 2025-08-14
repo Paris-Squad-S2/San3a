@@ -41,9 +41,7 @@ class CraftsmanHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            userServices = services?.map {
-                                it.title[currentLocale] ?: it.title.values.firstOrNull() ?: ""
-                            } ?: emptyList(),
+                            userServices = services?.map { it.id } ?: emptyList(),
                         )
                     )
                 )
