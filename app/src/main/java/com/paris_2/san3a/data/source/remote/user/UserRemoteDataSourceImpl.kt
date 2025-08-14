@@ -2,6 +2,7 @@ package com.paris_2.san3a.data.source.remote.user
 
 import android.util.Log
 import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.Query
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.SetOperation
 import com.paris_2.san3a.data.service.firestore.WriteOperation
@@ -263,7 +264,9 @@ class UserRemoteDataSourceImpl(
             path = SERVICE_REQUESTS_COLLECTION,
             fromJson = RequestServiceDto::fromJson,
             queryBuilder = { query ->
-                query.whereIn("title", relatedJobs)
+                query
+                    .whereIn("serviceId", relatedJobs)
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
             }
         )
     }
