@@ -144,7 +144,12 @@ class CraftsmanHomeViewModel(
                 jobs?.map { job ->
                     val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
                     val city = getLocationInfoUseCase.getCityById(job.cityId)
-                    job.toRequestServiceUiState(location = governorate?.name.orEmpty() + ", " + city?.name.orEmpty())
+                    job.toRequestServiceUiState(
+                        location = listOfNotNull(
+                            governorate?.name,
+                            city?.name
+                        ).joinToString(", ")
+                    )
                 }.also { mappedJobs ->
                     updateState(
                         screenState.value.copy(
@@ -200,12 +205,16 @@ class CraftsmanHomeViewModel(
     fun loadAvailableJobs() {
         tryToObserve(
             observe = getAvailableJobsUseCase::invoke,
-            onEach = {
-                    jobs ->
+            onEach = { jobs ->
                 jobs?.map { job ->
                     val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
                     val city = getLocationInfoUseCase.getCityById(job.cityId)
-                    job.toRequestServiceUiState(location = governorate?.name.orEmpty() + ", " + city?.name.orEmpty())
+                    job.toRequestServiceUiState(
+                        location = listOfNotNull(
+                            governorate?.name,
+                            city?.name
+                        ).joinToString(", ")
+                    )
                 }.also { mappedJobs ->
                     updateState(
                         screenState.value.copy(
