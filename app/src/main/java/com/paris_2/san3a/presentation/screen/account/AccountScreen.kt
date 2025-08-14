@@ -241,8 +241,8 @@ fun AccountScreenContent(
                         onCitiesDismissRequest = interactionListener::onCitiesBottomSheetDismissed,
                         onCitiesSelected = interactionListener::onCitiesSelected,
                         cities = uiState.accountUiState.cities,
-                        government = uiState.accountUiState.locationUiState.government,
-                        city = uiState.accountUiState.locationUiState.city,
+                        government = uiState.accountUiState.locationUiState.governorate?.name.orEmpty(),
+                        city = uiState.accountUiState.locationUiState.city?.name.orEmpty(),
                         addressInDetails = uiState.accountUiState.locationUiState.addressInDetails,
                         onAddressDetailsChange = interactionListener::onAddressDetailsChanged,
                         locationBottomSheetContentType = uiState.accountUiState.locationType

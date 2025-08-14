@@ -216,21 +216,17 @@ private fun CustomerHomeScreenContent(
                             isGovernmentSheetShowed = state.bottomSheetUiState.isGovernmentSheetVisible,
                             onGovernmentDismissRequest = { action.showGovernmentSheet(false) },
                             onGovernmentSelected = {
-                                action.setBottomSheetSelectedGovernment(it)
+                                action.setBottomSheetSelectedGovernment(it.id)
                             },
                             onCitiesSelected = {
-                                action.setBottomSheetSelectedCity(it)
+                                action.setBottomSheetSelectedCity(it.id)
                             },
-                            government = state.bottomSheetUiState.bottomSheetSelectedGovernment,
-                            city = state.bottomSheetUiState.bottomSheetSelectedCity,
+                            government = state.bottomSheetUiState.bottomSheetSelectedGovernmentName,
+                            city = state.bottomSheetUiState.bottomSheetSelectedCityName,
                             onGetLocationClicked = {
                                 action.showGovernmentSheet(true)
                             },
-                            locationBottomSheetContentType = if (state.bottomSheetUiState.bottomSheetSelectedGovernment.isNotEmpty()) {
-                                LocationBottomSheetContentType.CITY
-                            } else {
-                                LocationBottomSheetContentType.GOVERNMENT
-                            }
+                            locationBottomSheetContentType = state.bottomSheetUiState.locationBottomSheetType
                         )
                     }
                 }
@@ -246,18 +242,7 @@ private fun CustomerHomeScreenContent(
                         buttonIsActive = true,
                         step = 4,
                         onButtonClick = {
-                            action.createRequest(
-                                RequestServiceUiState(
-                                    serviceType = state.bottomSheetUiState.bottomSheetServiceTitle,
-                                    title = state.bottomSheetUiState.bottomSheetSubtitle,
-                                    description = state.bottomSheetUiState.bottomSheetDescription,
-                                    location = "${state.bottomSheetUiState.bottomSheetSelectedGovernment}, ${state.bottomSheetUiState.bottomSheetSelectedCity}",
-                                    locationDetails = state.bottomSheetUiState.bottomSheetAddressDetails,
-                                    image = state.bottomSheetUiState.bottomSheetImages,
-                                    userId = state.customerUiState.id,
-                                    serviceId = state.bottomSheetUiState.bottomSheetServiceId,
-                                ),
-                            )
+                            action.createRequest()
                         },
                         onClickBack = { action.previousBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() },

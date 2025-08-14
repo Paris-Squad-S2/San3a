@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.home.craftsman
 
 import android.util.Log
 import com.paris_2.san3a.domain.usecase.GetAvailableJobsUseCase
+import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRecentRelatedJobsUseCase
 import com.paris_2.san3a.domain.usecase.GetStatsUseCase
@@ -18,6 +19,7 @@ class CraftsmanHomeViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getOffersCountUseCase: GetOffersCountUseCase,
     private val getUserServicesUseCase: GetUserServicesUseCase,
+    private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getUserUseCase: GetUserUseCase,
 ) : CraftsmanInteractionListener, BaseViewModel<CraftsmanHomeState>(CraftsmanHomeState()) {
 
@@ -86,11 +88,17 @@ class CraftsmanHomeViewModel(
         tryToExecute(
             execute = { getUserUseCase(screenState.value.craftsmanHomeUiState.phoneNumber) },
             onSuccess = { user ->
+                val government =
+                    getLocationInfoUseCase.getGovernorateById(user.location.governmentId)
+                val city = getLocationInfoUseCase.getCityById(user.location.cityId)
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
                             currentUserName = user.fullName,
-                            location = user.location.government + ", " + user.location.cityName
+                            location = listOfNotNull(
+                                government?.name,
+                                city?.name
+                            ).joinToString(", "),
                         )
                     )
                 )
@@ -132,15 +140,28 @@ class CraftsmanHomeViewModel(
     fun loadRecentRelatedJobs() {
         tryToObserve(
             observe = { getRecentRelatedJobsUseCase(screenState.value.craftsmanHomeUiState.userServices) },
-            onEach = {
-                updateState(
-                    screenState.value.copy(
-                        craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            recentRelatedJobs = it?.toRequestServiceUiStateMap() ?: emptyMap()
+            onEach = { jobs ->
+                jobs?.map { job ->
+                    val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
+                    val city = getLocationInfoUseCase.getCityById(job.cityId)
+                    job.toRequestServiceUiState(
+                        location = listOfNotNull(
+                            governorate?.name,
+                            city?.name
+                        ).joinToString(", ")
+                    )
+                }.also { mappedJobs ->
+                    updateState(
+                        screenState.value.copy(
+                            craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                                recentRelatedJobs = mappedJobs?.associate { requestService ->
+                                    requestService.id to requestService
+                                } ?: emptyMap()
+                            )
                         )
                     )
-                )
-                getOffersCountForRecentJobs()
+                    getOffersCountForRecentJobs()
+                }
             },
             onError = {
                 updateState(
@@ -166,9 +187,10 @@ class CraftsmanHomeViewModel(
                     updateState(
                         screenState.value.copy(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                                recentRelatedJobs = screenState.value.craftsmanHomeUiState.recentRelatedJobs.toMutableMap().apply {
-                                    this[id] = updatedJob
-                                }
+                                recentRelatedJobs = screenState.value.craftsmanHomeUiState.recentRelatedJobs.toMutableMap()
+                                    .apply {
+                                        this[id] = updatedJob
+                                    }
                             )
                         )
                     )
@@ -183,15 +205,28 @@ class CraftsmanHomeViewModel(
     fun loadAvailableJobs() {
         tryToObserve(
             observe = getAvailableJobsUseCase::invoke,
-            onEach = {
-                updateState(
-                    screenState.value.copy(
-                        craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            availableJobs = it?.toRequestServiceUiStateMap() ?: emptyMap()
+            onEach = { jobs ->
+                jobs?.map { job ->
+                    val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
+                    val city = getLocationInfoUseCase.getCityById(job.cityId)
+                    job.toRequestServiceUiState(
+                        location = listOfNotNull(
+                            governorate?.name,
+                            city?.name
+                        ).joinToString(", ")
+                    )
+                }.also { mappedJobs ->
+                    updateState(
+                        screenState.value.copy(
+                            craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                                availableJobs = mappedJobs?.associate { requestService ->
+                                    requestService.id to requestService
+                                } ?: emptyMap()
+                            )
                         )
                     )
-                )
-                getOffersCountForAvailableJobs()
+                    getOffersCountForAvailableJobs()
+                }
             },
             onError = {
                 updateState(
@@ -217,9 +252,10 @@ class CraftsmanHomeViewModel(
                     updateState(
                         screenState.value.copy(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                                availableJobs = screenState.value.craftsmanHomeUiState.availableJobs.toMutableMap().apply {
-                                    this[id] = updatedJob
-                                }
+                                availableJobs = screenState.value.craftsmanHomeUiState.availableJobs.toMutableMap()
+                                    .apply {
+                                        this[id] = updatedJob
+                                    }
                             )
                         )
                     )
