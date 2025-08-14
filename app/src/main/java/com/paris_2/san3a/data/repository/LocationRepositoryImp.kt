@@ -1,47 +1,47 @@
 package com.paris_2.san3a.data.repository
 
 import com.paris_2.san3a.data.mapper.toCities
+import com.paris_2.san3a.data.mapper.toCity
+import com.paris_2.san3a.data.mapper.toGovernorate
 import com.paris_2.san3a.data.mapper.toStates
-import com.paris_2.san3a.data.source.remote.location.LocationRemoteDataSource
-import com.paris_2.san3a.data.source.remote.location.request.CitiesRequest
-import com.paris_2.san3a.data.utils.NetworkConnectionChecker
-import com.paris_2.san3a.domain.NoCitiesFoundException
-import com.paris_2.san3a.domain.NoGovernmentsFoundException
-import com.paris_2.san3a.domain.NoInternetConnectionException
-import com.paris_2.san3a.domain.entity.Cities
-import com.paris_2.san3a.domain.entity.States
+import com.paris_2.san3a.data.source.local.LocalDataStore
+import com.paris_2.san3a.data.source.local.location.LocationLocalDataSource
+import com.paris_2.san3a.domain.FailException
+import com.paris_2.san3a.domain.entity.City
+import com.paris_2.san3a.domain.entity.Governorate
 import com.paris_2.san3a.domain.repository.LocationRepository
+import kotlinx.coroutines.flow.first
 
 class LocationRepositoryImp(
-    private val locationRemoteDataSource: LocationRemoteDataSource,
-    private val networkConnectionChecker: NetworkConnectionChecker,
+    private val locationLocalDataSource: LocationLocalDataSource,
+    private val localDataStore: LocalDataStore
 ) : LocationRepository, BaseRepository() {
-    override suspend fun getGovernmentsInCountry(countryName: String): States {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
 
-        return safeCall(
-            exception = NoGovernmentsFoundException(),
-            call = { locationRemoteDataSource.getGovernmentsInCountry(countryName).toStates() })
+    override suspend fun getGovernorates(): List<Governorate> {
+        return safeCall(FailException("getGovernorates")) {
+            val language = localDataStore.getLatestSelectedAppLanguage().first()
+            locationLocalDataSource.getGovernorates().toStates(language = language)
+        }
     }
 
-    override suspend fun getCitiesInGovernment(
-        countryName: String,
-        stateName: String,
-    ): Cities {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
+    override suspend fun getCitiesInGovernment(governorateId: Int): List<City> {
+        return safeCall(FailException("getCitiesInGovernment")) {
+            val language = localDataStore.getLatestSelectedAppLanguage().first()
+            locationLocalDataSource.getCities(governorateId).toCities(language = language)
         }
+    }
 
-        return safeCall(
-            exception = NoCitiesFoundException(),
-            call = {
-                locationRemoteDataSource.getCitiesInGovernment(
-                    CitiesRequest(
-                        "Egypt", stateName
-                    )
-                ).toCities()
-            })
+    override suspend fun getGovernorateById(governorateId: Int): Governorate? {
+        return safeCall(FailException("getGovernorateById")) {
+            val language = localDataStore.getLatestSelectedAppLanguage().first()
+            locationLocalDataSource.getGovernorateById(governorateId)?.toGovernorate(language = language)
+        }
+    }
+
+    override suspend fun getCityById(cityId: Int): City? {
+        return safeCall(FailException("getCityById")) {
+            val language = localDataStore.getLatestSelectedAppLanguage().first()
+            locationLocalDataSource.getCityById(cityId)?.toCity(language = language)
+        }
     }
 }

@@ -6,7 +6,6 @@ import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.presentation.shared.components.OfferDetailsUIState
 import com.paris_2.san3a.presentation.shared.components.OfferStatus
-import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import com.paris_2.san3a.presentation.utill.getTimeAgo
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -123,7 +122,7 @@ data class RequestServiceUIState(
     val selectedCraftsmanId: String? = null,
 )
 
-fun RequestService.toRequestServiceUIState(): RequestServiceUIState {
+fun RequestService.toRequestServiceUIState(location: String): RequestServiceUIState {
     return RequestServiceUIState(
         id = this.id,
         userId = this.userId,
@@ -131,31 +130,12 @@ fun RequestService.toRequestServiceUIState(): RequestServiceUIState {
         title = this.title,
         serviceType = this.serviceType,
         description = this.description,
-        location = this.location,
+        location = location,
         locationDetails = this.locationDetails,
         time = getTimeAgo(this.time),
         state = this.state,
         images = this.image,
         selectedCraftsmanId = this.selectedCraftsmanId
-    )
-}
-
-
-fun RequestServiceUIState.toRequestService(): RequestService {
-    return RequestService(
-        id = this.id,
-        userId = this.userId,
-        requestStatus = this.requestStatus,
-        title = this.title,
-        serviceType = this.serviceType,
-        description = this.description,
-        location = this.location,
-        locationDetails = this.locationDetails,
-        time = getCurrentDateTime(),
-        state = this.state,
-        image = this.images,
-        selectedCraftsmanId = this.selectedCraftsmanId,
-        serviceId = this.serviceId
     )
 }
 

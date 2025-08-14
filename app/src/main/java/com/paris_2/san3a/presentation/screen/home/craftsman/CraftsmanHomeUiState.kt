@@ -40,7 +40,7 @@ fun Stats.toStatsUiState(): StatsUiState {
     )
 }
 
-fun RequestService.toRequestServiceUiState(): RequestServiceUiState {
+fun RequestService.toRequestServiceUiState(location: String): RequestServiceUiState {
     return RequestServiceUiState(
         id = id,
         userId = userId,
@@ -52,12 +52,6 @@ fun RequestService.toRequestServiceUiState(): RequestServiceUiState {
         locationDetails = locationDetails,
         time = time
     )
-}
-
-fun List<RequestService>.toRequestServiceUiStateMap(): Map<String, RequestServiceUiState> {
-    return this.associate { requestService ->
-        requestService.id to requestService.toRequestServiceUiState()
-    }
 }
 
 data class RequestServiceUiState(

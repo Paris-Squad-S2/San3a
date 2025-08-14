@@ -18,6 +18,7 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 data class SelectionItemData(
+    val id: Int,
     val title: String,
     val showIcon: Boolean = false
 )
