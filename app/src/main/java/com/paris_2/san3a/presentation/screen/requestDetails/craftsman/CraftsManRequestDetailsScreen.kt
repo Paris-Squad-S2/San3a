@@ -50,8 +50,11 @@ import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import org.koin.compose.viewmodel.koinViewModel
-import java.util.Calendar
+import kotlin.time.ExperimentalTime
 
 @Composable
 fun CraftsManRequestDetailsScreen(
@@ -206,7 +209,10 @@ fun CraftsmanRequestDetailsContent(
                                 interactionListener.onCancelRequestClick(state.request.id)
                             },
                             onPrimaryButtonClick = {
-                                interactionListener.markAsDoneClick(requestId = state.request.id, price = state.acceptedOffer.price)
+                                interactionListener.markAsDoneClick(
+                                    requestId = state.request.id,
+                                    price = state.acceptedOffer.price
+                                )
                             },
                             forCraftsMan = true,
                         )
@@ -242,7 +248,10 @@ fun CraftsmanRequestDetailsContent(
                         interactionListener.onCancelRequestClick(state.request.id)
                     },
                     onPrimaryButtonClick = {
-                        interactionListener.markAsDoneClick(requestId = state.request.id, price = state.yourOffer.price)
+                        interactionListener.markAsDoneClick(
+                            requestId = state.request.id,
+                            price = state.yourOffer.price
+                        )
                     },
                     forCraftsMan = true,
                 )
@@ -287,7 +296,10 @@ fun CraftsmanRequestDetailsContent(
                         interactionListener.onCancelRequestClick(state.request.id)
                     },
                     onPrimaryButtonClick = {
-                        interactionListener.markAsDoneClick(requestId = state.request.id, price = offer.price)
+                        interactionListener.markAsDoneClick(
+                            requestId = state.request.id,
+                            price = offer.price
+                        )
                     },
                     forCraftsMan = true,
                 )
@@ -367,7 +379,7 @@ fun ChatWithPosterCard(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun AddYourOfferSection(
     modifier: Modifier,
@@ -377,12 +389,7 @@ fun AddYourOfferSection(
     val datePicker = rememberDatePickerState(
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                val today = Calendar.getInstance().apply {
-                    set(Calendar.HOUR_OF_DAY, 0)
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0)
-                    set(Calendar.MILLISECOND, 0)
-                }.timeInMillis
+                val today = getCurrentDateTime().toInstant(TimeZone.UTC).toEpochMilliseconds()
                 return utcTimeMillis >= today
             }
         }
