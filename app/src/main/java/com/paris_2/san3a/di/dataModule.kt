@@ -18,8 +18,6 @@ import com.paris_2.san3a.data.source.local.location.LocationLocalDataSourceImpl
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSourceImpl
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSourceImpl
-import com.paris_2.san3a.data.source.remote.location.LocationRemoteDataSource
-import com.paris_2.san3a.data.source.remote.location.LocationRemoteDataSourceImp
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSourceImp
 import com.paris_2.san3a.data.source.remote.notification.NotificationDataSource
@@ -46,7 +44,6 @@ val dataModule = module {
     singleOf(::MessagesRemoteDataSourceImp) { bind<MessagesRemoteDataSource>() }
     singleOf(::FirebaseStorageDataSource) { bind<StorageRemoteDataSource>() }
     singleOf(::AuthRemoteDataSourceImpl) { bind<AuthRemoteDataSource>() }
-    singleOf(::LocationRemoteDataSourceImp) { bind<LocationRemoteDataSource>() }
     singleOf(::LocationLocalDataSourceImpl) { bind<LocationLocalDataSource>() }
     single { FirebaseFirestore.getInstance() }
     single { FirebaseStorage.getInstance() }
