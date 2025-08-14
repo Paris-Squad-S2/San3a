@@ -1,0 +1,944 @@
+[
+    {
+        "id": 149594,
+        "name_en": "Abu Qir",
+        "name_ar": "أبو قير",
+        "governorate_id": 3235
+    },
+    {
+        "id": 149595,
+        "name_en": "Agami",
+        "name_ar": "العجمي",
+        "governorate_id": 3235
+    },
+    {
+        "id": 31787,
+        "name_en": "Alexandria",
+        "name_ar": "الإسكندرية",
+        "governorate_id": 3235
+    },
+    {
+        "id": 149596,
+        "name_en": "Ar-Raml",
+        "name_ar": "الرمل",
+        "governorate_id": 3235
+    },
+    {
+        "id": 149597,
+        "name_en": "Borg El Arab",
+        "name_ar": "برج العرب",
+        "governorate_id": 3235
+    },
+    {
+        "id": 149598,
+        "name_en": "Montaza",
+        "name_ar": "المنتزة",
+        "governorate_id": 3235
+    },
+    {
+        "id": 149599,
+        "name_en": "New Borg El Arab",
+        "name_ar": "نيو برج العرب",
+        "governorate_id": 3235
+    },
+    {
+        "id": 149600,
+        "name_en": "Sidi Bishr",
+        "name_ar": "سيدي بشر",
+        "governorate_id": 3235
+    },
+    {
+        "id": 31756,
+        "name_en": "Abu Simbel",
+        "name_ar": "أبو سمبل",
+        "governorate_id": 3225
+    },
+    {
+        "id": 31791,
+        "name_en": "Aswan",
+        "name_ar": "أسوان",
+        "governorate_id": 3225
+    },
+    {
+        "id": 31819,
+        "name_en": "Edfu",
+        "name_ar": "إدفو",
+        "governorate_id": 3225
+    },
+    {
+        "id": 31829,
+        "name_en": "Kom Ombo",
+        "name_ar": "كوم أمبو",
+        "governorate_id": 3225
+    },
+    {
+        "id": 31755,
+        "name_en": "Abnoub",
+        "name_ar": "أبنوب",
+        "governorate_id": 3236
+    },
+    {
+        "id": 31758,
+        "name_en": "Abu Tij",
+        "name_ar": "أبو تيج",
+        "governorate_id": 3236
+    },
+    {
+        "id": 31764,
+        "name_en": "Al Badari",
+        "name_ar": "البداري",
+        "governorate_id": 3236
+    },
+    {
+        "id": 31781,
+        "name_en": "Al Qusiya",
+        "name_ar": "القوصية",
+        "governorate_id": 3236
+    },
+    {
+        "id": 31792,
+        "name_en": "Assiut",
+        "name_ar": "أسيوط",
+        "governorate_id": 3236
+    },
+    {
+        "id": 31807,
+        "name_en": "Dairut",
+        "name_ar": "ديروط",
+        "governorate_id": 3236
+    },
+    {
+        "id": 31836,
+        "name_en": "Manfalut",
+        "name_ar": "منفلوط",
+        "governorate_id": 3236
+    },
+    {
+        "id": 31759,
+        "name_en": "Abu Al Matamir",
+        "name_ar": "أبو المطامير",
+        "governorate_id": 3241
+    },
+    {
+        "id": 31760,
+        "name_en": "Al Delengat",
+        "name_ar": "الدلنجات",
+        "governorate_id": 3241
+    },
+    {
+        "id": 31804,
+        "name_en": "Damanhour",
+        "name_ar": "دمنهور",
+        "governorate_id": 3241
+    },
+    {
+        "id": 31879,
+        "name_en": "Hosh Issa",
+        "name_ar": "حوش عيسى",
+        "governorate_id": 3241
+    },
+    {
+        "id": 31820,
+        "name_en": "Edco",
+        "name_ar": "إدكو",
+        "governorate_id": 3241
+    },
+    {
+        "id": 31826,
+        "name_en": "Kafr El Dawwar",
+        "name_ar": "كفر الدوار",
+        "governorate_id": 3241
+    },
+    {
+        "id": 31830,
+        "name_en": "Kom Hamada",
+        "name_ar": "كوم حمادة",
+        "governorate_id": 3241
+    },
+    {
+        "id": 31857,
+        "name_en": "Rosetta",
+        "name_ar": "رشيد",
+        "governorate_id": 3241
+    },
+    {
+        "id": 31768,
+        "name_en": "Al Fashn",
+        "name_ar": "الفشن",
+        "governorate_id": 3230
+    },
+    {
+        "id": 31798,
+        "name_en": "Beni Suef",
+        "name_ar": "بني سويف",
+        "governorate_id": 3230
+    },
+    {
+        "id": 31801,
+        "name_en": "Bouh",
+        "name_ar": "بوش",
+        "governorate_id": 3230
+    },
+    {
+        "id": 31869,
+        "name_en": "Samasta",
+        "name_ar": "سمسطا",
+        "governorate_id": 3230
+    },
+    {
+        "id": 149582,
+        "name_en": "Badr",
+        "name_ar": "بدر",
+        "governorate_id": 3223
+    },
+    {
+        "id": 149583,
+        "name_en": "Bulaq",
+        "name_ar": "بولاق",
+        "governorate_id": 3223
+    },
+    {
+        "id": 31802,
+        "name_en": "Cairo",
+        "name_ar": "القاهرة",
+        "governorate_id": 3223
+    },
+    {
+        "id": 149584,
+        "name_en": "El Matareya",
+        "name_ar": "المطرية",
+        "governorate_id": 3223
+    },
+    {
+        "id": 149585,
+        "name_en": "Fustat",
+        "name_ar": "الفسطاط",
+        "governorate_id": 3223
+    },
+    {
+        "id": 149586,
+        "name_en": "Hadayek El Kobba",
+        "name_ar": "حدائق القبة",
+        "governorate_id": 3223
+    },
+    {
+        "id": 149587,
+        "name_en": "Heliopolis",
+        "name_ar": "هليوبوليس",
+        "governorate_id": 3223
+    },
+    {
+        "id": 149588,
+        "name_en": "Helwan",
+        "name_ar": "حلوان",
+        "governorate_id": 3223
+    },
+    {
+        "id": 149589,
+        "name_en": "Maadi",
+        "name_ar": "المعادي",
+        "governorate_id": 3223
+    },
+    {
+        "id": 149590,
+        "name_en": "Musturud",
+        "name_ar": "مسطرد",
+        "governorate_id": 3223
+    },
+    {
+        "id": 149591,
+        "name_en": "New Administrative Capital",
+        "name_ar": "العاصمة الإدارية الجديدة",
+        "governorate_id": 3223
+    },
+    {
+        "id": 149592,
+        "name_en": "Shubra",
+        "name_ar": "شبرا",
+        "governorate_id": 3223
+    },
+    {
+        "id": 149593,
+        "name_en": "Tura",
+        "name_ar": "طرة",
+        "governorate_id": 3223
+    },
+    {
+        "id": 31880,
+        "name_en": "Izbat Al Burj",
+        "name_ar": "عزبة البرج",
+        "governorate_id": 3245
+    },
+    {
+        "id": 31762,
+        "name_en": "Aga",
+        "name_ar": "أجا",
+        "governorate_id": 3245
+    },
+    {
+        "id": 31770,
+        "name_en": "Al Gamaliya",
+        "name_ar": "الجمالية",
+        "governorate_id": 3245
+    },
+    {
+        "id": 31775,
+        "name_en": "Mansoura",
+        "name_ar": "المنصورة",
+        "governorate_id": 3245
+    },
+    {
+        "id": 31774,
+        "name_en": "Al Manzala",
+        "name_ar": "المنزلة",
+        "governorate_id": 3245
+    },
+    {
+        "id": 31776,
+        "name_en": "Al Matareya",
+        "name_ar": "المطرية",
+        "governorate_id": 3245
+    },
+    {
+        "id": 31800,
+        "name_en": "Belqas",
+        "name_ar": "بلقاس",
+        "governorate_id": 3245
+    },
+    {
+        "id": 31808,
+        "name_en": "Dekernes",
+        "name_ar": "ديكر尼斯",
+        "governorate_id": 3245
+    },
+    {
+        "id": 31844,
+        "name_en": "Minyet El Nasr",
+        "name_ar": "منية النصر",
+        "governorate_id": 3245
+    },
+    {
+        "id": 31865,
+        "name_en": "Sherbin",
+        "name_ar": "شربين",
+        "governorate_id": 3245
+    },
+    {
+        "id": 31876,
+        "name_en": "Talkha",
+        "name_ar": "طلخا",
+        "governorate_id": 3245
+    },
+    {
+        "id": 31794,
+        "name_en": "Zagazig",
+        "name_ar": "الزقازيق",
+        "governorate_id": 3224
+    },
+    {
+        "id": 31805,
+        "name_en": "Damietta",
+        "name_ar": "دمياط",
+        "governorate_id": 3224
+    },
+    {
+        "id": 31815,
+        "name_en": "Faraskour",
+        "name_ar": "فارسكور",
+        "governorate_id": 3224
+    },
+    {
+        "id": 31769,
+        "name_en": "Fayoum",
+        "name_ar": "الفيوم",
+        "governorate_id": 3238
+    },
+    {
+        "id": 31782,
+        "name_en": "Al Wasta",
+        "name_ar": "الواسطة",
+        "governorate_id": 3238
+    },
+    {
+        "id": 31818,
+        "name_en": "Abshaway",
+        "name_ar": "إبشواي",
+        "governorate_id": 3238
+    },
+    {
+        "id": 31823,
+        "name_en": "Itsa",
+        "name_ar": "إطسا",
+        "governorate_id": 3238
+    },
+    {
+        "id": 31877,
+        "name_en": "Tamiya",
+        "name_ar": "طامية",
+        "governorate_id": 3238
+    },
+    {
+        "id": 31777,
+        "name_en": "Mahalla El Kubra",
+        "name_ar": "المحلة الكبرى",
+        "governorate_id": 3234
+    },
+    {
+        "id": 31799,
+        "name_en": "Basyoun",
+        "name_ar": "بسيون",
+        "governorate_id": 3234
+    },
+    {
+        "id": 31828,
+        "name_en": "Kafr El Zayat",
+        "name_ar": "كفر الزيات",
+        "governorate_id": 3234
+    },
+    {
+        "id": 31855,
+        "name_en": "Qutur",
+        "name_ar": "قطور",
+        "governorate_id": 3234
+    },
+    {
+        "id": 31860,
+        "name_en": "Samannoud",
+        "name_ar": "سمنود",
+        "governorate_id": 3234
+    },
+    {
+        "id": 31872,
+        "name_en": "Tanta",
+        "name_ar": "طنطا",
+        "governorate_id": 3234
+    },
+    {
+        "id": 31874,
+        "name_en": "Zefta",
+        "name_ar": "زفتا",
+        "governorate_id": 3234
+    },
+    {
+        "id": 31786,
+        "name_en": "Al Ayat",
+        "name_ar": "العياط",
+        "governorate_id": 3239
+    },
+    {
+        "id": 31766,
+        "name_en": "Al Bawiti",
+        "name_ar": "البويطي",
+        "governorate_id": 3239
+    },
+    {
+        "id": 31783,
+        "name_en": "Hawamidiya",
+        "name_ar": "الحوامدية",
+        "governorate_id": 3239
+    },
+    {
+        "id": 31795,
+        "name_en": "Al Saf",
+        "name_ar": "الصف",
+        "governorate_id": 3239
+    },
+    {
+        "id": 31793,
+        "name_en": "Ossim",
+        "name_ar": "أوسيم",
+        "governorate_id": 3239
+    },
+    {
+        "id": 31816,
+        "name_en": "Giza",
+        "name_ar": "الجيزة",
+        "governorate_id": 3239
+    },
+    {
+        "id": 31833,
+        "name_en": "6th of October City",
+        "name_ar": "مدينة 6 أكتوبر",
+        "governorate_id": 3239
+    },
+    {
+        "id": 31821,
+        "name_en": "Ismailia",
+        "name_ar": "الإسماعيلية",
+        "governorate_id": 3244
+    },
+    {
+        "id": 31784,
+        "name_en": "Al Hamoul",
+        "name_ar": "الحامول",
+        "governorate_id": 3222
+    },
+    {
+        "id": 31810,
+        "name_en": "Desouk",
+        "name_ar": "دسوق",
+        "governorate_id": 3222
+    },
+    {
+        "id": 31814,
+        "name_en": "Fouh",
+        "name_ar": "فوه",
+        "governorate_id": 3222
+    },
+    {
+        "id": 31827,
+        "name_en": "Kafr El Sheikh",
+        "name_ar": "كفر الشيخ",
+        "governorate_id": 3222
+    },
+    {
+        "id": 31837,
+        "name_en": "Desouk Center",
+        "name_ar": "مركز دسوق",
+        "governorate_id": 3222
+    },
+    {
+        "id": 31845,
+        "name_en": "Manshat Ali Agha",
+        "name_ar": "منشأة علي آغا",
+        "governorate_id": 3222
+    },
+    {
+        "id": 31870,
+        "name_en": "Sidi Salim",
+        "name_ar": "سيدي سالم",
+        "governorate_id": 3222
+    },
+    {
+        "id": 31832,
+        "name_en": "Luxor",
+        "name_ar": "الأقصر",
+        "governorate_id": 3242
+    },
+    {
+        "id": 31840,
+        "name_en": "Luxor Center",
+        "name_ar": "مركز الأقصر",
+        "governorate_id": 3242
+    },
+    {
+        "id": 31785,
+        "name_en": "El Alamein",
+        "name_ar": "العلمين",
+        "governorate_id": 3231
+    },
+    {
+        "id": 31843,
+        "name_en": "Marsa Matrouh",
+        "name_ar": "مرسى مطروح",
+        "governorate_id": 3231
+    },
+    {
+        "id": 31866,
+        "name_en": "Siwa Oasis",
+        "name_ar": "واحة سيوة",
+        "governorate_id": 3231
+    },
+    {
+        "id": 31757,
+        "name_en": "Abu Qurqas",
+        "name_ar": "أبو قرقاص",
+        "governorate_id": 3243
+    },
+    {
+        "id": 31778,
+        "name_en": "Minya",
+        "name_ar": "المنيا",
+        "governorate_id": 3243
+    },
+    {
+        "id": 31797,
+        "name_en": "Beni Mazar",
+        "name_ar": "بني مزار",
+        "governorate_id": 3243
+    },
+    {
+        "id": 31806,
+        "name_en": "Deir Mawas",
+        "name_ar": "دير مواس",
+        "governorate_id": 3243
+    },
+    {
+        "id": 31835,
+        "name_en": "Mallawi",
+        "name_ar": "ملوي",
+        "governorate_id": 3243
+    },
+    {
+        "id": 31842,
+        "name_en": "Matay",
+        "name_ar": "مطاي",
+        "governorate_id": 3243
+    },
+    {
+        "id": 31861,
+        "name_en": "Samalut",
+        "name_ar": "سملوط",
+        "governorate_id": 3243
+    },
+    {
+        "id": 31767,
+        "name_en": "Al Bagour",
+        "name_ar": "الباجور",
+        "governorate_id": 3228
+    },
+    {
+        "id": 31789,
+        "name_en": "Shuhada",
+        "name_ar": "الشهداء",
+        "governorate_id": 3228
+    },
+    {
+        "id": 31790,
+        "name_en": "Ashmoun",
+        "name_ar": "أشمون",
+        "governorate_id": 3228
+    },
+    {
+        "id": 31846,
+        "name_en": "Menouf",
+        "name_ar": "منوف",
+        "governorate_id": 3228
+    },
+    {
+        "id": 31854,
+        "name_en": "Quesna",
+        "name_ar": "قليوب",
+        "governorate_id": 3228
+    },
+    {
+        "id": 31863,
+        "name_en": "Shibin El Kom",
+        "name_ar": "شبين الكوم",
+        "governorate_id": 3228
+    },
+    {
+        "id": 31871,
+        "name_en": "Tala",
+        "name_ar": "طلا",
+        "governorate_id": 3228
+    },
+    {
+        "id": 31772,
+        "name_en": "Al Kharga",
+        "name_ar": "الخارجة",
+        "governorate_id": 3246
+    },
+    {
+        "id": 31852,
+        "name_en": "Qasr Farafra",
+        "name_ar": "قصر الفرافرة",
+        "governorate_id": 3246
+    },
+    {
+        "id": 31788,
+        "name_en": "Arish",
+        "name_ar": "العريش",
+        "governorate_id": 3227
+    },
+    {
+        "id": 31850,
+        "name_en": "Port Said",
+        "name_ar": "بورسعيد",
+        "governorate_id": 3229
+    },
+    {
+        "id": 31771,
+        "name_en": "Al Khankah",
+        "name_ar": "الخانكة",
+        "governorate_id": 3232
+    },
+    {
+        "id": 31779,
+        "name_en": "Al Qanater El Khayreya",
+        "name_ar": "القناطر الخيرية",
+        "governorate_id": 3232
+    },
+    {
+        "id": 31796,
+        "name_en": "Banha",
+        "name_ar": "بنها",
+        "governorate_id": 3232
+    },
+    {
+        "id": 31851,
+        "name_en": "Qalyub",
+        "name_ar": "قليوب",
+        "governorate_id": 3232
+    },
+    {
+        "id": 31864,
+        "name_en": "Shibin El Qanatir",
+        "name_ar": "شبين القناطر",
+        "governorate_id": 3232
+    },
+    {
+        "id": 31873,
+        "name_en": "Toukh",
+        "name_ar": "طوخ",
+        "governorate_id": 3232
+    },
+    {
+        "id": 31809,
+        "name_en": "Dishna",
+        "name_ar": "دشنا",
+        "governorate_id": 3247
+    },
+    {
+        "id": 31813,
+        "name_en": "Farshout",
+        "name_ar": "فرشوط",
+        "governorate_id": 3247
+    },
+    {
+        "id": 31822,
+        "name_en": "Itna",
+        "name_ar": "إتنا",
+        "governorate_id": 3247
+    },
+    {
+        "id": 31831,
+        "name_en": "Kousa",
+        "name_ar": "قفط",
+        "governorate_id": 3247
+    },
+    {
+        "id": 31847,
+        "name_en": "Naga Hammadi",
+        "name_ar": "نجع حمادي",
+        "governorate_id": 3247
+    },
+    {
+        "id": 31853,
+        "name_en": "Qena",
+        "name_ar": "قنا",
+        "governorate_id": 3247
+    },
+    {
+        "id": 31780,
+        "name_en": "Al Quseir",
+        "name_ar": "القصير",
+        "governorate_id": 3240
+    },
+    {
+        "id": 31811,
+        "name_en": "El Gouna",
+        "name_ar": "الجونة",
+        "governorate_id": 3240
+    },
+    {
+        "id": 31817,
+        "name_en": "Hurghada",
+        "name_ar": "الغردقة",
+        "governorate_id": 3240
+    },
+    {
+        "id": 31834,
+        "name_en": "Makadi Bay",
+        "name_ar": "خليج مكادي",
+        "governorate_id": 3240
+    },
+    {
+        "id": 31841,
+        "name_en": "Marsa Alam",
+        "name_ar": "مرسى علم",
+        "governorate_id": 3240
+    },
+    {
+        "id": 31856,
+        "name_en": "Ras Ghareb",
+        "name_ar": "رأس غارب",
+        "governorate_id": 3240
+    },
+    {
+        "id": 31858,
+        "name_en": "Safaga",
+        "name_ar": "سفاجا",
+        "governorate_id": 3240
+    },
+    {
+        "id": 149220,
+        "name_en": "10th of Ramadan",
+        "name_ar": "العاشر من رمضان",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149228,
+        "name_en": "Al Qurein",
+        "name_ar": "القرين",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149223,
+        "name_en": "Awlad Saqr",
+        "name_ar": "أولاد صقر",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149224,
+        "name_en": "Bilbeis",
+        "name_ar": "بيلبيس",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149225,
+        "name_en": "Diyarb Negm",
+        "name_ar": "ديرب نجم",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149226,
+        "name_en": "Husseiniya",
+        "name_ar": "الحسينية",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149229,
+        "name_en": "Faqous",
+        "name_ar": "فاقوس",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149230,
+        "name_en": "Heehya",
+        "name_ar": "ههيا",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149231,
+        "name_en": "Kafr Saqr",
+        "name_ar": "كفر صقر",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149221,
+        "name_en": "Abu Hammad Center",
+        "name_ar": "مركز أبو حماد",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149232,
+        "name_en": "Mashtoul El Souk",
+        "name_ar": "مسطول السوق",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149233,
+        "name_en": "Minya El Qamh",
+        "name_ar": "منيا القمح",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149234,
+        "name_en": "New Salhia",
+        "name_ar": "الصالحية الجديدة",
+        "governorate_id": 5067
+    },
+    {
+        "id": 149235,
+        "name_en": "Zagazig",
+        "name_ar": "زفتى",
+        "governorate_id": 5067
+    },
+    {
+        "id": 31763,
+        "name_en": "Akhmim",
+        "name_ar": "أخميم",
+        "governorate_id": 3226
+    },
+    {
+        "id": 31765,
+        "name_en": "El Balyana",
+        "name_ar": "البالية",
+        "governorate_id": 3226
+    },
+    {
+        "id": 31773,
+        "name_en": "El Mansha",
+        "name_ar": "المنشأة",
+        "governorate_id": 3226
+    },
+    {
+        "id": 31824,
+        "name_en": "Gerga",
+        "name_ar": "جرجا",
+        "governorate_id": 3226
+    },
+    {
+        "id": 31825,
+        "name_en": "Juheina",
+        "name_ar": "جهينة",
+        "governorate_id": 3226
+    },
+    {
+        "id": 31838,
+        "name_en": "Gerga Center",
+        "name_ar": "مركز جرجا",
+        "governorate_id": 3226
+    },
+    {
+        "id": 31839,
+        "name_en": "Sohag Center",
+        "name_ar": "مركز سوهاج",
+        "governorate_id": 3226
+    },
+    {
+        "id": 31867,
+        "name_en": "Sohag",
+        "name_ar": "سوهاج",
+        "governorate_id": 3226
+    },
+    {
+        "id": 31875,
+        "name_en": "Tahta",
+        "name_ar": "طهطا",
+        "governorate_id": 3226
+    },
+    {
+        "id": 31803,
+        "name_en": "Dahab",
+        "name_ar": "دهب",
+        "governorate_id": 3237
+    },
+    {
+        "id": 31812,
+        "name_en": "El Tor",
+        "name_ar": "الطور",
+        "governorate_id": 3237
+    },
+    {
+        "id": 31849,
+        "name_en": "Nuweiba",
+        "name_ar": "نويبع",
+        "governorate_id": 3237
+    },
+    {
+        "id": 31859,
+        "name_en": "Saint Catherine",
+        "name_ar": "سانت كاترين",
+        "governorate_id": 3237
+    },
+    {
+        "id": 31862,
+        "name_en": "Sharm El Sheikh",
+        "name_ar": "شرم الشيخ",
+        "governorate_id": 3237
+    },
+    {
+        "id": 31761,
+        "name_en": "Ain El Sokhna",
+        "name_ar": "عين السخنة",
+        "governorate_id": 3233
+    },
+    {
+        "id": 31868,
+        "name_en": "Suez",
+        "name_ar": "السويس",
+        "governorate_id": 3233
+    }
+]

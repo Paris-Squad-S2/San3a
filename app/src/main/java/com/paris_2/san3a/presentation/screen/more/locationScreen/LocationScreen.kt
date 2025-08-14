@@ -109,7 +109,7 @@ fun LocationScreenContent(
                         )
                 ) {
                     AppTextField(
-                        value = state.locationUiState.selectedGovernorate,
+                        value = state.locationUiState.selectedGovernorateName,
                         onValueChange = {},
                         placeholder = stringResource(R.string.choose_governorate),
                         readOnly = true,
@@ -150,7 +150,7 @@ fun LocationScreenContent(
                         )
                 ) {
                     AppTextField(
-                        value = state.locationUiState.selectedStreet,
+                        value = state.locationUiState.selectedCityName,
                         onValueChange = {},
                         placeholder = stringResource(R.string.choose_district),
                         label = null,
@@ -209,14 +209,14 @@ private fun getBottomSheetContent(
     return when (state.activeBottomSheet) {
         LocationBottomSheetType.GOVERNORATE -> BottomSheetContent(
             title = stringResProvider(R.string.choose_governorate),
-            items = state.governorates.map { SelectionItemData(it, showIcon = true) },
-            onClick = { selected -> locationInteractionListener.onAreaSelected(selected) }
+            items = state.governorates.map { SelectionItemData(it.id, it.name, showIcon = true) },
+            onClick = { selected -> locationInteractionListener.onGovernorateSelected(selected) }
         )
 
         LocationBottomSheetType.CITY -> BottomSheetContent(
             title = stringResProvider(R.string.choose_district),
-            items = state.streets.map { SelectionItemData(it, showIcon = false) },
-            onClick = { selected -> locationInteractionListener.onStreetChanged(selected) }
+            items = state.cities.map { SelectionItemData(it.id, it.name, showIcon = false) },
+            onClick = { selected -> locationInteractionListener.onCityChanged(selected) }
         )
 
         null -> null
@@ -231,8 +231,8 @@ fun LocationScreenPreview() {
         LocationScreenContent(
             state = LocationScreenState(),
             locationInteractionListener = object : LocationInteractionListener {
-                override fun onAreaSelected(area: String) {}
-                override fun onStreetChanged(street: String) {}
+                override fun onGovernorateSelected(governorateId: Int) {}
+                override fun onCityChanged(cityId: Int) {}
                 override fun onClickSave() {}
                 override fun onClickRetry() {}
                 override fun onNavigateBack() {}

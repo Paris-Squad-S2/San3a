@@ -1,0 +1,137 @@
+[
+    {
+        "id": 3235,
+        "name_en": "Alexandria",
+        "name_ar": "الإسكندرية"
+    },
+    {
+        "id": 3225,
+        "name_en": "Aswan",
+        "name_ar": "أسوان"
+    },
+    {
+        "id": 3236,
+        "name_en": "Assiut",
+        "name_ar": "أسيوط"
+    },
+    {
+        "id": 3241,
+        "name_en": "Beheira",
+        "name_ar": "البحيرة"
+    },
+    {
+        "id": 3230,
+        "name_en": "Beni Suef",
+        "name_ar": "بني سويف"
+    },
+    {
+        "id": 3223,
+        "name_en": "Cairo",
+        "name_ar": "القاهرة"
+    },
+    {
+        "id": 3245,
+        "name_en": "Dakahlia",
+        "name_ar": "الدقهلية"
+    },
+    {
+        "id": 3224,
+        "name_en": "Damietta",
+        "name_ar": "دمياط"
+    },
+    {
+        "id": 3238,
+        "name_en": "Faiyum",
+        "name_ar": "الفيوم"
+    },
+    {
+        "id": 3234,
+        "name_en": "Gharbia",
+        "name_ar": "الغربية"
+    },
+    {
+        "id": 3239,
+        "name_en": "Giza",
+        "name_ar": "الجيزة"
+    },
+    {
+        "id": 3244,
+        "name_en": "Ismailia",
+        "name_ar": "الإسماعيلية"
+    },
+    {
+        "id": 3222,
+        "name_en": "Kafr El Sheikh",
+        "name_ar": "كفر الشيخ"
+    },
+    {
+        "id": 3242,
+        "name_en": "Luxor",
+        "name_ar": "الأقصر"
+    },
+    {
+        "id": 3231,
+        "name_en": "Matrouh",
+        "name_ar": "مرسى مطروح"
+    },
+    {
+        "id": 3243,
+        "name_en": "Minya",
+        "name_ar": "المنيا"
+    },
+    {
+        "id": 3228,
+        "name_en": "Monufia",
+        "name_ar": "المنوفية"
+    },
+    {
+        "id": 3246,
+        "name_en": "New Valley",
+        "name_ar": "الوادي الجديد"
+    },
+    {
+        "id": 3227,
+        "name_en": "North Sinai",
+        "name_ar": "شمال سيناء"
+    },
+    {
+        "id": 3229,
+        "name_en": "Port Said",
+        "name_ar": "بورسعيد"
+    },
+    {
+        "id": 3232,
+        "name_en": "Qalyubia",
+        "name_ar": "قليوبية"
+    },
+    {
+        "id": 3247,
+        "name_en": "Qena",
+        "name_ar": "قنا"
+    },
+    {
+        "id": 3240,
+        "name_en": "Red Sea",
+        "name_ar": "البحر الأحمر"
+    },
+    {
+        "id": 5067,
+        "name_en": "Sharqia",
+        "name_ar": "الشرقية"
+    },
+    {
+        "id": 3226,
+        "name_en": "Sohag",
+        "name_ar": "سوهاج"
+    },
+    {
+        "id": 3237,
+        "name_en": "South Sinai",
+        "name_ar": "جنوب سيناء"
+    },
+    {
+        "id": 3233,
+        "name_en": "Suez",
+        "name_ar": "السويس"
+    }
+]

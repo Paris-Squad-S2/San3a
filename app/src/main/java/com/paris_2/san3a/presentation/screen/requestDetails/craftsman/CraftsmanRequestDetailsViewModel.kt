@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.IncrementJobsDoneForCraftsmanUseCase
@@ -31,6 +32,7 @@ class CraftsmanRequestDetailsViewModel(
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
+    private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val incrementJobsDoneForCraftsmanUseCase: IncrementJobsDoneForCraftsmanUseCase,
     private val updateEarningsForCraftsmanUseCase: UpdateEarningsForCraftsmanUseCase,
     private val getUserUseCase: GetUserUseCase,
@@ -51,11 +53,19 @@ class CraftsmanRequestDetailsViewModel(
         tryToExecute(
             execute = { getRequestDetailsByIdUseCase(requestId) },
             onSuccess = {
+                val governorate = getLocationInfoUseCase.getGovernorateById(it.governorateId)
+                val city = getLocationInfoUseCase.getCityById(it.cityId)
                 Log.d("CraftsmanRequestDetailsVM", "Request details loaded: $it")
                 updateState(
                     screenState.value.copy(
                         uiState = screenState.value.uiState.copy(
-                            request = it.toRequestServiceUIState(),
+                            request = it.toRequestServiceUIState(
+                                location =
+                                    listOfNotNull(
+                                        governorate?.name,
+                                        city?.name
+                                    ).joinToString(", ")
+                            ),
                         ),
                     )
                 )
@@ -442,11 +452,7 @@ class CraftsmanRequestDetailsViewModel(
                 )
             },
             onError = {
-                updateState(
-                    screenState.value.copy(
-                        error = it.message ?: "An error occurred while loading customer details",
-                    )
-                )
+                Log.d("CraftsmanRequestDetailsVM", "Error loading customer: ${it.message}")
             }
         )
     }
