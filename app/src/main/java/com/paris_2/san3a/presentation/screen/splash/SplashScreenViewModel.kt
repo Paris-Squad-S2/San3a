@@ -135,15 +135,6 @@ class SplashScreenViewModel(
         )
     }
 
-    private fun handleError(error: Throwable){
-        updateState(
-            newState = screenState.value.copy(
-                error = error.message,
-                isLoading = false
-            )
-        )
-    }
-
     fun navigateToDestination() {
         tryToExecute(
             execute = {
@@ -161,10 +152,18 @@ class SplashScreenViewModel(
         )
     }
 
+    private fun handleError(error: Throwable){
+        updateState(
+            newState = screenState.value.copy(
+                error = error.message,
+                isLoading = false
+            )
+        )
+
+    }
+
     fun onRetryClicked() {
         fetchUserProgress()
         navigateToDestination()
     }
-
-
 }
