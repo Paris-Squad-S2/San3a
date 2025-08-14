@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
@@ -49,7 +50,11 @@ import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
 
 @Composable
 fun CraftsManRequestDetailsScreen(
@@ -78,6 +83,7 @@ private fun CraftsManRequestDetailsScreenContent(
                 actionIcon = {
                     Icon(
                         modifier = Modifier
+                            .padding(end = 16.dp)
                             .clickable(onClick = interactionListener::onClickFavorite),
                         painter = painterResource(R.drawable.ic_heart_outline),
                         contentDescription = null,
@@ -203,7 +209,10 @@ fun CraftsmanRequestDetailsContent(
                                 interactionListener.onCancelRequestClick(state.request.id)
                             },
                             onPrimaryButtonClick = {
-                                interactionListener.markAsDoneClick(requestId = state.request.id, price = state.acceptedOffer.price)
+                                interactionListener.markAsDoneClick(
+                                    requestId = state.request.id,
+                                    price = state.acceptedOffer.price
+                                )
                             },
                             forCraftsMan = true,
                         )
@@ -239,7 +248,10 @@ fun CraftsmanRequestDetailsContent(
                         interactionListener.onCancelRequestClick(state.request.id)
                     },
                     onPrimaryButtonClick = {
-                        interactionListener.markAsDoneClick(requestId = state.request.id, price = state.yourOffer.price)
+                        interactionListener.markAsDoneClick(
+                            requestId = state.request.id,
+                            price = state.yourOffer.price
+                        )
                     },
                     forCraftsMan = true,
                 )
@@ -284,7 +296,10 @@ fun CraftsmanRequestDetailsContent(
                         interactionListener.onCancelRequestClick(state.request.id)
                     },
                     onPrimaryButtonClick = {
-                        interactionListener.markAsDoneClick(requestId = state.request.id, price = offer.price)
+                        interactionListener.markAsDoneClick(
+                            requestId = state.request.id,
+                            price = offer.price
+                        )
                     },
                     forCraftsMan = true,
                 )
@@ -364,13 +379,23 @@ fun ChatWithPosterCard(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun AddYourOfferSection(
     modifier: Modifier,
     interactionListener: CraftsmanRequestDetailsInteractionListener,
     state: CraftsmanRequestDetailsUiState
 ) {
+    val datePicker = rememberDatePickerState(
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                val today = getCurrentDateTime().toInstant(TimeZone.UTC).toEpochMilliseconds()
+                return utcTimeMillis >= today
+            }
+        }
+    )
+    val timePicker = rememberTimePickerState()
+
     AddOfferForm(
         modifier = modifier,
         price = state.offerToAdd.price,
@@ -384,8 +409,8 @@ fun AddYourOfferSection(
         onSendClick = interactionListener::onSendOfferClick,
         showDatePicker = state.showDatePicker,
         onShowDatePickerChange = interactionListener::onShowDatePickerChange,
-        datePickerState = rememberDatePickerState(),
-        timePickerState = rememberTimePickerState(),
+        datePickerState = datePicker,
+        timePickerState = timePicker,
         showTimePicker = state.showTimePicker,
         onShowTimePickerChange = interactionListener::onShowTimePickerChange,
         isOfferValid = state.isOfferValid
