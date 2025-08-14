@@ -61,6 +61,7 @@ data class UserUiState(
     val isVerify: Boolean = false,
     val isCraftsman: Boolean = true,
     val previousImage: Uri? = null,
+    val previousText: String = "",
 )
 
 class MoreViewModel(
@@ -498,10 +499,20 @@ class MoreViewModel(
         updateState(
             screenState.value.copy(showEditProfileBottomSheet = false)
         )
-        if (screenState.value.moreUiState.userUiState.name.isNotEmpty() ||
-            screenState.value.moreUiState.userUiState.imageUrl != null ||
-            screenState.value.moreUiState.userUiState.imageUrl != screenState.value.moreUiState.userUiState.previousImage
+        if ((screenState.value.moreUiState.userUiState.name.isNotEmpty() &&
+                    screenState.value.moreUiState.userUiState.name != screenState.value.moreUiState.userUiState.previousText) ||
+            (screenState.value.moreUiState.userUiState.imageUrl != null &&
+                    screenState.value.moreUiState.userUiState.imageUrl != screenState.value.moreUiState.userUiState.previousImage)
         ) {
+            updateState(
+                screenState.value.copy(
+                    moreUiState = screenState.value.moreUiState.copy(
+                        userUiState = screenState.value.moreUiState.userUiState.copy(
+                            previousText = screenState.value.moreUiState.userUiState.name
+                        )
+                    )
+                )
+            )
             saveUserInformation()
         }
     }
