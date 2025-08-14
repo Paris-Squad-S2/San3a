@@ -15,8 +15,22 @@ class LocationLocalDataSourceImpl(private val context: Context) : LocationLocalD
 
     override fun getGovernorates(): List<GovernorateDto> = readJsonList(GOVERNORATES_FILE)
 
-    override fun getCities(governorateId: Int): List<CityDto> = readJsonList<CityDto>(CITIES_FILE)
+    fun getAllCities(): List<CityDto> = readJsonList(CITIES_FILE)
+
+    override fun getCities(governorateId: Int): List<CityDto> = getAllCities()
         .filter { city -> city.governorateId == governorateId }
+
+    override fun getGovernorateById(governorateId: Int): GovernorateDto? {
+        return getGovernorates().let { governorateDtos ->
+            governorateDtos.find { it.id == governorateId }
+        }
+    }
+
+    override fun getCityById(cityId: Int): CityDto? {
+        return getAllCities().let { cityDtos ->
+            cityDtos.find { it.id == cityId }
+        }
+    }
 
     private inline fun <reified T> readJsonList(fileName: String): List<T> {
         val jsonString = getJsonString(fileName) ?: return emptyList()

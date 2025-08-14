@@ -50,28 +50,23 @@ data class ServiceUiState(
 )
 
 data class LocationUiState(
-    val government: Governorate? = null,
+    val governorate: Governorate? = null,
     val city: City? = null,
     val addressInDetails: String = "",
 )
 
 fun LocationUiState.toEntity(): Location {
     return Location(
-        government = this.government?.name ?: "", //TODO
-        cityName = this.city?.name ?: "",
+        governmentId = this.governorate?.id ?: throw IllegalArgumentException("Government cannot be null"),
+        cityId = this.city?.id ?: throw IllegalArgumentException("City cannot be null"),
         addressInDetails = this.addressInDetails
     )
 }
 
-fun Location.toUiState(): LocationUiState { //TODO
-//    return LocationUiState(
-//        government = this.government,
-//        city = this.cityName,
-//        addressInDetails = this.addressInDetails
-//    )
+fun Location.toUiState(governorate: Governorate?, city: City?): LocationUiState {
     return LocationUiState(
-        government = Governorate(id = 0, name = this.government),
-        city = City(id = 0, name = this.cityName, governorateId = 0),
+        governorate = governorate,
+        city = city,
         addressInDetails = this.addressInDetails
     )
 }

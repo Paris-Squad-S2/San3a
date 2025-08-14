@@ -45,12 +45,12 @@ class LocationViewModel(
         )
     }
 
-    private fun fetchCities(governorate: String) {
+    private fun fetchCities(governorateId: Int) {
         updateState(screenState.value.copy(isLoading = true))
 
         tryToExecute(
             execute = {
-                getLocationInfoUseCase.getCities(1) //TODO
+                getLocationInfoUseCase.getCities(governorateId)
             },
             onSuccess = { cities ->
                 updateState(
@@ -65,14 +65,13 @@ class LocationViewModel(
             onError = {
                 updateState(screenState.value.copy(isLoading = false, isNoInternet = true))
             },
-
-            )
+        )
     }
 
     override fun onClickSave() {
         val uiState = screenState.value.locationUiState
 
-        if (uiState.selectedGovernorate.isEmpty() || uiState.selectedStreet.isEmpty()) {
+        if (uiState.selectedGovernorateId == null || uiState.selectedCityId == null) {
             updateState(
                 screenState.value.copy(
                     showSnackBarError = true,
@@ -92,9 +91,9 @@ class LocationViewModel(
             execute = {
                 val phone = getPhoneNumberUseCase()
                 val location = Location(
-                    government = uiState.selectedGovernorate,
-                    cityName = uiState.selectedStreet,
-                    addressInDetails = "${uiState.selectedGovernorate},${uiState.selectedStreet}"
+                    governmentId = uiState.selectedGovernorateId,
+                    cityId = uiState.selectedCityId,
+                    addressInDetails = "${uiState.selectedGovernorateName}, ${uiState.selectedCityName}"
                 )
                 setUpAccountUseCase.saveLocation(phone, location)
             },
@@ -120,7 +119,6 @@ class LocationViewModel(
         )
     }
 
-
     override fun onClickRetry() {
         updateState(screenState.value.copy(isNoInternet = false))
         fetchGovernorates()
@@ -130,30 +128,62 @@ class LocationViewModel(
         navigateUp()
     }
 
-    override fun onAreaSelected(area: String) {
-        updateState(
-            screenState.value.copy(
-                locationUiState = screenState.value.locationUiState.copy(
-                    selectedGovernorate = area,
-                    selectedStreet = "",
-                    cities = emptyList(),
-                    activeBottomSheet = LocationBottomSheetType.CITY,
-                ),
-                locationButtonState = AppButtonState.Enable,
-            )
+    override fun onGovernorateSelected(governorateId: Int) {
+        tryToExecute(
+            execute = {
+                getLocationInfoUseCase.getGovernorateById(governorateId)
+            },
+            onSuccess = { governorate ->
+                updateState(
+                    screenState.value.copy(
+                        locationUiState = screenState.value.locationUiState.copy(
+                            selectedGovernorateName = governorate?.name.orEmpty(),
+                            selectedGovernorateId = governorateId,
+                            selectedCityName = "",
+                            selectedCityId = null,
+                            cities = emptyList(),
+                            activeBottomSheet = LocationBottomSheetType.CITY,
+                        ),
+                        locationButtonState = AppButtonState.Enable,
+                    )
+                )
+                fetchCities(governorateId)
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        showSnackBarError = true,
+                        errorMessage = R.string.some_error_happened,
+                    )
+                )
+            }
         )
-        fetchCities(area)
     }
 
-    override fun onStreetChanged(street: String) {
-        updateState(
-            screenState.value.copy(
-                locationUiState = screenState.value.locationUiState.copy(
-                    selectedStreet = street,
-                    activeBottomSheet = null
-                ),
-                locationButtonState = AppButtonState.Enable,
-            )
+    override fun onCityChanged(cityId: Int) {
+        tryToExecute(
+            execute = {
+                getLocationInfoUseCase.getCityById(cityId)
+            },
+            onSuccess = { city ->
+                updateState(
+                    screenState.value.copy(
+                        locationUiState = screenState.value.locationUiState.copy(
+                            selectedCityName = city?.name.orEmpty(),
+                            selectedCityId = cityId,
+                            activeBottomSheet = null,
+                        )
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        showSnackBarError = true,
+                        errorMessage = R.string.some_error_happened,
+                    )
+                )
+            }
         )
     }
 
@@ -186,11 +216,16 @@ class LocationViewModel(
             },
             onSuccess = { user ->
                 val location = user.location
+                val governorate =
+                    getLocationInfoUseCase.getGovernorateById(governorateId = location.governmentId)
+                val city = getLocationInfoUseCase.getCityById(cityId = location.cityId)
                 updateState(
                     screenState.value.copy(
                         locationUiState = screenState.value.locationUiState.copy(
-                            selectedGovernorate = location.government,
-                            selectedStreet = location.cityName
+                            selectedGovernorateName = governorate?.name.orEmpty(),
+                            selectedCityName = governorate?.name.orEmpty(),
+                            selectedGovernorateId = governorate?.id,
+                            selectedCityId = city?.id,
                         )
                     )
                 )

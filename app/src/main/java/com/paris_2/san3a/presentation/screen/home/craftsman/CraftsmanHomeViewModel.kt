@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.home.craftsman
 
 import android.util.Log
 import com.paris_2.san3a.domain.usecase.GetAvailableJobsUseCase
+import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRecentRelatedJobsUseCase
 import com.paris_2.san3a.domain.usecase.GetStatsUseCase
@@ -18,6 +19,7 @@ class CraftsmanHomeViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getOffersCountUseCase: GetOffersCountUseCase,
     private val getUserServicesUseCase: GetUserServicesUseCase,
+    private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getUserUseCase: GetUserUseCase,
 ) : CraftsmanInteractionListener, BaseViewModel<CraftsmanHomeState>(CraftsmanHomeState()) {
 
@@ -86,11 +88,13 @@ class CraftsmanHomeViewModel(
         tryToExecute(
             execute = { getUserUseCase(screenState.value.craftsmanHomeUiState.phoneNumber) },
             onSuccess = { user ->
+                val government = getLocationInfoUseCase.getGovernorateById(user.location.governmentId)
+                val city = getLocationInfoUseCase.getCityById(user.location.cityId)
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
                             currentUserName = user.fullName,
-                            location = user.location.government + ", " + user.location.cityName
+                            location = listOfNotNull(government?.name, city?.name).joinToString(", "),
                         )
                     )
                 )

@@ -2,7 +2,6 @@ package com.paris_2.san3a.presentation.screen.home.customer
 
 import com.paris_2.san3a.domain.entity.City
 import com.paris_2.san3a.domain.entity.Governorate
-import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
@@ -29,16 +28,8 @@ data class CustomerUiState(
     val mostRequestedServices: List<Service> = emptyList(),
     val services: List<Service> = emptyList(),
     val requestService: RequestServiceUiState? = null,
-    val locationUiState: LocationUiState = LocationUiState(),
     val searchQuery: String = "",
     val searchResults: List<Service> = emptyList()
-)
-
-data class LocationUiState(
-    val government: String = "",
-    val city: String = "",
-    val addressInDetails: String = "",
-    val cities: List<String> = emptyList()
 )
 
 data class BottomSheetUiState(
@@ -60,14 +51,6 @@ data class BottomSheetUiState(
     val locationBottomSheetType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
 
 )
-
-fun LocationUiState.toEntity(): Location {
-    return Location(
-        government = this.government,
-        cityName = this.city,
-        addressInDetails = this.addressInDetails
-    )
-}
 
 data class RequestServiceUiState(
     val title: String,

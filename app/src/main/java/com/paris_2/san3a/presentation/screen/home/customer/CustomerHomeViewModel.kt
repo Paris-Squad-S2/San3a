@@ -14,7 +14,6 @@ import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSh
 import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import java.util.Locale
@@ -294,11 +293,6 @@ class CustomerHomeViewModel(
                             bottomSheetGovernments = governments,
                             bottomSheetSelectedGovernment = ""
                         ),
-                        customerUiState = screenState.value.customerUiState.copy(
-                            locationUiState = screenState.value.customerUiState.locationUiState.copy(
-                                government = ""
-                            ),
-                        ),
                     )
                 )
             },
@@ -326,11 +320,6 @@ class CustomerHomeViewModel(
                         bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                             bottomSheetCities = cities,
                             bottomSheetSelectedCity = "",
-                        ),
-                        customerUiState = screenState.value.customerUiState.copy(
-                            locationUiState = screenState.value.customerUiState.locationUiState.copy(
-                                city = ""
-                            ),
                         ),
                     )
                 )
@@ -401,13 +390,15 @@ class CustomerHomeViewModel(
         tryToExecute(
             execute = { getUserUseCase(getPhoneNumberUseCase()) },
             onSuccess = {
+                val governorate = getLocationInfoUseCase.getGovernorateById(it.location.governmentId)
+                val city = getLocationInfoUseCase.getCityById(it.location.cityId)
                 updateState(
                     screenState.value.copy(
                         customerUiState = screenState.value.customerUiState.copy(
                             id = it.id,
                             currentUserName = it.fullName,
-                            government = it.location.government,
-                            city = it.location.cityName,
+                            government = governorate?.name.orEmpty(),
+                            city = city?.name.orEmpty(),
                         )
                     )
                 )
@@ -501,6 +492,5 @@ class CustomerHomeViewModel(
         const val ENGLISH_DESCRIPTION = "englishDescription"
         const val ARABIC_LANGUAGE = "ar"
         const val UNKNOWN_ERROR = "Unknown Error"
-        const val COUNTRY_NAME = "Egypt"
     }
 }

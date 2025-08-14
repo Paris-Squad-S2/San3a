@@ -20,16 +20,18 @@ data class LocationScreenState(
 
 data class LocationUiState(
     val governorates: List<Governorate> = emptyList(),
-    val selectedGovernorate: String = "",
+    val selectedGovernorateName: String = "",
+    val selectedGovernorateId: Int? = null,
     val cities: List<City> = emptyList(),
-    val selectedStreet: String = "",
+    val selectedCityName: String = "",
+    val selectedCityId: Int? = null,
     val activeBottomSheet: LocationBottomSheetType? = null,
 )
 
 data class BottomSheetContent(
     val title: String,
     val items: List<SelectionItemData>,
-    val onClick: (String) -> Unit
+    val onClick: (Int) -> Unit
 )
 
 enum class LocationBottomSheetType {

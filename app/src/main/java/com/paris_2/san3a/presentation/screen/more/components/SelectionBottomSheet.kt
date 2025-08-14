@@ -29,7 +29,7 @@ fun SelectionBottomSheet(
     isVisible: Boolean,
     items: List<SelectionItemData>,
     onDismiss: () -> Unit,
-    onItemClick: (String) -> Unit,
+    onItemClick: (Int) -> Unit,
 ) {
     BottomSheet(
         isVisible = isVisible,
@@ -67,7 +67,7 @@ fun SelectionBottomSheet(
             items.forEach { item ->
                 SelectionItem(
                     item = item,
-                    onClick = { onItemClick(item.title) }
+                    onClick = { onItemClick(item.id) }
                 )
             }
         }
@@ -84,10 +84,10 @@ fun SelectionBottomSheetPreview() {
             title = "Choose Governorate",
             isVisible = isVisible,
             items = listOf(
-                SelectionItemData("Governorate 1", true),
-                SelectionItemData("Governorate 2", true),
-                SelectionItemData("Governorate 3", true),
-                SelectionItemData("Governorate 4", true),
+                SelectionItemData(1,"Governorate 1", true),
+                SelectionItemData(2, "Governorate 2", true),
+                SelectionItemData(3, "Governorate 3", true),
+                SelectionItemData(4, "Governorate 4", true),
             ),
             onDismiss = { isVisible = false },
             onItemClick = { selected ->
