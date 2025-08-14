@@ -32,7 +32,7 @@ fun RequestService.toRequestServiceUiState(services: Map<String, String>): MyReq
         serviceId = this.serviceId,
         date = this.time.date.toString(),
         time = this.time.time.toString(),
-        serviceImage = services[this.serviceId] ?: ""
+        serviceImage = services[this.serviceId] ?: "",
     )
 }
 

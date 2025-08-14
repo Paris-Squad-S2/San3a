@@ -22,6 +22,7 @@ fun MostRequestedServices(
     services: List<Service>,
     isArabic: Boolean,
     action: CustomerHomeInteractionListener,
+    isDarkTheme: Boolean,
     modifier: Modifier = Modifier,
     onServiceClick: (String, String) -> Unit
 ) {
@@ -45,6 +46,8 @@ fun MostRequestedServices(
                     description = service.description[if (isArabic) "arabicDescription" else "englishDescription"]
                         ?: "",
                     serviceImageUrl = service.imageUrl,
+                    darkServiceImageUrl = service.darkImageUrl,
+                    isDarkTheme = isDarkTheme,
                     isLarge = true,
                     onclick = {
                         action.onServiceClick(service.id)

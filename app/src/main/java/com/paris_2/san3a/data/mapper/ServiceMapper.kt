@@ -8,7 +8,8 @@ fun ServiceDto.toEntity(): Service {
         id = id,
         title = title,
         description = description,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
+        darkImageUrl = darkImageUrl
     )
 }
 
@@ -21,6 +22,7 @@ fun Service.toDto(): ServiceDto {
         id = id,
         title = title,
         description = description,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
+        darkImageUrl = darkImageUrl
     )
 }

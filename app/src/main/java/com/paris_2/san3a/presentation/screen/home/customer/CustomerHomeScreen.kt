@@ -145,9 +145,12 @@ private fun CustomerHomeScreenContent(
         ) {
             when (state.bottomSheetUiState.bottomSheetStep) {
                 BottomSheetStep.SELECT_SERVICE -> {
+                    val allServices = state.customerUiState.services + state.customerUiState.mostRequestedServices
+                    val selected = allServices.find { it.id == state.bottomSheetUiState.bottomSheetServiceId }
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        imageUrl = state.bottomSheetUiState.bottomSheetServiceImageUrl,
+                        imageUrl = selected?.imageUrl.orEmpty(),
+                        darkImageUrl = selected?.darkImageUrl.orEmpty(),
                         color = Theme.colors.additional.primary.blue,
                         subTitle = stringResource(R.string.what_do_you_need_help_with),
                         buttonTitle = stringResource(R.string.next),
@@ -155,6 +158,7 @@ private fun CustomerHomeScreenContent(
                         step = 1,
                         onButtonClick = { action.nextBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() },
+                        isDarkTheme = state.isDarkTheme,
                     ) {
                         RequestTitleContent(
                             value = state.bottomSheetUiState.bottomSheetSubtitle,
@@ -172,9 +176,12 @@ private fun CustomerHomeScreenContent(
                 }
 
                 BottomSheetStep.PROBLEM_DESCRIPTION -> {
+                    val allServices = state.customerUiState.services + state.customerUiState.mostRequestedServices
+                    val selected = allServices.find { it.id == state.bottomSheetUiState.bottomSheetServiceId }
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        imageUrl = state.bottomSheetUiState.bottomSheetServiceImageUrl,
+                        imageUrl = selected?.imageUrl.orEmpty(),
+                        darkImageUrl = selected?.darkImageUrl.orEmpty(),
                         color = Theme.colors.additional.primary.blue,
                         subTitle = stringResource(R.string.describe_the_problem_in_detail),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetDescription.isNotEmpty(),
@@ -182,7 +189,8 @@ private fun CustomerHomeScreenContent(
                         buttonTitle = stringResource(R.string.next),
                         step = 2,
                         onClickBack = { action.previousBottomSheetStep() },
-                        onExitClick = { action.onDismissBottomSheet() }
+                        onExitClick = { action.onDismissBottomSheet() },
+                        isDarkTheme = state.isDarkTheme,
                     ) {
                         RequestDescriptionContent(
                             value = state.bottomSheetUiState.bottomSheetDescription,
@@ -193,9 +201,12 @@ private fun CustomerHomeScreenContent(
                 }
 
                 BottomSheetStep.SELECT_LOCATION -> {
+                    val allServices = state.customerUiState.services + state.customerUiState.mostRequestedServices
+                    val selected = allServices.find { it.id == state.bottomSheetUiState.bottomSheetServiceId }
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        imageUrl = state.bottomSheetUiState.bottomSheetServiceImageUrl,
+                        imageUrl = selected?.imageUrl.orEmpty(),
+                        darkImageUrl = selected?.darkImageUrl.orEmpty(),
                         color = Theme.colors.additional.primary.blue,
                         subTitle = stringResource(R.string.where_are_you_from),
                         buttonTitle = stringResource(R.string.next),
@@ -203,7 +214,8 @@ private fun CustomerHomeScreenContent(
                         step = 3,
                         onButtonClick = { action.nextBottomSheetStep() },
                         onClickBack = { action.previousBottomSheetStep() },
-                        onExitClick = { action.onDismissBottomSheet() }
+                        onExitClick = { action.onDismissBottomSheet() },
+                        isDarkTheme = state.isDarkTheme,
                     ) {
                         LocationContent(
                             governments = state.bottomSheetUiState.bottomSheetGovernments,
@@ -233,9 +245,12 @@ private fun CustomerHomeScreenContent(
                 }
 
                 BottomSheetStep.IMAGE_UPLOAD -> {
+                    val allServices = state.customerUiState.services + state.customerUiState.mostRequestedServices
+                    val selected = allServices.find { it.id == state.bottomSheetUiState.bottomSheetServiceId }
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        imageUrl = state.bottomSheetUiState.bottomSheetServiceImageUrl,
+                        imageUrl = selected?.imageUrl.orEmpty(),
+                        darkImageUrl = selected?.darkImageUrl.orEmpty(),
                         color = Theme.colors.additional.primary.blue,
                         subTitle = stringResource(R.string.add_some_photos),
                         optionalText = stringResource(R.string.optional),
@@ -258,7 +273,8 @@ private fun CustomerHomeScreenContent(
                         },
                         onClickBack = { action.previousBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() },
-                        requestButtonState = state.buttonSheetState
+                        requestButtonState = state.buttonSheetState,
+                        isDarkTheme = state.isDarkTheme,
                     ) {
                         if (state.bottomSheetUiState.bottomSheetImages.isEmpty()) {
                             AddPhotosContent(
@@ -376,7 +392,8 @@ private fun CustomerHomeScreenContent(
                         MostRequestedServices(
                             services = state.customerUiState.mostRequestedServices,
                             isArabic = isArabic,
-                            action = action
+                            action = action,
+                            isDarkTheme = state.isDarkTheme
                         ) { selectedTitle, selectedServiceId ->
                             action.initBottomSheet(selectedTitle, selectedServiceId)
                         }
@@ -413,7 +430,9 @@ private fun CustomerHomeScreenContent(
                             description = service.description[if (isArabic) ARABIC_DESCRIPTION else ENGLISH_DESCRIPTION]
                                 ?: "",
                             serviceImageUrl = service.imageUrl,
+                            darkServiceImageUrl = service.darkImageUrl,
                             isLarge = false,
+                            isDarkTheme = state.isDarkTheme,
                             modifier = Modifier
                                 .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
                             onclick = {

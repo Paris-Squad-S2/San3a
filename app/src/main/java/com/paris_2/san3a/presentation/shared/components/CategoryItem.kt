@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +30,8 @@ fun CategoryItem(
     title: String,
     description: String,
     serviceImageUrl: String,
+    darkServiceImageUrl: String = "",
+    isDarkTheme: Boolean? = null,
     modifier: Modifier = Modifier,
     isLarge: Boolean = true,
     onclick: () -> Unit
@@ -39,6 +42,8 @@ fun CategoryItem(
             description = description,
             modifier = modifier,
             serviceImageUrl = serviceImageUrl,
+            darkServiceImageUrl = darkServiceImageUrl,
+            isDarkTheme = isDarkTheme,
             onclick = onclick
         )
     }else{
@@ -47,6 +52,8 @@ fun CategoryItem(
             description = description,
             modifier = modifier,
             serviceImageUrl = serviceImageUrl,
+            darkServiceImageUrl = darkServiceImageUrl,
+            isDarkTheme = isDarkTheme,
             onclick = onclick
         )
     }
@@ -59,8 +66,13 @@ fun CategoryItemLarge(
     description: String,
     modifier: Modifier = Modifier,
     serviceImageUrl: String,
+    darkServiceImageUrl: String = "",
+    isDarkTheme: Boolean? = null,
     onclick: () -> Unit
 ){
+    val shouldUseDark = (isDarkTheme ?: isSystemInDarkTheme()) && darkServiceImageUrl.isNotBlank()
+    val imageUrlToShow = if (shouldUseDark) darkServiceImageUrl else serviceImageUrl
+
     Box(
         modifier = modifier
             .width(200.dp)
@@ -77,7 +89,7 @@ fun CategoryItemLarge(
                     .size(54.dp)
                     .clip(RoundedCornerShape(Theme.radius.extraLarge))
                     .padding(bottom = 12.dp),
-                model = serviceImageUrl,
+                model = imageUrlToShow,
                 contentDescription = null
             )
             Text(
@@ -103,8 +115,13 @@ fun CategoryItemSmall(
     description: String,
     modifier: Modifier = Modifier,
     serviceImageUrl: String,
+    darkServiceImageUrl: String = "",
+    isDarkTheme: Boolean? = null,
     onclick: () -> Unit
 ){
+    val shouldUseDark = (isDarkTheme ?: isSystemInDarkTheme()) && darkServiceImageUrl.isNotBlank()
+    val imageUrlToShow = if (shouldUseDark) darkServiceImageUrl else serviceImageUrl
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -123,7 +140,7 @@ fun CategoryItemSmall(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(Theme.radius.extraLarge)),
-                model =serviceImageUrl,
+                model = imageUrlToShow,
                 contentDescription = null
             )
             Column(

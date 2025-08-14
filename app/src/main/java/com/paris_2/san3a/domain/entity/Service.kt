@@ -4,5 +4,6 @@ data class Service(
     val id: String,
     val title: Map<String, String>,
     val description: Map<String, String>,
-    val imageUrl: String
+    val imageUrl: String,
+    val darkImageUrl: String
 )

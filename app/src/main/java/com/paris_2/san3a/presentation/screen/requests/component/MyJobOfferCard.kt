@@ -55,6 +55,8 @@ fun MyJobOfferCard(
                     title = jobUiState.title,
                     serviceType = jobUiState.serviceType,
                     serviceImageUrl = jobUiState.serviceImage,
+                    darkServiceImageUrl = jobUiState.serviceImage,
+                    isDarkTheme = null,
                 )
 
                 Row(Modifier.padding(top = 16.dp)) {

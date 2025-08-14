@@ -8,6 +8,7 @@ import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
 import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
+import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
@@ -25,6 +26,7 @@ class CustomerHomeViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getCustomerServiceUseCase: GetUserServicesUseCase,
+    private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
 ) : CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
 
     private val _triggerVoiceSearch = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -35,6 +37,19 @@ class CustomerHomeViewModel(
         loadMostRequestedServices()
         loadServices()
         getGovernments()
+        loadAppTheme()
+    }
+
+    private fun loadAppTheme() {
+        tryToExecute(
+            execute = { customizeProfileSettingsUseCase.isDarkThemeEnabled() },
+            onSuccess = { themeFlow ->
+                themeFlow.collect { isDark ->
+                    updateState(screenState.value.copy(isDarkTheme = isDark))
+                }
+            },
+            onError = { }
+        )
     }
 
     override fun initBottomSheet(serviceTitle: String, serviceId: String) {

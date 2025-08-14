@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.home.craftsman.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,8 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun RequestBottomSheetContent(
     title: String,
     imageUrl: String,
+    darkImageUrl: String = "",
+    isDarkTheme: Boolean? = null,
     color: Color,
     subTitle: String,
     optionalText: String? = null,
@@ -50,6 +53,9 @@ fun RequestBottomSheetContent(
     requestButtonState: AppButtonState = AppButtonState.Enable,
     content: @Composable () -> Unit,
 ) {
+    val useDark = ((isDarkTheme ?: isSystemInDarkTheme()) && darkImageUrl.isNotBlank())
+    val headerImageUrl = if (useDark) darkImageUrl else imageUrl
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -62,13 +68,12 @@ fun RequestBottomSheetContent(
                 modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
+            ) {
                 AsyncImage(
-                    model = imageUrl,
+                    model = headerImageUrl,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(18.dp)
-                        ,
+                        .size(18.dp),
                 )
                 Text(
                     text = title,
@@ -177,6 +182,8 @@ private fun Preview() {
     RequestBottomSheetContent(
         title = "Plumping Request",
         imageUrl = "https://example.com/image.png",
+        darkImageUrl = "https://example.com/dark-image.png",
+        isDarkTheme = null,
         color = Theme.colors.shade.primary,
         subTitle = "What do you need help with?",
         optionalText = "(Optional)",
