@@ -144,7 +144,7 @@ class LocationViewModel(
                             cities = emptyList(),
                             activeBottomSheet = LocationBottomSheetType.CITY,
                         ),
-                        locationButtonState = AppButtonState.Enable,
+                        locationButtonState = AppButtonState.Disabled,
                     )
                 )
                 fetchCities(governorateId)
@@ -172,7 +172,8 @@ class LocationViewModel(
                             selectedCityName = city?.name.orEmpty(),
                             selectedCityId = cityId,
                             activeBottomSheet = null,
-                        )
+                        ),
+                        locationButtonState = AppButtonState.Enable,
                     )
                 )
             },
@@ -223,12 +224,13 @@ class LocationViewModel(
                     screenState.value.copy(
                         locationUiState = screenState.value.locationUiState.copy(
                             selectedGovernorateName = governorate?.name.orEmpty(),
-                            selectedCityName = governorate?.name.orEmpty(),
                             selectedGovernorateId = governorate?.id,
+                            selectedCityName = city?.name.orEmpty(),
                             selectedCityId = city?.id,
                         )
                     )
                 )
+                fetchCities(governorate?.id ?: 0)
             },
             onError = {
                 updateState(screenState.value.copy(isNoInternet = true))
