@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.core.net.toUri
 import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
+import com.paris_2.san3a.data.source.local.LocalDataStore
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
@@ -17,31 +18,41 @@ import com.paris_2.san3a.domain.UpdateNumOfRequestsException
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.repository.HomeRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
 class HomeRepositoryImpl(
     private val serviceRemoteDataSource: ServiceRemoteDataSource,
     private val firebaseStorageRemoteDataSource: StorageRemoteDataSource,
-    private val networkConnectionChecker: NetworkConnectionChecker
+    private val networkConnectionChecker: NetworkConnectionChecker,
+    private val localDataStore: LocalDataStore
 ) : HomeRepository, BaseRepository() {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAllServices(): Flow<List<Service>> {
 
         if (networkConnectionChecker.isConnected.value.not()) {
             throw NoInternetConnectionException()
         }
 
-        return serviceRemoteDataSource.getAllServices()
-            .map { dtoList -> dtoList.map { it.toEntity() } }
-            .catch { throw GetAllServicesException() }
+        return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
+            serviceRemoteDataSource.getAllServices()
+                .map { dtoList -> dtoList.map { it.toEntity(isDarkTheme = isDarkModeEnabled) } }
+                .catch { throw GetAllServicesException() }
+        }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun searchServices(query: String): Flow<List<Service>> {
-        return serviceRemoteDataSource.searchServices(query)
-            .map { dto -> dto.map { it.toEntity() } }
-            .catch { throw SearchServicesException() }
+        return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
+            serviceRemoteDataSource.searchServices(query)
+                .map { dto -> dto.map { it.toEntity(isDarkTheme = isDarkModeEnabled) } }
+                .catch { throw SearchServicesException() }
+        }
     }
 
     override suspend fun requestService(requestedService: RequestService) {
@@ -66,11 +77,13 @@ class HomeRepositoryImpl(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getMostRequestedServices(): Flow<List<Service>> {
-        return serviceRemoteDataSource.getMostRequestedServices()
-            .map { dto -> dto.map { it.toEntity() } }
-            .catch { throw GetMostRequestedServicesException() }
-
+        return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
+            serviceRemoteDataSource.getMostRequestedServices()
+                .map { dto -> dto.map { it.toEntity(isDarkTheme = isDarkModeEnabled) } }
+                .catch { throw GetMostRequestedServicesException() }
+        }
     }
 
     override fun getAvailableJobs(): Flow<List<RequestService>> {

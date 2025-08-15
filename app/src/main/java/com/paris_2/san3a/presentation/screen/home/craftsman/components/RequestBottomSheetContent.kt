@@ -37,8 +37,6 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun RequestBottomSheetContent(
     title: String,
     imageUrl: String,
-    darkImageUrl: String = "",
-    isDarkTheme: Boolean? = null,
     color: Color,
     subTitle: String,
     optionalText: String? = null,
@@ -53,9 +51,6 @@ fun RequestBottomSheetContent(
     requestButtonState: AppButtonState = AppButtonState.Enable,
     content: @Composable () -> Unit,
 ) {
-    val useDark = ((isDarkTheme ?: isSystemInDarkTheme()) && darkImageUrl.isNotBlank())
-    val headerImageUrl = if (useDark) darkImageUrl else imageUrl
-
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -70,7 +65,7 @@ fun RequestBottomSheetContent(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 AsyncImage(
-                    model = headerImageUrl,
+                    model = imageUrl,
                     contentDescription = null,
                     modifier = Modifier
                         .size(18.dp),
@@ -182,8 +177,6 @@ private fun Preview() {
     RequestBottomSheetContent(
         title = "Plumping Request",
         imageUrl = "https://example.com/image.png",
-        darkImageUrl = "https://example.com/dark-image.png",
-        isDarkTheme = null,
         color = Theme.colors.shade.primary,
         subTitle = "What do you need help with?",
         optionalText = "(Optional)",

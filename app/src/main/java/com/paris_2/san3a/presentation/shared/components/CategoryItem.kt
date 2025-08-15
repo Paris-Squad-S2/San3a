@@ -30,9 +30,8 @@ fun CategoryItem(
     title: String,
     description: String,
     serviceImageUrl: String,
-    darkServiceImageUrl: String = "",
-    isDarkTheme: Boolean? = null,
     modifier: Modifier = Modifier,
+    isDarkTheme: Boolean? = null,
     isLarge: Boolean = true,
     onclick: () -> Unit
 ){
@@ -42,7 +41,6 @@ fun CategoryItem(
             description = description,
             modifier = modifier,
             serviceImageUrl = serviceImageUrl,
-            darkServiceImageUrl = darkServiceImageUrl,
             isDarkTheme = isDarkTheme,
             onclick = onclick
         )
@@ -52,7 +50,6 @@ fun CategoryItem(
             description = description,
             modifier = modifier,
             serviceImageUrl = serviceImageUrl,
-            darkServiceImageUrl = darkServiceImageUrl,
             isDarkTheme = isDarkTheme,
             onclick = onclick
         )

@@ -5,5 +5,4 @@ data class Service(
     val title: Map<String, String>,
     val description: Map<String, String>,
     val imageUrl: String,
-    val darkImageUrl: String
 )

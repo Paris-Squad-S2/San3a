@@ -757,7 +757,6 @@ class AccountViewModel(
                         title = mapOf(currentLocale to serviceUiState.serviceTitle),
                         description = mapOf(currentLocale to serviceUiState.serviceDescription),
                         imageUrl = serviceUiState.serviceImage,
-                        darkImageUrl = serviceUiState.serviceImage
                     )
                 }
                 setUpAccountUseCase.saveServices(

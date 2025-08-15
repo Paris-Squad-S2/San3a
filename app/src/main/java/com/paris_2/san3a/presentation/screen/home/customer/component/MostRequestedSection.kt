@@ -46,7 +46,6 @@ fun MostRequestedServices(
                     description = service.description[if (isArabic) "arabicDescription" else "englishDescription"]
                         ?: "",
                     serviceImageUrl = service.imageUrl,
-                    darkServiceImageUrl = service.darkImageUrl,
                     isDarkTheme = isDarkTheme,
                     isLarge = true,
                     onclick = {
