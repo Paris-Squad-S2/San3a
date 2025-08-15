@@ -1,9 +1,11 @@
 package com.paris_2.san3a.domain.repository
 
-import com.paris_2.san3a.domain.entity.Cities
-import com.paris_2.san3a.domain.entity.States
+import com.paris_2.san3a.domain.entity.City
+import com.paris_2.san3a.domain.entity.Governorate
 
 interface LocationRepository {
-    suspend fun getGovernmentsInCountry(countryName: String): States
-    suspend fun getCitiesInGovernment(countryName: String, stateName: String): Cities
+    suspend fun getGovernorates(): List<Governorate>
+    suspend fun getCitiesInGovernment(governorateId: Int): List<City>
+    suspend fun getGovernorateById(governorateId: Int): Governorate?
+    suspend fun getCityById(cityId: Int): City?
 }

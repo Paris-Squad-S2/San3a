@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.onboarding
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import com.paris_2.san3a.presentation.screen.onboarding.sections.TextSection
 import com.paris_2.san3a.presentation.screen.onboarding.sections.TopSection
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
+import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -34,11 +36,26 @@ fun OnBoardingScreen(
     pages: List<Page>,
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
-    OnBoardingScreenContent(
-        pages = pages,
-        state = state,
-        interactionListener = viewModel
-    )
+    when{
+        state.error!=null ->{
+            LostConnectionScreen(
+                onRetry = {
+                    viewModel.setOnboardingCompleted()
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Theme.colors.background.screen)
+                    .padding(horizontal = 60.dp)
+            )
+        }
+        state.isCompleted ->{
+            OnBoardingScreenContent(
+                pages = pages,
+                state = state,
+                interactionListener = viewModel
+            )
+        }
+    }
 }
 
 @Composable

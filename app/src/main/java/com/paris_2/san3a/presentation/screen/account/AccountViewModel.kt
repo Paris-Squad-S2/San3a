@@ -6,10 +6,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.domain.entity.City
+import com.paris_2.san3a.domain.entity.Governorate
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
@@ -23,7 +26,6 @@ import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSh
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
-import androidx.navigation.NavOptions
 
 class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
@@ -148,13 +150,10 @@ class AccountViewModel(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
                             userType = UserType.valueOf(user.accountType.name),
-                            locationUiState = user.location.let {
-                                LocationUiState(
-                                    government = it.government,
-                                    city = it.cityName,
-                                    addressInDetails = it.addressInDetails
-                                )
-                            },
+                            locationUiState = user.location.toUiState(
+                                getLocationInfoUseCase.getGovernorateById(user.location.governmentId),
+                                getLocationInfoUseCase.getCityById(user.location.cityId)
+                            ),
                             customerName = user.fullName,
                             customerProfilePhotoUri = if (user.profilePhoto.isNotBlank()) user.profilePhoto.toUri() else null,
                             frontOfNationalIdUri = if (user.nationalIdFrontImage.isNotBlank()) user.nationalIdFrontImage.toUri() else null,
@@ -163,7 +162,7 @@ class AccountViewModel(
                             accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
                                 userTypeButtonState = if (user.accountType.name.isNotBlank()) AppButtonState.Enable else AppButtonState.Disabled,
                                 profileButtonState = if (user.fullName.isNotBlank()) AppButtonState.Enable else AppButtonState.Disabled,
-                                locationButtonState = if (user.location.government.isNotBlank()) AppButtonState.Enable else AppButtonState.Disabled,
+                                locationButtonState = if (user.location.governmentId == 0) AppButtonState.Enable else AppButtonState.Disabled,
                                 verifyIdentityButtonState = if (user.nationalIdBackImage.isNotBlank() && user.nationalIdFrontImage.isNotEmpty()) AppButtonState.Enable else AppButtonState.Disabled,
                             )
                         )
@@ -341,7 +340,7 @@ class AccountViewModel(
                 )
             )
         )
-        if (screenState.value.accountUiState.backOfNationalIdUri!=null)
+        if (screenState.value.accountUiState.backOfNationalIdUri != null)
             updateState(
                 screenState.value.copy(
                     accountUiState = screenState.value.accountUiState.copy(
@@ -361,7 +360,7 @@ class AccountViewModel(
                 )
             )
         )
-        if (screenState.value.accountUiState.frontOfNationalIdUri!=null)
+        if (screenState.value.accountUiState.frontOfNationalIdUri != null)
             updateState(
                 screenState.value.copy(
                     accountUiState = screenState.value.accountUiState.copy(
@@ -382,7 +381,9 @@ class AccountViewModel(
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    workImagesUris = screenState.value.accountUiState.workImagesUris?.plus(filteredUris),
+                    workImagesUris = screenState.value.accountUiState.workImagesUris?.plus(
+                        filteredUris
+                    ),
                 )
             )
         )
@@ -440,8 +441,8 @@ class AccountViewModel(
                     )
             }
 
-            2 ->{
-                if (screenState.value.accountUiState.customerName.isBlank()){
+            2 -> {
+                if (screenState.value.accountUiState.customerName.isBlank()) {
                     updateState(
                         screenState.value.copy(
                             accountUiState = screenState.value.accountUiState.copy(
@@ -451,7 +452,7 @@ class AccountViewModel(
                             )
                         )
                     )
-                }else{
+                } else {
                     updateState(
                         screenState.value.copy(
                             accountUiState = screenState.value.accountUiState.copy(
@@ -465,7 +466,7 @@ class AccountViewModel(
             }
 
             3 -> {
-                if (!screenState.value.accountUiState.workImagesUris.isNullOrEmpty()){
+                if (!screenState.value.accountUiState.workImagesUris.isNullOrEmpty()) {
                     updateState(
                         screenState.value.copy(
                             accountUiState = screenState.value.accountUiState.copy(
@@ -542,12 +543,12 @@ class AccountViewModel(
 
     private fun getGovernments() {
         tryToExecute(
-            execute = { getLocationInfoUseCase.getGovernments(countryName = "Egypt") },
+            execute = { getLocationInfoUseCase.getGovernments() },
             onSuccess = { governments ->
                 updateState(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
-                            governments = governments.names
+                            governments = governments
                         )
                     )
                 )
@@ -563,19 +564,16 @@ class AccountViewModel(
         )
     }
 
-    fun getCities(stateName: String) {
+    fun getCities(governorateId: Int) {
         tryToExecute(
             execute = {
-                getLocationInfoUseCase.getCities(
-                    countryName = "Egypt",
-                    stateName = stateName
-                )
+                getLocationInfoUseCase.getCities(governorateId)
             },
             onSuccess = { cities ->
                 updateState(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
-                            cities = cities.names,
+                            cities = cities,
                             locationType = LocationBottomSheetContentType.CITY
                         )
                     )
@@ -592,25 +590,25 @@ class AccountViewModel(
         )
     }
 
-    fun updateGovernmentLocation(government: String) {
+    fun updateGovernmentLocation(governorate: Governorate) {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
                     locationUiState = screenState.value.accountUiState.locationUiState.copy(
-                        government = government
+                        governorate = governorate
                     )
                 )
             )
         )
     }
 
-    override fun onGovernmentSelected(government: String) {
-        getCities(government)
+    override fun onGovernmentSelected(governorate: Governorate) {
+        getCities(governorate.id)
         onCitiesBottomSheetVisibilityToggled()
-        updateGovernmentLocation(government)
+        updateGovernmentLocation(governorate)
     }
 
-    override fun onCitiesSelected(city: String) {
+    override fun onCitiesSelected(city: City) {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(

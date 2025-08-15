@@ -2,6 +2,7 @@ package com.paris_2.san3a.data.source.remote.user
 
 import android.util.Log
 import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.Query
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.SetOperation
 import com.paris_2.san3a.data.service.firestore.WriteOperation
@@ -84,7 +85,7 @@ class UserRemoteDataSourceImpl(
         }
         return fireStoreService.streamCollection(
             path = path,
-            fromJson = ::getServices
+            fromJson = { _, serviceId -> serviceId },
         ).let { docsFlow ->
             docsFlow.flatMapLatest { docsList ->
                 if (docsList.isNotEmpty()) {
@@ -102,15 +103,11 @@ class UserRemoteDataSourceImpl(
         }
     }
 
-    fun getServices(data: Map<String, Any>, serviceId: String): String {
-        return serviceId
-    }
-
     override suspend fun updateLocation(phone: String, location: Location) {
         val data = mapOf(
             "location" to mapOf(
-                "cityName" to location.cityName,
-                "government" to location.government,
+                "cityId" to location.cityId,
+                "governmentId" to location.governmentId,
                 "addressInDetails" to location.addressInDetails
             ),
         )
@@ -158,30 +155,10 @@ class UserRemoteDataSourceImpl(
 
 
     override suspend fun getUser(phone: String): User {
-        val userData = fireStoreService.getDoc(
+        return fireStoreService.getDoc(
             path = "$USERS_COLLECTION/$phone",
-            fromJson = { data, _ -> data }
+            fromJson = User::fromJson
         ) ?: throw Exception("User not found with phone number: $phone")
-
-        return User(
-            id = phone,
-            phone = phone,
-            fullName = userData["fullName"]?.toString() ?: "",
-            profilePhoto = userData["profilePhoto"]?.toString() ?: "",
-            nationalIdFrontImage = userData["nationalIdFrontImage"]?.toString() ?: "",
-            nationalIdBackImage = userData["nationalIdBackImage"]?.toString() ?: "",
-            workDescription = userData["workDescription"]?.toString() ?: "",
-            accountType = AccountType.entries.find {
-                it.name == userData["accountType"]?.toString()
-            } ?: AccountType.CUSTOMER,
-            location = (userData["location"] as? Map<*, *>)?.let { locationData ->
-                Location(
-                    government = locationData["government"]?.toString() ?: "",
-                    cityName = locationData["cityName"]?.toString() ?: "",
-                    addressInDetails = locationData["addressInDetails"]?.toString() ?: ""
-                )
-            } ?: Location("", "", ""),
-        )
     }
 
     override suspend fun getWorkMedia(phone: String): List<String> {
@@ -237,8 +214,8 @@ class UserRemoteDataSourceImpl(
     }
 
     override suspend fun updateEarningsForCraftsman(
-        userId: String,
         craftsmanId: String,
+        userId: String,
         requestId: String,
         earnings: Double
     ) {
@@ -291,7 +268,9 @@ class UserRemoteDataSourceImpl(
             path = SERVICE_REQUESTS_COLLECTION,
             fromJson = RequestServiceDto::fromJson,
             queryBuilder = { query ->
-                query.whereIn("title", relatedJobs)
+                query
+                    .whereIn("serviceId", relatedJobs)
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
             }
         )
     }

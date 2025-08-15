@@ -9,6 +9,7 @@ import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
@@ -28,6 +29,7 @@ class MyJobsCraftsmanViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
+    private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
     private val getCraftManOfferOnRequestUseCase: GetCraftManOfferOnRequestUseCase,
     private val createChatUseCase: CreateChatUseCase,
@@ -88,27 +90,43 @@ class MyJobsCraftsmanViewModel(
     }
 
     private fun onGetCraftsManOfferOnRequestEach(result: List<RequestService>?) {
-        Log.d("MyOfferCraftsmanViewModel", "Fetched requests: $result")
-        val filteredResult =
-            result?.filter { it.selectedCraftsmanId.isNullOrBlank() || it.selectedCraftsmanId == screenState.value.myOffersCraftsmanUiState.craftsManId }
-                ?: emptyList()
-        Log.d("MyOfferCraftsmanViewModel", "Filtered requests: $filteredResult")
-        updateState(
-            MyJobsCraftsmanScreenState(
-                isLoading = false,
-                errorMessage = null,
-                showSnackBarError = false,
-                myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                    ongoing = filteredResult.filter { it.requestStatus == RequestStatus.ONGOING }
-                        .toMyJobOfferUiStateMap(),
-                    completed = filteredResult.filter { it.requestStatus == RequestStatus.COMPLETED }
-                        .toMyJobOfferUiStateMap(),
-                    canceled = filteredResult.filter { it.requestStatus == RequestStatus.CANCELLED }
-                        .toMyJobOfferUiStateMap()
+        tryToExecute(
+            execute = {
+                Log.d("MyOfferCraftsmanViewModel", "Fetched requests: $result")
+                val filteredResult =
+                    result?.filter { it.selectedCraftsmanId.isNullOrBlank() || it.selectedCraftsmanId == screenState.value.myOffersCraftsmanUiState.craftsManId }
+                        ?: emptyList()
+                Log.d("MyOfferCraftsmanViewModel", "Filtered requests: $filteredResult")
+                filteredResult.map { request ->
+                    val governorate = getLocationInfoUseCase.getGovernorateById(request.governorateId)
+                    val city = getLocationInfoUseCase.getCityById(request.cityId)
+                    request.toMyJobOfferUiState(
+                        location = "${governorate?.name.orEmpty()} ${city?.name.orEmpty()}"
+                    )
+                }
+            },
+            onSuccess = { mappedResult ->
+                updateState(
+                    MyJobsCraftsmanScreenState(
+                        isLoading = false,
+                        errorMessage = null,
+                        showSnackBarError = false,
+                        myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                            ongoing = mappedResult.filter { it.status == RequestStatus.ONGOING }
+                                .associateBy { it.id },
+                            completed = mappedResult.filter { it.status == RequestStatus.COMPLETED }
+                                .associateBy { it.id },
+                            canceled = mappedResult.filter { it.status == RequestStatus.CANCELLED }
+                                .associateBy { it.id }
+                        )
+                    )
                 )
-            )
+                getOffersForRequests()
+            },
+            onError = {
+
+            }
         )
-        getOffersForRequests()
     }
 
     private fun onGetCraftsManOfferOnRequestError(throwable: Throwable) {

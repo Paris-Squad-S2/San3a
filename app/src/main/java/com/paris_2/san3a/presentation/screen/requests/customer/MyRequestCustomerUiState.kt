@@ -23,6 +23,7 @@ data class MyRequestCustomerUiState(
 )
 
 fun RequestService.toRequestServiceUiState(): MyRequestCustomerUi {
+    val timePattern = "%02d:%02d:%02d"
     return MyRequestCustomerUi(
         id = this.id,
         requestTitle = this.title,
@@ -30,7 +31,7 @@ fun RequestService.toRequestServiceUiState(): MyRequestCustomerUi {
         serviceType = this.serviceType,
         serviceId = this.serviceId,
         date = this.time.date.toString(),
-        time = this.time.time.toString(),
+        time = timePattern.format(time.hour, time.minute, time.second),
     )
 }
 

@@ -7,7 +7,8 @@ data class RequestServiceDto(
     val title: String,
     val serviceType: String,
     val description: String,
-    val location: String,
+    val governorateId: Int,
+    val cityId: Int,
     val locationDetails: String,
     val time: String?,
     val state: String,
@@ -15,7 +16,8 @@ data class RequestServiceDto(
     val userId: String,
     val serviceId: String,
     val selectedCraftsmanId: String?,
-    val requestStatus: String?
+    val requestStatus: String?,
+    val createdAt: Long = System.currentTimeMillis(),
 ) {
     companion object {
         fun fromJson(data: Map<String, Any>, id: String): RequestServiceDto {
@@ -24,7 +26,8 @@ data class RequestServiceDto(
                 title = data["title"] as? String ?: "",
                 serviceType = data["serviceType"] as? String ?: "",
                 description = data["description"] as? String ?: "",
-                location = data["location"] as? String ?: "",
+                governorateId = (data["governorateId"] as? Number)?.toInt() ?: 0,
+                cityId = (data["cityId"] as? Number)?.toInt() ?: 0,
                 locationDetails = data["locationDetails"] as? String ?: "",
                 time = data["time"] as? String,
                 state = data["state"] as? String ?: "",
@@ -32,7 +35,8 @@ data class RequestServiceDto(
                 userId = data["userId"] as? String ?: "",
                 serviceId = data["serviceId"] as? String ?: "",
                 selectedCraftsmanId = data["selectedCraftsmanId"] as? String,
-                requestStatus = data["requestStatus"] as? String
+                requestStatus = data["requestStatus"] as? String,
+                createdAt = (data["createdAt"] as? Number)?.toLong() ?: System.currentTimeMillis()
             )
         }
     }
@@ -42,12 +46,14 @@ data class RequestServiceDto(
             "title" to title,
             "serviceType" to serviceType,
             "description" to description,
-            "location" to location,
+            "governorateId" to governorateId,
+            "cityId" to cityId,
             "locationDetails" to locationDetails,
             "image" to image,
             "userId" to userId,
             "serviceId" to serviceId,
             "state" to state,
+            "createdAt" to createdAt
         )
         if (selectedCraftsmanId != null) {
             map["selectedCraftsmanId"] = selectedCraftsmanId

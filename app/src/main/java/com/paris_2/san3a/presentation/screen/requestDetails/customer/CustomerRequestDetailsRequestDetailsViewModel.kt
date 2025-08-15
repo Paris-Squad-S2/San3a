@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
@@ -26,6 +27,7 @@ class CustomerRequestDetailsRequestDetailsViewModel(
     private val acceptOfferUseCase: AcceptOfferUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val createChatUseCase: CreateChatUseCase,
     savedStateHandle: SavedStateHandle
@@ -44,13 +46,21 @@ class CustomerRequestDetailsRequestDetailsViewModel(
     fun loadRequestDetails(requestId: String) {
         tryToExecute(
             execute = { getRequestDetailsByIdUseCase(requestId) },
-            onSuccess = {
+            onSuccess = { request ->
+                val governorate = getLocationInfoUseCase.getGovernorateById(request.governorateId)
+                val city = getLocationInfoUseCase.getCityById(request.cityId)
                 updateState(
                     screenState.value.copy(
                         isLoading = false,
                         error = null,
                         uiState = screenState.value.uiState.copy(
-                            request = it.toRequestServiceUIState(),
+                            request = request.toRequestServiceUIState(
+                                location =
+                                    listOfNotNull(
+                                        governorate?.name,
+                                        city?.name
+                                    ).joinToString(", ")
+                            ),
                         ),
                     )
                 )
@@ -74,7 +84,8 @@ class CustomerRequestDetailsRequestDetailsViewModel(
                         isLoading = false,
                         error = null,
                         uiState = screenState.value.uiState.copy(
-                            offers = offers?.sortedByDescending { it.isAccepted }?.toOfferUiStateMap()
+                            offers = offers?.sortedByDescending { it.isAccepted }
+                                ?.toOfferUiStateMap()
                                 ?: emptyMap(),
                         )
                     )
@@ -97,7 +108,8 @@ class CustomerRequestDetailsRequestDetailsViewModel(
                 screenState.value.uiState.offers.forEach { offer ->
                     val craftsmanId = offer.value.craftsmanId
                     val userDeferred = scope.async { getUserUseCase(craftsmanId) }
-                    val ratingDeferred = scope.async { getRatingForCraftsmanUseCase(craftsmanId).first() }
+                    val ratingDeferred =
+                        scope.async { getRatingForCraftsmanUseCase(craftsmanId).first() }
                     val user = userDeferred.await()
                     val rating = ratingDeferred.await()
                     user.toRequestOfferUiState(offer.value, rating).also { offerUiState ->
@@ -166,7 +178,11 @@ class CustomerRequestDetailsRequestDetailsViewModel(
     override fun onAcceptOfferClick(offerId: String, craftsmanId: String) {
         tryToExecute(
             execute = {
-                acceptOfferUseCase(offerId = offerId, craftsmanId = craftsmanId, requestId = requestId)
+                acceptOfferUseCase(
+                    offerId = offerId,
+                    craftsmanId = craftsmanId,
+                    requestId = requestId
+                )
             },
             onSuccess = {
                 addNotificationUseCase(
