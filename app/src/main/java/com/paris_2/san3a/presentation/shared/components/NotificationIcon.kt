@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -9,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,7 +29,11 @@ fun NotificationIcon(
     Box(modifier) {
         Icon(
             modifier = Modifier.Companion
-                .clickable(onClick = onNotificationClick),
+                .clickable(
+                    onClick = onNotificationClick,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ),
             painter = painterResource(R.drawable.ic_notification_outline),
             contentDescription = null,
             tint = Theme.colors.shade.primary
