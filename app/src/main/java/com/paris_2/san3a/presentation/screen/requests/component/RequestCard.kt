@@ -71,8 +71,6 @@ fun RequestCard(
                 title = requestUi.requestTitle,
                 serviceType = requestUi.serviceType,
                 serviceImageUrl = requestUi.serviceImage,
-                darkServiceImageUrl = requestUi.serviceImage,
-                isDarkTheme = null
             )
 
             if (requestUi.status == RequestStatus.ONGOING && requestUi.offer.isAccepted) {

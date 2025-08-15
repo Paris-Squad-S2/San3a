@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.shared.components
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,18 +22,13 @@ fun ServiceTypeCard(
     title: String,
     serviceType: String,
     serviceImageUrl: String,
-    darkServiceImageUrl: String = "",
-    isDarkTheme: Boolean? = null,
 ) {
-    val shouldUseDark = (isDarkTheme ?: isSystemInDarkTheme()) && darkServiceImageUrl.isNotBlank()
-    val imageUrlToShow = if (shouldUseDark) darkServiceImageUrl else serviceImageUrl
-
     Row(verticalAlignment = Alignment.CenterVertically) {
         AsyncImage(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape),
-            model = imageUrlToShow,
+            model = serviceImageUrl,
             contentDescription = null
         )
 
