@@ -50,7 +50,7 @@ private fun MessagesScreenContent(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 actionIcon = {
                     NotificationIcon(
-                        notificationsCount = state.notificationsCount,
+                        count = state.notificationsCount,
                         onNotificationClick = messagesInteractionListener::onNotificationClick
                     )
                 }

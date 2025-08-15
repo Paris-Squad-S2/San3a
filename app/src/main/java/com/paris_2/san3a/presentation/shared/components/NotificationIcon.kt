@@ -20,9 +20,9 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
 fun NotificationIcon(
+    count: Int,
+    onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier,
-    notificationsCount: Int,
-    onNotificationClick: () -> Unit
 ) {
     Box(modifier) {
         Icon(
@@ -32,7 +32,7 @@ fun NotificationIcon(
             contentDescription = null,
             tint = Theme.colors.shade.primary
         )
-        if (notificationsCount > 0) {
+        if (count > 0) {
             Box(
                 modifier = Modifier.Companion
                     .align(Alignment.Companion.TopEnd)
@@ -41,7 +41,7 @@ fun NotificationIcon(
                     .background(Theme.colors.additional.primary.red, shape = CircleShape)
             ) {
                 Text(
-                    text = notificationsCount.toString(),
+                    text = count.toString(),
                     color = Theme.colors.additional.secondary.red,
                     fontSize = 10.sp,
                     modifier = Modifier.Companion.align(Alignment.Companion.Center)
@@ -55,7 +55,7 @@ fun NotificationIcon(
 @Composable
 fun NotificationIconPreview() {
     NotificationIcon(
-        notificationsCount = 5,
+        count = 5,
         onNotificationClick = {}
     )
 }
