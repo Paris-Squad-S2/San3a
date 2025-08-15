@@ -133,7 +133,7 @@ fun CraftsManOffer(
             postedTime = offerDetails.postedTime,
             description = offerDetails.description,
             amount = offerDetails.amount,
-            rate = offerDetails.rate,
+            rate = offerDetails.rate, // TODO( hide it untile we made it ),
             reviewsNumber = offerDetails.reviewsNumber,
             status = offerDetails.status,
             time = offerDetails.time,

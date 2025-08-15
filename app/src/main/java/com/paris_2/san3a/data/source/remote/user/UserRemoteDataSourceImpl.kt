@@ -2,11 +2,13 @@ package com.paris_2.san3a.data.source.remote.user
 
 import android.util.Log
 import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.Query
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.SetOperation
 import com.paris_2.san3a.data.service.firestore.WriteOperation
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
+import com.paris_2.san3a.data.utils.roundFloat
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
@@ -191,12 +193,16 @@ class UserRemoteDataSourceImpl(
             flow {
                 val ratings = ratingsFlow.firstOrNull() ?: emptyList()
                 val avg = if (ratings.isNotEmpty()) {
-                    ratings.mapNotNull { it }.average().toFloat()
+                    ratings.mapNotNull {it}
+                        .average()
+                        .toFloat()
+                        .roundFloat()
                 } else 0f
                 emit(avg)
             }
         }
     }
+
 
     override suspend fun getCustomerRatingOnCraftsman(
         craftsmanId: String,
@@ -204,7 +210,7 @@ class UserRemoteDataSourceImpl(
     ): Float? {
         return fireStoreService.getDoc(
             path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION/$userId",
-            fromJson = { data, _ -> (data["rating"] as? Number)?.toFloat() }
+            fromJson = { data, _ -> (data["rating"] as? Number)?.toFloat()?.roundFloat() }
         )
     }
 
@@ -263,7 +269,9 @@ class UserRemoteDataSourceImpl(
             path = SERVICE_REQUESTS_COLLECTION,
             fromJson = RequestServiceDto::fromJson,
             queryBuilder = { query ->
-                query.whereIn("title", relatedJobs)
+                query
+                    .whereIn("serviceId", relatedJobs)
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
             }
         )
     }

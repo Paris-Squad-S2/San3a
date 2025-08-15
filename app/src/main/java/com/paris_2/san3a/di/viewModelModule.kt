@@ -19,6 +19,7 @@ import com.paris_2.san3a.presentation.screen.requests.customer.MyRequestCustomer
 import com.paris_2.san3a.presentation.screen.requests.craftsman.MyJobsCraftsmanViewModel
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.CraftsmanRequestDetailsViewModel
 import com.paris_2.san3a.presentation.screen.requestDetails.customer.CustomerRequestDetailsRequestDetailsViewModel
+import com.paris_2.san3a.presentation.screen.splash.SplashScreenViewModel
 import org.koin.dsl.module
 
 
@@ -41,4 +42,5 @@ val viewModelModule = module {
     viewModelOf(::MyJobsCraftsmanViewModel)
     viewModelOf(::CraftsmanRequestDetailsViewModel)
     viewModelOf(::CustomerRequestDetailsRequestDetailsViewModel)
+    viewModelOf(::SplashScreenViewModel)
 }
