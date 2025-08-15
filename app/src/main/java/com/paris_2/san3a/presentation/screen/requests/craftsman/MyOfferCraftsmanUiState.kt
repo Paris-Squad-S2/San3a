@@ -18,6 +18,7 @@ data class MyJobsCraftsmanScreenState(
 
 data class MyOfferCraftsmanUiState(
     val craftsManId: String = "",
+    val notificationsCount: Int = 0,
     val ongoing: Map<String, JobUiState> = emptyMap(),
     val completed: Map<String, JobUiState> = emptyMap(),
     val canceled: Map<String, JobUiState> = emptyMap(),

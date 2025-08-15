@@ -14,6 +14,7 @@ import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetCraftManOfferOnRequestUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
@@ -31,6 +32,7 @@ class MyJobsCraftsmanViewModel(
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
+    private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val getCraftManOfferOnRequestUseCase: GetCraftManOfferOnRequestUseCase,
     private val createChatUseCase: CreateChatUseCase,
 ) : BaseViewModel<MyJobsCraftsmanScreenState>(MyJobsCraftsmanScreenState()),
@@ -65,8 +67,30 @@ class MyJobsCraftsmanViewModel(
                 )
             )
         )
+        getNotificationsCount(phoneNumber)
         getCraftsManOfferOnRequest()
     }
+
+    private fun getNotificationsCount(userId: String) {
+        tryToObserve(
+            observe = {
+                getUnReadNotificationsCountUseCase(userId)
+            },
+            onEach = { count ->
+                updateState(
+                    screenState.value.copy(
+                        myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                            notificationsCount = count ?: 0
+                        )
+                    )
+                )
+            },
+            onError = { exception ->
+                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+            },
+        )
+    }
+
 
     private fun onGetCraftsManPhoneError(throwable: Throwable) {
         updateState(
