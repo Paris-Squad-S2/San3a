@@ -249,7 +249,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="_45_000_iqd">45,000 IQD</string>
     <string name="tomorrow_1_00_pm">Tomorrow, 1:00 PM</string>
     <string name="_2_hour_ago">2 hour ago</string>
-    <string name="craftsman_reviews">%1$s (%2$d reviews)</string>
+    <string name="craftsman_reviews">%1$s</string>
     <string name="get_started">Get Started</string>
     <string name="register_background">Register Background</string>
     <string name="occruc_error_when_language_app_updated">occur error when language app updated</string>

@@ -193,9 +193,10 @@ class UserRemoteDataSourceImpl(
             flow {
                 val ratings = ratingsFlow.firstOrNull() ?: emptyList()
                 val avg = if (ratings.isNotEmpty()) {
-                    ratings.mapNotNull { it?.roundFloat() }
+                    ratings.mapNotNull {it}
                         .average()
                         .toFloat()
+                        .roundFloat()
                 } else 0f
                 emit(avg)
             }

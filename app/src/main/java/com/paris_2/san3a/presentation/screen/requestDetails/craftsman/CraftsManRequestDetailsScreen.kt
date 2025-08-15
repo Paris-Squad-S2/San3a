@@ -200,7 +200,7 @@ fun CraftsmanRequestDetailsContent(
                         )
                         CraftsManOffer(
                             addShadow = true,
-                            showActionButtons = state.yourOffer != state.acceptedOffer,
+                            showActionButtons = state.yourOffer == state.acceptedOffer && state.request.requestStatus == RequestStatus.ONGOING,
                             offerDetails = state.acceptedOffer.toOfferDetailsUIState(
                                 offerAccepted = true
                             ),
