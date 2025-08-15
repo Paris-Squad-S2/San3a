@@ -1,22 +1,18 @@
 package com.paris_2.san3a.data.source.remote.notification
 
 import com.paris_2.san3a.data.service.firestore.FireStoreService
+import com.paris_2.san3a.data.service.firestore.UpdateOperation
 import com.paris_2.san3a.data.source.remote.notification.dto.NotificationDto
 import kotlinx.coroutines.flow.Flow
-
 
 class NotificationDataSourceImpl(
     private val fireStoreService: FireStoreService
 ) : NotificationDataSource {
 
-    companion object {
-        private const val NOTIFICATION_COLLECTION = "notifications"
-    }
-
-    override fun getStreamNotifications(userId : String): Flow<List<NotificationDto>> {
+    override fun getStreamNotifications(userId: String): Flow<List<NotificationDto>> {
         return fireStoreService.streamCollection(
-            path = NOTIFICATION_COLLECTION,
-            fromJson = { data, id -> NotificationDto.fromMap(data, id) },
+            path = "$USERS_COLLECTION/$userId/$NOTIFICATION_COLLECTION",
+            fromJson = NotificationDto::fromMap,
             queryBuilder = { query ->
                 query.whereEqualTo("userId", userId)
             }
@@ -26,10 +22,48 @@ class NotificationDataSourceImpl(
 
     override suspend fun addNotification(notification: NotificationDto): String {
         return fireStoreService.addToCollection(
-            path = NOTIFICATION_COLLECTION,
+            path = "$USERS_COLLECTION/${notification.userId}/$NOTIFICATION_COLLECTION",
             data = notification.toMap(),
         )
     }
+
+    override suspend fun markNotificationsAsRead(userId: String) {
+        val unreadNotifications = fireStoreService.getCollection(
+            path = "$USERS_COLLECTION/$userId/$NOTIFICATION_COLLECTION",
+            fromJson = NotificationDto::fromMap,
+            queryBuilder = { query ->
+                query.whereEqualTo("userId", userId)
+                    .whereEqualTo("isRead", false)
+            }
+        )
+
+        if (unreadNotifications.isEmpty()) return
+
+        val operations = unreadNotifications.map { notification ->
+            UpdateOperation(
+                path = "$USERS_COLLECTION/$userId/$NOTIFICATION_COLLECTION/${notification.id}",
+                data = mapOf("isRead" to true)
+            )
+        }
+
+        fireStoreService.batchWrite(operations)
+    }
+
+    override fun getUnreadNotificationsCount(userId: String): Flow<Int> {
+        return fireStoreService.streamCountOfCollection(
+            path = "$USERS_COLLECTION/$userId/$NOTIFICATION_COLLECTION",
+            queryBuilder = { query ->
+                query.whereEqualTo("userId", userId)
+                    .whereEqualTo("isRead", false)
+            }
+        )
+    }
+
+    companion object {
+        private const val NOTIFICATION_COLLECTION = "notifications"
+        private const val USERS_COLLECTION = "users"
+    }
+
 
 }
 

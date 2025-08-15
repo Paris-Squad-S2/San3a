@@ -8,12 +8,12 @@ import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.User
-import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetCraftManOfferOnRequestUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
@@ -156,13 +156,13 @@ class MyJobsCraftsmanViewModel(
     private fun getOffersForRequests() {
         tryToExecute(
             execute = {
-                screenState.value.myOffersCraftsmanUiState.ongoing.map { mapEntry ->
+                screenState.value.myOffersCraftsmanUiState.ongoing.forEach { mapEntry ->
                     updateRequestOffer(requestId = mapEntry.key, listType = ListType.ONGOING)
                 }
-                screenState.value.myOffersCraftsmanUiState.completed.map { mapEntry ->
+                screenState.value.myOffersCraftsmanUiState.completed.forEach { mapEntry ->
                     updateRequestOffer(requestId = mapEntry.key, listType = ListType.COMPLETED)
                 }
-                screenState.value.myOffersCraftsmanUiState.canceled.map { mapEntry ->
+                screenState.value.myOffersCraftsmanUiState.canceled.forEach { mapEntry ->
                     updateRequestOffer(requestId = mapEntry.key, listType = ListType.CANCELED)
                 }
             },

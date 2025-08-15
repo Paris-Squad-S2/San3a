@@ -155,7 +155,7 @@ class MessagesRemoteDataSourceImp(
     }
 
     companion object {
-        const val CHATS_COLLECTION = "chats"
-        const val MESSAGES_COLLECTION = "messages"
+        private const val CHATS_COLLECTION = "chats"
+        private const val MESSAGES_COLLECTION = "messages"
     }
 }

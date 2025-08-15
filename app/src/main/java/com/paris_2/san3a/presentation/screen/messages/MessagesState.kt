@@ -9,6 +9,7 @@ import kotlinx.datetime.number
 data class MessagesState(
     val chatsMap: Map<String, ChatUI> = emptyMap(),
     val currentUserId: String = "",
+    val notificationsCount: Int = 0,
     val isLoading: Boolean = false,
     val error: String? = null,
 )

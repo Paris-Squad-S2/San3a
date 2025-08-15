@@ -6,4 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface NotificationDataSource {
     fun getStreamNotifications(userId : String): Flow<List<NotificationDto>>
     suspend fun addNotification(notification: NotificationDto): String
+    suspend fun markNotificationsAsRead(userId: String)
+    fun getUnreadNotificationsCount(userId: String): Flow<Int>
 }

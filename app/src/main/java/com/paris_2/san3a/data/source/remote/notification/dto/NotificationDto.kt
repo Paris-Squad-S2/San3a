@@ -5,7 +5,8 @@ data class NotificationDto(
     val title: String = "",
     val caption: String = "",
     val date: String = "",
-    val userId: String = ""
+    val userId: String = "",
+    val isRead: Boolean = false
 ) {
     companion object {
         fun fromMap(data: Map<String, Any>, id: String): NotificationDto {
@@ -14,7 +15,8 @@ data class NotificationDto(
                 title = data["title"] as? String ?: "",
                 caption = data["caption"] as? String ?: "",
                 date = data["date"] as? String ?: "",
-                userId = data["userId"] as? String ?: ""
+                userId = data["userId"] as? String ?: "",
+                isRead = data["isRead"] as? Boolean ?: false
             )
         }
     }
@@ -24,7 +26,8 @@ data class NotificationDto(
             "title" to title,
             "caption" to caption,
             "date" to date,
-            "userId" to userId
+            "userId" to userId,
+            "isRead" to isRead
         )
     }
 }

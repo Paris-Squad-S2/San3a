@@ -1,18 +1,15 @@
 package com.paris_2.san3a.presentation.screen.messages
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +19,7 @@ import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
+import com.paris_2.san3a.presentation.shared.components.NotificationIcon
 import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
@@ -51,12 +49,9 @@ private fun MessagesScreenContent(
                 title = stringResource(R.string.messages),
                 modifier = Modifier.padding(horizontal = 8.dp),
                 actionIcon = {
-                    Icon(
-                        modifier = Modifier
-                            .clickable(onClick = messagesInteractionListener::onNotificationClick),
-                        painter = painterResource(R.drawable.ic_notification_outline),
-                        contentDescription = null,
-                        tint = Theme.colors.shade.primary
+                    NotificationIcon(
+                        notificationsCount = state.notificationsCount,
+                        onNotificationClick = messagesInteractionListener::onNotificationClick
                     )
                 }
             )
@@ -131,3 +126,4 @@ fun ChatList(
         }
     }
 }
+

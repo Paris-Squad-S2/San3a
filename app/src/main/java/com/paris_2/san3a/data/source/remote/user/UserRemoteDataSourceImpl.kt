@@ -272,14 +272,14 @@ class UserRemoteDataSourceImpl(
     }
 
     companion object {
-        const val USERS_COLLECTION = "users"
-        const val CRAFTSMAN_STATUS_COLLECTION = "craftsmen"
-        const val SERVICE_REQUESTS_COLLECTION = "service_requests"
-        const val OFFERED_SERVICES_COLLECTION = "offeredServices"
-        const val REQUESTED_SERVICES_PATH = "requestedServices"
-        const val SERVICES_COLLECTION = "services"
-        const val RATINGS_COLLECTION = "ratings"
-        const val EARNINGS_COLLECTION = "earnings"
-        const val JOBS_DONE_COLLECTION = "jobs_done"
+        private const val USERS_COLLECTION = "users"
+        private const val CRAFTSMAN_STATUS_COLLECTION = "craftsmen"
+        private const val SERVICE_REQUESTS_COLLECTION = "service_requests"
+        private const val OFFERED_SERVICES_COLLECTION = "offeredServices"
+        private const val REQUESTED_SERVICES_PATH = "requestedServices"
+        private const val SERVICES_COLLECTION = "services"
+        private const val RATINGS_COLLECTION = "ratings"
+        private const val EARNINGS_COLLECTION = "earnings"
+        private const val JOBS_DONE_COLLECTION = "jobs_done"
     }
 }

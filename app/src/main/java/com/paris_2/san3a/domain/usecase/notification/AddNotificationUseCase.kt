@@ -1,4 +1,4 @@
-package com.paris_2.san3a.domain.usecase
+package com.paris_2.san3a.domain.usecase.notification
 
 import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.repository.NotificationRepository
