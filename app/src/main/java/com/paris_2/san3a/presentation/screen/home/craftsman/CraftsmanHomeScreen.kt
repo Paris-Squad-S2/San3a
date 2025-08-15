@@ -27,9 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
 import com.paris_2.san3a.data.utils.getCurrentDateTime
-import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
-import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.StatsContainer
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
