@@ -73,7 +73,10 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
         return scope.launch(exceptionHandler) {
             observe()
                 .onStart { onStart() }
-                .catch { onError(it) }
+                .catch {
+                    Log.e("BaseViewModel", "tryToObserve: Error executing operation", it)
+                    onError(it)
+                }
                 .also { onEach(null) }
                 .collect { onEach(it) }
         }
