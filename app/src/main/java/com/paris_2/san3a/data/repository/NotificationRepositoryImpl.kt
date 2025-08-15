@@ -15,7 +15,7 @@ class NotificationRepositoryImpl(
 ) : NotificationRepository, BaseRepository() {
 
     override fun getNotifications(userId: String): Flow<List<Notification>> {
-        return notificationDataSource.getStreamNotifications(userId)
+        return notificationDataSource.getNotifications(userId)
             .map { dtoList -> dtoList.map { it.toDomain() } }
             .catch { e ->
                 throw FailException("Failed to get notifications: ${e.message}")

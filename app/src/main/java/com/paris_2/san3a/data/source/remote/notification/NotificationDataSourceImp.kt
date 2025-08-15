@@ -9,13 +9,10 @@ class NotificationDataSourceImpl(
     private val fireStoreService: FireStoreService
 ) : NotificationDataSource {
 
-    override fun getStreamNotifications(userId: String): Flow<List<NotificationDto>> {
+    override fun getNotifications(userId: String): Flow<List<NotificationDto>> {
         return fireStoreService.streamCollection(
             path = "$USERS_COLLECTION/$userId/$NOTIFICATION_COLLECTION",
             fromJson = NotificationDto::fromMap,
-            queryBuilder = { query ->
-                query.whereEqualTo("userId", userId)
-            }
         )
     }
 
