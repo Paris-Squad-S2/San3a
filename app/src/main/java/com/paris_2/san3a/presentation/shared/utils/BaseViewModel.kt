@@ -57,6 +57,7 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
             }
         }
     }
+
     protected fun <T> tryToObserve(
         observe: () -> Flow<T>,
         onEach: suspend (T?) -> Unit,
@@ -70,20 +71,11 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
         }
 
         return scope.launch(exceptionHandler) {
-            var emitted = false
             observe()
                 .onStart { onStart() }
-                .catch {
-                    Log.e("BaseViewModel", "tryToObserve: Error executing operation", it)
-                    onError(it)
-                }
-                .collect {
-                    emitted = true
-                    onEach(it)
-                }
-            if (!emitted) {
-                onEach(null)
-            }
+                .catch { onError(it) }
+                .also { onEach(null) }
+                .collect { onEach(it) }
         }
     }
 
