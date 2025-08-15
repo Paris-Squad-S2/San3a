@@ -28,7 +28,7 @@ fun NotificationIcon(
 ) {
     Box(modifier) {
         Icon(
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .clickable(
                     onClick = onNotificationClick,
                     interactionSource = remember { MutableInteractionSource() },
@@ -40,8 +40,8 @@ fun NotificationIcon(
         )
         if (count > 0) {
             Box(
-                modifier = Modifier.Companion
-                    .align(Alignment.Companion.TopEnd)
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
                     .offset(x = 4.dp, y = (-4).dp)
                     .size(16.dp)
                     .background(Theme.colors.additional.primary.red, shape = CircleShape)
@@ -50,7 +50,7 @@ fun NotificationIcon(
                     text = count.toString(),
                     color = Theme.colors.additional.secondary.red,
                     fontSize = 10.sp,
-                    modifier = Modifier.Companion.align(Alignment.Companion.Center)
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
         }
