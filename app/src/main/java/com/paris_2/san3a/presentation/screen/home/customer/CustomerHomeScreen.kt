@@ -370,7 +370,6 @@ private fun CustomerHomeScreenContent(
                             services = state.customerUiState.mostRequestedServices,
                             isArabic = isArabic,
                             action = action,
-                            isDarkTheme = state.isDarkTheme
                         ) { selectedTitle, selectedServiceId ->
                             action.initBottomSheet(selectedTitle, selectedServiceId)
                         }

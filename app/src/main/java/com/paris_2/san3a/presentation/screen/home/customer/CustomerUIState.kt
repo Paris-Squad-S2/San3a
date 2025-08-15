@@ -18,7 +18,6 @@ data class CustomerHomeUiState(
     val showSnackBarSuccess: Boolean = false,
     val successSnackBarMessage: String? = null,
     val buttonSheetState: AppButtonState = AppButtonState.Enable,
-    val isDarkTheme: Boolean = false,
 )
 
 data class CustomerUiState(

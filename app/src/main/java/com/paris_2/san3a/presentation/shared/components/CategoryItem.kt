@@ -31,7 +31,6 @@ fun CategoryItem(
     description: String,
     serviceImageUrl: String,
     modifier: Modifier = Modifier,
-    isDarkTheme: Boolean? = null,
     isLarge: Boolean = true,
     onclick: () -> Unit
 ){
@@ -41,7 +40,6 @@ fun CategoryItem(
             description = description,
             modifier = modifier,
             serviceImageUrl = serviceImageUrl,
-            isDarkTheme = isDarkTheme,
             onclick = onclick
         )
     }else{
@@ -50,7 +48,6 @@ fun CategoryItem(
             description = description,
             modifier = modifier,
             serviceImageUrl = serviceImageUrl,
-            isDarkTheme = isDarkTheme,
             onclick = onclick
         )
     }
@@ -63,13 +60,8 @@ fun CategoryItemLarge(
     description: String,
     modifier: Modifier = Modifier,
     serviceImageUrl: String,
-    darkServiceImageUrl: String = "",
-    isDarkTheme: Boolean? = null,
     onclick: () -> Unit
 ){
-    val shouldUseDark = (isDarkTheme ?: isSystemInDarkTheme()) && darkServiceImageUrl.isNotBlank()
-    val imageUrlToShow = if (shouldUseDark) darkServiceImageUrl else serviceImageUrl
-
     Box(
         modifier = modifier
             .width(200.dp)
@@ -86,7 +78,7 @@ fun CategoryItemLarge(
                     .size(54.dp)
                     .clip(RoundedCornerShape(Theme.radius.extraLarge))
                     .padding(bottom = 12.dp),
-                model = imageUrlToShow,
+                model = serviceImageUrl,
                 contentDescription = null
             )
             Text(
@@ -112,13 +104,8 @@ fun CategoryItemSmall(
     description: String,
     modifier: Modifier = Modifier,
     serviceImageUrl: String,
-    darkServiceImageUrl: String = "",
-    isDarkTheme: Boolean? = null,
     onclick: () -> Unit
 ){
-    val shouldUseDark = (isDarkTheme ?: isSystemInDarkTheme()) && darkServiceImageUrl.isNotBlank()
-    val imageUrlToShow = if (shouldUseDark) darkServiceImageUrl else serviceImageUrl
-
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -137,7 +124,7 @@ fun CategoryItemSmall(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(Theme.radius.extraLarge)),
-                model = imageUrlToShow,
+                model = serviceImageUrl,
                 contentDescription = null
             )
             Column(
