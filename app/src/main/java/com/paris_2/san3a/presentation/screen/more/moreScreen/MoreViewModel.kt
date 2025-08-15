@@ -207,6 +207,7 @@ class MoreViewModel(
     }
 
     private fun onGetUserInformationSuccess(user: User, rating: Flow<Float>) {
+        Log.d("MoreViewModel", "User: ${user.profilePhoto}")
         tryToObserve(
             observe = { rating },
             onEach = { userRating ->
@@ -530,6 +531,7 @@ class MoreViewModel(
                     fullName = screenState.value.moreUiState.userUiState.name,
                     profileUri = screenState.value.moreUiState.userUiState.imageUrl
                 )
+                Log.d("MoreViewModel", screenState.value.moreUiState.userUiState.imageUrl.toString())
             },
             onSuccess = ::onSaveUserInformationSuccess,
             onError = ::onSaveUserInformationError

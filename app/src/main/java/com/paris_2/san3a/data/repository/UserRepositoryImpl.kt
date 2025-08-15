@@ -110,8 +110,11 @@ class UserRepositoryImpl(
 
         safeCall(SavePersonalInfoException()) {
             val profileUrl = profileUri?.let { uri ->
+                Log.d("UserRepositoryImpl", "savePersonalInfo: $uri")
                 val path = "$PROFILE_IMAGE_PATH/$phone.jpg"
+                Log.d("UserRepositoryImpl", "savePersonalInfo: $path")
                 storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
+                Log.d("UserRepositoryImpl", "savePersonalInfo: $path")
                 storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
             }
             userRemoteDataSource.updatePersonalInfo(phone, fullName, profileUrl)

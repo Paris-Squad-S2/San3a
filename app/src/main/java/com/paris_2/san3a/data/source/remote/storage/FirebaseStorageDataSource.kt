@@ -1,6 +1,7 @@
 package com.paris_2.san3a.data.source.remote.storage
 
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import kotlinx.coroutines.tasks.await
@@ -12,10 +13,16 @@ class FirebaseStorageDataSource(
         try {
             if (uris.isNotEmpty()) {
                 val storageRef = fireStorage.reference
-                for ((index, uri) in uris.withIndex()) {
+                uris.forEachIndexed { index, uri ->
                     val path = paths[index]
-                    if (!checkIfImageAlreadyExist(path)) {
-                        val imageRef = storageRef.child(path)
+                    val imageRef = storageRef.child(path)
+                    val exists = try {
+                        imageRef.metadata.await()
+                        true
+                    } catch (e: StorageException) {
+                        e.errorCode != StorageException.ERROR_OBJECT_NOT_FOUND
+                    }
+                    if (!exists) {
                         imageRef.putFile(uri).await()
                     }
                 }
@@ -31,23 +38,10 @@ class FirebaseStorageDataSource(
         }
     }
 
-    private suspend fun checkIfImageAlreadyExist(path: String): Boolean {
-        return try {
-            val storageRef = fireStorage.reference.child(path)
-            storageRef.metadata.await()
-            true
-        } catch (e: StorageException) {
-            if (e.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                false
-            } else {
-                throw e
-            }
-        }
-    }
-
     override suspend fun getImagesByPaths(paths: List<String>): List<String> {
         return try {
             if (paths.isNotEmpty()) {
+                Log.d("FirebaseStorageDataSource", "getImagesByPaths: $paths")
                 paths.map { path ->
                     val url = fireStorage.reference.child(path).downloadUrl
                     url.await().toString()

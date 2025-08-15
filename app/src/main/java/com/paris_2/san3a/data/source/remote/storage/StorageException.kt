@@ -7,4 +7,3 @@ class FireStorageException(path: String, message: String) : StorageException(pat
 class WriteStorageException(path: String, message: String) : StorageException(path,message)
 class InvalidPathException(path: String, message: String="Invalid path") : StorageException(path,message)
 class ReadStorageException(path: String, message: String) : StorageException(path,message)
-class ImageAlreadyExistException(path: String) : StorageException(path,"Image already exist")
