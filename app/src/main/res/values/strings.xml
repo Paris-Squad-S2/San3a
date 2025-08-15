@@ -329,5 +329,5 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="occurred_while_sending_message_to_customer">occurred while sending message to customer</string>
     <string name="service_request_send_successfully">service request send successfully</string>
     <string name="error_occur_when_creating_request">Error occur when creating request</string>
-    <string name="good_afternoon">good afternoon</string>
+    <string name="good_afternoon">good afternoon, %1$s!</string>
 </resources>
