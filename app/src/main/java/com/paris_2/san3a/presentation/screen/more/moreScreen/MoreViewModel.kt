@@ -15,6 +15,7 @@ import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.mapper.toUserUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
@@ -32,6 +33,7 @@ class MoreViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
+    private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
     private val getVersionNameUseCase: GetVersionNameUseCase,
 ) : BaseViewModel<MoreScreenState>(MoreScreenState()), MoreInteractionListener {
@@ -232,7 +234,29 @@ class MoreViewModel(
             )
         )
         getUserInformation()
+        getNotificationsCount(phoneNumber)
     }
+
+    private fun getNotificationsCount(userId: String) {
+        tryToObserve(
+            observe = {
+                getUnReadNotificationsCountUseCase(userId)
+            },
+            onEach = { count ->
+                updateState(
+                    screenState.value.copy(
+                        moreUiState = screenState.value.moreUiState.copy(
+                            notificationsCount = count ?: 0
+                        )
+                    )
+                )
+            },
+            onError = { exception ->
+                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+            },
+        )
+    }
+
 
     private fun onGetPhoneNumberError(th: Throwable) {
         updateState(

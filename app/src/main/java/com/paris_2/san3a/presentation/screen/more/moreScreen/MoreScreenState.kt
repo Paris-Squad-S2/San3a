@@ -19,6 +19,7 @@ data class MoreScreenState(
 
 data class MoreUiState(
     val userUiState: UserUiState = UserUiState(),
+    val notificationsCount: Int = 0,
     val isDarkMode: Boolean = false,
     val versionNumber: String = "",
     val selectedLanguage: String = LanguageUiState.ENGLISH.name,
