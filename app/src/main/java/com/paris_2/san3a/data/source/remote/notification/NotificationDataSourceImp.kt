@@ -29,8 +29,7 @@ class NotificationDataSourceImpl(
             path = "$USERS_COLLECTION/$userId/$NOTIFICATION_COLLECTION",
             fromJson = NotificationDto::fromMap,
             queryBuilder = { query ->
-                query.whereEqualTo("userId", userId)
-                    .whereEqualTo("isRead", false)
+                query.whereEqualTo("isRead", false)
             }
         )
 
@@ -50,8 +49,7 @@ class NotificationDataSourceImpl(
         return fireStoreService.streamCountOfCollection(
             path = "$USERS_COLLECTION/$userId/$NOTIFICATION_COLLECTION",
             queryBuilder = { query ->
-                query.whereEqualTo("userId", userId)
-                    .whereEqualTo("isRead", false)
+                query.whereEqualTo("isRead", false)
             }
         )
     }
