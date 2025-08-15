@@ -134,7 +134,6 @@ fun CraftsmanOfferDetails(
                                 text = stringResource(
                                     R.string.craftsman_reviews,
                                     it,
-                                    it1
                                 ),
                                 style = Theme.textStyle.body.small.medium,
                                 color = Theme.colors.shade.primary

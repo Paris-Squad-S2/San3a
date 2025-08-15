@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.screen.messagesDetails.components
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,7 +21,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -85,17 +83,8 @@ fun MessageTextField(
                         tint = Theme.colors.shade.secondary,
                         contentDescription = stringResource(R.string.add_images),
                         modifier = Modifier
-                            .padding(end = 30.dp)
-                            .clickable(onClick = onImageClick)
-                    )
-
-                    Icon(
-                        painter = voiceIcon,
-                        tint = Theme.colors.shade.secondary,
-                        contentDescription = stringResource(R.string.voice_icon),
-                        modifier = Modifier
                             .padding(end = 19.dp)
-                            .clickable(onClick = onVoiceClick)
+                            .clickable(onClick = onImageClick)
                     )
 
                 } else {
