@@ -40,8 +40,7 @@ class CustomerHomeViewModel(
         getGovernments()
     }
 
-    override fun initBottomSheet(serviceTitle: String, serviceId: String) {
-        val imageUrl = findServiceImageUrl(serviceId)
+    override fun initBottomSheet(serviceTitle: String, serviceId: String, imageUrl: String) {
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
@@ -60,12 +59,6 @@ class CustomerHomeViewModel(
                 )
             )
         )
-    }
-
-    private fun findServiceImageUrl(serviceId: String): String {
-        val services = screenState.value.customerUiState.services
-        val mostRequested = screenState.value.customerUiState.mostRequestedServices
-        return (services + mostRequested).find { it.id == serviceId }?.imageUrl ?: ""
     }
 
     override fun updateBottomSheetStep(step: BottomSheetStep) {
@@ -541,7 +534,7 @@ class CustomerHomeViewModel(
         } else {
             selectedService?.title?.get(ENGLISH_NAME)
         } ?: ""
-        initBottomSheet(serviceTitle, serviceId)
+        initBottomSheet(serviceTitle, serviceId, selectedService?.imageUrl.orEmpty())
     }
 
     override fun onBecomeCraftsmanClick() {

@@ -23,7 +23,7 @@ fun MostRequestedServices(
     isArabic: Boolean,
     action: CustomerHomeInteractionListener,
     modifier: Modifier = Modifier,
-    onServiceClick: (String, String) -> Unit
+    onServiceClick: (String, String, String) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -50,7 +50,8 @@ fun MostRequestedServices(
                         action.onServiceClick(service.id)
                         onServiceClick(
                             service.title[if (isArabic) "arabicName" else "englishName"] ?: "",
-                            service.id
+                            service.id,
+                            service.imageUrl
                         )
                     },
                 )
