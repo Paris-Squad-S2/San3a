@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
+import android.util.Log
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
@@ -8,6 +9,7 @@ import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
 import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
@@ -23,6 +25,7 @@ class CustomerHomeViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val updateNumOfRequestsUseCase: UpdateNumOfRequestsUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getCustomerServiceUseCase: GetUserServicesUseCase,
 ) : CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
@@ -466,6 +469,7 @@ class CustomerHomeViewModel(
                         )
                     )
                 )
+                getNotificationsCount(it.id)
             },
             onError = {
                 updateState(
@@ -476,6 +480,25 @@ class CustomerHomeViewModel(
             }
         )
     }
+
+    private fun getNotificationsCount(userId: String) {
+        tryToObserve(
+            observe = {
+                getUnReadNotificationsCountUseCase(userId)
+            },
+            onEach = { count ->
+                updateState(
+                    screenState.value.copy(
+                        notificationsCount = count ?: 0,
+                    )
+                )
+            },
+            onError = { exception ->
+                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+            },
+        )
+    }
+
 
     override fun onNotificationClick() {
         navigate(Destinations.Notification)

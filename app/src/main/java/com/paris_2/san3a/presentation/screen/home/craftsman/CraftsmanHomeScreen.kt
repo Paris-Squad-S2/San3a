@@ -26,12 +26,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
-import com.paris_2.san3a.domain.entity.RequestService
+import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.domain.entity.RequestStatus
-import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.StatsContainer
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
+import com.paris_2.san3a.presentation.shared.components.NotificationIcon
 import com.paris_2.san3a.presentation.shared.components.RequestCardForCraftsMan
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.datetime.LocalDateTime
@@ -65,11 +65,11 @@ fun CraftsmanHomeContent(
                     .fillMaxWidth()
                     .background(Theme.colors.background.card),
                 actionIcon = {
-                    Icon(
-                        modifier = Modifier.clickable(onClick = action::onNotificationClick).padding(end = 8.dp),
-                        painter = painterResource(R.drawable.ic_notification_outline),
-                        contentDescription = null,
-                        tint = Theme.colors.shade.primary
+                    NotificationIcon(
+                        modifier = Modifier
+                            .padding(end = 8.dp),
+                        count = state.craftsmanHomeUiState.notificationsCount,
+                        onNotificationClick = action::onNotificationClick
                     )
                 },
                 leadingIcon = {
@@ -77,9 +77,15 @@ fun CraftsmanHomeContent(
                         modifier = Modifier
                             .padding(start = 8.dp)
                     ) {
+                        val time = getCurrentDateTime()
+                        val greeting = if (time.hour in 5..11) {
+                            R.string.good_morning
+                        } else {
+                            R.string.good_afternoon
+                        }
                         Text(
                             text = stringResource(
-                                R.string.good_morning,
+                                greeting,
                                 state.craftsmanHomeUiState.currentUserName
                             ),
 

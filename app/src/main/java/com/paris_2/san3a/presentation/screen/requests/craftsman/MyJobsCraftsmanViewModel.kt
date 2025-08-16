@@ -8,13 +8,14 @@ import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.User
-import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetCraftManOfferOnRequestUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
@@ -32,6 +33,7 @@ class MyJobsCraftsmanViewModel(
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
+    private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val getCraftManOfferOnRequestUseCase: GetCraftManOfferOnRequestUseCase,
     private val createChatUseCase: CreateChatUseCase,
     private val getAllServicesUseCase: GetAllServicesUseCase,
@@ -68,8 +70,30 @@ class MyJobsCraftsmanViewModel(
             )
         )
         getUserServices()
+        getNotificationsCount(phoneNumber)
         getCraftsManOfferOnRequest()
     }
+
+    private fun getNotificationsCount(userId: String) {
+        tryToObserve(
+            observe = {
+                getUnReadNotificationsCountUseCase(userId)
+            },
+            onEach = { count ->
+                updateState(
+                    screenState.value.copy(
+                        myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                            notificationsCount = count ?: 0
+                        )
+                    )
+                )
+            },
+            onError = { exception ->
+                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+            },
+        )
+    }
+
 
     private fun onGetCraftsManPhoneError(throwable: Throwable) {
         updateState(
@@ -160,13 +184,13 @@ class MyJobsCraftsmanViewModel(
     private fun getOffersForRequests() {
         tryToExecute(
             execute = {
-                screenState.value.myOffersCraftsmanUiState.ongoing.map { mapEntry ->
+                screenState.value.myOffersCraftsmanUiState.ongoing.forEach { mapEntry ->
                     updateRequestOffer(requestId = mapEntry.key, listType = ListType.ONGOING)
                 }
-                screenState.value.myOffersCraftsmanUiState.completed.map { mapEntry ->
+                screenState.value.myOffersCraftsmanUiState.completed.forEach { mapEntry ->
                     updateRequestOffer(requestId = mapEntry.key, listType = ListType.COMPLETED)
                 }
-                screenState.value.myOffersCraftsmanUiState.canceled.map { mapEntry ->
+                screenState.value.myOffersCraftsmanUiState.canceled.forEach { mapEntry ->
                     updateRequestOffer(requestId = mapEntry.key, listType = ListType.CANCELED)
                 }
             },

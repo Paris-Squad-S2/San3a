@@ -1,6 +1,6 @@
 package com.paris_2.san3a.di
 
-import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.AddRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.AddUserUseCase
 import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
@@ -26,7 +26,7 @@ import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetOnboardingCompletedUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
-import com.paris_2.san3a.domain.usecase.StreamNotificationsUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetNotificationsUseCase
 import com.paris_2.san3a.domain.usecase.UpdateEarningsForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
@@ -35,6 +35,8 @@ import com.paris_2.san3a.domain.usecase.messages.GetChatsByUserIdUseCase
 import com.paris_2.san3a.domain.usecase.messages.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.messages.MarkMessagesAsSeenUseCase
 import com.paris_2.san3a.domain.usecase.messages.SendMessageUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
+import com.paris_2.san3a.domain.usecase.notification.MarkNotificationsAsReadUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.CancelRequestUseCase
@@ -79,7 +81,9 @@ val useCaseModule = module {
     factoryOf(::UpdateNumOfRequestsUseCase)
     factoryOf(::MarkMessagesAsSeenUseCase)
     factoryOf(::AddNotificationUseCase)
-    factoryOf(::StreamNotificationsUseCase)
+    factoryOf(::GetNotificationsUseCase)
+    factoryOf(::GetUnReadNotificationsCountUseCase)
+    factoryOf(::MarkNotificationsAsReadUseCase)
     factoryOf(::CustomizeProfileSettingsUseCase)
     factoryOf(::GetCustomerRequestsUseCase)
     factoryOf(::GetVersionNameUseCase)

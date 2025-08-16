@@ -4,6 +4,7 @@ import android.util.Log
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.GetChatsByUserIdUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
@@ -11,6 +12,7 @@ class MessagesViewModel(
     private val getChatsByUserIdUseCase: GetChatsByUserIdUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase
 ) : MessagesInteractionListener,
     BaseViewModel<MessagesState>(MessagesState()) {
 
@@ -27,9 +29,28 @@ class MessagesViewModel(
             onSuccess = { userId ->
                 updateState(screenState.value.copy(currentUserId = userId))
                 getChatsForCurrentUser()
+                getNotificationsCount(userId)
             },
             onError = { exception ->
                 updateState(screenState.value.copy(error = exception.message))
+            },
+        )
+    }
+
+    private fun getNotificationsCount(userId: String) {
+        tryToObserve(
+            observe = {
+                getUnReadNotificationsCountUseCase(userId)
+            },
+            onEach = { count ->
+                updateState(
+                    screenState.value.copy(
+                        notificationsCount = count ?: 0,
+                    )
+                )
+            },
+            onError = { exception ->
+                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
             },
         )
     }

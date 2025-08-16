@@ -48,7 +48,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
 fun AppNavigationBar(
-    selectedItem: AppNavBarItem,
+    selectedItem: AppNavBarItem?,
     modifier: Modifier = Modifier,
     destinations: List<AppNavBarItem> = AppNavBarItem.destinations(),
     onItemClick: (Destination) -> Unit = {}

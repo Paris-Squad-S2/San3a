@@ -14,6 +14,7 @@ data class MyRequestCustomerScreenState(
 
 data class MyRequestCustomerUiState(
     val customerPhone: String = "",
+    val notificationsCount: Int = 0,
     val isRatingVisible: Boolean = false,
     val ongoing: Map<String, MyRequestCustomerUi> = emptyMap(),
     val completed: Map<String, MyRequestCustomerUi> = emptyMap(),
