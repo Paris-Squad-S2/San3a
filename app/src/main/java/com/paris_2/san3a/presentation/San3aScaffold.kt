@@ -4,7 +4,6 @@ import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -24,7 +24,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.paris_2.san3a.domain.entity.AccountType
-import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.navigation.Navigator
 import com.paris_2.san3a.presentation.navigation.San3aNavGraph
 import com.paris_2.san3a.presentation.screen.main.MainViewModel
@@ -33,6 +32,7 @@ import com.paris_2.san3a.presentation.shared.components.AppNavigationBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -67,7 +67,7 @@ fun San3aScaffold(
         derivedStateOf {
             AppNavBarItem.destinations().indexOfFirst { item ->
                 currentBackStackEntry?.destination?.hasRoute(item.destination::class) == true
-            }.coerceAtLeast(0)
+            }
         }
     }
 
@@ -89,30 +89,41 @@ fun San3aScaffold(
             containerColor = Theme.colors.background.card,
             content = { San3aNavGraph(navController = navController) },
             bottomBar = {
+                var showNavBar by remember { mutableStateOf(false) }
+                LaunchedEffect(isVisible) {
+                    if (isVisible) {
+                        delay(500)
+                        showNavBar = true
+                    } else {
+                        showNavBar = false
+                    }
+                }
                 AnimatedVisibility(
-                    visible = isVisible,
+                    visible = showNavBar,
                     enter = slideInVertically(initialOffsetY = { it }),
                     exit = slideOutVertically(targetOffsetY = { it }),
                 ) {
-                    AppNavigationBar(
-                        destinations = AppNavBarItem.destinations(LocalAccountType.value),
-                        selectedItem = AppNavBarItem.destinations(LocalAccountType.value)[selectedDestinationIndex],
-                        onItemClick = { destination ->
-                            scope.launch {
-                                navigator.navigate(
-                                    destination,
-                                    navOptions = NavOptions.Builder()
-                                        .setPopUpTo(
-                                            0,
-                                            inclusive = true
-                                        ).build()
-                                )
+                    if (showNavBar) {
+                        AppNavigationBar(
+                            destinations = AppNavBarItem.destinations(LocalAccountType.value),
+                            selectedItem = AppNavBarItem.destinations(LocalAccountType.value).getOrNull(selectedDestinationIndex),
+                            onItemClick = { destination ->
+                                scope.launch {
+                                    navigator.navigate(
+                                        destination,
+                                        navOptions = NavOptions.Builder()
+                                            .setPopUpTo(
+                                                0,
+                                                inclusive = true
+                                            ).build()
+                                    )
+                                }
                             }
-                        }
-                    )
-
+                        )
+                    }
                 }
-            })
+            }
+        )
     }
 }
 

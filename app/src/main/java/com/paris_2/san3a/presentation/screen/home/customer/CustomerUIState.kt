@@ -12,6 +12,7 @@ import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 data class CustomerHomeUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
+    val notificationsCount: Int = 0,
     val customerUiState: CustomerUiState = CustomerUiState(),
     val bottomSheetUiState: BottomSheetUiState = BottomSheetUiState(),
     val showSnackBarError: Boolean = false,

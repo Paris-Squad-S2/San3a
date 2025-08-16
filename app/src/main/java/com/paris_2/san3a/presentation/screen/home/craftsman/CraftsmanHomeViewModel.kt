@@ -8,6 +8,7 @@ import com.paris_2.san3a.domain.usecase.GetRecentRelatedJobsUseCase
 import com.paris_2.san3a.domain.usecase.GetStatsUseCase
 import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersCountUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
@@ -19,6 +20,7 @@ class CraftsmanHomeViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getOffersCountUseCase: GetOffersCountUseCase,
     private val getUserServicesUseCase: GetUserServicesUseCase,
+    private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getUserUseCase: GetUserUseCase,
 ) : CraftsmanInteractionListener, BaseViewModel<CraftsmanHomeState>(CraftsmanHomeState()) {
@@ -69,6 +71,7 @@ class CraftsmanHomeViewModel(
                     )
                 )
                 loadUserDate()
+                getNotificationsCount(phoneNumber)
                 loadStats()
                 getUserServices()
             },
@@ -81,6 +84,27 @@ class CraftsmanHomeViewModel(
             }
         )
     }
+
+    private fun getNotificationsCount(userId: String) {
+        tryToObserve(
+            observe = {
+                getUnReadNotificationsCountUseCase(userId)
+            },
+            onEach = { count ->
+                updateState(
+                    screenState.value.copy(
+                        craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                            notificationsCount = count ?: 0
+                        )
+                    )
+                )
+            },
+            onError = { exception ->
+                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+            },
+        )
+    }
+
 
     private fun loadUserDate() {
         tryToExecute(

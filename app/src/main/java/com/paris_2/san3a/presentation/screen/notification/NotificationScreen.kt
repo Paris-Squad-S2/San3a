@@ -34,7 +34,7 @@ fun NotificationScreen(
         topBar = {
             AppBar(
                 title = stringResource(R.string.notifications),
-                onBackClick = { viewModel.onBackClick() },
+                onBackClick = viewModel::onBackClick,
             )
         },
         modifier = Modifier

@@ -8,6 +8,7 @@ import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetAcceptedOfferOnRequestUseCaseUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersCountUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
@@ -26,6 +27,7 @@ class MyRequestCustomerViewModel(
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val getCustomerRatingOnCraftsmanUseCase: GetCustomerRatingOnCraftsmanUseCase,
     private val addRatingForCraftsmanUseCase: AddRatingForCraftsmanUseCase,
+    private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val createChatUseCase: CreateChatUseCase,
 ) : BaseViewModel<MyRequestCustomerScreenState>(MyRequestCustomerScreenState()),
     MyRequestCustomerInteractionListener {
@@ -51,6 +53,7 @@ class MyRequestCustomerViewModel(
                     )
                 )
                 getRequests()
+                getNotificationsCount(phoneNumber)
             },
             onError = {
                 updateState(
@@ -61,6 +64,27 @@ class MyRequestCustomerViewModel(
             }
         )
     }
+
+    private fun getNotificationsCount(userId: String) {
+        tryToObserve(
+            observe = {
+                getUnReadNotificationsCountUseCase(userId)
+            },
+            onEach = { count ->
+                updateState(
+                    screenState.value.copy(
+                        myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                            notificationsCount = count ?: 0,
+                        )
+                    )
+                )
+            },
+            onError = { exception ->
+                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+            },
+        )
+    }
+
 
     private fun getRequests() {
         tryToObserve(

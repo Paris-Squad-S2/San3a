@@ -52,6 +52,7 @@ import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.BottomSheet
 import com.paris_2.san3a.presentation.shared.components.CategoryItem
+import com.paris_2.san3a.presentation.shared.components.NotificationIcon
 import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
 import com.paris_2.san3a.presentation.shared.components.RequestDescriptionContent
 import com.paris_2.san3a.presentation.shared.components.RequestTitleContent
@@ -283,13 +284,10 @@ private fun CustomerHomeScreenContent(
                     .fillMaxWidth()
                     .background(Theme.colors.background.card),
                 actionIcon = {
-                    Icon(
-                        modifier = Modifier
-                            .clickable(onClick = action::onNotificationClick)
-                            .padding(end = 8.dp),
-                        painter = painterResource(R.drawable.ic_notification_outline),
-                        contentDescription = null,
-                        tint = Theme.colors.shade.primary
+                    NotificationIcon(
+                        modifier = Modifier.padding(end = 8.dp),
+                        count = state.notificationsCount,
+                        onNotificationClick = action::onNotificationClick,
                     )
                 },
                 leadingIcon = {

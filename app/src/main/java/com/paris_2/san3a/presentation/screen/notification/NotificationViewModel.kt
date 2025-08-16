@@ -2,20 +2,25 @@ package com.paris_2.san3a.presentation.screen.notification
 
 
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.StreamNotificationsUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetNotificationsUseCase
+import com.paris_2.san3a.domain.usecase.notification.MarkNotificationsAsReadUseCase
 import com.paris_2.san3a.presentation.screen.notification.components.NotificationUiState
 import com.paris_2.san3a.presentation.screen.notification.components.toUiModelList
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
 class NotificationViewModel(
-    private val streamNotificationsUseCase: StreamNotificationsUseCase,
+    private val getNotificationsUseCase: GetNotificationsUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
+    private val markNotificationsAsReadUseCase: MarkNotificationsAsReadUseCase
 ) : BaseViewModel<NotificationUiState>(NotificationUiState()) {
 
     init {
         tryToExecute(
             execute = { getPhoneNumberUseCase() },
-            onSuccess = { userId -> observeNotifications(userId) },
+            onSuccess = { userId ->
+                observeNotifications(userId)
+                markNotificationsAsReadUseCase(userId)
+            },
             onError = { e ->
                 updateState(screenState.value.copy(error = e.message ?: "Unknown error"))
             }
@@ -24,7 +29,7 @@ class NotificationViewModel(
 
     private fun observeNotifications(userId: String) {
         tryToObserve(
-            observe = { streamNotificationsUseCase(userId) },
+            observe = { getNotificationsUseCase(userId) },
             onEach = { notifications ->
                 updateState(
                     screenState.value.copy(
