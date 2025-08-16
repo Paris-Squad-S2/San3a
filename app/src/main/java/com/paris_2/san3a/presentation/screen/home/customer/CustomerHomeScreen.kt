@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.R
+import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.presentation.screen.account.components.LocationContent
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.RequestBottomSheetContent
 import com.paris_2.san3a.presentation.screen.home.customer.component.MostRequestedServices
@@ -294,9 +295,15 @@ private fun CustomerHomeScreenContent(
                         modifier = Modifier
                             .padding(start = 16.dp)
                     ) {
+                        val time = getCurrentDateTime()
+                        val greeting = if (time.hour in 5..11) {
+                            R.string.good_morning
+                        } else {
+                            R.string.good_afternoon
+                        }
                         Text(
                             text = stringResource(
-                                R.string.good_morning,
+                                greeting,
                                 state.customerUiState.currentUserName
                             ),
 
