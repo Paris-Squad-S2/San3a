@@ -131,18 +131,10 @@ class MyServiceViewModel(
         )
         tryToExecute(
             execute = {
-                val currentLocale = "englishName"
                 val selectedServices =
                     screenState.value.myServiceUiState.filter { it.isSelected }
                 val isCraftsman = screenState.value.isCraftsman
-                val services = selectedServices.map { serviceUiState ->
-                    Service(
-                        id = serviceUiState.id,
-                        title = mapOf(currentLocale to serviceUiState.serviceTitle),
-                        description = mapOf(currentLocale to serviceUiState.serviceDescription),
-                        imageUrl = serviceUiState.serviceImage,
-                    )
-                }
+                val services = selectedServices.map { it.id }
                 setUpAccountUseCase.saveServices(
                     phone = screenState.value.phoneNumber,
                     services,

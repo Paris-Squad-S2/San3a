@@ -23,7 +23,7 @@ interface UserRemoteDataSource {
 
     suspend fun getAccountType(phone: String) : AccountType
 
-    suspend fun saveServices(phone: String, services: List<Service>, isCraftsman: Boolean)
+    suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean)
 
     fun getServices(phone: String, isCraftsman: Boolean): Flow<List<ServiceDto>>
 

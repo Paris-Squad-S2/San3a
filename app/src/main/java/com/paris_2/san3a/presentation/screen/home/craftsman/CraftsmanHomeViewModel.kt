@@ -31,7 +31,6 @@ class CraftsmanHomeViewModel(
     }
 
     private fun getUserServices() {
-        val currentLocale = "englishName"
         tryToObserve(
             observe = {
                 getUserServicesUseCase(

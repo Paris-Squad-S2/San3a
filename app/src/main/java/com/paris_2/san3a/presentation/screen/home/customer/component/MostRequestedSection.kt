@@ -20,10 +20,8 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 @Composable
 fun MostRequestedServices(
     services: List<Service>,
-    isArabic: Boolean,
-    action: CustomerHomeInteractionListener,
+    onServiceClick: (Service) -> Unit,
     modifier: Modifier = Modifier,
-    onServiceClick: (String, String, String) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -41,19 +39,11 @@ fun MostRequestedServices(
         ) {
             items(services) { service ->
                 CategoryItem(
-                    title = service.title[if (isArabic) "arabicName" else "englishName"] ?: "",
-                    description = service.description[if (isArabic) "arabicDescription" else "englishDescription"]
-                        ?: "",
+                    title = service.title,
+                    description = service.description,
                     serviceImageUrl = service.imageUrl,
                     isLarge = true,
-                    onclick = {
-                        action.onServiceClick(service.id)
-                        onServiceClick(
-                            service.title[if (isArabic) "arabicName" else "englishName"] ?: "",
-                            service.id,
-                            service.imageUrl
-                        )
-                    },
+                    onclick = { onServiceClick(service) },
                 )
             }
         }

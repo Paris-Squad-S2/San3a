@@ -74,7 +74,6 @@ private fun CustomerHomeScreenContent(
     state: CustomerHomeUiState,
     action: CustomerHomeInteractionListener,
 ) {
-    val isArabic = remember { Locale.getDefault().language == "ar" }
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents(),
         onResult = { uriList ->
@@ -371,11 +370,8 @@ private fun CustomerHomeScreenContent(
                     item {
                         MostRequestedServices(
                             services = state.customerUiState.mostRequestedServices,
-                            isArabic = isArabic,
-                            action = action,
-                        ) { selectedTitle, selectedServiceId, imageUrl ->
-                            action.initBottomSheet(selectedTitle, selectedServiceId, imageUrl)
-                        }
+                            onServiceClick = action::onServiceClick,
+                        )
                     }
                 }
 
@@ -404,16 +400,14 @@ private fun CustomerHomeScreenContent(
                     }
                     items(servicesToDisplay) { service ->
                         CategoryItem(
-                            title = service.title[if (isArabic) ARABIC_NAME else ENGLISH_NAME]
-                                ?: "",
-                            description = service.description[if (isArabic) ARABIC_DESCRIPTION else ENGLISH_DESCRIPTION]
-                                ?: "",
+                            title = service.title,
+                            description = service.description,
                             serviceImageUrl = service.imageUrl,
                             isLarge = false,
                             modifier = Modifier
                                 .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
                             onclick = {
-                                action.onServiceClick(service.id)
+                                action.onServiceClick(service)
                             }
                         )
                     }
@@ -465,8 +459,3 @@ private fun CustomerHomeScreenContent(
         }
     }
 }
-
-const val ARABIC_NAME = "arabicName"
-const val ENGLISH_NAME = "englishName"
-const val ARABIC_DESCRIPTION = "arabicDescription"
-const val ENGLISH_DESCRIPTION = "englishDescription"

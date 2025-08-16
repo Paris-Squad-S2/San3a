@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.home.customer
 
 import android.util.Log
 import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
@@ -17,7 +18,6 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import java.util.Locale
 
 class CustomerHomeViewModel(
     private val getMostRequestedServicesUseCase: GetMostRequestedServicesUseCase,
@@ -505,15 +505,10 @@ class CustomerHomeViewModel(
             emptyList()
         } else {
             allServices.filter { service ->
-                val titleEn = service.title[ENGLISH_NAME]?.lowercase() ?: ""
-                val titleAr = service.title[ARABIC_NAME]?.lowercase() ?: ""
-                val descEn = service.description[ENGLISH_DESCRIPTION]?.lowercase() ?: ""
-                val descAr = service.description[ARABIC_DESCRIPTION]?.lowercase() ?: ""
+                val title = service.title
+                val desc = service.description
 
-                titleEn.contains(searchQuery) ||
-                        titleAr.contains(searchQuery) ||
-                        descEn.contains(searchQuery) ||
-                        descAr.contains(searchQuery)
+                title.contains(searchQuery) || desc.contains(searchQuery)
             }
         }
         updateState(
@@ -526,15 +521,8 @@ class CustomerHomeViewModel(
         )
     }
 
-    override fun onServiceClick(serviceId: String) {
-        val selectedService = screenState.value.customerUiState.services.find { it.id == serviceId }
-        val isArabic = Locale.getDefault().language == ARABIC_LANGUAGE
-        val serviceTitle = if (isArabic) {
-            selectedService?.title?.get(ARABIC_NAME)
-        } else {
-            selectedService?.title?.get(ENGLISH_NAME)
-        } ?: ""
-        initBottomSheet(serviceTitle, serviceId, selectedService?.imageUrl.orEmpty())
+    override fun onServiceClick(service: Service) {
+        initBottomSheet(service.title, service.id, service.imageUrl)
     }
 
     override fun onBecomeCraftsmanClick() {

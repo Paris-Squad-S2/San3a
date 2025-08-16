@@ -21,7 +21,6 @@ import com.paris_2.san3a.domain.repository.HomeRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
@@ -40,23 +39,37 @@ class HomeRepositoryImpl(
         }
 
         return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
-            serviceRemoteDataSource.getAllServices()
-                .map { dtoList -> dtoList.map { it.toEntity(isDarkTheme = isDarkModeEnabled) } }
-                .catch { throw GetAllServicesException() }
+            localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
+                serviceRemoteDataSource.getAllServices()
+                    .map { dtoList ->
+                        dtoList.toEntity(
+                            isDarkTheme = isDarkModeEnabled,
+                            language = language
+                        )
+                    }
+                    .catch { throw GetAllServicesException() }
+            }
         }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun searchServices(query: String): Flow<List<Service>> {
-        return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
-            serviceRemoteDataSource.searchServices(query)
-                .map { dto -> dto.map { it.toEntity(isDarkTheme = isDarkModeEnabled) } }
-                .catch { throw SearchServicesException() }
+        return localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
+            localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
+                serviceRemoteDataSource.searchServices(query)
+                    .map { dto ->
+                        dto.toEntity(
+                            isDarkTheme = isDarkModeEnabled,
+                            language = language
+                        )
+                    }
+                    .catch { throw SearchServicesException() }
+            }
         }
     }
 
     override suspend fun requestService(requestedService: RequestService) {
-        safeCall(RequestServiceException(requestedService)){
+        safeCall(RequestServiceException(requestedService)) {
             val imageUris = requestedService.image
             val imageUrls = if (imageUris.isNotEmpty()) {
                 val paths = imageUris.map { uri ->
@@ -80,9 +93,11 @@ class HomeRepositoryImpl(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getMostRequestedServices(): Flow<List<Service>> {
         return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
-            serviceRemoteDataSource.getMostRequestedServices()
-                .map { dto -> dto.map { it.toEntity(isDarkTheme = isDarkModeEnabled) } }
-                .catch { throw GetMostRequestedServicesException() }
+            localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
+                serviceRemoteDataSource.getMostRequestedServices()
+                    .map { dto -> dto.toEntity(isDarkTheme = isDarkModeEnabled, language = language) }
+                    .catch { throw GetMostRequestedServicesException() }
+            }
         }
     }
 
@@ -98,7 +113,7 @@ class HomeRepositoryImpl(
     override suspend fun updateNumOfRequestService(serviceId: String) {
         return try {
             serviceRemoteDataSource.updateNumOfRequestService(serviceId)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             throw UpdateNumOfRequestsException()
         }
     }

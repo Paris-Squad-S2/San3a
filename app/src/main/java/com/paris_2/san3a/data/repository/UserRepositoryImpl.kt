@@ -73,7 +73,7 @@ class UserRepositoryImpl(
 
     override suspend fun saveServices(
         phone: String,
-        services: List<Service>,
+        services: List<String>,
         isCraftsman: Boolean
     ) {
         if (networkConnectionChecker.isConnected.value.not()) {
@@ -92,12 +92,11 @@ class UserRepositoryImpl(
         }
 
         return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
-            userRemoteDataSource.getServices(phone, isCraftsman)
-                .map { dtoList -> dtoList.map { it.toEntity(isDarkModeEnabled) } }
-                .catch {
-                    Log.e("UserRepositoryImpl", "Error fetching services: ${it.message}")
-                    throw GetServicesException()
-                }
+            localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
+                userRemoteDataSource.getServices(phone, isCraftsman)
+                    .map { dtoList -> dtoList.toEntity(isDarkModeEnabled, language) }
+                    .catch { throw GetServicesException() }
+            }
         }
     }
 
