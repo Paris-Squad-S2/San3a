@@ -1,6 +1,6 @@
 package com.paris_2.san3a.presentation.screen.home.utils
 
-fun getSuggestions(serviceType: String): List<String> {
+fun getSuggestions(serviceType: String): List<String> { //TODO: Remove it
     return when(serviceType){
         "Plumping" -> listOf("Shower is not working", "Bathroom faucet is broken", "Drain Cleaning", "Water Heater Installation")
         "Electrical Services" -> listOf("Wiring", "Circuit Breaker Repair", "Lighting Installation", "Appliance Repair")
