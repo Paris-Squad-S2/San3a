@@ -242,9 +242,9 @@ class CraftsmanHomeViewModel(
                         imageUrl = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.imageUrl.orEmpty()
                     )
                 }.also { mappedJobs ->
-                    val services = screenState.value.craftsmanHomeUiState.userServices.values.toList().map { it.title }
+                    val services = screenState.value.craftsmanHomeUiState.userServices.keys.toList()
                     val filteredJobs =
-                        mappedJobs?.filter { service -> services.contains(service.serviceType) }
+                        mappedJobs?.filter { service -> services.contains(service.serviceId) }
                     updateState(
                         screenState.value.copy(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
