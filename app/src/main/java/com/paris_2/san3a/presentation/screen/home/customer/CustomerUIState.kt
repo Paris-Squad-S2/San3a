@@ -28,7 +28,6 @@ data class CustomerUiState(
     val city: String = "",
     val mostRequestedServices: List<Service> = emptyList(),
     val services: List<Service> = emptyList(),
-    val requestService: RequestServiceUiState? = null,
     val searchQuery: String = "",
     val searchResults: List<Service> = emptyList()
 )
@@ -51,54 +50,7 @@ data class BottomSheetUiState(
     val bottomSheetAddressDetails: String = "",
     val isGovernmentSheetVisible: Boolean = false,
     val locationBottomSheetType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT
-
 )
-
-data class RequestServiceUiState(
-    val title: String,
-    val serviceType: String,
-    val description: String,
-    val governorateId: Int,
-    val cityId: Int,
-    val locationDetails: String,
-    val image: List<String>,
-    val serviceId: String,
-    val userId: String = "",
-    val requestStatus: RequestStatus = RequestStatus.ONGOING
-)
-
-fun RequestService.toRequestServiceUiState(): RequestServiceUiState {
-    return RequestServiceUiState(
-        title = this.title,
-        serviceType = this.serviceType,
-        description = this.description,
-        governorateId = this.governorateId,
-        cityId = this.cityId,
-        locationDetails = this.locationDetails,
-        image = this.image,
-        userId = this.userId,
-        serviceId = serviceId
-    )
-}
-
-fun RequestServiceUiState.toRequestService(): RequestService {
-    return RequestService(
-        id = "",
-        title = this.title,
-        serviceType = this.serviceType,
-        description = this.description,
-        governorateId = this.governorateId,
-        cityId = this.cityId,
-        locationDetails = this.locationDetails,
-        image = this.image,
-        userId = this.userId,
-        selectedCraftsmanId = null,
-        time = getCurrentDateTime(),
-        state = "",
-        requestStatus = this.requestStatus,
-        serviceId = serviceId
-    )
-}
 
 enum class BottomSheetStep {
     SELECT_SERVICE,

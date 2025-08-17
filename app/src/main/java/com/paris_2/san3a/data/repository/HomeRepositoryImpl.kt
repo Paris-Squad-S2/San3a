@@ -21,6 +21,7 @@ import com.paris_2.san3a.domain.repository.HomeRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
@@ -49,6 +50,21 @@ class HomeRepositoryImpl(
                     }
                     .catch { throw GetAllServicesException() }
             }
+        }
+    }
+
+    override suspend fun getServiceById(serviceId: String): Service? {
+        if (networkConnectionChecker.isConnected.value.not()) {
+            throw NoInternetConnectionException()
+        }
+
+        return safeCall(GetAllServicesException()) {
+            val isDarkModeEnabled = localDataStore.isDarkThemeEnabled().first()
+            val language = localDataStore.getLatestSelectedAppLanguage().first()
+            serviceRemoteDataSource.getServiceById(serviceId)?.toEntity(
+                isDarkTheme = isDarkModeEnabled,
+                language = language
+            )
         }
     }
 

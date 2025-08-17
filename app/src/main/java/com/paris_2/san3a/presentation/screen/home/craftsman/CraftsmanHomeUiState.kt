@@ -42,7 +42,7 @@ fun Stats.toStatsUiState(): StatsUiState {
     )
 }
 
-fun RequestService.toRequestServiceUiState(location: String, imageUrl: String): RequestServiceUiState {
+fun RequestService.toRequestServiceUiState(location: String, imageUrl: String, serviceType: String): RequestServiceUiState {
     return RequestServiceUiState(
         id = id,
         userId = userId,

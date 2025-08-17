@@ -112,6 +112,7 @@ data class RequestServiceUIState(
     val requestStatus: RequestStatus = RequestStatus.ONGOING,
     val title: String = "Loading...",
     val serviceType: String = "Loading...",
+    val serviceImageUri: String = "",
     val description: String = "Loading...",
     val location: String = "Loading...",
     val locationDetails: String = "Loading...",
@@ -128,12 +129,10 @@ fun RequestService.toRequestServiceUIState(location: String): RequestServiceUISt
         userId = this.userId,
         requestStatus = this.requestStatus,
         title = this.title,
-        serviceType = this.serviceType,
         description = this.description,
         location = location,
         locationDetails = this.locationDetails,
         time = getTimeAgo(this.time),
-        state = this.state,
         images = this.image,
         selectedCraftsmanId = this.selectedCraftsmanId
     )

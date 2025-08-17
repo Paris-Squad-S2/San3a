@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.requests.customer
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 
 
@@ -19,38 +20,37 @@ data class MyRequestCustomerUiState(
     val ongoing: Map<String, MyRequestCustomerUi> = emptyMap(),
     val completed: Map<String, MyRequestCustomerUi> = emptyMap(),
     val canceled: Map<String, MyRequestCustomerUi> = emptyMap(),
-    val services: Map<String, String> = emptyMap(),
+    val services: Map<String, Service> = emptyMap(),
     val rating: Float = 0.0f,
     val craftsmanToRate: String = ""
 )
 
-fun RequestService.toRequestServiceUiState(services: Map<String, String>): MyRequestCustomerUi {
+fun RequestService.toRequestServiceUiState(services: Map<String, Service>): MyRequestCustomerUi {
     val timePattern = "%02d:%02d:%02d"
     return MyRequestCustomerUi(
         id = this.id,
         requestTitle = this.title,
         status = this.requestStatus,
-        serviceType = this.serviceType,
         serviceId = this.serviceId,
         date = this.time.date.toString(),
         time = timePattern.format(time.hour, time.minute, time.second),
-        serviceImage = services[this.serviceId] ?: "",
+        serviceImage = services[this.serviceId]?.imageUrl.orEmpty(),
     )
 }
 
-fun List<RequestService>.toRequestServiceUiStateMap(services: Map<String, String>): Map<String, MyRequestCustomerUi> {
+fun List<RequestService>.toRequestServiceUiStateMap(services: Map<String, Service>): Map<String, MyRequestCustomerUi> {
     return this.associateBy { it.id }.mapValues { it.value.toRequestServiceUiState(services) }
 }
 
 data class MyRequestCustomerUi(
     val id: String = "",
     val requestTitle: String = "",
-    val serviceType: String = "",
     val offersCount: Int = 0,
     val date: String = "",
     val time: String = "",
     val serviceId: String = "",
     val serviceImage : String = "",
+    val serviceType: String = "",
     val status: RequestStatus = RequestStatus.ONGOING,
     val offer: OfferUiState = OfferUiState(),
     val craftsMan: CraftsManUiState = CraftsManUiState(),

@@ -8,13 +8,11 @@ data class RequestService(
     val requestStatus: RequestStatus,
     val serviceId: String,
     val title: String,
-    val serviceType: String,
     val description: String,
     val governorateId: Int,
     val cityId: Int,
     val locationDetails: String,
     val time: LocalDateTime,
-    val state: String,
     val image : List<String>,
     val selectedCraftsmanId: String?
 )
