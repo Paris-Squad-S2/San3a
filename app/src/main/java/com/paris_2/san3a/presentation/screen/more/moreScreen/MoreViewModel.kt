@@ -22,6 +22,7 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -77,6 +78,7 @@ class MoreViewModel(
                 isLoading = false
             )
         )
+        hideSnackBar()
     }
 
     private fun getLanguageSelected() {
@@ -108,6 +110,7 @@ class MoreViewModel(
                 showSnackBarError = true,
             )
         )
+        hideSnackBar()
     }
 
     private fun getPhoneNumber() {
@@ -167,6 +170,7 @@ class MoreViewModel(
                 showSnackBarError = true,
             )
         )
+        hideSnackBar()
     }
 
     private fun onGetUserInformationSuccess(user: User, rating: Flow<Float>) {
@@ -219,6 +223,7 @@ class MoreViewModel(
                     isLoadingChangeAccount = false
                 )
             )
+            hideSnackBar()
         }
 
     }
@@ -254,7 +259,10 @@ class MoreViewModel(
                 )
             },
             onError = { exception ->
-                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+                Log.e(
+                    "MessagesViewModel",
+                    "Error fetching notifications count: ${exception.message}"
+                )
             },
         )
     }
@@ -268,6 +276,7 @@ class MoreViewModel(
                 showSnackBarSuccess = false
             )
         )
+        hideSnackBar()
     }
 
     override fun onClickEditProfileBottomSheet() {
@@ -402,6 +411,7 @@ class MoreViewModel(
                     showSnackBarSuccess = false
                 )
             )
+            hideSnackBar()
         }
 
     }
@@ -446,6 +456,7 @@ class MoreViewModel(
                 showSnackBarSuccess = false
             )
         )
+        hideSnackBar()
     }
 
     override fun onChangeToDarkMode(isDarkMode: Boolean) {
@@ -535,6 +546,7 @@ class MoreViewModel(
                 showSnackBarError = false
             )
         )
+        hideSnackBar()
     }
 
     private fun onSaveUserInformationError(th: Throwable) {
@@ -592,6 +604,7 @@ class MoreViewModel(
                 isNoInternet = false
             )
         )
+        hideSnackBar()
     }
 
     fun onPickImageClick(uri: Uri) {
@@ -660,6 +673,20 @@ class MoreViewModel(
                 successMessageSnackBar = null
             )
         )
+    }
+
+    private fun hideSnackBar() {
+        viewModelScope.launch {
+            if (screenState.value.showSnackBarError || screenState.value.showSnackBarSuccess) {
+                delay(3000)
+                updateState(
+                    screenState.value.copy(
+                        showSnackBarError = false,
+                        showSnackBarSuccess = false
+                    )
+                )
+            }
+        }
     }
 
 

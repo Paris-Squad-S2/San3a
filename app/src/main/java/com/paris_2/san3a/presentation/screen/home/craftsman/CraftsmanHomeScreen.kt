@@ -221,6 +221,7 @@ private fun Preview() {
                     "1" to RequestServiceUiState(
                         id = "1",
                         title = "Shower is not working",
+                        serviceId = "1",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
                         offersCount = 2,
@@ -234,6 +235,7 @@ private fun Preview() {
                     "2" to RequestServiceUiState(
                         id = "2",
                         title = "Shower is not working",
+                        serviceId = "2",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
                         offersCount = 2,
@@ -247,6 +249,7 @@ private fun Preview() {
                     "3" to RequestServiceUiState(
                         id = "3",
                         title = "Shower is not working",
+                        serviceId = "3",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
                         offersCount = 2,
@@ -262,6 +265,7 @@ private fun Preview() {
                     "1" to RequestServiceUiState(
                         id = "1",
                         title = "Shower is not working",
+                        serviceId = "4",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
                         offersCount = 2,
@@ -275,6 +279,7 @@ private fun Preview() {
                     "2" to RequestServiceUiState(
                         id = "2",
                         title = "Shower is not working",
+                        serviceId = "5",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
                         offersCount = 2,
@@ -288,6 +293,7 @@ private fun Preview() {
                     "3" to RequestServiceUiState(
                         id = "3",
                         title = "Shower is not working",
+                        serviceId = "6",
                         description = "Shower is not working",
                         location = "Cairo, Egypt",
                         offersCount = 2,

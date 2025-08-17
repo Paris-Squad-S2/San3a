@@ -7,6 +7,7 @@ import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.GetServiceByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
@@ -28,6 +29,7 @@ class CustomerRequestDetailsRequestDetailsViewModel(
     private val addNotificationUseCase: AddNotificationUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
+    private val getServiceByIdUseCase: GetServiceByIdUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val createChatUseCase: CreateChatUseCase,
     savedStateHandle: SavedStateHandle
@@ -64,11 +66,37 @@ class CustomerRequestDetailsRequestDetailsViewModel(
                         ),
                     )
                 )
+                getServiceDetails(request.serviceId)
             },
             onError = {
                 updateState(
                     screenState.value.copy(
                         error = it.message ?: "An error occurred",
+                    )
+                )
+            }
+        )
+    }
+
+    private fun getServiceDetails(serviceId: String) {
+        tryToExecute(
+            execute = { getServiceByIdUseCase(serviceId) },
+            onSuccess = { service ->
+                updateState(
+                    screenState.value.copy(
+                        uiState = screenState.value.uiState.copy(
+                            request = screenState.value.uiState.request.copy(
+                                serviceType = service?.title ?: "Unknown Service",
+                                serviceImageUri = service?.imageUrl.orEmpty(),
+                            )
+                        )
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while loading service details",
                     )
                 )
             }

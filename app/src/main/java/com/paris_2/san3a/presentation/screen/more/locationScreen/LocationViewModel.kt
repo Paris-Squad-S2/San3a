@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.more.locationScreen
 
+import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
@@ -8,6 +9,8 @@ import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class LocationViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
@@ -32,8 +35,7 @@ class LocationViewModel(
             onSuccess = { result ->
                 updateState(
                     screenState.value.copy(
-                        isLoading = false,
-                        locationUiState = screenState.value.locationUiState.copy(
+                        isLoading = false, locationUiState = screenState.value.locationUiState.copy(
                             governorates = result
                         )
                     )
@@ -55,8 +57,7 @@ class LocationViewModel(
             onSuccess = { cities ->
                 updateState(
                     screenState.value.copy(
-                        isLoading = false,
-                        locationUiState = screenState.value.locationUiState.copy(
+                        isLoading = false, locationUiState = screenState.value.locationUiState.copy(
                             cities = cities
                         )
                     )
@@ -74,10 +75,10 @@ class LocationViewModel(
         if (uiState.selectedGovernorateId == null || uiState.selectedCityId == null) {
             updateState(
                 screenState.value.copy(
-                    showSnackBarError = true,
-                    errorMessage = R.string.please_select_location
+                    showSnackBarError = true, errorMessage = R.string.please_select_location
                 )
             )
+            hideSnackBar()
             return
         }
 
@@ -87,36 +88,34 @@ class LocationViewModel(
             )
         )
 
-        tryToExecute(
-            execute = {
-                val phone = getPhoneNumberUseCase()
-                val location = Location(
-                    governmentId = uiState.selectedGovernorateId,
-                    cityId = uiState.selectedCityId,
-                    addressInDetails = "${uiState.selectedGovernorateName}, ${uiState.selectedCityName}"
+        tryToExecute(execute = {
+            val phone = getPhoneNumberUseCase()
+            val location = Location(
+                governmentId = uiState.selectedGovernorateId,
+                cityId = uiState.selectedCityId,
+                addressInDetails = "${uiState.selectedGovernorateName}, ${uiState.selectedCityName}"
+            )
+            setUpAccountUseCase.saveLocation(phone, location)
+        }, onSuccess = {
+            updateState(
+                screenState.value.copy(
+                    showSnackBarSuccess = true,
+                    locationButtonState = AppButtonState.Enable,
+                    successMessageSnackBar = R.string.success_location_saved
                 )
-                setUpAccountUseCase.saveLocation(phone, location)
-            },
-            onSuccess = {
-                updateState(
-                    screenState.value.copy(
-                        showSnackBarSuccess = true,
-                        locationButtonState = AppButtonState.Enable,
-                        successMessageSnackBar = R.string.success_location_saved
-                    )
+            )
+            hideSnackBar()
+            navigateUp()
+        }, onError = {
+            updateState(
+                screenState.value.copy(
+                    showSnackBarError = true,
+                    locationButtonState = AppButtonState.Enable,
+                    errorMessage = R.string.some_error_happened
                 )
-                navigateUp()
-            },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        showSnackBarError = true,
-                        locationButtonState = AppButtonState.Enable,
-                        errorMessage = R.string.some_error_happened
-                    )
-                )
-            }
-        )
+            )
+            hideSnackBar()
+        })
     }
 
     override fun onClickRetry() {
@@ -129,63 +128,57 @@ class LocationViewModel(
     }
 
     override fun onGovernorateSelected(governorateId: Int) {
-        tryToExecute(
-            execute = {
-                getLocationInfoUseCase.getGovernorateById(governorateId)
-            },
-            onSuccess = { governorate ->
-                updateState(
-                    screenState.value.copy(
-                        locationUiState = screenState.value.locationUiState.copy(
-                            selectedGovernorateName = governorate?.name.orEmpty(),
-                            selectedGovernorateId = governorateId,
-                            selectedCityName = "",
-                            selectedCityId = null,
-                            cities = emptyList(),
-                            activeBottomSheet = LocationBottomSheetType.CITY,
-                        ),
-                        locationButtonState = AppButtonState.Disabled,
-                    )
+        tryToExecute(execute = {
+            getLocationInfoUseCase.getGovernorateById(governorateId)
+        }, onSuccess = { governorate ->
+            updateState(
+                screenState.value.copy(
+                    locationUiState = screenState.value.locationUiState.copy(
+                        selectedGovernorateName = governorate?.name.orEmpty(),
+                        selectedGovernorateId = governorateId,
+                        selectedCityName = "",
+                        selectedCityId = null,
+                        cities = emptyList(),
+                        activeBottomSheet = LocationBottomSheetType.CITY,
+                    ),
+                    locationButtonState = AppButtonState.Disabled,
                 )
-                fetchCities(governorateId)
-            },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        showSnackBarError = true,
-                        errorMessage = R.string.some_error_happened,
-                    )
+            )
+            fetchCities(governorateId)
+        }, onError = {
+            updateState(
+                screenState.value.copy(
+                    showSnackBarError = true,
+                    errorMessage = R.string.some_error_happened,
                 )
-            }
-        )
+            )
+            hideSnackBar()
+        })
     }
 
     override fun onCityChanged(cityId: Int) {
-        tryToExecute(
-            execute = {
-                getLocationInfoUseCase.getCityById(cityId)
-            },
-            onSuccess = { city ->
-                updateState(
-                    screenState.value.copy(
-                        locationUiState = screenState.value.locationUiState.copy(
-                            selectedCityName = city?.name.orEmpty(),
-                            selectedCityId = cityId,
-                            activeBottomSheet = null,
-                        ),
-                        locationButtonState = AppButtonState.Enable,
-                    )
+        tryToExecute(execute = {
+            getLocationInfoUseCase.getCityById(cityId)
+        }, onSuccess = { city ->
+            updateState(
+                screenState.value.copy(
+                    locationUiState = screenState.value.locationUiState.copy(
+                        selectedCityName = city?.name.orEmpty(),
+                        selectedCityId = cityId,
+                        activeBottomSheet = null,
+                    ),
+                    locationButtonState = AppButtonState.Enable,
                 )
-            },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        showSnackBarError = true,
-                        errorMessage = R.string.some_error_happened,
-                    )
+            )
+        }, onError = {
+            updateState(
+                screenState.value.copy(
+                    showSnackBarError = true,
+                    errorMessage = R.string.some_error_happened,
                 )
-            }
-        )
+            )
+            hideSnackBar()
+        })
     }
 
     override fun onShowBottomSheet(type: LocationBottomSheetType) {
@@ -210,32 +203,41 @@ class LocationViewModel(
     }
 
     private fun fetchUserLocation() {
-        tryToExecute(
-            execute = {
-                val phone = getPhoneNumberUseCase()
-                getUserUseCase(phone)
-            },
-            onSuccess = { user ->
-                val location = user.location
-                val governorate =
-                    getLocationInfoUseCase.getGovernorateById(governorateId = location.governmentId)
-                val city = getLocationInfoUseCase.getCityById(cityId = location.cityId)
-                updateState(
-                    screenState.value.copy(
-                        locationUiState = screenState.value.locationUiState.copy(
-                            selectedGovernorateName = governorate?.name.orEmpty(),
-                            selectedGovernorateId = governorate?.id,
-                            selectedCityName = city?.name.orEmpty(),
-                            selectedCityId = city?.id,
-                        )
+        tryToExecute(execute = {
+            val phone = getPhoneNumberUseCase()
+            getUserUseCase(phone)
+        }, onSuccess = { user ->
+            val location = user.location
+            val governorate =
+                getLocationInfoUseCase.getGovernorateById(governorateId = location.governmentId)
+            val city = getLocationInfoUseCase.getCityById(cityId = location.cityId)
+            updateState(
+                screenState.value.copy(
+                    locationUiState = screenState.value.locationUiState.copy(
+                        selectedGovernorateName = governorate?.name.orEmpty(),
+                        selectedGovernorateId = governorate?.id,
+                        selectedCityName = city?.name.orEmpty(),
+                        selectedCityId = city?.id,
                     )
                 )
-                fetchCities(governorate?.id ?: 0)
-            },
-            onError = {
-                updateState(screenState.value.copy(isNoInternet = true))
+            )
+            fetchCities(governorate?.id ?: 0)
+        }, onError = {
+            updateState(screenState.value.copy(isNoInternet = true))
+        })
+    }
+
+    private fun hideSnackBar() {
+        viewModelScope.launch {
+            if (screenState.value.showSnackBarError || screenState.value.showSnackBarSuccess) {
+                delay(3000)
+                updateState(
+                    screenState.value.copy(
+                        showSnackBarError = false, showSnackBarSuccess = false
+                    )
+                )
             }
-        )
+        }
     }
 
 

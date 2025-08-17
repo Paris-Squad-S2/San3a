@@ -6,6 +6,7 @@ import coil3.toUri
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 
 data class MyJobsCraftsmanScreenState(
@@ -22,17 +23,18 @@ data class MyOfferCraftsmanUiState(
     val ongoing: Map<String, JobUiState> = emptyMap(),
     val completed: Map<String, JobUiState> = emptyMap(),
     val canceled: Map<String, JobUiState> = emptyMap(),
+    val userServices: Map<String, Service> = emptyMap(),
 )
 
 data class JobUiState(
     val id: String = "",
     val customerPhone: String = "",
-    val serviceType: String = "",
     val address: String = "",
     val status: RequestStatus = RequestStatus.ONGOING,
     val time: String = "",
     val title: String = "",
     val serviceId: String = "",
+    val serviceType: String = "",
     val serviceImage: String = "",
     val description: String = "",
     val selectedCraftsmanId: String? = null,
@@ -43,7 +45,6 @@ fun RequestService.toMyJobOfferUiState(location: String, serviceImage: String?):
     return JobUiState(
         id = this.id,
         customerPhone = this.userId,
-        serviceType = this.serviceType,
         address = listOf(location, this.locationDetails)
             .filter { it.isNotBlank() }
             .joinToString(", "),

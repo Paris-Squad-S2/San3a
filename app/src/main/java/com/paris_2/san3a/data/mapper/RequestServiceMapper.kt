@@ -8,7 +8,6 @@ import kotlinx.datetime.LocalDateTime
 
 fun RequestServiceDto.toEntity() = RequestService(
     id = id,
-    serviceType = serviceType,
     description = description,
     governorateId = governorateId,
     cityId = cityId,
@@ -17,7 +16,6 @@ fun RequestServiceDto.toEntity() = RequestService(
     image = image,
     title = title,
     time = LocalDateTime.parse(time ?: getCurrentDateTime().toString()),
-    state = state,
     serviceId = serviceId,
     selectedCraftsmanId = selectedCraftsmanId,
     requestStatus = RequestStatus.valueOf(requestStatus ?: RequestStatus.ONGOING.name)
@@ -25,7 +23,6 @@ fun RequestServiceDto.toEntity() = RequestService(
 
 fun RequestService.toDto(imageUrls: List<String> = emptyList()) = RequestServiceDto(
     id = id,
-    serviceType = serviceType,
     description = description,
     governorateId = governorateId,
     cityId = cityId,
@@ -34,7 +31,6 @@ fun RequestService.toDto(imageUrls: List<String> = emptyList()) = RequestService
     image = imageUrls,
     title = title,
     time = time.toString(),
-    state = state,
     serviceId = serviceId,
     selectedCraftsmanId = selectedCraftsmanId,
     requestStatus = requestStatus.name

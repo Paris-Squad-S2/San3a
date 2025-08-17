@@ -42,24 +42,40 @@ class MyRequestCustomerViewModel(
         tryToObserve(
             observe = { getAllServicesUseCase() },
             onEach = { servicesList ->
-                val idToImage = (servicesList.orEmpty()).associate { it.id to it.imageUrl }
+                updateState(
+                    screenState.value.copy(
+                        myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                            services = servicesList.orEmpty().associateBy { it.id },
+                        )
+                    )
+                )
+                val servicesById = (servicesList.orEmpty()).associateBy { it.id }
 
                 val current = screenState.value.myRequestCustomerUiState
 
                 val updatedOngoing = current.ongoing.mapValues { (_, req) ->
-                    req.copy(serviceImage = idToImage[req.serviceId] ?: req.serviceImage)
+                    req.copy(
+                        serviceImage = servicesById[req.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = servicesById[req.serviceId]?.title.orEmpty()
+                    )
                 }
                 val updatedCompleted = current.completed.mapValues { (_, req) ->
-                    req.copy(serviceImage = idToImage[req.serviceId] ?: req.serviceImage)
+                    req.copy(
+                        serviceImage = servicesById[req.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = servicesById[req.serviceId]?.title.orEmpty()
+                    )
                 }
                 val updatedCanceled = current.canceled.mapValues { (_, req) ->
-                    req.copy(serviceImage = idToImage[req.serviceId] ?: req.serviceImage)
+                    req.copy(
+                        serviceImage = servicesById[req.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = servicesById[req.serviceId]?.title.orEmpty()
+                    )
                 }
 
                 updateState(
                     screenState.value.copy(
                         myRequestCustomerUiState = current.copy(
-                            services = idToImage,
+                            services = servicesById,
                             ongoing = updatedOngoing,
                             completed = updatedCompleted,
                             canceled = updatedCanceled,
@@ -121,7 +137,10 @@ class MyRequestCustomerViewModel(
                 )
             },
             onError = { exception ->
-                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+                Log.e(
+                    "MessagesViewModel",
+                    "Error fetching notifications count: ${exception.message}"
+                )
             },
         )
     }
@@ -137,11 +156,14 @@ class MyRequestCustomerViewModel(
                     MyRequestCustomerScreenState(
                         myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
                             ongoing = result?.filter { it.requestStatus == RequestStatus.ONGOING }
-                                ?.toRequestServiceUiStateMap(screenState.value.myRequestCustomerUiState.services) ?: emptyMap(),
+                                ?.toRequestServiceUiStateMap(screenState.value.myRequestCustomerUiState.services)
+                                ?: emptyMap(),
                             completed = result?.filter { it.requestStatus == RequestStatus.COMPLETED }
-                                ?.toRequestServiceUiStateMap(screenState.value.myRequestCustomerUiState.services) ?: emptyMap(),
+                                ?.toRequestServiceUiStateMap(screenState.value.myRequestCustomerUiState.services)
+                                ?: emptyMap(),
                             canceled = result?.filter { it.requestStatus == RequestStatus.CANCELLED }
-                                ?.toRequestServiceUiStateMap(screenState.value.myRequestCustomerUiState.services) ?: emptyMap(),
+                                ?.toRequestServiceUiStateMap(screenState.value.myRequestCustomerUiState.services)
+                                ?: emptyMap(),
                         ),
                     )
                 )
@@ -295,7 +317,8 @@ class MyRequestCustomerViewModel(
         tryToExecute(
             execute = { scope ->
                 val craftsManDeferred = scope.async { getUserUseCase(craftsManId) }
-                val ratingDeferred = scope.async { getRatingForCraftsmanUseCase(craftsManId).first() }
+                val ratingDeferred =
+                    scope.async { getRatingForCraftsmanUseCase(craftsManId).first() }
 
                 craftsManDeferred.await() to ratingDeferred.await()
             },

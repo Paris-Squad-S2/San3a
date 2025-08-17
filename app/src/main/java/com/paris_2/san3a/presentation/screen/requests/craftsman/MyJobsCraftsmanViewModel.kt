@@ -1,12 +1,14 @@
 package com.paris_2.san3a.presentation.screen.requests.craftsman
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
@@ -23,7 +25,9 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class MyJobsCraftsmanViewModel(
     private val getCraftsManRequestsUseCase: GetCraftsManRequestsUseCase,
@@ -65,7 +69,7 @@ class MyJobsCraftsmanViewModel(
                 showSnackBarError = false,
                 isLoading = false,
                 myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                    craftsManId = phoneNumber
+                    craftsManId = phoneNumber,
                 )
             )
         )
@@ -83,13 +87,16 @@ class MyJobsCraftsmanViewModel(
                 updateState(
                     screenState.value.copy(
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            notificationsCount = count ?: 0
+                            notificationsCount = count ?: 0,
                         )
                     )
                 )
             },
             onError = { exception ->
-                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+                Log.e(
+                    "MessagesViewModel",
+                    "Error fetching notifications count: ${exception.message}"
+                )
             },
         )
     }
@@ -104,6 +111,7 @@ class MyJobsCraftsmanViewModel(
                 isLoading = false
             )
         )
+        hideSnackBar()
     }
 
     private fun getCraftsManOfferOnRequest() {
@@ -125,11 +133,12 @@ class MyJobsCraftsmanViewModel(
                         ?: emptyList()
                 Log.d("MyOfferCraftsmanViewModel", "Filtered requests: $filteredResult")
                 filteredResult.map { request ->
-                    val governorate = getLocationInfoUseCase.getGovernorateById(request.governorateId)
+                    val governorate =
+                        getLocationInfoUseCase.getGovernorateById(request.governorateId)
                     val city = getLocationInfoUseCase.getCityById(request.cityId)
                     request.toMyJobOfferUiState(
                         location = "${governorate?.name.orEmpty()} ${city?.name.orEmpty()}",
-                        serviceImage = serviceIdToImage[request.serviceId]
+                        serviceImage = screenState.value.myOffersCraftsmanUiState.userServices[request.serviceId]?.imageUrl.orEmpty()
                     )
                 }
             },
@@ -145,7 +154,7 @@ class MyJobsCraftsmanViewModel(
                             completed = mappedResult.filter { it.status == RequestStatus.COMPLETED }
                                 .associateBy { it.id },
                             canceled = mappedResult.filter { it.status == RequestStatus.CANCELLED }
-                                .associateBy { it.id }
+                                .associateBy { it.id },
                         )
                     )
                 )
@@ -177,6 +186,7 @@ class MyJobsCraftsmanViewModel(
                     showSnackBarError = true
                 )
             )
+            hideSnackBar()
         }
 
     }
@@ -206,6 +216,7 @@ class MyJobsCraftsmanViewModel(
                 showSnackBarError = true
             )
         )
+        hideSnackBar()
     }
 
     private fun updateRequestOffer(requestId: String, listType: ListType) = tryToObserve(
@@ -242,6 +253,7 @@ class MyJobsCraftsmanViewModel(
                     errorMessage = R.string.failed_to_load_offers_for_request
                 )
             )
+            hideSnackBar()
         }
 
     }
@@ -267,7 +279,7 @@ class MyJobsCraftsmanViewModel(
             ListType.ONGOING -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        ongoing = updatedRequests
+                        ongoing = updatedRequests,
                     )
                 )
             )
@@ -275,7 +287,7 @@ class MyJobsCraftsmanViewModel(
             ListType.COMPLETED -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        completed = updatedRequests
+                        completed = updatedRequests,
                     )
                 )
             )
@@ -283,7 +295,7 @@ class MyJobsCraftsmanViewModel(
             ListType.CANCELED -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        canceled = updatedRequests
+                        canceled = updatedRequests,
                     )
                 )
             )
@@ -337,6 +349,7 @@ class MyJobsCraftsmanViewModel(
                     errorMessage = R.string.error_fetching_craftsman_details
                 )
             )
+            hideSnackBar()
         }
 
     }
@@ -364,7 +377,7 @@ class MyJobsCraftsmanViewModel(
             ListType.ONGOING -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        ongoing = updatedRequests
+                        ongoing = updatedRequests,
                     )
                 )
             )
@@ -372,7 +385,7 @@ class MyJobsCraftsmanViewModel(
             ListType.COMPLETED -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        completed = updatedRequests
+                        completed = updatedRequests,
                     )
                 )
             )
@@ -380,31 +393,44 @@ class MyJobsCraftsmanViewModel(
             ListType.CANCELED -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        canceled = updatedRequests
+                        canceled = updatedRequests,
                     )
                 )
             )
         }
     }
 
-    private var serviceIdToImage: Map<String, String> = emptyMap()
-
     private fun getUserServices() {
         tryToObserve(
             observe = getAllServicesUseCase::invoke,
             onEach = { servicesList ->
-                serviceIdToImage = (servicesList ?: emptyList()).associate { it.id to it.imageUrl }
+                updateState(
+                    screenState.value.copy(
+                        myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                            userServices = servicesList?.associateBy { it.id } ?: emptyMap()
+                        ),
+                    )
+                )
 
                 // Update only the serviceImage fields for current items
                 val current = screenState.value.myOffersCraftsmanUiState
                 val updatedOngoing = current.ongoing.mapValues { (_, ui) ->
-                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                    ui.copy(
+                        serviceImage = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.title ?: ui.serviceType
+                    )
                 }
                 val updatedCompleted = current.completed.mapValues { (_, ui) ->
-                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                    ui.copy(
+                        serviceImage = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.title ?: ui.serviceType
+                    )
                 }
                 val updatedCanceled = current.canceled.mapValues { (_, ui) ->
-                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                    ui.copy(
+                        serviceImage = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.title ?: ui.serviceType
+                    )
                 }
 
                 updateState(
@@ -452,6 +478,7 @@ class MyJobsCraftsmanViewModel(
                     errorMessage = R.string.error_marking_request_as_done
                 )
             )
+            hideSnackBar()
         }
     }
 
@@ -492,6 +519,7 @@ class MyJobsCraftsmanViewModel(
                     errorMessage = R.string.some_error_happened
                 )
             )
+            hideSnackBar()
         }
     }
 
@@ -538,6 +566,7 @@ class MyJobsCraftsmanViewModel(
                     errorMessage = R.string.occurred_while_sending_message_to_customer
                 )
             )
+            hideSnackBar()
         }
     }
 
@@ -574,5 +603,14 @@ class MyJobsCraftsmanViewModel(
                 errorMessage = null,
             )
         )
+    }
+
+    private fun hideSnackBar() {
+        viewModelScope.launch {
+            if (screenState.value.showSnackBarError) {
+                delay(3000)
+                updateState(screenState.value.copy(showSnackBarError = false))
+            }
+        }
     }
 }

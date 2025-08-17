@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface HomeRepository {
     fun getAllServices(): Flow<List<Service>>
+    suspend fun getServiceById(serviceId: String): Service?
     fun searchServices(query: String): Flow<List<Service>>
     suspend fun requestService(requestedService: RequestService)
     fun getMostRequestedServices(): Flow<List<Service>>

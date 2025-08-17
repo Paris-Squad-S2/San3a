@@ -12,6 +12,7 @@ import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetCustomerRatingOnCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetRecentRelatedJobsUseCase
+import com.paris_2.san3a.domain.usecase.GetServiceByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetStatsUseCase
 import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
@@ -63,6 +64,7 @@ val useCaseModule = module {
     factoryOf(::SetOnboardingCompletedUseCase)
     factoryOf(::SavePhoneNumberUseCase)
     factoryOf(::GetAllServicesUseCase)
+    factoryOf(::GetServiceByIdUseCase)
     factoryOf(::SendOtpUseCase)
     factoryOf(::GetStatsUseCase)
     factoryOf(::GetRecentRelatedJobsUseCase)

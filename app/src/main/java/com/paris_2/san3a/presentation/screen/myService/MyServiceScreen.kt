@@ -25,7 +25,7 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.account.components.ServicesContent
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppButton
-import com.paris_2.san3a.presentation.shared.components.AppButtonState
+import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
@@ -101,6 +101,7 @@ fun MyServiceScreenContent(
                 AppButton(
                     text = stringResource(R.string.save),
                     onClick = myServiceInteractionListener::onClickSave,
+                    size = AppButtonSize.Large,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
@@ -108,7 +109,7 @@ fun MyServiceScreenContent(
                     state = myServiceScreenState.serviceButtonState,
                     type = AppButtonType.Primary,
                     loadingIcon = {
-                            LoadingScreen(Modifier.size(16.dp), background = Theme.colors.brand.primary)
+                            LoadingScreen(Modifier.size(20.dp), background = Theme.colors.brand.primary)
 
                     }
                 )
