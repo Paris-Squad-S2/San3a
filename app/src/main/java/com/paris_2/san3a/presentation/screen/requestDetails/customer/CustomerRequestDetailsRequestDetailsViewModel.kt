@@ -216,12 +216,12 @@ class CustomerRequestDetailsRequestDetailsViewModel(
                     screenState.value.uiState.request.userId,
                     NotificationToSend(
                         title = mapOf(
-                            "en" to "Request Completed",
-                            "ar" to "تم الانتهاء من الطلب"
+                            "en" to "New Offer Accepted",
+                            "ar" to "تم قبول عرض جديد"
                         ),
                         caption = mapOf(
-                            "en" to "Your request ${screenState.value.uiState.request.title} has been marked as done.",
-                            "ar" to "تم الانتهاء من طلبك '${screenState.value.uiState.request.title}'"
+                            "en" to "Your offer for request '${screenState.value.uiState.request.title}' has been accepted.",
+                            "ar" to "تم قبول عرضك للطلب '${screenState.value.uiState.request.title}'"
                         ),
                     )
                 )
