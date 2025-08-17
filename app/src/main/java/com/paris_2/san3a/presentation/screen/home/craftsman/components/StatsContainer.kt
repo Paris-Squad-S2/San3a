@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,30 +42,15 @@ fun StatsContainer(
     ){
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_suitcase),
-                    contentDescription = stringResource(R.string.jobs_done),
-                    tint = Theme.colors.additional.primary.purple,
-                    modifier = Modifier.padding(bottom = 8.dp , top = 16.dp)
-                )
-                Text(
-                    text = stringResource(R.string.jobs_done),
-                    style = Theme.textStyle.label.medium.regular,
-                    color = Theme.colors.shade.secondary,
-                    modifier = Modifier.padding(bottom = 4.dp)
-
-                )
-                Text(
-                    text = jobsDone.toString(),
-                    style = Theme.textStyle.body.small.semibold,
-                    color = Theme.colors.shade.primary
-                )
-            }
+            StatsColumn(
+                modifier = Modifier.weight(1f),
+                iconRes = R.drawable.ic_suitcase,
+                contentDescription = stringResource(R.string.jobs_done),
+                iconTint = Theme.colors.additional.primary.purple,
+                label = stringResource(R.string.jobs_done),
+                value = jobsDone.toString()
+            )
 
             VerticalDivider(
                 modifier = Modifier
@@ -74,28 +60,14 @@ fun StatsContainer(
                 thickness = 1.dp
             )
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_wallet_money),
-                    contentDescription = stringResource(R.string.earnings),
-                    tint = Theme.colors.additional.primary.green,
-                    modifier = Modifier.padding(bottom = 8.dp , top = 16.dp)
-                )
-                Text(
-                    text = stringResource(R.string.earnings),
-                    style = Theme.textStyle.label.medium.regular,
-                    color = Theme.colors.shade.secondary,
-                    modifier = Modifier.padding(bottom = 4.dp)
-
-                )
-                Text(
-                    text = stringResource(R.string.egp, earnings),
-                    style = Theme.textStyle.body.small.semibold,
-                    color = Theme.colors.shade.primary
-                )
-            }
+            StatsColumn(
+                modifier = Modifier.weight(1f),
+                iconRes = R.drawable.ic_wallet_money,
+                contentDescription = stringResource(R.string.earnings),
+                iconTint = Theme.colors.additional.primary.green,
+                label = stringResource(R.string.earnings),
+                value = stringResource(R.string.egp, earnings)
+            )
 
             VerticalDivider(
                 modifier = Modifier
@@ -105,29 +77,48 @@ fun StatsContainer(
                 thickness = 1.dp
             )
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_star),
-                    contentDescription = stringResource(R.string.rating),
-                    tint = Theme.colors.additional.primary.yellow,
-                    modifier = Modifier.padding(bottom = 8.dp , top = 16.dp)
-                )
-                Text(
-                    text = stringResource(R.string.rating),
-                    style = Theme.textStyle.label.medium.regular,
-                    color = Theme.colors.shade.secondary,
-                    modifier = Modifier.padding(bottom = 4.dp)
-
-                )
-                Text(
-                    text = rating.toString(),
-                    style = Theme.textStyle.body.small.semibold,
-                    color = Theme.colors.shade.primary
-                )
-            }
+            StatsColumn(
+                modifier = Modifier.weight(1f),
+                iconRes = R.drawable.ic_star,
+                contentDescription = stringResource(R.string.rating),
+                iconTint = Theme.colors.additional.primary.yellow,
+                label = stringResource(R.string.rating),
+                value = rating.toString()
+            )
         }
+    }
+}
+
+@Composable
+private fun StatsColumn(
+    iconRes: Int,
+    contentDescription: String,
+    iconTint: Color,
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = contentDescription,
+            tint = iconTint,
+            modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
+        )
+        Text(
+            text = label,
+            style = Theme.textStyle.label.medium.regular,
+            color = Theme.colors.shade.secondary,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+        Text(
+            text = value,
+            style = Theme.textStyle.body.small.semibold,
+            color = Theme.colors.shade.primary,
+        )
     }
 }
 
