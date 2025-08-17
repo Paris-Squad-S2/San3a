@@ -17,9 +17,9 @@ class NotificationDataSourceImpl(
     }
 
 
-    override suspend fun addNotification(notification: NotificationDto): String {
+    override suspend fun addNotification(userId: String, notification: NotificationDto): String {
         return fireStoreService.addToCollection(
-            path = "$USERS_COLLECTION/${notification.userId}/$NOTIFICATION_COLLECTION",
+            path = "$USERS_COLLECTION/${userId}/$NOTIFICATION_COLLECTION",
             data = notification.toMap(),
         )
     }

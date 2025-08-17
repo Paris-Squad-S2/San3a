@@ -4,11 +4,10 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
-import com.paris_2.san3a.domain.entity.Notification
+import com.paris_2.san3a.domain.entity.NotificationToSend
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
-import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
@@ -23,7 +22,6 @@ import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -486,12 +484,16 @@ class MyJobsCraftsmanViewModel(
         tryToExecute(
             execute = {
                 addNotificationUseCase(
-                    Notification(
-                        id = "",
-                        title = "Request Completed",
-                        caption = "Your request $requestTitle has been marked as done.",
-                        date = getCurrentDateTime(),
-                        userId = customerId
+                    customerId,
+                    NotificationToSend(
+                        title = mapOf(
+                            "en" to "Request Completed",
+                            "ar" to "تم الانتهاء من الطلب"
+                        ),
+                        caption = mapOf(
+                            "en" to "Your request ${requestTitle} has been marked as done.",
+                            "ar" to "تم الانتهاء من طلبك '${requestTitle}'"
+                        ),
                     )
                 )
             },

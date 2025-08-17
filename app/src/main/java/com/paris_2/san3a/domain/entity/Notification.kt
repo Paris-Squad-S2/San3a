@@ -7,5 +7,9 @@ data class Notification(
     val title: String,
     val caption: String,
     val date: LocalDateTime,
-    val userId: String,
+)
+
+data class NotificationToSend (
+    val title: Map<String, String>,
+    val caption: Map<String, String>,
 )
