@@ -25,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -40,7 +39,6 @@ import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.presentation.screen.account.components.LocationContent
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.RequestBottomSheetContent
 import com.paris_2.san3a.presentation.screen.home.customer.component.MostRequestedServices
-import com.paris_2.san3a.presentation.screen.home.utils.getSuggestions
 import com.paris_2.san3a.presentation.shared.components.AdCard
 import com.paris_2.san3a.presentation.shared.components.AddPhotos
 import com.paris_2.san3a.presentation.shared.components.AddPhotosContent
@@ -157,7 +155,7 @@ private fun CustomerHomeScreenContent(
                         RequestTitleContent(
                             value = state.bottomSheetUiState.bottomSheetSubtitle,
                             onValueChange = { action.setBottomSheetServiceSubTitle(it) },
-                            suggestions = getSuggestions(serviceType = state.bottomSheetUiState.bottomSheetService?.title.orEmpty()),
+                            suggestions = state.bottomSheetUiState.bottomSheetService?.suggestions.orEmpty(),
                             selectedSuggestion = state.bottomSheetUiState.bottomSheetSelectedSuggestion,
                             onChipClick = {
                                 action.setBottomSheetSelectedSuggestion(it)

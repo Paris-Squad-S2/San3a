@@ -4,5 +4,6 @@ data class Service(
     val id: String,
     val title: String,
     val description: String,
+    val suggestions: List<String>,
     val imageUrl: String,
 )

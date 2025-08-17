@@ -8,7 +8,8 @@ fun ServiceDto.toEntity(isDarkTheme: Boolean, language: String): Service {
         id = id,
         title = title[language] ?: title["en"] ?: "",
         description = description[language] ?: description["en"] ?: "",
-        imageUrl = if (isDarkTheme) darkImageUrl else imageUrl
+        imageUrl = if (isDarkTheme) darkImageUrl else imageUrl,
+        suggestions = suggestions[language] ?: suggestions["en"] ?: emptyList(),
     )
 }
 
