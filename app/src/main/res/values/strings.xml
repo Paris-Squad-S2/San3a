@@ -334,4 +334,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="earnings">Earnings</string>
     <string name="rating">Rating</string>
     <string name="egp">%1$s EGP</string>
+    <string name="see_less">See less</string>
+    <string name="see_more">See more</string>
 </resources>
