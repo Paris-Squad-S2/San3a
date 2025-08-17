@@ -1,5 +1,6 @@
 package com.paris_2.san3a.data.source.remote.notification
 
+import com.google.firebase.firestore.Query
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.UpdateOperation
 import com.paris_2.san3a.data.source.remote.notification.dto.NotificationDto
@@ -13,6 +14,9 @@ class NotificationDataSourceImpl(
         return fireStoreService.streamCollection(
             path = "$USERS_COLLECTION/$userId/$NOTIFICATION_COLLECTION",
             fromJson = NotificationDto::fromMap,
+            queryBuilder = { query ->
+                query.orderBy("dateTime", Query.Direction.DESCENDING)
+            }
         )
     }
 

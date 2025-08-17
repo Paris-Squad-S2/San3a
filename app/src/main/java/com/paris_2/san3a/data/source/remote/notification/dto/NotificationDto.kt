@@ -1,10 +1,14 @@
 package com.paris_2.san3a.data.source.remote.notification.dto
 
+import com.paris_2.san3a.data.utils.toLocalDateTime
+import com.paris_2.san3a.data.utils.toLong
+import kotlinx.datetime.LocalDateTime
+
 data class NotificationDto(
     val id: String = "",
     val titleMap: Map<String, String>,
     val captionMap: Map<String, String>,
-    val date: String = "",
+    val dateTime: LocalDateTime,
     val isRead: Boolean = false
 ) {
 
@@ -15,7 +19,7 @@ data class NotificationDto(
                 id = id,
                 titleMap = data["titleMap"] as? Map<String, String> ?: emptyMap(),
                 captionMap = data["captionMap"] as? Map<String, String> ?: emptyMap(),
-                date = data["date"] as? String ?: "",
+                dateTime = (data["dateTime"] as? Long).toLocalDateTime(),
                 isRead = data["isRead"] as? Boolean ?: false
             )
         }
@@ -25,7 +29,7 @@ data class NotificationDto(
         return mapOf(
             "titleMap" to titleMap,
             "captionMap" to captionMap,
-            "date" to date,
+            "dateTime" to dateTime.toLong(),
             "isRead" to isRead
         )
     }

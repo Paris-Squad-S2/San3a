@@ -24,7 +24,7 @@ fun Notification.toUiModel(): NotificationUiModel {
         id = id,
         title = title,
         caption = caption,
-        date = date,
+        date = dateTime,
     )
 }
 

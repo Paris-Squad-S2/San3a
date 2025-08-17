@@ -6,7 +6,7 @@ data class Notification(
     val id: String,
     val title: String,
     val caption: String,
-    val date: LocalDateTime,
+    val dateTime: LocalDateTime,
 )
 
 data class NotificationToSend (
