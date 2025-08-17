@@ -2,16 +2,19 @@ package com.paris_2.san3a.presentation.screen.notification.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,13 +22,13 @@ import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 @Composable
 fun NotificationCard(
     title : String,
     caption : String,
-    date : LocalDate,
+    date : LocalDateTime,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -56,11 +59,27 @@ fun NotificationCard(
                 style = Theme.textStyle.body.small.regular,
                 color = Theme.colors.shade.primary
             )
-            Text(
-                text = date.toString(),
-                style = Theme.textStyle.body.small.regular,
-                color = Theme.colors.shade.secondary
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = date.date.toString(),
+                    style = Theme.textStyle.body.small.regular,
+                    color = Theme.colors.shade.secondary
+                )
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 6.dp)
+                        .size(3.dp)
+                        .clip(RoundedCornerShape(Theme.radius.full))
+                        .background(Theme.colors.shade.tertiary)
+                )
+                Text(
+                    text = " ${date.time.hour}:${date.time.minute}",
+                    style = Theme.textStyle.body.small.regular,
+                    color = Theme.colors.shade.secondary
+                )
+            }
         }
 
     }
@@ -74,7 +93,7 @@ private fun NotificationCardPreview() {
         NotificationCard(
             title = "title",
             caption = "caption",
-            date = LocalDate.parse("2023-01-01"),
+            date = LocalDateTime.parse("2023-01-01"),
         )
     }
 }
