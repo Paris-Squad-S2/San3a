@@ -13,6 +13,5 @@ fun User.toUserUiState(rating: Float): UserUiState {
         rating = rating,
         isCraftsman = this.accountType == AccountType.CRAFTSMAN,
         imageUrl = this.profilePhoto.toUri(),
-        previousImage = this.profilePhoto.toUri()
     )
 }
