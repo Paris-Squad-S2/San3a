@@ -9,25 +9,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.presentation.screen.home.customer.CustomerHomeInteractionListener
-import com.paris_2.san3a.presentation.screen.home.utils.getResource
-import com.paris_2.san3a.presentation.screen.home.utils.getResourceColors
-import com.paris_2.san3a.presentation.screen.home.utils.getResourceTint
 import com.paris_2.san3a.presentation.shared.components.CategoryItem
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
 fun MostRequestedServices(
     services: List<Service>,
-    isArabic: Boolean,
-    action: CustomerHomeInteractionListener,
+    onServiceClick: (Service) -> Unit,
     modifier: Modifier = Modifier,
-    onServiceClick: (String, String) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -45,20 +39,11 @@ fun MostRequestedServices(
         ) {
             items(services) { service ->
                 CategoryItem(
-                    title = service.title[if (isArabic) "arabicName" else "englishName"] ?: "",
-                    description = service.description[if (isArabic) "arabicDescription" else "englishDescription"]
-                        ?: "",
-                    tint = getResourceTint(service.id),
-                    iconColor = getResourceColors(service.id),
-                    painter = painterResource(getResource(service.id)),
+                    title = service.title,
+                    description = service.description,
+                    serviceImageUrl = service.imageUrl,
                     isLarge = true,
-                    onclick = {
-                        action.onServiceClick(service.id)
-                        onServiceClick(
-                            service.title[if (isArabic) "arabicName" else "englishName"] ?: "",
-                            service.id
-                        )
-                    },
+                    onclick = { onServiceClick(service) },
                 )
             }
         }

@@ -374,16 +374,18 @@ class AccountViewModel(
 
     fun onWorkImageSelected(uris: List<Uri>) {
 
+        val lastWorkImagesUris = screenState.value.accountUiState.workImagesUris
+
         val filteredUris = uris.filter { uri ->
-            !screenState.value.accountUiState.workImagesUris.orEmpty().contains(uri)
+            !lastWorkImagesUris.orEmpty().contains(uri)
         }
+
+        val workImagesUris = lastWorkImagesUris?.plus(filteredUris) ?: filteredUris
 
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    workImagesUris = screenState.value.accountUiState.workImagesUris?.plus(
-                        filteredUris
-                    ),
+                    workImagesUris = workImagesUris,
                 )
             )
         )
@@ -747,17 +749,10 @@ class AccountViewModel(
                         )
                     )
                 )
-                val currentLocale = "englishName"
                 val selectedServices =
                     screenState.value.accountUiState.serviceUiState.filter { it.isSelected }
                 val isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN
-                val services = selectedServices.map { serviceUiState ->
-                    Service(
-                        id = serviceUiState.id,
-                        title = mapOf(currentLocale to serviceUiState.serviceTitle),
-                        description = mapOf(currentLocale to serviceUiState.serviceDescription)
-                    )
-                }
+                val services = selectedServices.map { it.id }
                 setUpAccountUseCase.saveServices(
                     phone = screenState.value.accountUiState.phoneNumber,
                     services,

@@ -68,7 +68,11 @@ fun RequestCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
-            ServiceTypeCard(title = requestUi.requestTitle, serviceType = requestUi.serviceType, serviceId = requestUi.serviceId)
+            ServiceTypeCard(
+                title = requestUi.requestTitle,
+                serviceType = requestUi.serviceType,
+                serviceImageUrl = requestUi.serviceImage,
+            )
 
             if (requestUi.status == RequestStatus.ONGOING && requestUi.offer.isAccepted) {
                 HorizontalDivider(
