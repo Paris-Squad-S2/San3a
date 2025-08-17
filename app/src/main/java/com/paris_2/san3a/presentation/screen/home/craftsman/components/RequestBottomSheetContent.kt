@@ -37,17 +37,15 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 fun RequestBottomSheetContent(
     title: String,
     imageUrl: String,
-    color: Color,
     subTitle: String,
+    modifier: Modifier = Modifier,
     optionalText: String? = null,
     step: Int,
     buttonTitle: String,
-    modifier: Modifier = Modifier,
     buttonIsActive: Boolean = false,
     onClickBack: (() -> Unit)? = null,
     onButtonClick: () -> Unit,
     onExitClick: () -> Unit,
-    containImg: Boolean = false,
     requestButtonState: AppButtonState = AppButtonState.Enable,
     content: @Composable () -> Unit,
 ) {
@@ -73,7 +71,7 @@ fun RequestBottomSheetContent(
                 Text(
                     text = title,
                     style = Theme.textStyle.label.medium.medium,
-                    color = color
+                    color = Theme.colors.additional.primary.blue
                 )
             }
             Row(
@@ -177,7 +175,6 @@ private fun Preview() {
     RequestBottomSheetContent(
         title = "Plumping Request",
         imageUrl = "https://example.com/image.png",
-        color = Theme.colors.shade.primary,
         subTitle = "What do you need help with?",
         optionalText = "(Optional)",
         buttonTitle = "Next",

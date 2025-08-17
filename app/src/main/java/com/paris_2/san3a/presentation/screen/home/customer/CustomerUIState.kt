@@ -11,7 +11,7 @@ import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 
 data class CustomerHomeUiState(
     val isLoading: Boolean = false,
-    val errorMessage: String? = null,
+    val errorMessage: String? = null, //TODO handle localized error messages
     val notificationsCount: Int = 0,
     val customerUiState: CustomerUiState = CustomerUiState(),
     val bottomSheetUiState: BottomSheetUiState = BottomSheetUiState(),
@@ -36,10 +36,9 @@ data class CustomerUiState(
 data class BottomSheetUiState(
     val bottomSheetState: Boolean = false,
     val bottomSheetStep: BottomSheetStep = BottomSheetStep.SELECT_SERVICE,
-    val bottomSheetServiceTitle: String = "",
+    val bottomSheetService: Service? = null,
     val bottomSheetSubtitle: String = "",
     val bottomSheetServiceId: String = "",
-    val bottomSheetServiceImageUrl: String = "",
     val bottomSheetDescription: String = "",
     val bottomSheetImages: List<String> = emptyList(),
     val bottomSheetSelectedSuggestion: String? = null,

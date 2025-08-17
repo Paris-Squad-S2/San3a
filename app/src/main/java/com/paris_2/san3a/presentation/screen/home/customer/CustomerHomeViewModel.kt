@@ -40,15 +40,13 @@ class CustomerHomeViewModel(
         getGovernments()
     }
 
-    override fun initBottomSheet(serviceTitle: String, serviceId: String, imageUrl: String) {
+    override fun initBottomSheet(service: Service) {
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetState = true,
                     bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
-                    bottomSheetServiceTitle = serviceTitle,
-                    bottomSheetServiceId = serviceId,
-                    bottomSheetServiceImageUrl = imageUrl,
+                    bottomSheetService = service,
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
@@ -241,10 +239,9 @@ class CustomerHomeViewModel(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
-                    bottomSheetServiceTitle = "",
+                    bottomSheetService = null,
                     bottomSheetSubtitle = "",
                     bottomSheetServiceId = "",
-                    bottomSheetServiceImageUrl = "",
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
@@ -280,11 +277,10 @@ class CustomerHomeViewModel(
         }
 
         val request = RequestServiceUiState(
-            serviceType = screenState.value.bottomSheetUiState.bottomSheetServiceTitle,
+            serviceType = screenState.value.bottomSheetUiState.bottomSheetService?.title.orEmpty(), //TODO: replace it with id
             title = screenState.value.bottomSheetUiState.bottomSheetSubtitle,
             description = screenState.value.bottomSheetUiState.bottomSheetDescription,
-            governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId
-                ?: 0,
+            governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId ?: 0,
             cityId = screenState.value.bottomSheetUiState.bottomSheetSelectedCityId ?: 0,
             locationDetails = screenState.value.bottomSheetUiState.bottomSheetAddressDetails,
             image = screenState.value.bottomSheetUiState.bottomSheetImages,
@@ -522,7 +518,7 @@ class CustomerHomeViewModel(
     }
 
     override fun onServiceClick(service: Service) {
-        initBottomSheet(service.title, service.id, service.imageUrl)
+        initBottomSheet(service)
     }
 
     override fun onBecomeCraftsmanClick() {
@@ -553,11 +549,6 @@ class CustomerHomeViewModel(
 
 
     companion object {
-        const val ARABIC_NAME = "arabicName"
-        const val ENGLISH_NAME = "englishName"
-        const val ARABIC_DESCRIPTION = "arabicDescription"
-        const val ENGLISH_DESCRIPTION = "englishDescription"
-        const val ARABIC_LANGUAGE = "ar"
         const val UNKNOWN_ERROR = "Unknown Error"
     }
 }
