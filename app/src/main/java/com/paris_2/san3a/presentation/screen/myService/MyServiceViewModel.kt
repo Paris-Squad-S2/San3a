@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.myService
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
@@ -15,6 +16,8 @@ import com.paris_2.san3a.presentation.screen.account.ServiceUiState
 import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 data class MyServiceScreenState(
     val myServiceUiState: List<ServiceUiState> = emptyList(),
@@ -78,6 +81,7 @@ class MyServiceViewModel(
                         showSnackBarError = true
                     )
                 )
+                hideSnackBar()
             }
         )
     }
@@ -118,6 +122,7 @@ class MyServiceViewModel(
                             showSnackBarError = true
                         )
                     )
+                    hideSnackBar()
                 }
 
             },
@@ -164,6 +169,7 @@ class MyServiceViewModel(
                 errorMessage = null,
             )
         )
+        hideSnackBar()
         navigateUp()
     }
 
@@ -187,6 +193,7 @@ class MyServiceViewModel(
                     showSnackBarError = true,
                 )
             )
+            hideSnackBar()
         }
 
     }
@@ -254,6 +261,15 @@ class MyServiceViewModel(
                 successMessageSnackBar = null
             )
         )
+    }
+
+    private fun hideSnackBar() {
+        viewModelScope.launch {
+            if (screenState.value.showSnackBarError || screenState.value.showSnackBarSuccess) {
+                delay(3000)
+                updateState(screenState.value.copy(showSnackBarError = false, showSnackBarSuccess = false))
+            }
+        }
     }
 
 }

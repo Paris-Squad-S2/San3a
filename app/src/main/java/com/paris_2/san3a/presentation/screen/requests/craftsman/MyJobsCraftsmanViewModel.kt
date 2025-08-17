@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.requests.craftsman
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.Notification
@@ -22,7 +23,9 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class MyJobsCraftsmanViewModel(
     private val getCraftsManRequestsUseCase: GetCraftsManRequestsUseCase,
@@ -101,6 +104,7 @@ class MyJobsCraftsmanViewModel(
                 isLoading = false
             )
         )
+        hideSnackBar()
     }
 
     private fun getCraftsManOfferOnRequest() {
@@ -173,6 +177,7 @@ class MyJobsCraftsmanViewModel(
                     showSnackBarError = true
                 )
             )
+            hideSnackBar()
         }
 
     }
@@ -202,6 +207,7 @@ class MyJobsCraftsmanViewModel(
                 showSnackBarError = true
             )
         )
+        hideSnackBar()
     }
 
     private fun updateRequestOffer(requestId: String, listType: ListType) = tryToObserve(
@@ -238,6 +244,7 @@ class MyJobsCraftsmanViewModel(
                     errorMessage = R.string.failed_to_load_offers_for_request
                 )
             )
+            hideSnackBar()
         }
 
     }
@@ -252,6 +259,7 @@ class MyJobsCraftsmanViewModel(
                     showSnackBarError = true
                 )
             )
+            hideSnackBar()
         }
 
         val updatedRequests = when (listType) {
@@ -332,6 +340,7 @@ class MyJobsCraftsmanViewModel(
                     errorMessage = R.string.error_fetching_craftsman_details
                 )
             )
+            hideSnackBar()
         }
 
     }
@@ -415,6 +424,7 @@ class MyJobsCraftsmanViewModel(
                     errorMessage = R.string.error_marking_request_as_done
                 )
             )
+            hideSnackBar()
         }
     }
 
@@ -455,6 +465,7 @@ class MyJobsCraftsmanViewModel(
                     errorMessage = R.string.some_error_happened
                 )
             )
+            hideSnackBar()
         }
     }
 
@@ -501,6 +512,7 @@ class MyJobsCraftsmanViewModel(
                     errorMessage = R.string.occurred_while_sending_message_to_customer
                 )
             )
+            hideSnackBar()
         }
     }
 
@@ -536,5 +548,14 @@ class MyJobsCraftsmanViewModel(
                 errorMessage = null,
             )
         )
+    }
+
+    private fun hideSnackBar() {
+        viewModelScope.launch {
+            if (screenState.value.showSnackBarError) {
+                delay(3000)
+                updateState(screenState.value.copy(showSnackBarError = false))
+            }
+        }
     }
 }
