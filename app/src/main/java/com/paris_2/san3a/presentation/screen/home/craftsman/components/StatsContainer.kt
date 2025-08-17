@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
@@ -47,19 +48,19 @@ fun StatsContainer(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_suitcase),
-                    contentDescription = "Jobs Done",
+                    contentDescription = stringResource(R.string.jobs_done),
                     tint = Theme.colors.additional.primary.purple,
                     modifier = Modifier.padding(bottom = 8.dp , top = 16.dp)
                 )
                 Text(
-                    text = "Jobs Done",
+                    text = stringResource(R.string.jobs_done),
                     style = Theme.textStyle.label.medium.regular,
                     color = Theme.colors.shade.secondary,
                     modifier = Modifier.padding(bottom = 4.dp)
 
                 )
                 Text(
-                    text = "$jobsDone",
+                    text = jobsDone.toString(),
                     style = Theme.textStyle.body.small.semibold,
                     color = Theme.colors.shade.primary
                 )
@@ -78,19 +79,19 @@ fun StatsContainer(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_wallet_money),
-                    contentDescription = "Jobs Done",
+                    contentDescription = stringResource(R.string.earnings),
                     tint = Theme.colors.additional.primary.green,
                     modifier = Modifier.padding(bottom = 8.dp , top = 16.dp)
                 )
                 Text(
-                    text = "Earnings",
+                    text = stringResource(R.string.earnings),
                     style = Theme.textStyle.label.medium.regular,
                     color = Theme.colors.shade.secondary,
                     modifier = Modifier.padding(bottom = 4.dp)
 
                 )
                 Text(
-                    text = "$earnings IQD",
+                    text = stringResource(R.string.egp, earnings),
                     style = Theme.textStyle.body.small.semibold,
                     color = Theme.colors.shade.primary
                 )
@@ -109,19 +110,19 @@ fun StatsContainer(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_star),
-                    contentDescription = "Jobs Done",
+                    contentDescription = stringResource(R.string.rating),
                     tint = Theme.colors.additional.primary.yellow,
                     modifier = Modifier.padding(bottom = 8.dp , top = 16.dp)
                 )
                 Text(
-                    text = "Rating",
+                    text = stringResource(R.string.rating),
                     style = Theme.textStyle.label.medium.regular,
                     color = Theme.colors.shade.secondary,
                     modifier = Modifier.padding(bottom = 4.dp)
 
                 )
                 Text(
-                    text = "$rating",
+                    text = rating.toString(),
                     style = Theme.textStyle.body.small.semibold,
                     color = Theme.colors.shade.primary
                 )

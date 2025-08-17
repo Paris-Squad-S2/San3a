@@ -18,8 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.radius.defaultSan3aRadius
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -29,7 +32,7 @@ fun RequestCardForCraftsMan(
     modifier: Modifier = Modifier,
     title: String,
     type: String,
-    offers: String,
+    offers: Int,
     description: String,
     location: String,
     onClick: () -> Unit
@@ -53,7 +56,7 @@ fun RequestCardForCraftsMan(
                     .padding(8.dp)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_waterdrops_bold),
+                    painter = painterResource(id = R.drawable.ic_waterdrops_bold), //TODO: use the service image
                     contentDescription = "",
                     tint = Theme.colors.additional.primary.blue,
                     modifier = Modifier
@@ -82,19 +85,17 @@ fun RequestCardForCraftsMan(
                     )
                     Box(
                         modifier = Modifier
-                            .padding(6.dp)
+                            .padding(horizontal = 6.dp)
                             .size(3.dp)
                             .clip(RoundedCornerShape(Theme.radius.full))
                             .background(Theme.colors.shade.tertiary)
                     )
                     Text(
-                        text = "$offers offers",
+                        text = stringResource(R.string.number_of_offers, offers),
                         style = Theme.textStyle.body.medium.semibold,
                         color = Theme.colors.brand.primary
                     )
                 }
-
-
             }
 
         }
@@ -108,9 +109,11 @@ fun RequestCardForCraftsMan(
         )
         Column {
             Text(
-                text = description,
+                text = description.trim(),
                 style = Theme.textStyle.body.small.regular,
-                color = Theme.colors.shade.secondary
+                color = Theme.colors.shade.secondary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             Row(
                 modifier = Modifier
@@ -131,11 +134,7 @@ fun RequestCardForCraftsMan(
                     color = Theme.colors.shade.secondary
                 )
             }
-
-
         }
-
-
     }
 }
 
@@ -145,7 +144,7 @@ fun RequestCardForCraftsManPreview() {
     RequestCardForCraftsMan(
         title = "Title",
         type = "Type",
-        offers = "2",
+        offers = 2,
         description = "Description",
         location = "Location",
         onClick = {}

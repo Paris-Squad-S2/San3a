@@ -160,7 +160,7 @@ fun CraftsmanHomeContent(
                                 RequestCardForCraftsMan(
                                     title = it.title,
                                     type = it.serviceType,
-                                    offers = it.offersCount.toString(),
+                                    offers = it.offersCount,
                                     description = it.description,
                                     location = it.location,
                                     onClick = { action.onJobClick(it.id) }
@@ -183,7 +183,7 @@ fun CraftsmanHomeContent(
                         RequestCardForCraftsMan(
                             title = it.title,
                             type = it.serviceType,
-                            offers = it.offersCount.toString(),
+                            offers = it.offersCount,
                             description = it.description,
                             location = it.location,
                             modifier = Modifier.padding(horizontal = 16.dp),

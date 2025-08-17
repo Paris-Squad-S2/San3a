@@ -249,13 +249,6 @@ class MyJobsCraftsmanViewModel(
     private fun onUpdateRequestOfferEach(offer: Offer?, requestId: String, listType: ListType) {
         if (offer == null) {
             Log.d("MyOfferCraftsmanViewModel", "No offer found for request $requestId")
-            updateState(
-                screenState.value.copy(
-                    isLoading = false,
-                    errorMessage = R.string.no_offer_found_for_request,
-                    showSnackBarError = true
-                )
-            )
         }
 
         val updatedRequests = when (listType) {
