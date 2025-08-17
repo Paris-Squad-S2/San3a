@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
@@ -16,8 +17,10 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
 
 class CustomerHomeViewModel(
     private val getMostRequestedServicesUseCase: GetMostRequestedServicesUseCase,
@@ -273,6 +276,7 @@ class CustomerHomeViewModel(
                     showSnackBarError = true
                 )
             )
+            hideSnackBar()
             return
         }
 
@@ -308,6 +312,7 @@ class CustomerHomeViewModel(
 
                         )
                 )
+                hideSnackBar()
                 updateNumOfRequests(request.serviceId)
             },
             onError = {
@@ -318,6 +323,7 @@ class CustomerHomeViewModel(
                         showSnackBarError = true
                     )
                 )
+                hideSnackBar()
             }
         )
     }
@@ -546,6 +552,20 @@ class CustomerHomeViewModel(
                 successSnackBarMessage = null
             )
         )
+    }
+
+    private fun hideSnackBar() {
+        viewModelScope.launch {
+            if (screenState.value.showSnackBarError || screenState.value.showSnackBarSuccess) {
+                delay(3000)
+                updateState(
+                    screenState.value.copy(
+                        showSnackBarError = false,
+                        showSnackBarSuccess = false
+                    )
+                )
+            }
+        }
     }
 
 

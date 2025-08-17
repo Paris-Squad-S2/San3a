@@ -2,12 +2,15 @@ package com.paris_2.san3a.presentation.screen.verification
 
 import android.net.Uri
 import androidx.annotation.StringRes
+import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 data class VerificationScreenState(
     val verificationUiState: VerificationUiState = VerificationUiState(),
@@ -68,6 +71,7 @@ class VerificationViewModel(
                 showSnackBarSuccess = false
             )
         )
+        hideSnackBar()
     }
 
     override fun onBackClick() {
@@ -130,6 +134,7 @@ class VerificationViewModel(
                 successMessageSnackBar = R.string.r_string_national_id_images_uploaded_successfully
             )
         )
+        hideSnackBar()
         navigateUp()
     }
 
@@ -160,6 +165,7 @@ class VerificationViewModel(
                     verificationButtonState = AppButtonState.Disabled,
                 )
             )
+            hideSnackBar()
         }
     }
 
@@ -200,5 +206,19 @@ class VerificationViewModel(
                 successMessageSnackBar = null
             )
         )
+    }
+
+    private fun hideSnackBar() {
+        viewModelScope.launch {
+            if (screenState.value.showSnackBarError || screenState.value.showSnackBarSuccess) {
+                delay(3000)
+                updateState(
+                    screenState.value.copy(
+                        showSnackBarError = false,
+                        showSnackBarSuccess = false
+                    )
+                )
+            }
+        }
     }
 }
