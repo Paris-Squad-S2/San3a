@@ -749,17 +749,10 @@ class AccountViewModel(
                         )
                     )
                 )
-                val currentLocale = "englishName"
                 val selectedServices =
                     screenState.value.accountUiState.serviceUiState.filter { it.isSelected }
                 val isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN
-                val services = selectedServices.map { serviceUiState ->
-                    Service(
-                        id = serviceUiState.id,
-                        title = mapOf(currentLocale to serviceUiState.serviceTitle),
-                        description = mapOf(currentLocale to serviceUiState.serviceDescription)
-                    )
-                }
+                val services = selectedServices.map { it.id }
                 setUpAccountUseCase.saveServices(
                     phone = screenState.value.accountUiState.phoneNumber,
                     services,

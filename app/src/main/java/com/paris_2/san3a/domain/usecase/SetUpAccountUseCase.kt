@@ -18,7 +18,7 @@ class SetUpAccountUseCase(
         userRepository.uploadNationalIdImages(phone, frontUri, backUri)
     }
 
-    suspend fun saveServices(phone: String, services: List<Service>, isCraftsman: Boolean) {
+    suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean) {
         userRepository.saveServices(phone, services, isCraftsman)
     }
 

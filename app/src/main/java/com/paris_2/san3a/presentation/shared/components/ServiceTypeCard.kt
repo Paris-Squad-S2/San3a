@@ -12,24 +12,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.paris_2.san3a.presentation.screen.home.utils.getResource
-import com.paris_2.san3a.presentation.screen.home.utils.getResourceColors
-import com.paris_2.san3a.presentation.screen.home.utils.getResourceTint
+import coil3.compose.AsyncImage
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
 @Composable
-fun ServiceTypeCard(title: String, serviceType: String, serviceId: String) {
+fun ServiceTypeCard(
+    title: String,
+    serviceType: String,
+    serviceImageUrl: String,
+) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        CategoryIconBox(
+        AsyncImage(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape),
-            tint = getResourceTint(serviceId),
-            iconColor = getResourceColors(serviceId),
-            painter = painterResource(getResource(serviceId)),
+            model = serviceImageUrl,
+            contentDescription = null
         )
 
         Spacer(modifier = Modifier.width(8.dp))
