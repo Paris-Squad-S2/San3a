@@ -187,6 +187,7 @@ class OTPRegisterViewModel(
 
                         )
                     )
+                    hideSnackBar()
                 }
             },
             onError = { errorMessage ->
@@ -293,6 +294,15 @@ class OTPRegisterViewModel(
         )
     }
 
-    fun generateOtp(): String = (10000..99999).random().toString()
+    private fun generateOtp(): String = (10000..99999).random().toString()
+
+    private fun hideSnackBar() {
+        viewModelScope.launch {
+            if (screenState.value.showSnackBarError) {
+                delay(3000)
+                updateState(screenState.value.copy(showSnackBarError = false))
+            }
+        }
+    }
 
 }

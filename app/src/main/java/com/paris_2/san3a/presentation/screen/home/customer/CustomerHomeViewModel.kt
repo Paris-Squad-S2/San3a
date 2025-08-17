@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
@@ -19,8 +20,10 @@ import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSh
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
 
 class CustomerHomeViewModel(
     private val getMostRequestedServicesUseCase: GetMostRequestedServicesUseCase,
@@ -276,6 +279,7 @@ class CustomerHomeViewModel(
                     showSnackBarError = true
                 )
             )
+            hideSnackBar()
             return
         }
 
@@ -315,6 +319,7 @@ class CustomerHomeViewModel(
                         showSnackBarSuccess = true,
                         )
                 )
+                hideSnackBar()
                 updateNumOfRequests(screenState.value.bottomSheetUiState.bottomSheetServiceId)
             },
             onError = {
@@ -325,6 +330,7 @@ class CustomerHomeViewModel(
                         showSnackBarError = true
                     )
                 )
+                hideSnackBar()
             }
         )
     }
@@ -553,6 +559,20 @@ class CustomerHomeViewModel(
                 successSnackBarMessage = null
             )
         )
+    }
+
+    private fun hideSnackBar() {
+        viewModelScope.launch {
+            if (screenState.value.showSnackBarError || screenState.value.showSnackBarSuccess) {
+                delay(3000)
+                updateState(
+                    screenState.value.copy(
+                        showSnackBarError = false,
+                        showSnackBarSuccess = false
+                    )
+                )
+            }
+        }
     }
 
 
