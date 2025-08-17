@@ -42,7 +42,7 @@ fun RequestInfoSection(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(Theme.radius.extraLarge))
-                    .padding(bottom = 12.dp),
+                    .padding(8.dp),
                 model = request.serviceImageUri,
                 contentDescription = null
             )

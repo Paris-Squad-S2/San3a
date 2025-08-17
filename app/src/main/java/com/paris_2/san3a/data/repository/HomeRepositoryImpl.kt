@@ -8,13 +8,8 @@ import com.paris_2.san3a.data.source.local.LocalDataStore
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
-import com.paris_2.san3a.domain.GetAllServicesException
-import com.paris_2.san3a.domain.GetAvailableJobsException
-import com.paris_2.san3a.domain.GetMostRequestedServicesException
+import com.paris_2.san3a.domain.FailException
 import com.paris_2.san3a.domain.NoInternetConnectionException
-import com.paris_2.san3a.domain.RequestServiceException
-import com.paris_2.san3a.domain.SearchServicesException
-import com.paris_2.san3a.domain.UpdateNumOfRequestsException
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.repository.HomeRepository
@@ -48,7 +43,7 @@ class HomeRepositoryImpl(
                             language = language
                         )
                     }
-                    .catch { throw GetAllServicesException() }
+                    .catch { throw FailException("getAllServices") }
             }
         }
     }
@@ -58,7 +53,7 @@ class HomeRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        return safeCall(GetAllServicesException()) {
+        return safeCall(FailException("getServiceById")) {
             val isDarkModeEnabled = localDataStore.isDarkThemeEnabled().first()
             val language = localDataStore.getLatestSelectedAppLanguage().first()
             serviceRemoteDataSource.getServiceById(serviceId)?.toEntity(
@@ -79,13 +74,13 @@ class HomeRepositoryImpl(
                             language = language
                         )
                     }
-                    .catch { throw SearchServicesException() }
+                    .catch { throw FailException("searchServices") }
             }
         }
     }
 
     override suspend fun requestService(requestedService: RequestService) {
-        safeCall(RequestServiceException(requestedService)) {
+        safeCall(FailException("requestService")) {
             val imageUris = requestedService.image
             val imageUrls = if (imageUris.isNotEmpty()) {
                 val paths = imageUris.map { uri ->
@@ -112,7 +107,7 @@ class HomeRepositoryImpl(
             localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
                 serviceRemoteDataSource.getMostRequestedServices()
                     .map { dto -> dto.toEntity(isDarkTheme = isDarkModeEnabled, language = language) }
-                    .catch { throw GetMostRequestedServicesException() }
+                    .catch { throw FailException("getMostRequestedServices") }
             }
         }
     }
@@ -122,15 +117,13 @@ class HomeRepositoryImpl(
             .map { dto -> dto.map { it.toEntity() } }
             .catch {
                 Log.d("HomeRepositoryImpl", "Error fetching available jobs: ${it.message}")
-                throw GetAvailableJobsException()
+                throw FailException("getAvailableJobs")
             }
     }
 
     override suspend fun updateNumOfRequestService(serviceId: String) {
-        return try {
+        safeCall(FailException("updateNumOfRequestService")){
             serviceRemoteDataSource.updateNumOfRequestService(serviceId)
-        } catch (e: Exception) {
-            throw UpdateNumOfRequestsException()
         }
     }
 

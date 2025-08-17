@@ -49,33 +49,33 @@ class MyRequestCustomerViewModel(
                         )
                     )
                 )
-                val idToImage = (servicesList.orEmpty()).associateBy { it.id }
+                val servicesById = (servicesList.orEmpty()).associateBy { it.id }
 
                 val current = screenState.value.myRequestCustomerUiState
 
                 val updatedOngoing = current.ongoing.mapValues { (_, req) ->
                     req.copy(
-                        serviceImage = idToImage[req.serviceId]?.imageUrl.orEmpty(),
-                        serviceType = idToImage[req.serviceId]?.title.orEmpty()
+                        serviceImage = servicesById[req.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = servicesById[req.serviceId]?.title.orEmpty()
                     )
                 }
                 val updatedCompleted = current.completed.mapValues { (_, req) ->
                     req.copy(
-                        serviceImage = idToImage[req.serviceId]?.imageUrl.orEmpty(),
-                        serviceType = idToImage[req.serviceId]?.title.orEmpty()
+                        serviceImage = servicesById[req.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = servicesById[req.serviceId]?.title.orEmpty()
                     )
                 }
                 val updatedCanceled = current.canceled.mapValues { (_, req) ->
                     req.copy(
-                        serviceImage = idToImage[req.serviceId]?.imageUrl.orEmpty(),
-                        serviceType = idToImage[req.serviceId]?.title.orEmpty()
+                        serviceImage = servicesById[req.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = servicesById[req.serviceId]?.title.orEmpty()
                     )
                 }
 
                 updateState(
                     screenState.value.copy(
                         myRequestCustomerUiState = current.copy(
-                            services = idToImage,
+                            services = servicesById,
                             ongoing = updatedOngoing,
                             completed = updatedCompleted,
                             canceled = updatedCanceled,
