@@ -12,7 +12,6 @@ import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCount
 import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersCountUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.flow.first
 
 class CraftsmanHomeViewModel(
     private val getStatsUseCase: GetStatsUseCase,
@@ -100,7 +99,10 @@ class CraftsmanHomeViewModel(
                 )
             },
             onError = { exception ->
-                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+                Log.e(
+                    "MessagesViewModel",
+                    "Error fetching notifications count: ${exception.message}"
+                )
             },
         )
     }
@@ -240,11 +242,9 @@ class CraftsmanHomeViewModel(
                         imageUrl = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.imageUrl.orEmpty()
                     )
                 }.also { mappedJobs ->
-                  val services =  getUserServicesUseCase(
-                        screenState.value.craftsmanHomeUiState.phoneNumber,
-                        isCraftsman = true
-                    ).first().map { it.title }
-                    val filteredJobs = mappedJobs?.filter { service-> services.contains(service.serviceType) }
+                    val services = screenState.value.craftsmanHomeUiState.userServices.values.toList().map { it.title }
+                    val filteredJobs =
+                        mappedJobs?.filter { service -> services.contains(service.serviceType) }
                     updateState(
                         screenState.value.copy(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
