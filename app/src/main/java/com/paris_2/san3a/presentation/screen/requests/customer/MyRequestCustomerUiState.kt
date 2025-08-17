@@ -19,11 +19,12 @@ data class MyRequestCustomerUiState(
     val ongoing: Map<String, MyRequestCustomerUi> = emptyMap(),
     val completed: Map<String, MyRequestCustomerUi> = emptyMap(),
     val canceled: Map<String, MyRequestCustomerUi> = emptyMap(),
+    val services: Map<String, String> = emptyMap(),
     val rating: Float = 0.0f,
     val craftsmanToRate: String = ""
 )
 
-fun RequestService.toRequestServiceUiState(): MyRequestCustomerUi {
+fun RequestService.toRequestServiceUiState(services: Map<String, String>): MyRequestCustomerUi {
     val timePattern = "%02d:%02d:%02d"
     return MyRequestCustomerUi(
         id = this.id,
@@ -33,11 +34,12 @@ fun RequestService.toRequestServiceUiState(): MyRequestCustomerUi {
         serviceId = this.serviceId,
         date = this.time.date.toString(),
         time = timePattern.format(time.hour, time.minute, time.second),
+        serviceImage = services[this.serviceId] ?: "",
     )
 }
 
-fun List<RequestService>.toRequestServiceUiStateMap(): Map<String, MyRequestCustomerUi> {
-    return this.associateBy { it.id }.mapValues { it.value.toRequestServiceUiState() }
+fun List<RequestService>.toRequestServiceUiStateMap(services: Map<String, String>): Map<String, MyRequestCustomerUi> {
+    return this.associateBy { it.id }.mapValues { it.value.toRequestServiceUiState(services) }
 }
 
 data class MyRequestCustomerUi(
@@ -48,6 +50,7 @@ data class MyRequestCustomerUi(
     val date: String = "",
     val time: String = "",
     val serviceId: String = "",
+    val serviceImage : String = "",
     val status: RequestStatus = RequestStatus.ONGOING,
     val offer: OfferUiState = OfferUiState(),
     val craftsMan: CraftsManUiState = CraftsManUiState(),

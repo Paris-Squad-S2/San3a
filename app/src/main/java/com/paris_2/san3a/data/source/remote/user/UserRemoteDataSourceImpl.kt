@@ -55,7 +55,7 @@ class UserRemoteDataSourceImpl(
 
     override suspend fun saveServices(
         phone: String,
-        services: List<Service>,
+        services: List<String>,
         isCraftsman: Boolean
     ) {
         val path = if (isCraftsman) {
@@ -68,7 +68,7 @@ class UserRemoteDataSourceImpl(
         services.forEach { service ->
             operations.add(
                 SetOperation(
-                    path = "$path/${service.id}",
+                    path = "$path/${service}",
                     data = mapOf()
                 )
             )
