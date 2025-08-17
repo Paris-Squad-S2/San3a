@@ -45,7 +45,7 @@ class MessageRepositoryImpl(
                     )
                     messagesRemoteDataSource.sendMessage(
                         message.toImageMessageDto(
-                            storageRemoteDataSource.getImagesByPaths(paths)
+                            storageRemoteDataSource.getImagesByPaths(paths,message.messageContent.uris.map { it.toUri() })
                         )
                     )
                 }

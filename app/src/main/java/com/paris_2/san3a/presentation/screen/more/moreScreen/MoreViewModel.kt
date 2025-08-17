@@ -170,6 +170,7 @@ class MoreViewModel(
     }
 
     private fun onGetUserInformationSuccess(user: User, rating: Flow<Float>) {
+        Log.d("MoreViewModel", "User: ${user.profilePhoto}")
         tryToObserve(
             observe = { rating },
             onEach = { userRating ->
@@ -189,6 +190,7 @@ class MoreViewModel(
                         )
                     )
                 )
+
             },
             onError = {
                 Log.d("MoreViewModel", "Error getting rating: ${it.message}")
@@ -486,8 +488,8 @@ class MoreViewModel(
         )
         if ((screenState.value.moreUiState.userUiState.name.isNotEmpty() &&
                     screenState.value.moreUiState.userUiState.name != screenState.value.moreUiState.userUiState.previousText) ||
-            (screenState.value.moreUiState.userUiState.imageUrl != null &&
-                    screenState.value.moreUiState.userUiState.imageUrl != screenState.value.moreUiState.userUiState.previousImage)
+            (screenState.value.moreUiState.userUiState.imageUrl != null
+                    )
         ) {
             updateState(
                 screenState.value.copy(
@@ -510,6 +512,8 @@ class MoreViewModel(
         )
         tryToExecute(
             execute = {
+                Log.d("MoreViewModel", "Enter the edit scope...")
+                Log.d("MoreViewModel", screenState.value.moreUiState.userUiState.imageUrl.toString())
                 setUpAccountUseCase.savePersonalInfo(
                     phone = screenState.value.moreUiState.userUiState.phoneNumber,
                     fullName = screenState.value.moreUiState.userUiState.name,

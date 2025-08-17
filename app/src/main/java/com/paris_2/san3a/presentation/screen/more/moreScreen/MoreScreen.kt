@@ -30,6 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.more.components.BecomeCraftsmanCard
 import com.paris_2.san3a.presentation.screen.more.components.ChangeLanguageBottomSheet
@@ -134,7 +136,13 @@ private fun MoreScreenContent(
                             isVerify = moreScreenState.moreUiState.userUiState.isVerify,
                             phoneNumber = moreScreenState.moreUiState.userUiState.phoneNumber,
                             isCraftsman = moreScreenState.moreUiState.userUiState.isCraftsman,
-                            painter = rememberAsyncImagePainter(moreScreenState.moreUiState.userUiState.imageUrl),
+                            painter = rememberAsyncImagePainter(
+                                ImageRequest.Builder(LocalContext.current)
+                                    .data(moreScreenState.moreUiState.userUiState.imageUrl)
+                                    .diskCachePolicy(CachePolicy.DISABLED)
+                                    .memoryCachePolicy(CachePolicy.ENABLED)
+                                    .build()
+                            ),
                             onClickEdit = moreInteractionListener::onClickEditProfileBottomSheet,
                         )
 
