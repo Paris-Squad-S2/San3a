@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.home.craftsman.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
@@ -34,18 +36,16 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 @Composable
 fun RequestBottomSheetContent(
     title: String,
-    icon: Int,
-    color: Color,
+    imageUrl: String,
     subTitle: String,
+    modifier: Modifier = Modifier,
     optionalText: String? = null,
     step: Int,
     buttonTitle: String,
-    modifier: Modifier = Modifier,
     buttonIsActive: Boolean = false,
     onClickBack: (() -> Unit)? = null,
     onButtonClick: () -> Unit,
     onExitClick: () -> Unit,
-    containImg: Boolean = false,
     requestButtonState: AppButtonState = AppButtonState.Enable,
     content: @Composable () -> Unit,
 ) {
@@ -60,20 +60,18 @@ fun RequestBottomSheetContent(
             Row(
                 modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically,
-
-                ) {
-                Icon(
-                    painter = painterResource(id = icon),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                AsyncImage(
+                    model = imageUrl,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(16.dp)
-                        .padding(end = 4.dp),
-                    tint = color
+                        .size(18.dp),
                 )
                 Text(
                     text = title,
                     style = Theme.textStyle.label.medium.medium,
-                    color = color
+                    color = Theme.colors.additional.primary.blue
                 )
             }
             Row(
@@ -176,8 +174,7 @@ fun RequestBottomSheetContent(
 private fun Preview() {
     RequestBottomSheetContent(
         title = "Plumping Request",
-        icon = R.drawable.ic_waterdrops_bold,
-        color = Theme.colors.shade.primary,
+        imageUrl = "https://example.com/image.png",
         subTitle = "What do you need help with?",
         optionalText = "(Optional)",
         buttonTitle = "Next",

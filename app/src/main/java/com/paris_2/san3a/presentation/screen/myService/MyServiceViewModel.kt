@@ -13,7 +13,6 @@ import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.ServiceUiState
-import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.delay
@@ -137,17 +136,10 @@ class MyServiceViewModel(
         )
         tryToExecute(
             execute = {
-                val currentLocale = "englishName"
                 val selectedServices =
                     screenState.value.myServiceUiState.filter { it.isSelected }
                 val isCraftsman = screenState.value.isCraftsman
-                val services = selectedServices.map { serviceUiState ->
-                    Service(
-                        id = serviceUiState.id,
-                        title = mapOf(currentLocale to serviceUiState.serviceTitle),
-                        description = mapOf(currentLocale to serviceUiState.serviceDescription)
-                    )
-                }
+                val services = selectedServices.map { it.id }
                 setUpAccountUseCase.saveServices(
                     phone = screenState.value.phoneNumber,
                     services,

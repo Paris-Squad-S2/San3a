@@ -9,6 +9,7 @@ import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.User
+import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
@@ -38,6 +39,7 @@ class MyJobsCraftsmanViewModel(
     private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val getCraftManOfferOnRequestUseCase: GetCraftManOfferOnRequestUseCase,
     private val createChatUseCase: CreateChatUseCase,
+    private val getAllServicesUseCase: GetAllServicesUseCase,
 ) : BaseViewModel<MyJobsCraftsmanScreenState>(MyJobsCraftsmanScreenState()),
     MyJobCraftsmanInteractionListener {
 
@@ -70,6 +72,7 @@ class MyJobsCraftsmanViewModel(
                 )
             )
         )
+        getUserServices()
         getNotificationsCount(phoneNumber)
         getCraftsManOfferOnRequest()
     }
@@ -129,7 +132,8 @@ class MyJobsCraftsmanViewModel(
                     val governorate = getLocationInfoUseCase.getGovernorateById(request.governorateId)
                     val city = getLocationInfoUseCase.getCityById(request.cityId)
                     request.toMyJobOfferUiState(
-                        location = "${governorate?.name.orEmpty()} ${city?.name.orEmpty()}"
+                        location = "${governorate?.name.orEmpty()} ${city?.name.orEmpty()}",
+                        serviceImage = serviceIdToImage[request.serviceId]
                     )
                 }
             },
@@ -252,14 +256,6 @@ class MyJobsCraftsmanViewModel(
     private fun onUpdateRequestOfferEach(offer: Offer?, requestId: String, listType: ListType) {
         if (offer == null) {
             Log.d("MyOfferCraftsmanViewModel", "No offer found for request $requestId")
-            updateState(
-                screenState.value.copy(
-                    isLoading = false,
-                    errorMessage = R.string.no_offer_found_for_request,
-                    showSnackBarError = true
-                )
-            )
-            hideSnackBar()
         }
 
         val updatedRequests = when (listType) {
@@ -270,27 +266,35 @@ class MyJobsCraftsmanViewModel(
 
         Log.d("MyOfferCraftsmanViewModel", "Updating request $requestId with offer: $offer")
 
-        updatedRequests[requestId]?.copy(
+        updatedRequests[requestId] = updatedRequests[requestId]?.copy(
             offer = offer.toUiState()
-        )
+        ) ?: return
 
-        Log.d(
-            "MyOfferCraftsmanViewModel",
-            "Updated request $requestId: ${updatedRequests[requestId]}"
-        )
-
-        val updatedState = when (listType) {
-            ListType.ONGOING -> screenState.value.myOffersCraftsmanUiState.copy(ongoing = updatedRequests)
-            ListType.COMPLETED -> screenState.value.myOffersCraftsmanUiState.copy(completed = updatedRequests)
-            ListType.CANCELED -> screenState.value.myOffersCraftsmanUiState.copy(canceled = updatedRequests)
-        }
-
-        updateState(
-            screenState.value.copy(
-                myOffersCraftsmanUiState = updatedState
+        when (listType) {
+            ListType.ONGOING -> updateState(
+                screenState.value.copy(
+                    myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                        ongoing = updatedRequests
+                    )
+                )
             )
-        )
 
+            ListType.COMPLETED -> updateState(
+                screenState.value.copy(
+                    myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                        completed = updatedRequests
+                    )
+                )
+            )
+
+            ListType.CANCELED -> updateState(
+                screenState.value.copy(
+                    myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                        canceled = updatedRequests
+                    )
+                )
+            )
+        }
         offer?.let {
             getCraftsManDetails(
                 requestId = requestId,
@@ -391,6 +395,38 @@ class MyJobsCraftsmanViewModel(
         }
     }
 
+    private var serviceIdToImage: Map<String, String> = emptyMap()
+
+    private fun getUserServices() {
+        tryToObserve(
+            observe = getAllServicesUseCase::invoke,
+            onEach = { servicesList ->
+                serviceIdToImage = (servicesList ?: emptyList()).associate { it.id to it.imageUrl }
+
+                // Update only the serviceImage fields for current items
+                val current = screenState.value.myOffersCraftsmanUiState
+                val updatedOngoing = current.ongoing.mapValues { (_, ui) ->
+                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                }
+                val updatedCompleted = current.completed.mapValues { (_, ui) ->
+                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                }
+                val updatedCanceled = current.canceled.mapValues { (_, ui) ->
+                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                }
+
+                updateState(
+                    screenState.value.copy(
+                        myOffersCraftsmanUiState = current.copy(
+                            ongoing = updatedOngoing,
+                            completed = updatedCompleted,
+                            canceled = updatedCanceled,
+                        )
+                    )
+                )
+            }
+        )
+    }
 
     override fun onMarkAsDone(requestId: String, requestTitle: String, customerId: String) {
         tryToExecute(
@@ -538,6 +574,7 @@ class MyJobsCraftsmanViewModel(
                 showSnackBarError = false
             )
         )
+        getUserServices()
         getCraftsManOfferOnRequest()
     }
 

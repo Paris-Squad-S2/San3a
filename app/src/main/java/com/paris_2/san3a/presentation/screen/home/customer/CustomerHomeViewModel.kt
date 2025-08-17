@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.home.customer
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
@@ -14,14 +15,12 @@ import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCount
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
-import com.paris_2.san3a.presentation.screen.home.utils.getResource
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 class CustomerHomeViewModel(
     private val getMostRequestedServicesUseCase: GetMostRequestedServicesUseCase,
@@ -44,15 +43,13 @@ class CustomerHomeViewModel(
         getGovernments()
     }
 
-    override fun initBottomSheet(serviceTitle: String, serviceId: String, iconRes: Int) {
+    override fun initBottomSheet(service: Service) {
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetState = true,
                     bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
-                    bottomSheetServiceTitle = serviceTitle,
-                    bottomSheetServiceId = serviceId,
-                    bottomSheetIconRes = iconRes,
+                    bottomSheetService = service,
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
@@ -245,10 +242,9 @@ class CustomerHomeViewModel(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
-                    bottomSheetServiceTitle = "",
+                    bottomSheetService = null,
                     bottomSheetSubtitle = "",
                     bottomSheetServiceId = "",
-                    bottomSheetIconRes = 0,
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
@@ -285,7 +281,7 @@ class CustomerHomeViewModel(
         }
 
         val request = RequestServiceUiState(
-            serviceType = screenState.value.bottomSheetUiState.bottomSheetServiceTitle,
+            serviceType = screenState.value.bottomSheetUiState.bottomSheetService?.title.orEmpty(), //TODO: replace it with id
             title = screenState.value.bottomSheetUiState.bottomSheetSubtitle,
             description = screenState.value.bottomSheetUiState.bottomSheetDescription,
             governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId
@@ -515,15 +511,7 @@ class CustomerHomeViewModel(
             emptyList()
         } else {
             allServices.filter { service ->
-                val titleEn = service.title[ENGLISH_NAME]?.lowercase() ?: ""
-                val titleAr = service.title[ARABIC_NAME]?.lowercase() ?: ""
-                val descEn = service.description[ENGLISH_DESCRIPTION]?.lowercase() ?: ""
-                val descAr = service.description[ARABIC_DESCRIPTION]?.lowercase() ?: ""
-
-                titleEn.contains(searchQuery) ||
-                        titleAr.contains(searchQuery) ||
-                        descEn.contains(searchQuery) ||
-                        descAr.contains(searchQuery)
+                service.title.contains(searchQuery) || service.description.contains(searchQuery)
             }
         }
         updateState(
@@ -536,16 +524,8 @@ class CustomerHomeViewModel(
         )
     }
 
-    override fun onServiceClick(serviceId: String) {
-        val selectedService = screenState.value.customerUiState.services.find { it.id == serviceId }
-        val isArabic = Locale.getDefault().language == ARABIC_LANGUAGE
-        val serviceTitle = if (isArabic) {
-            selectedService?.title?.get(ARABIC_NAME)
-        } else {
-            selectedService?.title?.get(ENGLISH_NAME)
-        } ?: ""
-        val iconRes = getResource(serviceId)
-        initBottomSheet(serviceTitle, serviceId, iconRes)
+    override fun onServiceClick(service: Service) {
+        initBottomSheet(service)
     }
 
     override fun onBecomeCraftsmanClick() {
@@ -590,11 +570,6 @@ class CustomerHomeViewModel(
 
 
     companion object {
-        const val ARABIC_NAME = "arabicName"
-        const val ENGLISH_NAME = "englishName"
-        const val ARABIC_DESCRIPTION = "arabicDescription"
-        const val ENGLISH_DESCRIPTION = "englishDescription"
-        const val ARABIC_LANGUAGE = "ar"
         const val UNKNOWN_ERROR = "Unknown Error"
     }
 }

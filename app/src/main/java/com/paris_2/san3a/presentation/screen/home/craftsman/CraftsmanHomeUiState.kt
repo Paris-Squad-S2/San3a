@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.home.craftsman
 
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.presentation.screen.account.UserType
 import kotlinx.datetime.LocalDateTime
@@ -17,7 +18,7 @@ data class CraftsmanHomeUiState(
     val notificationsCount: Int = 0,
     val currentUserName: String = "",
     val userType: UserType = UserType.CRAFTSMAN,
-    val userServices: List<String> = emptyList(),
+    val userServices: Map<String, Service> = emptyMap(),
     val relatedJob: String = "",
     val location: String = "",
     val stats: StatsUiState = StatsUiState(),
@@ -41,12 +42,13 @@ fun Stats.toStatsUiState(): StatsUiState {
     )
 }
 
-fun RequestService.toRequestServiceUiState(location: String): RequestServiceUiState {
+fun RequestService.toRequestServiceUiState(location: String, imageUrl: String): RequestServiceUiState {
     return RequestServiceUiState(
         id = id,
         userId = userId,
         requestStatus = requestStatus,
         title = title,
+        imageUrl = imageUrl,
         serviceType = serviceType,
         description = description,
         location = location,
@@ -60,6 +62,7 @@ data class RequestServiceUiState(
     val userId: String,
     val requestStatus: RequestStatus,
     val title: String,
+    val imageUrl: String,
     val serviceType: String,
     val description: String,
     val location: String,
