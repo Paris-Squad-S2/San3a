@@ -99,7 +99,10 @@ class CraftsmanHomeViewModel(
                 )
             },
             onError = { exception ->
-                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+                Log.e(
+                    "MessagesViewModel",
+                    "Error fetching notifications count: ${exception.message}"
+                )
             },
         )
     }
@@ -239,10 +242,13 @@ class CraftsmanHomeViewModel(
                         imageUrl = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.imageUrl.orEmpty()
                     )
                 }.also { mappedJobs ->
+                    val services = screenState.value.craftsmanHomeUiState.userServices.keys.toList()
+                    val filteredJobs =
+                        mappedJobs?.filter { service -> services.contains(service.serviceId) }
                     updateState(
                         screenState.value.copy(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                                availableJobs = mappedJobs?.associate { requestService ->
+                                availableJobs = filteredJobs?.associate { requestService ->
                                     requestService.id to requestService
                                 } ?: emptyMap()
                             )
