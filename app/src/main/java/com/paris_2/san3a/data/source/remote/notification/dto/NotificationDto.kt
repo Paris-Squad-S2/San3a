@@ -1,21 +1,25 @@
 package com.paris_2.san3a.data.source.remote.notification.dto
 
+import com.paris_2.san3a.data.utils.toLocalDateTime
+import com.paris_2.san3a.data.utils.toLong
+import kotlinx.datetime.LocalDateTime
+
 data class NotificationDto(
     val id: String = "",
-    val title: String = "",
-    val caption: String = "",
-    val date: String = "",
-    val userId: String = "",
+    val titleMap: Map<String, String>,
+    val captionMap: Map<String, String>,
+    val dateTime: LocalDateTime,
     val isRead: Boolean = false
 ) {
+
     companion object {
+        @Suppress("UNCHECKED_CAST")
         fun fromMap(data: Map<String, Any>, id: String): NotificationDto {
             return NotificationDto(
                 id = id,
-                title = data["title"] as? String ?: "",
-                caption = data["caption"] as? String ?: "",
-                date = data["date"] as? String ?: "",
-                userId = data["userId"] as? String ?: "",
+                titleMap = data["titleMap"] as? Map<String, String> ?: emptyMap(),
+                captionMap = data["captionMap"] as? Map<String, String> ?: emptyMap(),
+                dateTime = (data["dateTime"] as? Long).toLocalDateTime(),
                 isRead = data["isRead"] as? Boolean ?: false
             )
         }
@@ -23,10 +27,9 @@ data class NotificationDto(
 
     fun toMap(): Map<String, Any> {
         return mapOf(
-            "title" to title,
-            "caption" to caption,
-            "date" to date,
-            "userId" to userId,
+            "titleMap" to titleMap,
+            "captionMap" to captionMap,
+            "dateTime" to dateTime.toLong(),
             "isRead" to isRead
         )
     }
