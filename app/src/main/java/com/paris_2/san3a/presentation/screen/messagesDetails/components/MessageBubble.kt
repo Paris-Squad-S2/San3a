@@ -72,9 +72,7 @@ fun ExpandableText(
     var isOverflowing by remember { mutableStateOf(false) }
 
 
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Column {
         Text(
             text = text,
             maxLines = if (isExpanded) Int.MAX_VALUE else minimizedMaxLines,
