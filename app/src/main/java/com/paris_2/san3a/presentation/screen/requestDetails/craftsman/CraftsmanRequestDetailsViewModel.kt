@@ -333,7 +333,7 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onPriceChanged(price: String) {
-        if (price.all { it.isDigit() }) {
+        if (isInputPriceValid(price)) {
             val updatedOffer = screenState.value.uiState.offerToAdd.copy(price = price)
             updateState(
                 screenState.value.copy(
@@ -344,6 +344,9 @@ class CraftsmanRequestDetailsViewModel(
                 )
             )
         }
+    }
+    private fun isInputPriceValid(price: String): Boolean {
+        return price.all{ it.isDigit()} && price.length<=7
     }
 
     override fun onDateChanged(date: LocalDate) {
