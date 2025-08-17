@@ -110,12 +110,10 @@ class UserRepositoryImpl(
 
         safeCall(SavePersonalInfoException()) {
             val profileUrl = profileUri?.let { uri ->
-                Log.d("UserRepositoryImpl", "savePersonalInfo: $uri")
                 val path = "$PROFILE_IMAGE_PATH/$phone.jpg"
                 Log.d("UserRepositoryImpl", "savePersonalInfo: $path")
                 storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                Log.d("UserRepositoryImpl", "savePersonalInfo: $path")
-                storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
+                storageRemoteDataSource.getImagesByPaths(listOf(path),listOf(uri)).firstOrNull()
             }
             userRemoteDataSource.updatePersonalInfo(phone, fullName, profileUrl)
         }
@@ -130,7 +128,7 @@ class UserRepositoryImpl(
             val mediaUrls = workMedia?.mapIndexedNotNull { index, uri ->
                 val path = "$WORK_SHOWCASE_PATH/$phone/media_$index.jpg"
                 storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
+                storageRemoteDataSource.getImagesByPaths(listOf(path),listOf(uri)).firstOrNull()
             }
             userRemoteDataSource.updateWorkShowcase(phone, mediaUrls, workDescription)
         }
@@ -246,13 +244,13 @@ class UserRepositoryImpl(
             val frontUrl = frontUri?.let { uri ->
                 val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
                 storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
+                storageRemoteDataSource.getImagesByPaths(listOf(path),listOf(uri)).firstOrNull()
             }
 
             val backUrl = backUri?.let { uri ->
                 val path = "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME"
                 storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                storageRemoteDataSource.getImagesByPaths(listOf(path)).firstOrNull()
+                storageRemoteDataSource.getImagesByPaths(listOf(path),listOf(uri)).firstOrNull()
             }
             userRemoteDataSource.updateNationalIdImages(phone, frontUrl, backUrl)
         }
