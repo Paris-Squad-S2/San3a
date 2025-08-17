@@ -81,7 +81,7 @@ class HomeRepositoryImpl(
                     paths,
                     imageUris.map { it.toUri() }
                 )
-                firebaseStorageRemoteDataSource.getImagesByPaths(paths)
+                firebaseStorageRemoteDataSource.getImagesByPaths(paths,imageUris.map { it.toUri() })
             } else {
                 emptyList()
             }
