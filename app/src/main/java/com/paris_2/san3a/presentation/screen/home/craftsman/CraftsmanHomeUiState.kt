@@ -14,6 +14,7 @@ data class CraftsmanHomeState(
 
 data class CraftsmanHomeUiState(
     val phoneNumber: String = "",
+    val notificationsCount: Int = 0,
     val currentUserName: String = "",
     val userType: UserType = UserType.CRAFTSMAN,
     val userServices: List<String> = emptyList(),

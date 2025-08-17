@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.entity.Notification
-import com.paris_2.san3a.domain.usecase.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
@@ -67,6 +67,8 @@ class CraftsmanRequestDetailsViewModel(
                                     ).joinToString(", ")
                             ),
                         ),
+                        isLoading = false,
+                        error = null,
                     )
                 )
                 getCustomer(it.userId)

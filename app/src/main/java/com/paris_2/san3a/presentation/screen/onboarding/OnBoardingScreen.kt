@@ -36,8 +36,8 @@ fun OnBoardingScreen(
     pages: List<Page>,
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
-    when{
-        state.error!=null ->{
+    when {
+        state.error != null -> {
             LostConnectionScreen(
                 onRetry = {
                     viewModel.setOnboardingCompleted()
@@ -48,7 +48,7 @@ fun OnBoardingScreen(
                     .padding(horizontal = 60.dp)
             )
         }
-        state.isCompleted ->{
+        state.isCompleted.not() -> {
             OnBoardingScreenContent(
                 pages = pages,
                 state = state,

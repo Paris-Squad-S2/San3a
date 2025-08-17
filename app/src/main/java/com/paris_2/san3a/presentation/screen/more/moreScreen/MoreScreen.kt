@@ -6,8 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +38,6 @@ import com.paris_2.san3a.presentation.screen.more.components.ChangeLanguageBotto
 import com.paris_2.san3a.presentation.screen.more.components.EditProfileBottomSheet
 import com.paris_2.san3a.presentation.screen.more.components.LogoutBottomSheet
 import com.paris_2.san3a.presentation.screen.more.components.LogoutItem
-import com.paris_2.san3a.presentation.screen.more.components.NotificationIcon
 import com.paris_2.san3a.presentation.screen.more.components.SettingItems
 import com.paris_2.san3a.presentation.screen.more.components.UserProfileSection
 import com.paris_2.san3a.presentation.shared.components.AppBar
@@ -49,6 +45,7 @@ import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.AppSectionTitle
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
+import com.paris_2.san3a.presentation.shared.components.NotificationIcon
 import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
@@ -100,11 +97,8 @@ private fun MoreScreenContent(
                 title = stringResource(R.string.more),
                 actionIcon = {
                     NotificationIcon(
-                        modifier = Modifier.clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = moreInteractionListener::onClickNotification
-                        )
+                        count = moreScreenState.moreUiState.notificationsCount,
+                        onNotificationClick = moreInteractionListener::onClickNotification,
                     )
                 }
             )

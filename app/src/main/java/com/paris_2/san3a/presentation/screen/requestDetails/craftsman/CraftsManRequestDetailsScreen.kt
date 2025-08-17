@@ -52,6 +52,7 @@ import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toInstant
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.ExperimentalTime
@@ -389,7 +390,8 @@ fun AddYourOfferSection(
     val datePicker = rememberDatePickerState(
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                val today = getCurrentDateTime().toInstant(TimeZone.UTC).toEpochMilliseconds()
+                val todayDate = getCurrentDateTime().date
+                val today = todayDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
                 return utcTimeMillis >= today
             }
         }

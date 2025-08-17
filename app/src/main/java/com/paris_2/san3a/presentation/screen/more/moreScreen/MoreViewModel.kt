@@ -2,7 +2,6 @@ package com.paris_2.san3a.presentation.screen.more.moreScreen
 
 import android.net.Uri
 import android.util.Log
-import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.NoInternetConnectionException
@@ -16,6 +15,7 @@ import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.mapper.toUserUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
@@ -26,43 +26,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-data class MoreScreenState(
-    val moreUiState: MoreUiState = MoreUiState(),
-    val showEditProfileBottomSheet: Boolean = false,
-    val showLanguageBottomSheet: Boolean = false,
-    @StringRes val errorMessage: Int? = null,
-    @StringRes val successMessageSnackBar: Int? = null,
-    val isNoInternet: Boolean = false,
-    val isLoading: Boolean = false,
-    val showSnackBarSuccess: Boolean = false,
-    val showSnackBarError: Boolean = false,
-    val isLoadingChangeAccount: Boolean = false,
-    val showLogoutBottomSheet: Boolean = false,
-)
-
-data class MoreUiState(
-    val userUiState: UserUiState = UserUiState(),
-    val isDarkMode: Boolean = false,
-    val versionNumber: String = "",
-    val selectedLanguage: String = LanguageUiState.ENGLISH.name,
-)
-
-enum class LanguageUiState(name: String) {
-    ENGLISH("en"),
-    ARABIC("ar")
-}
-
-data class UserUiState(
-    val imageUrl: Uri? = null,
-    val name: String = "",
-    val review: Int = 0,
-    val rating: Float = 0.0f,
-    val phoneNumber: String = "",
-    val isVerify: Boolean = false,
-    val isCraftsman: Boolean = true,
-    val previousText: String = "",
-)
-
 class MoreViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val setLoginUseCase: SetLoginUseCase,
@@ -70,6 +33,7 @@ class MoreViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
+    private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
     private val getVersionNameUseCase: GetVersionNameUseCase,
 ) : BaseViewModel<MoreScreenState>(MoreScreenState()), MoreInteractionListener {
@@ -272,7 +236,29 @@ class MoreViewModel(
             )
         )
         getUserInformation()
+        getNotificationsCount(phoneNumber)
     }
+
+    private fun getNotificationsCount(userId: String) {
+        tryToObserve(
+            observe = {
+                getUnReadNotificationsCountUseCase(userId)
+            },
+            onEach = { count ->
+                updateState(
+                    screenState.value.copy(
+                        moreUiState = screenState.value.moreUiState.copy(
+                            notificationsCount = count ?: 0
+                        )
+                    )
+                )
+            },
+            onError = { exception ->
+                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+            },
+        )
+    }
+
 
     private fun onGetPhoneNumberError(th: Throwable) {
         updateState(

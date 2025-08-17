@@ -31,6 +31,7 @@ import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.AppTabBar
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
+import com.paris_2.san3a.presentation.shared.components.NotificationIcon
 import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
 import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -66,13 +67,10 @@ private fun MyRequestScreenContent(
                     .padding(start = 8.dp),
                 title = stringResource(R.string.my_jobs),
                 actionIcon = {
-                    Icon(
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .clickable(onClick = myJobCraftsmanInteractionListener::onNotificationClick),
-                        painter = painterResource(R.drawable.ic_notification_outline),
-                        contentDescription = "Request Icon",
-                        tint = Theme.colors.shade.primary,
+                    NotificationIcon(
+                        modifier = Modifier.padding(end = 8.dp),
+                        count = uiState.myOffersCraftsmanUiState.notificationsCount,
+                        onNotificationClick = myJobCraftsmanInteractionListener::onNotificationClick
                     )
                 }
             )
