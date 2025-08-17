@@ -18,11 +18,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
@@ -105,7 +107,9 @@ fun ExpandableText(
                     contentPadding = PaddingValues(0.dp)
                 ) {
                     Text(
-                        text = if (isExpanded) "See less" else "See more",
+                        text = if (isExpanded) stringResource(R.string.see_less) else stringResource(
+                            R.string.see_more
+                        ),
                         style = Theme.textStyle.body.medium.regular,
                         color = Theme.colors.button.primary
                     )
