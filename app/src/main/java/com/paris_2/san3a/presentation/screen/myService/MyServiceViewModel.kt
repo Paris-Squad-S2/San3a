@@ -15,6 +15,7 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.ServiceUiState
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -42,6 +43,7 @@ class MyServiceViewModel(
 
     val phoneNumber = saveStateHandle.toRoute<Destinations.MyService>().phoneNumber
     val isCraftsman = saveStateHandle.toRoute<Destinations.MyService>().isCraftsman
+
     init {
         updateState(
             screenState.value.copy(
@@ -54,15 +56,15 @@ class MyServiceViewModel(
 
     private fun getUserSelectedServices() {
         updateState(screenState.value.copy(isLoading = true))
-        tryToObserve(
-            observe = {
+        tryToExecute(
+            execute = {
                 getUserServicesUseCase(
                     phoneNumber = phoneNumber,
                     isCraftsman = isCraftsman
-                )
+                ).first()
             },
-            onEach = { services ->
-                val serviceUiStates = mapServiceToUiState(services ?: emptyList())
+            onSuccess = { services ->
+                val serviceUiStates = mapServiceToUiState(services)
                 updateState(
                     screenState.value.copy(
                         myServiceUiState = screenState.value.myServiceUiState.map { service ->
@@ -98,7 +100,7 @@ class MyServiceViewModel(
                             myServiceUiState = serviceUiStates,
                         )
                     )
-                getUserSelectedServices()
+                    getUserSelectedServices()
                 }
             },
             onError = { throwable ->
@@ -151,7 +153,7 @@ class MyServiceViewModel(
         )
     }
 
-    private fun onUploadServiceSuccess(unit: Unit){
+    private fun onUploadServiceSuccess(unit: Unit) {
         updateState(
             screenState.value.copy(
                 isLoading = false,
@@ -159,10 +161,10 @@ class MyServiceViewModel(
                 successMessageSnackBar = R.string.services_uploaded_successfully,
                 showSnackBarError = false,
                 errorMessage = null,
+                serviceButtonState = AppButtonState.Enable
             )
         )
         hideSnackBar()
-        navigateUp()
     }
 
     private fun onUploadServiceError(throwable: Throwable) {
@@ -175,6 +177,7 @@ class MyServiceViewModel(
                     showSnackBarError = false,
                     showSnackBarSuccess = false,
                     successMessageSnackBar = null,
+                    serviceButtonState = AppButtonState.Enable
                 )
             )
         } else {
@@ -183,6 +186,7 @@ class MyServiceViewModel(
                     isLoading = false,
                     errorMessage = R.string.occur_error_when_upload_service,
                     showSnackBarError = true,
+                    serviceButtonState = AppButtonState.Enable
                 )
             )
             hideSnackBar()
@@ -229,13 +233,13 @@ class MyServiceViewModel(
                 myServiceUiState = updatedServices
             )
         )
-        if (screenState.value.myServiceUiState.any{it.isSelected}){
+        if (screenState.value.myServiceUiState.any { it.isSelected }) {
             updateState(
                 screenState.value.copy(
                     serviceButtonState = AppButtonState.Enable
                 )
             )
-        }else{
+        } else {
             updateState(
                 screenState.value.copy(
                     serviceButtonState = AppButtonState.Disabled
