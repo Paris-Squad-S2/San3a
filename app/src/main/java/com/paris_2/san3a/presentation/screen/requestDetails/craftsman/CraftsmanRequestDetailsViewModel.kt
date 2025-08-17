@@ -305,7 +305,7 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onPriceChanged(price: String) {
-        if (price.all { it.isDigit() }) {
+        if (price.all{ it.isDigit()} && price.length<=7 ) {
             val updatedOffer = screenState.value.uiState.offerToAdd.copy(price = price)
             updateState(
                 screenState.value.copy(
