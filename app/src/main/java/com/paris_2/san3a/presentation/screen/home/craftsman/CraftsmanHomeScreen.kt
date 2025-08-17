@@ -163,6 +163,7 @@ fun CraftsmanHomeContent(
                                     offers = it.offersCount,
                                     description = it.description,
                                     location = it.location,
+                                    imageUri = it.imageUrl,
                                     onClick = { action.onJobClick(it.id) }
                                 )
                             }
@@ -186,6 +187,7 @@ fun CraftsmanHomeContent(
                             offers = it.offersCount,
                             description = it.description,
                             location = it.location,
+                            imageUri = it.imageUrl,
                             modifier = Modifier.padding(horizontal = 16.dp),
                             onClick = { action.onJobClick(it.id) }
                         )
@@ -227,6 +229,7 @@ private fun Preview() {
                         requestStatus = RequestStatus.ONGOING,
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
                         locationDetails = "123 Street, Cairo",
+                        imageUrl = "https://example.com/image.jpg"
                     ),
                     "2" to RequestServiceUiState(
                         id = "2",
@@ -239,6 +242,7 @@ private fun Preview() {
                         requestStatus = RequestStatus.ONGOING,
                         locationDetails = "placeholder_locationDetails",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
+                        imageUrl = "https://example.com/image.jpg"
                     ),
                     "3" to RequestServiceUiState(
                         id = "3",
@@ -250,6 +254,7 @@ private fun Preview() {
                         userId = "placeholder_userId",
                         requestStatus = RequestStatus.ONGOING,
                         locationDetails = "placeholder_locationDetails",
+                        imageUrl = "https://example.com/image.jpg",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
                     ),
                 ),
@@ -264,6 +269,7 @@ private fun Preview() {
                         userId = "placeholder_userId",
                         requestStatus = RequestStatus.ONGOING,
                         locationDetails = "placeholder_locationDetails",
+                        imageUrl = "https://example.com/image.jpg",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
                     ),
                     "2" to RequestServiceUiState(
@@ -276,6 +282,7 @@ private fun Preview() {
                         userId = "placeholder_userId",
                         requestStatus = RequestStatus.ONGOING,
                         locationDetails = "placeholder_locationDetails",
+                        imageUrl = "https://example.com/image.jpg",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
                     ),
                     "3" to RequestServiceUiState(
@@ -288,6 +295,7 @@ private fun Preview() {
                         userId = "placeholder_userId",
                         requestStatus = RequestStatus.ONGOING,
                         locationDetails = "placeholder_locationDetails",
+                        imageUrl = "https://example.com/image.jpg",
                         time = LocalDateTime(2023, 10, 1, 12, 0, 0),
                     ),
                 )

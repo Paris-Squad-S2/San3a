@@ -42,7 +42,7 @@ class MyRequestCustomerViewModel(
         tryToObserve(
             observe = { getAllServicesUseCase() },
             onEach = { servicesList ->
-                val idToImage = (servicesList ?: emptyList()).associate { it.id to it.imageUrl }
+                val idToImage = (servicesList.orEmpty()).associate { it.id to it.imageUrl }
 
                 val current = screenState.value.myRequestCustomerUiState
 
@@ -93,7 +93,6 @@ class MyRequestCustomerViewModel(
                         ),
                     )
                 )
-                getUserServices()
                 getRequests()
                 getNotificationsCount(phoneNumber)
             },
@@ -147,6 +146,7 @@ class MyRequestCustomerViewModel(
                     )
                 )
                 getOffersForRequests()
+                getUserServices()
                 getOffersCountForRequests(ListType.ONGOING)
                 getOffersCountForRequests(ListType.COMPLETED)
                 getOffersCountForRequests(ListType.CANCELED)

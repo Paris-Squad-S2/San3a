@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.radius.defaultSan3aRadius
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -33,6 +34,7 @@ fun RequestCardForCraftsMan(
     title: String,
     type: String,
     offers: Int,
+    imageUri: String,
     description: String,
     location: String,
     onClick: () -> Unit
@@ -48,22 +50,14 @@ fun RequestCardForCraftsMan(
     )
     {
         Row {
-            Box(
+            AsyncImage(
                 modifier = Modifier
                     .size(48.dp)
-                    .clip(RoundedCornerShape(Theme.radius.full))
-                    .background(Theme.colors.additional.primary.blue.copy(alpha = 0.08f))
-                    .padding(8.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_waterdrops_bold), //TODO: use the service image
-                    contentDescription = "",
-                    tint = Theme.colors.additional.primary.blue,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(24.dp),
-                )
-            }
+                    .clip(RoundedCornerShape(Theme.radius.extraLarge))
+                    .padding(bottom = 12.dp),
+                model = imageUri,
+                contentDescription = null
+            )
             Column(
                 modifier = Modifier
                     .padding(horizontal = 12.dp, vertical = 4.dp)
@@ -147,6 +141,7 @@ fun RequestCardForCraftsManPreview() {
         offers = 2,
         description = "Description",
         location = "Location",
-        onClick = {}
+        onClick = {},
+        imageUri = "https://example.com/image.jpg",
     )
 }

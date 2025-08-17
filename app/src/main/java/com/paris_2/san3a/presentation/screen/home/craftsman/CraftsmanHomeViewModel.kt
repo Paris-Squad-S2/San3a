@@ -27,7 +27,6 @@ class CraftsmanHomeViewModel(
 
     init {
         loadPhoneNumber()
-        loadAvailableJobs()
     }
 
     private fun getUserServices() {
@@ -42,10 +41,11 @@ class CraftsmanHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            userServices = services?.map { it.id } ?: emptyList(),
+                            userServices = services.orEmpty().associateBy { service -> service.id }
                         )
                     )
                 )
+                loadAvailableJobs()
                 loadRecentRelatedJobs()
             },
             onError = {
@@ -160,7 +160,7 @@ class CraftsmanHomeViewModel(
 
     fun loadRecentRelatedJobs() {
         tryToObserve(
-            observe = { getRecentRelatedJobsUseCase(screenState.value.craftsmanHomeUiState.userServices) },
+            observe = { getRecentRelatedJobsUseCase(screenState.value.craftsmanHomeUiState.userServices.keys.toList()) },
             onEach = { jobs ->
                 jobs?.map { job ->
                     val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
@@ -169,7 +169,8 @@ class CraftsmanHomeViewModel(
                         location = listOfNotNull(
                             governorate?.name,
                             city?.name
-                        ).joinToString(", ")
+                        ).joinToString(", "),
+                        imageUrl = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.imageUrl.orEmpty()
                     )
                 }.also { mappedJobs ->
                     updateState(
@@ -177,7 +178,7 @@ class CraftsmanHomeViewModel(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
                                 recentRelatedJobs = mappedJobs?.associate { requestService ->
                                     requestService.id to requestService
-                                } ?: emptyMap()
+                                }.orEmpty()
                             )
                         )
                     )
@@ -234,7 +235,8 @@ class CraftsmanHomeViewModel(
                         location = listOfNotNull(
                             governorate?.name,
                             city?.name
-                        ).joinToString(", ")
+                        ).joinToString(", "),
+                        imageUrl = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.imageUrl.orEmpty()
                     )
                 }.also { mappedJobs ->
                     updateState(

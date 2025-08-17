@@ -280,7 +280,8 @@ class CustomerHomeViewModel(
             serviceType = screenState.value.bottomSheetUiState.bottomSheetService?.title.orEmpty(), //TODO: replace it with id
             title = screenState.value.bottomSheetUiState.bottomSheetSubtitle,
             description = screenState.value.bottomSheetUiState.bottomSheetDescription,
-            governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId ?: 0,
+            governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId
+                ?: 0,
             cityId = screenState.value.bottomSheetUiState.bottomSheetSelectedCityId ?: 0,
             locationDetails = screenState.value.bottomSheetUiState.bottomSheetAddressDetails,
             image = screenState.value.bottomSheetUiState.bottomSheetImages,
@@ -483,7 +484,10 @@ class CustomerHomeViewModel(
                 )
             },
             onError = { exception ->
-                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+                Log.e(
+                    "MessagesViewModel",
+                    "Error fetching notifications count: ${exception.message}"
+                )
             },
         )
     }
@@ -501,10 +505,7 @@ class CustomerHomeViewModel(
             emptyList()
         } else {
             allServices.filter { service ->
-                val title = service.title
-                val desc = service.description
-
-                title.contains(searchQuery) || desc.contains(searchQuery)
+                service.title.contains(searchQuery) || service.description.contains(searchQuery)
             }
         }
         updateState(
