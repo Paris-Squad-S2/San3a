@@ -3,6 +3,7 @@ package com.paris_2.san3a.data.repository
 import android.net.Uri
 import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
+import com.paris_2.san3a.data.source.local.LocalDataStore
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
@@ -35,16 +36,18 @@ import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.repository.UserRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
     private val storageRemoteDataSource: StorageRemoteDataSource,
     private val networkConnectionChecker: NetworkConnectionChecker,
-
+    private val localDataStore: LocalDataStore
     ) : UserRepository, BaseRepository() {
 
     override suspend fun addUser(phone: String) =
@@ -70,7 +73,7 @@ class UserRepositoryImpl(
 
     override suspend fun saveServices(
         phone: String,
-        services: List<Service>,
+        services: List<String>,
         isCraftsman: Boolean
     ) {
         if (networkConnectionChecker.isConnected.value.not()) {
@@ -82,14 +85,18 @@ class UserRepositoryImpl(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<Service>> {
         if (networkConnectionChecker.isConnected.value.not()) {
             throw NoInternetConnectionException()
         }
 
-        return userRemoteDataSource.getServices(phone, isCraftsman).map { it.toEntity() }.catch {
-            Log.e("UserRepositoryImpl", "Error fetching services: ${it.message}")
-            throw GetServicesException()
+        return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
+            localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
+                userRemoteDataSource.getServices(phone, isCraftsman)
+                    .map { dtoList -> dtoList.toEntity(isDarkModeEnabled, language) }
+                    .catch { throw GetServicesException() }
+            }
         }
     }
 

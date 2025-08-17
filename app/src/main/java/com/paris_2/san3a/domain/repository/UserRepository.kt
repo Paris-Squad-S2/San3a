@@ -14,7 +14,7 @@ interface UserRepository {
     suspend fun addUser(phone: String)
     suspend fun saveAccountType(phone: String, accountType: AccountType)
     suspend fun getAccountType(phone: String) : AccountType
-    suspend fun saveServices(phone: String, services:  List<Service>, isCraftsman: Boolean)
+    suspend fun saveServices(phone: String, services:  List<String>, isCraftsman: Boolean)
     fun getServices(phone: String, isCraftsman: Boolean) : Flow<List<Service>>
     suspend fun saveLocation(phone: String, location: Location)
     suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?)

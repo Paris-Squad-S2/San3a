@@ -10,7 +10,6 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -41,10 +39,6 @@ import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.presentation.screen.account.components.LocationContent
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.RequestBottomSheetContent
 import com.paris_2.san3a.presentation.screen.home.customer.component.MostRequestedServices
-import com.paris_2.san3a.presentation.screen.home.utils.getResource
-import com.paris_2.san3a.presentation.screen.home.utils.getResourceColors
-import com.paris_2.san3a.presentation.screen.home.utils.getResourceTint
-import com.paris_2.san3a.presentation.screen.home.utils.getSuggestions
 import com.paris_2.san3a.presentation.shared.components.AdCard
 import com.paris_2.san3a.presentation.shared.components.AddPhotos
 import com.paris_2.san3a.presentation.shared.components.AddPhotosContent
@@ -78,7 +72,6 @@ private fun CustomerHomeScreenContent(
     state: CustomerHomeUiState,
     action: CustomerHomeInteractionListener,
 ) {
-    val isArabic = remember { Locale.getDefault().language == "ar" }
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents(),
         onResult = { uriList ->
@@ -130,7 +123,7 @@ private fun CustomerHomeScreenContent(
                 )
                 putExtra(
                     RecognizerIntent.EXTRA_LANGUAGE,
-                    Locale.getDefault()
+                    Locale.getDefault() //TODO: Use the app language
                 )
             }
             voiceLauncher.launch(intent)
@@ -150,9 +143,8 @@ private fun CustomerHomeScreenContent(
             when (state.bottomSheetUiState.bottomSheetStep) {
                 BottomSheetStep.SELECT_SERVICE -> {
                     RequestBottomSheetContent(
-                        title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        icon = state.bottomSheetUiState.bottomSheetIconRes,
-                        color = Theme.colors.additional.primary.blue,
+                        title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
                         subTitle = stringResource(R.string.what_do_you_need_help_with),
                         buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetSubtitle.isNotEmpty(),
@@ -163,7 +155,7 @@ private fun CustomerHomeScreenContent(
                         RequestTitleContent(
                             value = state.bottomSheetUiState.bottomSheetSubtitle,
                             onValueChange = { action.setBottomSheetServiceSubTitle(it) },
-                            suggestions = getSuggestions(serviceType = state.bottomSheetUiState.bottomSheetServiceTitle),
+                            suggestions = state.bottomSheetUiState.bottomSheetService?.suggestions.orEmpty(),
                             selectedSuggestion = state.bottomSheetUiState.bottomSheetSelectedSuggestion,
                             onChipClick = {
                                 action.setBottomSheetSelectedSuggestion(it)
@@ -177,16 +169,15 @@ private fun CustomerHomeScreenContent(
 
                 BottomSheetStep.PROBLEM_DESCRIPTION -> {
                     RequestBottomSheetContent(
-                        title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        icon = state.bottomSheetUiState.bottomSheetIconRes,
-                        color = Theme.colors.additional.primary.blue,
+                        title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
                         subTitle = stringResource(R.string.describe_the_problem_in_detail),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetDescription.isNotEmpty(),
                         onButtonClick = { action.nextBottomSheetStep() },
                         buttonTitle = stringResource(R.string.next),
                         step = 2,
                         onClickBack = { action.previousBottomSheetStep() },
-                        onExitClick = { action.onDismissBottomSheet() }
+                        onExitClick = { action.onDismissBottomSheet() },
                     ) {
                         RequestDescriptionContent(
                             value = state.bottomSheetUiState.bottomSheetDescription,
@@ -198,16 +189,17 @@ private fun CustomerHomeScreenContent(
 
                 BottomSheetStep.SELECT_LOCATION -> {
                     RequestBottomSheetContent(
-                        title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        icon = state.bottomSheetUiState.bottomSheetIconRes,
-                        color = Theme.colors.additional.primary.blue,
+                        title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
                         subTitle = stringResource(R.string.where_are_you_from),
                         buttonTitle = stringResource(R.string.next),
-                        buttonIsActive = state.bottomSheetUiState.bottomSheetAddressDetails.isNotEmpty(),
+                        buttonIsActive = state.bottomSheetUiState.bottomSheetAddressDetails.isNotEmpty() &&
+                                state.bottomSheetUiState.bottomSheetSelectedGovernmentId != null &&
+                                state.bottomSheetUiState.bottomSheetSelectedCityId != null,
                         step = 3,
                         onButtonClick = { action.nextBottomSheetStep() },
                         onClickBack = { action.previousBottomSheetStep() },
-                        onExitClick = { action.onDismissBottomSheet() }
+                        onExitClick = { action.onDismissBottomSheet() },
                     ) {
                         LocationContent(
                             governments = state.bottomSheetUiState.bottomSheetGovernments,
@@ -234,9 +226,8 @@ private fun CustomerHomeScreenContent(
 
                 BottomSheetStep.IMAGE_UPLOAD -> {
                     RequestBottomSheetContent(
-                        title = state.bottomSheetUiState.bottomSheetServiceTitle,
-                        icon = state.bottomSheetUiState.bottomSheetIconRes,
-                        color = Theme.colors.additional.primary.blue,
+                        title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
                         subTitle = stringResource(R.string.add_some_photos),
                         optionalText = stringResource(R.string.optional),
                         buttonTitle = stringResource(R.string.create_request),
@@ -247,7 +238,7 @@ private fun CustomerHomeScreenContent(
                         },
                         onClickBack = { action.previousBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() },
-                        requestButtonState = state.buttonSheetState
+                        requestButtonState = state.buttonSheetState,
                     ) {
                         if (state.bottomSheetUiState.bottomSheetImages.isEmpty()) {
                             AddPhotosContent(
@@ -351,7 +342,8 @@ private fun CustomerHomeScreenContent(
                             if (ContextCompat.checkSelfPermission(
                                     context,
                                     Manifest.permission.RECORD_AUDIO
-                                ) == PackageManager.PERMISSION_GRANTED) {
+                                ) == PackageManager.PERMISSION_GRANTED
+                            ) {
                                 action.onMicClick()
                             } else {
                                 permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
@@ -366,12 +358,8 @@ private fun CustomerHomeScreenContent(
                     item {
                         MostRequestedServices(
                             services = state.customerUiState.mostRequestedServices,
-                            isArabic = isArabic,
-                            action = action
-                        ) { selectedTitle, selectedServiceId ->
-                            val iconRes = getResource(selectedServiceId)
-                            action.initBottomSheet(selectedTitle, selectedServiceId, iconRes)
-                        }
+                            onServiceClick = action::onServiceClick,
+                        )
                     }
                 }
 
@@ -400,18 +388,14 @@ private fun CustomerHomeScreenContent(
                     }
                     items(servicesToDisplay) { service ->
                         CategoryItem(
-                            title = service.title[if (isArabic) ARABIC_NAME else ENGLISH_NAME]
-                                ?: "",
-                            description = service.description[if (isArabic) ARABIC_DESCRIPTION else ENGLISH_DESCRIPTION]
-                                ?: "",
-                            tint = getResourceTint(service.id),
-                            iconColor = getResourceColors(service.id),
-                            painter = painterResource(getResource(service.id)),
+                            title = service.title,
+                            description = service.description,
+                            serviceImageUrl = service.imageUrl,
                             isLarge = false,
                             modifier = Modifier
                                 .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
                             onclick = {
-                                action.onServiceClick(service.id)
+                                action.onServiceClick(service)
                             }
                         )
                     }
@@ -450,21 +434,16 @@ private fun CustomerHomeScreenContent(
             }
         }
         AnimatedVisibility(state.showSnackBarSuccess) {
-                SnackBar(
-                    text = R.string.service_request_send_successfully,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .padding(horizontal = 12.dp, vertical = 16.dp)
-                        .align(Alignment.TopCenter),
-                    onClick = action::onDismissSnackBar
-                )
+            SnackBar(
+                text = R.string.service_request_send_successfully,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(horizontal = 12.dp, vertical = 16.dp)
+                    .align(Alignment.TopCenter),
+                onClick = action::onDismissSnackBar
+            )
 
         }
     }
 }
-
-const val ARABIC_NAME = "arabicName"
-const val ENGLISH_NAME = "englishName"
-const val ARABIC_DESCRIPTION = "arabicDescription"
-const val ENGLISH_DESCRIPTION = "englishDescription"
