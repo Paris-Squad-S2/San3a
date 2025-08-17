@@ -8,6 +8,7 @@ import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
+import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
@@ -68,7 +69,7 @@ class MyJobsCraftsmanViewModel(
                 showSnackBarError = false,
                 isLoading = false,
                 myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                    craftsManId = phoneNumber
+                    craftsManId = phoneNumber,
                 )
             )
         )
@@ -86,13 +87,16 @@ class MyJobsCraftsmanViewModel(
                 updateState(
                     screenState.value.copy(
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                            notificationsCount = count ?: 0
+                            notificationsCount = count ?: 0,
                         )
                     )
                 )
             },
             onError = { exception ->
-                Log.e("MessagesViewModel", "Error fetching notifications count: ${exception.message}")
+                Log.e(
+                    "MessagesViewModel",
+                    "Error fetching notifications count: ${exception.message}"
+                )
             },
         )
     }
@@ -129,11 +133,12 @@ class MyJobsCraftsmanViewModel(
                         ?: emptyList()
                 Log.d("MyOfferCraftsmanViewModel", "Filtered requests: $filteredResult")
                 filteredResult.map { request ->
-                    val governorate = getLocationInfoUseCase.getGovernorateById(request.governorateId)
+                    val governorate =
+                        getLocationInfoUseCase.getGovernorateById(request.governorateId)
                     val city = getLocationInfoUseCase.getCityById(request.cityId)
                     request.toMyJobOfferUiState(
                         location = "${governorate?.name.orEmpty()} ${city?.name.orEmpty()}",
-                        serviceImage = serviceIdToImage[request.serviceId]
+                        serviceImage = screenState.value.myOffersCraftsmanUiState.userServices[request.serviceId]?.imageUrl.orEmpty()
                     )
                 }
             },
@@ -149,7 +154,7 @@ class MyJobsCraftsmanViewModel(
                             completed = mappedResult.filter { it.status == RequestStatus.COMPLETED }
                                 .associateBy { it.id },
                             canceled = mappedResult.filter { it.status == RequestStatus.CANCELLED }
-                                .associateBy { it.id }
+                                .associateBy { it.id },
                         )
                     )
                 )
@@ -274,7 +279,7 @@ class MyJobsCraftsmanViewModel(
             ListType.ONGOING -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        ongoing = updatedRequests
+                        ongoing = updatedRequests,
                     )
                 )
             )
@@ -282,7 +287,7 @@ class MyJobsCraftsmanViewModel(
             ListType.COMPLETED -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        completed = updatedRequests
+                        completed = updatedRequests,
                     )
                 )
             )
@@ -290,7 +295,7 @@ class MyJobsCraftsmanViewModel(
             ListType.CANCELED -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        canceled = updatedRequests
+                        canceled = updatedRequests,
                     )
                 )
             )
@@ -372,7 +377,7 @@ class MyJobsCraftsmanViewModel(
             ListType.ONGOING -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        ongoing = updatedRequests
+                        ongoing = updatedRequests,
                     )
                 )
             )
@@ -380,7 +385,7 @@ class MyJobsCraftsmanViewModel(
             ListType.COMPLETED -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        completed = updatedRequests
+                        completed = updatedRequests,
                     )
                 )
             )
@@ -388,31 +393,44 @@ class MyJobsCraftsmanViewModel(
             ListType.CANCELED -> updateState(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
-                        canceled = updatedRequests
+                        canceled = updatedRequests,
                     )
                 )
             )
         }
     }
 
-    private var serviceIdToImage: Map<String, String> = emptyMap()
-
     private fun getUserServices() {
         tryToObserve(
             observe = getAllServicesUseCase::invoke,
             onEach = { servicesList ->
-                serviceIdToImage = (servicesList ?: emptyList()).associate { it.id to it.imageUrl }
+                updateState(
+                    screenState.value.copy(
+                        myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
+                            userServices = servicesList?.associateBy { it.id } ?: emptyMap()
+                        ),
+                    )
+                )
 
                 // Update only the serviceImage fields for current items
                 val current = screenState.value.myOffersCraftsmanUiState
                 val updatedOngoing = current.ongoing.mapValues { (_, ui) ->
-                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                    ui.copy(
+                        serviceImage = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.title ?: ui.serviceType
+                    )
                 }
                 val updatedCompleted = current.completed.mapValues { (_, ui) ->
-                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                    ui.copy(
+                        serviceImage = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.title ?: ui.serviceType
+                    )
                 }
                 val updatedCanceled = current.canceled.mapValues { (_, ui) ->
-                    ui.copy(serviceImage = serviceIdToImage[ui.serviceId] ?: ui.serviceImage)
+                    ui.copy(
+                        serviceImage = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = screenState.value.myOffersCraftsmanUiState.userServices[ui.serviceId]?.title ?: ui.serviceType
+                    )
                 }
 
                 updateState(
