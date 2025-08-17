@@ -46,6 +46,7 @@ fun RequestService.toRequestServiceUiState(location: String, imageUrl: String): 
     return RequestServiceUiState(
         id = id,
         userId = userId,
+        serviceId = serviceId,
         requestStatus = requestStatus,
         title = title,
         imageUrl = imageUrl,
@@ -60,6 +61,7 @@ fun RequestService.toRequestServiceUiState(location: String, imageUrl: String): 
 data class RequestServiceUiState(
     val id: String,
     val userId: String,
+    val serviceId: String,
     val requestStatus: RequestStatus,
     val title: String,
     val imageUrl: String,
