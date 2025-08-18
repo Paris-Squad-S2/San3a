@@ -49,6 +49,4 @@ interface UserRepository {
     suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String)
 
     fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestService>>
-    suspend fun setOnboardingCompleted()
-    suspend fun isOnboardingCompleted(): Boolean
 }

@@ -1,21 +1,21 @@
 package com.paris_2.san3a.domain.usecase
 
-import com.paris_2.san3a.domain.repository.ProfileRepository
+import com.paris_2.san3a.domain.repository.UserPreferencesRepository
 
 class CustomizeProfileSettingsUseCase (
-    private val profileRepository: ProfileRepository
+    private val userPreferencesRepository: UserPreferencesRepository
 ) {
     suspend fun updateAppLanguage(newLanguage: String) {
-       profileRepository.updateAppLanguage(newLanguage)
+       userPreferencesRepository.updateAppLanguage(newLanguage)
     }
 
       fun getLatestSelectedAppLanguage() =
-        profileRepository.getLatestSelectedAppLanguage()
+        userPreferencesRepository.getLatestSelectedAppLanguage()
 
     suspend fun setAppThemeToDark(isDarkTheme: Boolean) {
-        profileRepository.setDarkTheme(isDarkTheme)
+        userPreferencesRepository.setDarkTheme(isDarkTheme)
     }
 
-    suspend fun isDarkThemeEnabled() = profileRepository.isDarkThemeEnabled()
+    suspend fun isDarkThemeEnabled() = userPreferencesRepository.isDarkThemeEnabled()
 
 }
