@@ -6,9 +6,9 @@ import com.paris_2.san3a.data.service.firestore.UpdateOperation
 import com.paris_2.san3a.data.source.remote.notification.dto.NotificationDto
 import kotlinx.coroutines.flow.Flow
 
-class NotificationDataSourceImpl(
+class NotificationRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService
-) : NotificationDataSource {
+) : NotificationRemoteDataSource {
 
     override fun getNotifications(userId: String): Flow<List<NotificationDto>> {
         return fireStoreService.streamCollection(

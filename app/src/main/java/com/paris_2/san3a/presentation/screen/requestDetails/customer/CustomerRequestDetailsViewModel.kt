@@ -163,7 +163,6 @@ class CustomerRequestDetailsViewModel(
 
             }
         )
-
     }
 
 
@@ -232,6 +231,4 @@ class CustomerRequestDetailsViewModel(
             }
         )
     }
-
-
 }

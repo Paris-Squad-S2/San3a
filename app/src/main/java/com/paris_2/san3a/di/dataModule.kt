@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.paris_2.san3a.data.repository.HomeRepositoryImpl
+import com.paris_2.san3a.data.repository.ServicesRepositoryImpl
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
 import com.paris_2.san3a.data.source.local.AppVersionDataSource
@@ -20,8 +20,8 @@ import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSourceImpl
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSourceImp
-import com.paris_2.san3a.data.source.remote.notification.NotificationDataSource
-import com.paris_2.san3a.data.source.remote.notification.NotificationDataSourceImpl
+import com.paris_2.san3a.data.source.remote.notification.NotificationRemoteDataSource
+import com.paris_2.san3a.data.source.remote.notification.NotificationRemoteDataSourceImpl
 import com.paris_2.san3a.data.source.remote.requestDetails.RequestDataSource
 import com.paris_2.san3a.data.source.remote.requestDetails.RequestDataSourceImpl
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
@@ -40,7 +40,7 @@ val dataModule = module {
     singleOf(::FirebaseStorageDataSource) { bind<StorageRemoteDataSource>() }
     singleOf(::UserRemoteDataSourceImpl) { bind<UserRemoteDataSource>() }
     singleOf(::ServiceRemoteDataSourceImpl) { bind<ServiceRemoteDataSource>() }
-    singleOf(::HomeRepositoryImpl) { bind<HomeRepository>() }
+    singleOf(::ServicesRepositoryImpl) { bind<HomeRepository>() }
     singleOf(::MessagesRemoteDataSourceImp) { bind<MessagesRemoteDataSource>() }
     singleOf(::FirebaseStorageDataSource) { bind<StorageRemoteDataSource>() }
     singleOf(::AuthRemoteDataSourceImpl) { bind<AuthRemoteDataSource>() }
@@ -52,6 +52,6 @@ val dataModule = module {
     single<DataStore<Preferences>> {
         PreferenceDataStoreFactory.create { get<Context>().preferencesDataStoreFile("app_datastore") }
     }
-    singleOf(::NotificationDataSourceImpl) { bind<NotificationDataSource>() }
+    singleOf(::NotificationRemoteDataSourceImpl) { bind<NotificationRemoteDataSource>() }
     singleOf(::RequestDataSourceImpl) { bind<RequestDataSource>() }
 }

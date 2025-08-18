@@ -1,12 +1,12 @@
 package com.paris_2.san3a.domain.usecase.messages
 
 import com.paris_2.san3a.domain.entity.Message
-import com.paris_2.san3a.domain.repository.MessageRepository
+import com.paris_2.san3a.domain.repository.MessagingRepository
 
 class SendMessageUseCase(
-    private val messageRepository: MessageRepository
+    private val messagingRepository: MessagingRepository
 ) {
     suspend operator fun invoke(message: Message) {
-        messageRepository.saveMessage(message)
+        messagingRepository.sendMessage(message)
     }
 }

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.core.net.toUri
 import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
+import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.local.LocalDataStore
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
@@ -20,7 +21,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
-class HomeRepositoryImpl(
+class ServicesRepositoryImpl(
     private val serviceRemoteDataSource: ServiceRemoteDataSource,
     private val firebaseStorageRemoteDataSource: StorageRemoteDataSource,
     private val networkConnectionChecker: NetworkConnectionChecker,
@@ -49,10 +50,7 @@ class HomeRepositoryImpl(
     }
 
     override suspend fun getServiceById(serviceId: String): Service? {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
+        validateNetworkConnection()
         return safeCall(FailException("getServiceById")) {
             val isDarkModeEnabled = localDataStore.isDarkThemeEnabled().first()
             val language = localDataStore.getLatestSelectedAppLanguage().first()
@@ -65,34 +63,28 @@ class HomeRepositoryImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun searchServices(query: String): Flow<List<Service>> {
+        validateNetworkConnection()
         return localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
             localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
                 serviceRemoteDataSource.searchServices(query)
-                    .map { dto ->
-                        dto.toEntity(
-                            isDarkTheme = isDarkModeEnabled,
-                            language = language
-                        )
-                    }
+                    .map { it.toEntity(isDarkModeEnabled, language) }
                     .catch { throw FailException("searchServices") }
             }
         }
     }
 
     override suspend fun requestService(requestedService: RequestService) {
+        validateNetworkConnection()
         safeCall(FailException("requestService")) {
             val imageUris = requestedService.image
             val imageUrls = if (imageUris.isNotEmpty()) {
                 val paths = imageUris.map { uri ->
-                    "${requestedService.title}/${
-                        uri.toUri().path?.substringAfterLast("/") ?: ""
-                    }.jpg"
+                    "${requestedService.title}/${uri.toUri().path?.substringAfterLast("/") ?: ""}.jpg"
                 }
-                firebaseStorageRemoteDataSource.saveImages(
+                firebaseStorageRemoteDataSource.saveImages(paths, imageUris.map { it.toUri() })
+                firebaseStorageRemoteDataSource.getImagesByPaths(
                     paths,
-                    imageUris.map { it.toUri() }
-                )
-                firebaseStorageRemoteDataSource.getImagesByPaths(paths,imageUris.map { it.toUri() })
+                    imageUris.map { it.toUri() })
             } else {
                 emptyList()
             }
@@ -103,16 +95,18 @@ class HomeRepositoryImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getMostRequestedServices(): Flow<List<Service>> {
+        validateNetworkConnection()
         return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
             localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
                 serviceRemoteDataSource.getMostRequestedServices()
-                    .map { dto -> dto.toEntity(isDarkTheme = isDarkModeEnabled, language = language) }
+                    .map { it.toEntity(isDarkModeEnabled, language) }
                     .catch { throw FailException("getMostRequestedServices") }
             }
         }
     }
 
     override fun getAvailableJobs(): Flow<List<RequestService>> {
+        validateNetworkConnection()
         return serviceRemoteDataSource.getAvailableJobs()
             .map { dto -> dto.map { it.toEntity() } }
             .catch {
@@ -122,10 +116,9 @@ class HomeRepositoryImpl(
     }
 
     override suspend fun updateNumOfRequestService(serviceId: String) {
-        safeCall(FailException("updateNumOfRequestService")){
+        validateNetworkConnection()
+        safeCall(FailException("updateNumOfRequestService")) {
             serviceRemoteDataSource.updateNumOfRequestService(serviceId)
         }
     }
-
-
 }

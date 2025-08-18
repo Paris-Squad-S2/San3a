@@ -1,14 +1,14 @@
 package com.paris_2.san3a.domain.usecase.messages
 
 import com.paris_2.san3a.domain.entity.Message
-import com.paris_2.san3a.domain.repository.MessageRepository
+import com.paris_2.san3a.domain.repository.MessagingRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetMessagesByChatIdUseCase(
-    private val messageRepository: MessageRepository
+    private val messagingRepository: MessagingRepository
 ) {
      operator fun invoke(chatId: String): Flow<List<Message>> {
-        return messageRepository.getMessagesByChatId(chatId)
+        return messagingRepository.getMessagesByChatId(chatId)
     }
 
 }

@@ -3,6 +3,7 @@ package com.paris_2.san3a.data.repository
 import android.net.Uri
 import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
+import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.local.LocalDataStore
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
@@ -258,6 +259,18 @@ class UserRepositoryImpl(
         safeCall(FailException("Failed to get work media")) {
             userRemoteDataSource.getWorkMedia(phone)
         }
+
+    override suspend fun setOnboardingCompleted() {
+        safeCall(FailException("Failed to set onboarding completed")) {
+            localDataStore.setOnboardingCompleted()
+        }
+    }
+
+    override suspend fun isOnboardingCompleted(): Boolean {
+        return safeCall(FailException("Failed to check if onboarding is completed")) {
+            localDataStore.isOnboardingCompleted()
+        }
+    }
 
     companion object {
         private const val PROFILE_IMAGE_PATH = "profile_images"

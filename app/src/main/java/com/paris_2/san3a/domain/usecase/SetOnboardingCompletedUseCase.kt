@@ -1,11 +1,11 @@
 package com.paris_2.san3a.domain.usecase
 
-import com.paris_2.san3a.domain.repository.OnboardingRepository
+import com.paris_2.san3a.domain.repository.UserRepository
 
 class SetOnboardingCompletedUseCase(
-    private val onboardingRepository: OnboardingRepository
+    private val userRepository: UserRepository
 ) {
     suspend operator fun invoke() {
-        onboardingRepository.setOnboardingCompleted()
+        userRepository.setOnboardingCompleted()
     }
 }

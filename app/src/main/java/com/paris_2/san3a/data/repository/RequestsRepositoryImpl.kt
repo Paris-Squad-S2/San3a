@@ -2,6 +2,7 @@ package com.paris_2.san3a.data.repository
 
 import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
+import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.remote.requestDetails.RequestDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
 import com.paris_2.san3a.domain.FailException
