@@ -6,6 +6,7 @@ import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
@@ -34,16 +35,36 @@ class CustomerHomeViewModel(
     private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getCustomerServiceUseCase: GetUserServicesUseCase,
+    private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
 ) : CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
 
     private val _triggerVoiceSearch = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val triggerVoiceSearch: SharedFlow<Unit> = _triggerVoiceSearch
 
     init {
+        getCurrentLanguage()
         loadUserData()
         loadMostRequestedServices()
         loadServices()
         getGovernments()
+    }
+
+    private fun getCurrentLanguage() {
+        tryToObserve(
+            observe = { customizeProfileSettingsUseCase.getLatestSelectedAppLanguage() },
+            onEach = { language ->
+                updateState(
+                    screenState.value.copy(
+                        customerUiState = screenState.value.customerUiState.copy(
+                            currentLanguage = language ?: "en"
+                        )
+                    )
+                )
+            },
+            onError = {
+                Log.d("CustomerHomeViewModel", "Error getting current language: ${it.message}")
+            }
+        )
     }
 
     override fun initBottomSheet(service: Service) {
@@ -427,7 +448,7 @@ class CustomerHomeViewModel(
                     updateState(
                         screenState.value.copy(
                             customerUiState = screenState.value.customerUiState.copy(
-                                services = userServices
+                                services = userServices,
                             )
                         )
                     )
@@ -450,7 +471,7 @@ class CustomerHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         customerUiState = screenState.value.customerUiState.copy(
-                            mostRequestedServices = mostRequestedServices ?: emptyList()
+                            mostRequestedServices = mostRequestedServices ?: emptyList(),
                         )
                     )
                 )
@@ -535,7 +556,7 @@ class CustomerHomeViewModel(
             screenState.value.copy(
                 customerUiState = screenState.value.customerUiState.copy(
                     searchQuery = query,
-                    searchResults = results
+                    searchResults = results,
                 )
             )
         )

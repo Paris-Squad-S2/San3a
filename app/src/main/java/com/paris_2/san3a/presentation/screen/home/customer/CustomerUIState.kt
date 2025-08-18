@@ -20,13 +20,14 @@ data class CustomerHomeUiState(
 
 data class CustomerUiState(
     val id: String = "",
+    val currentLanguage: String = "en",
     val currentUserName: String = "",
     val government: String = "",
     val city: String = "",
     val mostRequestedServices: List<Service> = emptyList(),
     val services: List<Service> = emptyList(),
     val searchQuery: String = "",
-    val searchResults: List<Service> = emptyList()
+    val searchResults: List<Service> = emptyList(),
 )
 
 data class BottomSheetUiState(
