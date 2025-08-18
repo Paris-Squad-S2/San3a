@@ -23,7 +23,7 @@ class ProfileRepositoryImpl(
 
     override fun getLatestSelectedAppLanguage(): Flow<String> {
         return localDataStore.getLatestSelectedAppLanguage()
-            .catch { FailException("failed to get selected language") }
+            .catch { throw FailException("failed to get selected language") }
     }
 
     override suspend fun updateAppLanguage(newLanguage: String): Boolean {
