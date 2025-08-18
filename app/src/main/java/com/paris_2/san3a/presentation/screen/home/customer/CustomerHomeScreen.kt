@@ -123,7 +123,7 @@ private fun CustomerHomeScreenContent(
                 )
                 putExtra(
                     RecognizerIntent.EXTRA_LANGUAGE,
-                    Locale.getDefault() //TODO: Use the app language
+                    state.customerUiState.currentLanguage
                 )
             }
             voiceLauncher.launch(intent)

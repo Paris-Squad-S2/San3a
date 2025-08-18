@@ -7,27 +7,8 @@ import com.paris_2.san3a.data.source.local.LocalDataStore
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
-import com.paris_2.san3a.domain.AddRatingForCraftsmanException
-import com.paris_2.san3a.domain.AddUserException
-import com.paris_2.san3a.domain.CompleteUserSetupException
-import com.paris_2.san3a.domain.GetAccountTypeException
-import com.paris_2.san3a.domain.GetCustomerRatingOnCraftsmanException
-import com.paris_2.san3a.domain.GetRatingForCraftsmanException
-import com.paris_2.san3a.domain.GetRecentRelatedJobsException
-import com.paris_2.san3a.domain.GetServicesException
-import com.paris_2.san3a.domain.GetStatsException
-import com.paris_2.san3a.domain.GetUserException
-import com.paris_2.san3a.domain.GetUserProgressException
-import com.paris_2.san3a.domain.GetUserWorkMediaException
-import com.paris_2.san3a.domain.IncrementJobsDoneForCraftsmanException
+import com.paris_2.san3a.domain.FailException
 import com.paris_2.san3a.domain.NoInternetConnectionException
-import com.paris_2.san3a.domain.SaveAccountTypeException
-import com.paris_2.san3a.domain.SaveLocationException
-import com.paris_2.san3a.domain.SavePersonalInfoException
-import com.paris_2.san3a.domain.SaveServicesException
-import com.paris_2.san3a.domain.SaveWorkShowcaseException
-import com.paris_2.san3a.domain.UpdateEarningsForCraftsmanException
-import com.paris_2.san3a.domain.UploadNationalIdImagesException
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
@@ -51,7 +32,7 @@ class UserRepositoryImpl(
     ) : UserRepository, BaseRepository() {
 
     override suspend fun addUser(phone: String) =
-        safeCall(AddUserException()) {
+        safeCall(FailException("Failed to add user")) {
             userRemoteDataSource.addUser(phone)
         }
 
@@ -60,14 +41,14 @@ class UserRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        return safeCall(SaveAccountTypeException()) {
+        return safeCall(FailException("Failed to save account type")) {
             userRemoteDataSource.saveAccountType(phone, accountType)
         }
     }
 
 
     override suspend fun getAccountType(phone: String): AccountType =
-        safeCall(GetAccountTypeException()) {
+        safeCall(FailException("Failed to get account type")) {
             userRemoteDataSource.getAccountType(phone)
         }
 
@@ -80,7 +61,7 @@ class UserRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        safeCall(SaveServicesException()) {
+        safeCall(FailException("Failed to save services")) {
             userRemoteDataSource.saveServices(phone, services, isCraftsman)
         }
     }
@@ -95,7 +76,7 @@ class UserRepositoryImpl(
             localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
                 userRemoteDataSource.getServices(phone, isCraftsman)
                     .map { dtoList -> dtoList.toEntity(isDarkModeEnabled, language) }
-                    .catch { throw GetServicesException() }
+                    .catch { throw FailException("Failed to get services for user: $phone, isCraftsman: $isCraftsman") }
             }
         }
     }
@@ -105,7 +86,7 @@ class UserRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        safeCall(SaveLocationException()) {
+        safeCall(FailException("Failed to save location")) {
             userRemoteDataSource.updateLocation(phone, location)
         }
     }
@@ -115,7 +96,7 @@ class UserRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        safeCall(SavePersonalInfoException()) {
+        safeCall(FailException("Failed to save personal info")) {
             val profileUrl = profileUri?.let { uri ->
                 val path = "$PROFILE_IMAGE_PATH/$phone.jpg"
                 Log.d("UserRepositoryImpl", "savePersonalInfo: $path")
@@ -131,7 +112,7 @@ class UserRepositoryImpl(
         workMedia: List<Uri>?,
         workDescription: String
     ) =
-        safeCall(SaveWorkShowcaseException()) {
+        safeCall(FailException("Failed to save work showcase")) {
             val mediaUrls = workMedia?.mapIndexedNotNull { index, uri ->
                 val path = "$WORK_SHOWCASE_PATH/$phone/media_$index.jpg"
                 storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
@@ -141,12 +122,12 @@ class UserRepositoryImpl(
         }
 
     override suspend fun getUserProgress(phone: String): AccountSetupStep =
-        safeCall(GetUserProgressException()) {
+        safeCall(FailException("Failed to get user progress")) {
             userRemoteDataSource.getUserProgress(phone)
         }
 
     override suspend fun updateUserProgress(phone: String, step: AccountSetupStep) =
-        safeCall(CompleteUserSetupException()) {
+        safeCall(FailException("Failed to update user progress")) {
             userRemoteDataSource.updateUserProgress(phone, step)
         }
 
@@ -163,7 +144,7 @@ class UserRepositoryImpl(
                 rating = rating
             )
         }.catch {
-            throw GetStatsException()
+            throw FailException("Failed to get stats for user: $userId")
         }
     }
 
@@ -176,7 +157,7 @@ class UserRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        safeCall(AddRatingForCraftsmanException()) {
+        safeCall(FailException("Failed to add rating for craftsman")) {
             userRemoteDataSource.addRatingForCraftsman(userId, craftsmanId, rating)
         }
     }
@@ -187,7 +168,7 @@ class UserRepositoryImpl(
         }
 
         return userRemoteDataSource.getRatingForCraftsman(craftsmanId)
-            .catch { throw GetRatingForCraftsmanException() }
+            .catch { throw FailException("Failed to get rating for craftsman: $craftsmanId") }
     }
 
     override suspend fun getCustomerRatingOnCraftsman(
@@ -198,7 +179,7 @@ class UserRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        return safeCall(GetCustomerRatingOnCraftsmanException()) {
+        return safeCall(FailException("Failed to get customer rating on craftsman")) {
             userRemoteDataSource.getCustomerRatingOnCraftsman(craftsmanId, userId)
         }
     }
@@ -213,7 +194,7 @@ class UserRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        safeCall(UpdateEarningsForCraftsmanException()) {
+        safeCall(FailException("Failed to update earnings for craftsman")) {
             userRemoteDataSource.updateEarningsForCraftsman(
                 craftsmanId = craftsmanId,
                 userId = userId,
@@ -232,7 +213,7 @@ class UserRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        safeCall(IncrementJobsDoneForCraftsmanException()) {
+        safeCall(FailException("Failed to increment jobs done for craftsman")) {
             userRemoteDataSource.incrementJobsDoneForCraftsman(craftsmanId, requestId, userId)
         }
     }
@@ -240,14 +221,14 @@ class UserRepositoryImpl(
     override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestService>> {
         return userRemoteDataSource.getRecentRelatedJobs(relatedJobs)
             .map { list -> list.map { it.toEntity() } }
-            .catch { throw GetRecentRelatedJobsException() }
+            .catch { throw FailException("Failed to get recent related jobs: $relatedJobs") }
     }
 
     override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) {
         if (networkConnectionChecker.isConnected.value.not()) {
             throw NoInternetConnectionException()
         }
-        safeCall(UploadNationalIdImagesException()) {
+        safeCall(FailException("Failed to upload national ID images")) {
             val frontUrl = frontUri?.let { uri ->
                 val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
                 storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
@@ -268,13 +249,13 @@ class UserRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        return safeCall(GetUserException()) {
+        return safeCall(FailException("Failed to get user")) {
             userRemoteDataSource.getUser(phone)
         }
     }
 
     override suspend fun getWorkMedia(phone: String): List<String> =
-        safeCall(GetUserWorkMediaException()) {
+        safeCall(FailException("Failed to get work media")) {
             userRemoteDataSource.getWorkMedia(phone)
         }
 

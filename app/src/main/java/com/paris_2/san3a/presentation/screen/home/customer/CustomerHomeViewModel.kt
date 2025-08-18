@@ -6,6 +6,7 @@ import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
 import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
@@ -34,16 +35,36 @@ class CustomerHomeViewModel(
     private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getCustomerServiceUseCase: GetUserServicesUseCase,
+    private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
 ) : CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
 
     private val _triggerVoiceSearch = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val triggerVoiceSearch: SharedFlow<Unit> = _triggerVoiceSearch
 
     init {
+        getCurrentLanguage()
         loadUserData()
         loadMostRequestedServices()
         loadServices()
         getGovernments()
+    }
+
+    private fun getCurrentLanguage() {
+        tryToObserve(
+            observe = { customizeProfileSettingsUseCase.getLatestSelectedAppLanguage() },
+            onEach = { language ->
+                updateState(
+                    screenState.value.copy(
+                        customerUiState = screenState.value.customerUiState.copy(
+                            currentLanguage = language ?: "en"
+                        )
+                    )
+                )
+            },
+            onError = {
+                Log.d("CustomerHomeViewModel", "Error getting current language: ${it.message}")
+            }
+        )
     }
 
     override fun initBottomSheet(service: Service) {
@@ -247,7 +268,6 @@ class CustomerHomeViewModel(
                     bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
                     bottomSheetService = null,
                     bottomSheetSubtitle = "",
-                    bottomSheetServiceId = "",
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
@@ -282,6 +302,17 @@ class CustomerHomeViewModel(
             hideSnackBar()
             return
         }
+        if (screenState.value.bottomSheetUiState.bottomSheetService == null) {
+            updateState(
+                screenState.value.copy(
+                    errorMessage = "Please select a service",
+                    buttonSheetState = AppButtonState.Enable,
+                    showSnackBarError = true
+                )
+            )
+            hideSnackBar()
+            return
+        }
 
         tryToExecute(
             execute = {
@@ -305,7 +336,7 @@ class CustomerHomeViewModel(
                         selectedCraftsmanId = null,
                         time = getCurrentDateTime(),
                         requestStatus = RequestStatus.ONGOING,
-                        serviceId = screenState.value.bottomSheetUiState.bottomSheetServiceId
+                        serviceId = screenState.value.bottomSheetUiState.bottomSheetService?.id ?: return@tryToExecute,
                     )
                 )
             },
@@ -320,7 +351,7 @@ class CustomerHomeViewModel(
                         )
                 )
                 hideSnackBar()
-                updateNumOfRequests(screenState.value.bottomSheetUiState.bottomSheetServiceId)
+                updateNumOfRequests(screenState.value.bottomSheetUiState.bottomSheetService?.id ?: return@tryToExecute)
             },
             onError = {
                 updateState(
@@ -417,7 +448,7 @@ class CustomerHomeViewModel(
                     updateState(
                         screenState.value.copy(
                             customerUiState = screenState.value.customerUiState.copy(
-                                services = userServices
+                                services = userServices,
                             )
                         )
                     )
@@ -440,7 +471,7 @@ class CustomerHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         customerUiState = screenState.value.customerUiState.copy(
-                            mostRequestedServices = mostRequestedServices ?: emptyList()
+                            mostRequestedServices = mostRequestedServices ?: emptyList(),
                         )
                     )
                 )
@@ -525,7 +556,7 @@ class CustomerHomeViewModel(
             screenState.value.copy(
                 customerUiState = screenState.value.customerUiState.copy(
                     searchQuery = query,
-                    searchResults = results
+                    searchResults = results,
                 )
             )
         )

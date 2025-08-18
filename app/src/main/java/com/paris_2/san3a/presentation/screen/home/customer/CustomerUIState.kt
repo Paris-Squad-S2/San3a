@@ -2,12 +2,9 @@ package com.paris_2.san3a.presentation.screen.home.customer
 
 import com.paris_2.san3a.domain.entity.City
 import com.paris_2.san3a.domain.entity.Governorate
-import com.paris_2.san3a.domain.entity.RequestService
-import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
-import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 
 data class CustomerHomeUiState(
     val isLoading: Boolean = false,
@@ -23,13 +20,14 @@ data class CustomerHomeUiState(
 
 data class CustomerUiState(
     val id: String = "",
+    val currentLanguage: String = "en",
     val currentUserName: String = "",
     val government: String = "",
     val city: String = "",
     val mostRequestedServices: List<Service> = emptyList(),
     val services: List<Service> = emptyList(),
     val searchQuery: String = "",
-    val searchResults: List<Service> = emptyList()
+    val searchResults: List<Service> = emptyList(),
 )
 
 data class BottomSheetUiState(
@@ -37,7 +35,6 @@ data class BottomSheetUiState(
     val bottomSheetStep: BottomSheetStep = BottomSheetStep.SELECT_SERVICE,
     val bottomSheetService: Service? = null,
     val bottomSheetSubtitle: String = "",
-    val bottomSheetServiceId: String = "",
     val bottomSheetDescription: String = "",
     val bottomSheetImages: List<String> = emptyList(),
     val bottomSheetSelectedSuggestion: String? = null,

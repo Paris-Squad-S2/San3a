@@ -32,7 +32,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CustomerRequestDetailsScreen(
-    viewModel: CustomerRequestDetailsRequestDetailsViewModel = koinViewModel()
+    viewModel: CustomerRequestDetailsViewModel = koinViewModel()
 ) {
     val state by viewModel.screenState.collectAsState()
     CustomerRequestDetailsScreenContent(state, viewModel)

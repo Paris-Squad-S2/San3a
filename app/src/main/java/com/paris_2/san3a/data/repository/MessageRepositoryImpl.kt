@@ -5,9 +5,7 @@ import com.paris_2.san3a.data.mapper.toImageMessageDto
 import com.paris_2.san3a.data.mapper.toMessageList
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
-import com.paris_2.san3a.domain.MarkMessagesAsSeenException
-import com.paris_2.san3a.domain.ReadMessagesException
-import com.paris_2.san3a.domain.SendMessageException
+import com.paris_2.san3a.domain.FailException
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
 import com.paris_2.san3a.domain.repository.MessageRepository
@@ -23,12 +21,12 @@ class MessageRepositoryImpl(
 ) : MessageRepository, BaseRepository() {
     override fun getMessagesByChatId(chatId: String): Flow<List<Message>> {
         return messagesRemoteDataSource.getChatMessages(chatId).map { it.toMessageList() }.catch {
-            throw ReadMessagesException(chatId)
+            throw FailException("Messages with related chat id $chatId is cant be read")
         }
     }
 
     override suspend fun saveMessage(message: Message) {
-        safeCall(SendMessageException(message.id)) {
+        safeCall(FailException("Message $message is not send")) {
             when (message.messageContent) {
                 is MessageContent.Audio -> null
                 is MessageContent.Image -> {
@@ -58,7 +56,7 @@ class MessageRepositoryImpl(
     }
 
     override suspend fun markMessagesAsSeen(chatId: String, userId: String) {
-        safeCall(MarkMessagesAsSeenException(chatId, userId)) {
+        safeCall(FailException("Messages with chat id $chatId and user id $userId is cant be marked as seen")) {
             messagesRemoteDataSource.markMessagesAsSeen(chatId, userId)
         }
     }
