@@ -247,7 +247,6 @@ class CustomerHomeViewModel(
                     bottomSheetStep = BottomSheetStep.SELECT_SERVICE,
                     bottomSheetService = null,
                     bottomSheetSubtitle = "",
-                    bottomSheetServiceId = "",
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
@@ -282,6 +281,17 @@ class CustomerHomeViewModel(
             hideSnackBar()
             return
         }
+        if (screenState.value.bottomSheetUiState.bottomSheetService == null) {
+            updateState(
+                screenState.value.copy(
+                    errorMessage = "Please select a service",
+                    buttonSheetState = AppButtonState.Enable,
+                    showSnackBarError = true
+                )
+            )
+            hideSnackBar()
+            return
+        }
 
         tryToExecute(
             execute = {
@@ -305,7 +315,7 @@ class CustomerHomeViewModel(
                         selectedCraftsmanId = null,
                         time = getCurrentDateTime(),
                         requestStatus = RequestStatus.ONGOING,
-                        serviceId = screenState.value.bottomSheetUiState.bottomSheetServiceId
+                        serviceId = screenState.value.bottomSheetUiState.bottomSheetService?.id ?: return@tryToExecute,
                     )
                 )
             },
@@ -320,7 +330,7 @@ class CustomerHomeViewModel(
                         )
                 )
                 hideSnackBar()
-                updateNumOfRequests(screenState.value.bottomSheetUiState.bottomSheetServiceId)
+                updateNumOfRequests(screenState.value.bottomSheetUiState.bottomSheetService?.id ?: return@tryToExecute)
             },
             onError = {
                 updateState(

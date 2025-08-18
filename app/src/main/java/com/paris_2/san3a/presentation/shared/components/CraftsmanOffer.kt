@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +31,8 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
+import com.paris_2.san3a.presentation.utill.getTimeAgo
+import kotlinx.datetime.LocalDateTime
 
 enum class OfferStatus {
     PENDING_OFFER,
@@ -45,7 +48,7 @@ data class OfferDetailsUIState(
     val description: String = "I can fix this today. I have 10+ years experience with kitchen plumbing.",
     val amount: String = "50,000 IQD",
     val time: String = "Tomorrow, 2:00 PM",
-    val postedTime: String = "1 hour ago",
+    val postedTime: LocalDateTime? = null,
     val status: OfferStatus = OfferStatus.PENDING_OFFER,
     val isVerify: Boolean = true
 )
@@ -130,7 +133,7 @@ fun CraftsManOffer(
             painter = painter,
             isVerified = offerDetails.isVerify,
             name = offerDetails.name,
-            postedTime = offerDetails.postedTime,
+            postedTime = getTimeAgo(offerDetails.postedTime, LocalContext.current),
             description = offerDetails.description,
             amount = offerDetails.amount,
             rate = offerDetails.rate, // TODO( hide it untile we made it ),

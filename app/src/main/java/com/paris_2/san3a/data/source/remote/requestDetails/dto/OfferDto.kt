@@ -9,6 +9,7 @@ data class OfferDto(
     val price: Double,
     val preferredDate: String,
     val preferredTime: String,
+    val createdAt: String,
     val messageToCustomer: String,
     val isAccepted: Boolean
 ){
@@ -21,6 +22,7 @@ data class OfferDto(
                 price = (data["price"] as? Number)?.toDouble() ?: 0.0,
                 preferredDate = data["preferredDate"] as? String ?: "",
                 preferredTime = data["preferredTime"] as? String ?: "",
+                createdAt = data["createdAt"] as? String ?: "",
                 messageToCustomer = data["messageToCustomer"] as? String ?: "",
                 isAccepted = data["isAccepted"] as? Boolean ?: false
             )
@@ -33,6 +35,7 @@ data class OfferDto(
             "price" to price,
             "preferredDate" to preferredDate,
             "preferredTime" to preferredTime,
+            "createdAt" to createdAt,
             "messageToCustomer" to messageToCustomer,
             "isAccepted" to isAccepted
         )

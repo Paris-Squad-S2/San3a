@@ -2,7 +2,6 @@ package com.paris_2.san3a.presentation.screen.requestDetails.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,13 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,6 +24,7 @@ import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.RequestServiceUIState
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.utill.getTimeAgo
 
 @Composable
 fun RequestInfoSection(
@@ -73,7 +73,7 @@ fun RequestInfoSection(
         )
         RequestInfoIconTextRow(
             painter = painterResource(id = R.drawable.ic_clock_circle_outline),
-            text = request.time,
+            text = getTimeAgo(request.time, LocalContext.current),
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
         )
         RequestInfoIconTextRow(

@@ -21,7 +21,7 @@ import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 
-class CustomerRequestDetailsRequestDetailsViewModel(
+class CustomerRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
     private val getOffersUseCase: GetOffersUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase,
