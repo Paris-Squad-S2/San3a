@@ -42,10 +42,10 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
         onSuccess: (suspend (T) -> Unit)? = null,
         onError: (Throwable) -> Unit,
         scope: CoroutineScope = viewModelScope,
-        execute: suspend (CoroutineScope) -> T,
         onRetry: (suspend () -> Unit) ?= {},
-        retryLimit: Int?=null
-    ): Job {
+        retryLimit: Int?=null,
+        execute: suspend (CoroutineScope) -> T,
+        ): Job {
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             onError(throwable)
         }
