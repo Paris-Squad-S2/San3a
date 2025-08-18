@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
+import com.google.api.QuotaLimit
 import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Navigator
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -44,6 +45,7 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
         scope: CoroutineScope = viewModelScope,
         execute: suspend (CoroutineScope) -> T,
         onRetry: (suspend () -> Unit) ?= {},
+        retryLimit: Int?=null
     ): Job {
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             onError(throwable)
@@ -56,9 +58,10 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
                 Log.e("BaseViewModel", "tryToExecute: Error executing operation", e)
                 onError(e)
             }finally {
-                // before any one comment in pr , i still working on it
-                // please hold on until i finish it
-                onRetry?.invoke()
+                retryLimit?.let {
+                    for (i in 0..it)
+                        onRetry?.invoke()
+                }
             }
         }
     }
