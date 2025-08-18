@@ -19,12 +19,10 @@ import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.GetWorkMediaUseCase
 import com.paris_2.san3a.domain.usecase.IncrementJobsDoneForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.IsLoggedInUseCase
 import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
 import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
-import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetOnboardingCompletedUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetNotificationsUseCase
@@ -71,8 +69,6 @@ val useCaseModule = module {
     factoryOf(::GetAvailableJobsUseCase)
     factoryOf(::GetMostRequestedServicesUseCase)
     factoryOf(::RequestServiceUseCase)
-    factoryOf(::IsLoggedInUseCase)
-    factoryOf(::SetLoginUseCase)
     factoryOf(::GetPhoneNumberUseCase)
     factoryOf(::CreateChatUseCase)
     factoryOf(::GetLocationInfoUseCase)

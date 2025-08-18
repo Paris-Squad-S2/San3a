@@ -8,9 +8,6 @@ interface AuthRepository {
     ): Boolean
 
     suspend fun savePhoneNumber(phoneNumber: String)
-
     suspend fun setLoggedIn(isLoggedIn: Boolean)
-
-    suspend fun isLoggedIn(): Boolean
     suspend fun getPhoneNumber(): String
 }

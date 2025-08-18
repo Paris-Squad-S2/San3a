@@ -13,7 +13,6 @@ import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
@@ -29,7 +28,6 @@ import kotlinx.coroutines.launch
 
 class MoreViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
-    private val setLoginUseCase: SetLoginUseCase,
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
@@ -434,7 +432,6 @@ class MoreViewModel(
         tryToExecute(
             execute = {
                 savePhoneNumberUseCase("")
-                setLoginUseCase(false)
             },
             onSuccess = ::onLogoutSuccess,
             onError = ::onLogoutError

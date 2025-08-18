@@ -13,7 +13,6 @@ import com.paris_2.san3a.domain.usecase.AddUserUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
-import com.paris_2.san3a.domain.usecase.SetLoginUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Destinations
@@ -25,7 +24,6 @@ import kotlinx.coroutines.launch
 class OTPRegisterViewModel(
     private val sendOtpUseCase: SendOtpUseCase,
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
-    private val setLoginUseCase: SetLoginUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val addUserUseCase: AddUserUseCase,
@@ -162,7 +160,6 @@ class OTPRegisterViewModel(
                             )
                         )
                     )
-                    setLoginUseCase(true)
                 }
             },
             onSuccess = {

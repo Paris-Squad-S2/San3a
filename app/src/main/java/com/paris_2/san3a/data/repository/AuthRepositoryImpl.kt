@@ -37,12 +37,6 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun isLoggedIn(): Boolean {
-        return safeCall(FailException("is logged in error")) {
-            localDataStoreImpl.isLoggedIn()
-        }
-    }
-
     override suspend fun getPhoneNumber(): String {
         return safeCall(FailException("get phone number error")) {
             localDataStoreImpl.getPhoneNumber()
