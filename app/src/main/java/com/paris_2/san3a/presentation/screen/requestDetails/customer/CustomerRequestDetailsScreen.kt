@@ -57,15 +57,6 @@ private fun CustomerRequestDetailsScreenContent(
             AppBar(
                 onBackClick = interactionListener::onClickBack,
                 title = stringResource(R.string.request_details),
-                actionIcon = {
-                    Icon(
-                        modifier = Modifier
-                            .clickable(onClick = interactionListener::onClickActonDots),
-                        painter = painterResource(R.drawable.ic_menu_dots_outline),
-                        contentDescription = null,
-                        tint = Theme.colors.shade.primary
-                    )
-                }
             )
         },
         containerColor = Theme.colors.background.screen,

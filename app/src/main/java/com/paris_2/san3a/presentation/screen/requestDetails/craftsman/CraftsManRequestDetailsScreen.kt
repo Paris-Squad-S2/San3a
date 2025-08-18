@@ -81,16 +81,6 @@ private fun CraftsManRequestDetailsScreenContent(
             AppBar(
                 onBackClick = interactionListener::onClickBack,
                 title = stringResource(R.string.request_details),
-                actionIcon = {
-                    Icon(
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .clickable(onClick = interactionListener::onClickFavorite),
-                        painter = painterResource(R.drawable.ic_heart_outline),
-                        contentDescription = null,
-                        tint = Theme.colors.shade.primary
-                    )
-                }
             )
         },
         containerColor = Theme.colors.background.screen,
