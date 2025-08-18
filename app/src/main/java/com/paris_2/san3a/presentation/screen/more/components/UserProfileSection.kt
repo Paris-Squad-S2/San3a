@@ -31,7 +31,6 @@ fun UserProfileSection(
     isCraftsman: Boolean,
     name: String,
     rating: Float,
-    review: Int,
     isVerify: Boolean,
     painter: Painter,
     onClickEdit: () -> Unit,
@@ -79,11 +78,6 @@ fun UserProfileSection(
                             style = Theme.textStyle.body.small.medium,
                             color = Theme.colors.shade.secondary
                         )
-                        Text(
-                            text = stringResource(R.string.reviews, review),
-                            style = Theme.textStyle.body.small.medium,
-                            color = Theme.colors.shade.secondary
-                        )
                     }
                 } else {
                     Text(
@@ -115,7 +109,6 @@ private fun UserProfileSectionPreview() {
     UserProfileSection(
         name = stringResource(R.string.mohammed_akkad),
         rating = 4.7f,
-        review = 1127,
         onClickEdit = {},
         isVerify = true,
         painter = painterResource(R.drawable.person_chat),
@@ -130,7 +123,6 @@ private fun UserProfileSectionWithoutVerifyPreview() {
     UserProfileSection(
         name = stringResource(R.string.mohammed_akkad),
         rating = 4.7f,
-        review = 1127,
         onClickEdit = {},
         isVerify = false,
         painter = painterResource(R.drawable.person_chat),

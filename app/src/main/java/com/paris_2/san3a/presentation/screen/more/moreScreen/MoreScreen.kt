@@ -132,7 +132,6 @@ private fun MoreScreenContent(
                             modifier = Modifier.padding(16.dp),
                             name = moreScreenState.moreUiState.userUiState.name,
                             rating = moreScreenState.moreUiState.userUiState.rating,
-                            review = moreScreenState.moreUiState.userUiState.review,
                             isVerify = moreScreenState.moreUiState.userUiState.isVerify,
                             phoneNumber = moreScreenState.moreUiState.userUiState.phoneNumber,
                             isCraftsman = moreScreenState.moreUiState.userUiState.isCraftsman,
