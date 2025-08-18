@@ -2,9 +2,7 @@ package com.paris_2.san3a.data.repository
 
 import com.paris_2.san3a.data.mapper.toChatList
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
-import com.paris_2.san3a.domain.CreateChatException
-import com.paris_2.san3a.domain.DeleteChatException
-import com.paris_2.san3a.domain.ReadChatException
+import com.paris_2.san3a.domain.FailException
 import com.paris_2.san3a.domain.entity.Chat
 import com.paris_2.san3a.domain.repository.ChatRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,18 +17,18 @@ class ChatRepositoryImpl(
 
     override fun getChatsByUserId(userId: String): Flow<List<Chat>> {
         return messagesRemoteDataSource.getUserChats(userId).map { it.toChatList() }.catch {
-            throw ReadChatException(userId)
+            throw FailException(it.message ?: "An error occurred while fetching chats")
         }
     }
 
     override suspend fun createChat(participants: List<String>): String {
-        return safeCall(CreateChatException(participants)) {
+        return safeCall(FailException("Failed to create chat with participants: $participants")) {
             messagesRemoteDataSource.addChat(participants)
         }
     }
 
     override suspend fun deleteChatById(chatId: String) {
-        safeCall(DeleteChatException(chatId)) {
+        safeCall(FailException("Failed to delete chat with ID: $chatId")) {
             messagesRemoteDataSource.deleteChat(chatId)
         }
     }

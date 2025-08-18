@@ -4,10 +4,8 @@ import com.paris_2.san3a.data.service.auth.WhatsAppMessage
 import com.paris_2.san3a.data.source.local.LocalDataStore
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
-import com.paris_2.san3a.domain.LoginStatusException
+import com.paris_2.san3a.domain.FailException
 import com.paris_2.san3a.domain.NoInternetConnectionException
-import com.paris_2.san3a.domain.RegisterException
-import com.paris_2.san3a.domain.SavePhoneNumberException
 import com.paris_2.san3a.domain.repository.AuthRepository
 
 class AuthRepositoryImpl(
@@ -23,7 +21,7 @@ class AuthRepositoryImpl(
         if (networkConnectionChecker.isConnected.value.not()) {
             throw NoInternetConnectionException()
         }
-        return safeCall(RegisterException()) {
+        return safeCall(FailException("register error")) {
             val body = WhatsAppMessage(
                 phoneNumber = phoneNumber,
                 message = message
@@ -35,25 +33,25 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun savePhoneNumber(phoneNumber: String) {
-        safeCall(SavePhoneNumberException()) {
+        safeCall(FailException("save phone number error")) {
             localDataStoreImpl.savePhoneNumber(phoneNumber)
         }
     }
 
     override suspend fun setLoggedIn(isLoggedIn: Boolean) {
-        return safeCall(LoginStatusException()) {
+        return safeCall(FailException("set logged in error")) {
             localDataStoreImpl.setLoggedIn(isLoggedIn)
         }
     }
 
     override suspend fun isLoggedIn(): Boolean {
-        return safeCall(LoginStatusException()) {
+        return safeCall(FailException("is logged in error")) {
             localDataStoreImpl.isLoggedIn()
         }
     }
 
     override suspend fun getPhoneNumber(): String {
-        return safeCall(LoginStatusException()) {
+        return safeCall(FailException("get phone number error")) {
             localDataStoreImpl.getPhoneNumber()
         }
     }
