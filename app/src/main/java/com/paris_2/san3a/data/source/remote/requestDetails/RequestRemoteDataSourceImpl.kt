@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 
-class RequestDataSourceImpl(
+class RequestRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
-): RequestDataSource {
+): RequestRemoteDataSource {
 
     override suspend fun addOffer(offer: OfferDto) {
         fireStoreService.addToCollection(

@@ -1,11 +1,11 @@
 package com.paris_2.san3a.domain.usecase
 
-import com.paris_2.san3a.domain.repository.AuthRepository
+import com.paris_2.san3a.domain.repository.UserRepository
 
 class SavePhoneNumberUseCase(
-    private val authRepository: AuthRepository
+    private val userRepository: UserRepository
 ) {
     suspend operator fun invoke(phoneNumber: String){
-        authRepository.savePhoneNumber(phoneNumber)
+        userRepository.savePhoneNumber(phoneNumber)
     }
 }

@@ -4,7 +4,9 @@ import android.net.Uri
 import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.repository.shared.BaseRepository
+import com.paris_2.san3a.data.service.auth.WhatsAppMessage
 import com.paris_2.san3a.data.source.local.LocalDataStore
+import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
 import com.paris_2.san3a.domain.FailException
@@ -26,6 +28,7 @@ import kotlinx.coroutines.flow.map
 class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
     private val storageRemoteDataSource: StorageRemoteDataSource,
+    private val authRemoteDataSource: AuthRemoteDataSource,
     private val localDataStore: LocalDataStore
 ) : UserRepository, BaseRepository() {
 
@@ -221,6 +224,29 @@ class UserRepositoryImpl(
         safeCall(FailException("Failed to get work media")) {
             userRemoteDataSource.getWorkMedia(phone)
         }
+
+    override suspend fun sendMessage(
+        phoneNumber: String,
+        message: String,
+    ): Boolean {
+        validateNetworkConnection()
+        return safeCall(FailException("register error")) {
+            val body = WhatsAppMessage(phoneNumber = phoneNumber, message = message)
+            authRemoteDataSource.sendMessage(body).success ?: false
+        }
+    }
+
+    override suspend fun savePhoneNumber(phoneNumber: String) {
+        safeCall(FailException("save phone number error")) {
+            localDataStore.savePhoneNumber(phoneNumber)
+        }
+    }
+
+    override suspend fun getPhoneNumber(): String {
+        return safeCall(FailException("get phone number error")) {
+            localDataStore.getPhoneNumber()
+        }
+    }
 
     companion object {
         private const val PROFILE_IMAGE_PATH = "profile_images"

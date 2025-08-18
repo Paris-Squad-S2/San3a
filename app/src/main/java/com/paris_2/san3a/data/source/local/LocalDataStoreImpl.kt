@@ -29,15 +29,6 @@ class LocalDataStoreImpl(
         dataStore.setValue(PHONE_NUMBER, phoneNumber)
     }
 
-    override suspend fun setLoggedIn(isLoggedIn: Boolean) {
-        dataStore.setValue(KEY_USER_LOGGED_IN, isLoggedIn)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override suspend fun isLoggedIn(): Boolean = dataStore.data.mapLatest {
-        it[KEY_USER_LOGGED_IN] ?: false
-    }.first()
-
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun getPhoneNumber(): String {
         return dataStore.data.mapLatest {
@@ -92,7 +83,6 @@ class LocalDataStoreImpl(
     companion object {
         private val KEY_ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
         private val PHONE_NUMBER = stringPreferencesKey("phone_number")
-        private val KEY_USER_LOGGED_IN = booleanPreferencesKey("user_logged_in")
         private val IS_DARK_THEME = booleanPreferencesKey("Is_Dark_Theme")
         private val LOCAL_LANGUAGE = stringPreferencesKey("LOCAL_LANGUAGE")
         private val APP_VERSION_NAME = stringPreferencesKey("APP_VERSION_NAME")
