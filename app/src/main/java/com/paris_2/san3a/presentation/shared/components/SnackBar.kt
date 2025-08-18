@@ -24,6 +24,7 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 @Composable
 fun SnackBar(
     @StringRes text: Int,
+    uiText:String?=null,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
@@ -45,7 +46,7 @@ fun SnackBar(
     ) {
 
         Text(
-            text = stringResource(id = text),
+            text = uiText?:stringResource(id = text),
             style = Theme.textStyle.body.medium.regular,
             color = Theme.colors.shade.primary,
             modifier = Modifier.padding(start = 12.dp)

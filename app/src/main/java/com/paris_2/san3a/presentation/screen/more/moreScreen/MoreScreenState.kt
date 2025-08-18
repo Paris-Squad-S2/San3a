@@ -2,13 +2,14 @@ package com.paris_2.san3a.presentation.screen.more.moreScreen
 
 import android.net.Uri
 import androidx.annotation.StringRes
+import com.paris_2.san3a.presentation.utill.UiText
 
 data class MoreScreenState(
     val moreUiState: MoreUiState = MoreUiState(),
     val showEditProfileBottomSheet: Boolean = false,
     val showLanguageBottomSheet: Boolean = false,
-    @StringRes val errorMessage: Int? = null,
-    @StringRes val successMessageSnackBar: Int? = null,
+    val errorMessage: UiText? = null,
+    val successMessageSnackBar: UiText? = null,
     val isNoInternet: Boolean = false,
     val isLoading: Boolean = false,
     val showSnackBarSuccess: Boolean = false,
