@@ -171,9 +171,6 @@ class CustomerRequestDetailsRequestDetailsViewModel(
         navigateUp()
     }
 
-    override fun onClickActonDots() {
-//        TODO("Not yet implemented")
-    }
 
     override fun onRetryClick() {
         updateState(
