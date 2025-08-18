@@ -5,13 +5,11 @@ import com.google.firebase.firestore.DocumentId
 data class RequestServiceDto(
     @DocumentId val id: String = "",
     val title: String,
-    val serviceType: String,
     val description: String,
     val governorateId: Int,
     val cityId: Int,
     val locationDetails: String,
     val time: String?,
-    val state: String,
     val image: List<String>,
     val userId: String,
     val serviceId: String,
@@ -24,13 +22,11 @@ data class RequestServiceDto(
             return RequestServiceDto(
                 id = id,
                 title = data["title"] as? String ?: "",
-                serviceType = data["serviceType"] as? String ?: "",
                 description = data["description"] as? String ?: "",
                 governorateId = (data["governorateId"] as? Number)?.toInt() ?: 0,
                 cityId = (data["cityId"] as? Number)?.toInt() ?: 0,
                 locationDetails = data["locationDetails"] as? String ?: "",
                 time = data["time"] as? String,
-                state = data["state"] as? String ?: "",
                 image = (data["image"] as? List<*>)?.mapNotNull { it as? String } ?: emptyList(),
                 userId = data["userId"] as? String ?: "",
                 serviceId = data["serviceId"] as? String ?: "",
@@ -44,7 +40,6 @@ data class RequestServiceDto(
     fun toJson(): Map<String, Any> {
         val map = mutableMapOf(
             "title" to title,
-            "serviceType" to serviceType,
             "description" to description,
             "governorateId" to governorateId,
             "cityId" to cityId,
@@ -52,7 +47,6 @@ data class RequestServiceDto(
             "image" to image,
             "userId" to userId,
             "serviceId" to serviceId,
-            "state" to state,
             "createdAt" to createdAt
         )
         if (selectedCraftsmanId != null) {

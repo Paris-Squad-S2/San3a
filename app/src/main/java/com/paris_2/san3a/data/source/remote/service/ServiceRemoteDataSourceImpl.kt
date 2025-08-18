@@ -19,6 +19,13 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
+    override suspend fun getServiceById(serviceId: String): ServiceDto? {
+        return fireStoreService.getDoc(
+            path = "$SERVICES_COLLECTION/$serviceId",
+            fromJson = ServiceDto::fromJson
+        )
+    }
+
     override suspend fun requestService(requestedServiceDto: RequestServiceDto): String {
         return fireStoreService.addToCollection(
             path = SERVICE_REQUESTS_COLLECTION,

@@ -3,10 +3,11 @@ package com.paris_2.san3a.presentation.screen.requestDetails.customer
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
-import com.paris_2.san3a.domain.entity.Notification
+import com.paris_2.san3a.domain.entity.NotificationToSend
 import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.GetServiceByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
@@ -17,7 +18,6 @@ import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toOfferUiS
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toRequestOfferUiState
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toRequestServiceUIState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 
@@ -28,6 +28,7 @@ class CustomerRequestDetailsRequestDetailsViewModel(
     private val addNotificationUseCase: AddNotificationUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
+    private val getServiceByIdUseCase: GetServiceByIdUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val createChatUseCase: CreateChatUseCase,
     savedStateHandle: SavedStateHandle
@@ -64,11 +65,37 @@ class CustomerRequestDetailsRequestDetailsViewModel(
                         ),
                     )
                 )
+                getServiceDetails(request.serviceId)
             },
             onError = {
                 updateState(
                     screenState.value.copy(
                         error = it.message ?: "An error occurred",
+                    )
+                )
+            }
+        )
+    }
+
+    private fun getServiceDetails(serviceId: String) {
+        tryToExecute(
+            execute = { getServiceByIdUseCase(serviceId) },
+            onSuccess = { service ->
+                updateState(
+                    screenState.value.copy(
+                        uiState = screenState.value.uiState.copy(
+                            request = screenState.value.uiState.request.copy(
+                                serviceType = service?.title ?: "Unknown Service",
+                                serviceImageUri = service?.imageUrl.orEmpty(),
+                            )
+                        )
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while loading service details",
                     )
                 )
             }
@@ -186,12 +213,16 @@ class CustomerRequestDetailsRequestDetailsViewModel(
             },
             onSuccess = {
                 addNotificationUseCase(
-                    Notification(
-                        id = "",
-                        title = "New Offer Accepted",
-                        caption = "Your offer for request '${screenState.value.uiState.request.title}' has been accepted.",
-                        date = getCurrentDateTime(),
-                        userId = craftsmanId
+                    screenState.value.uiState.request.userId,
+                    NotificationToSend(
+                        title = mapOf(
+                            "en" to "New Offer Accepted",
+                            "ar" to "تم قبول عرض جديد"
+                        ),
+                        caption = mapOf(
+                            "en" to "Your offer for request '${screenState.value.uiState.request.title}' has been accepted.",
+                            "ar" to "تم قبول عرضك للطلب '${screenState.value.uiState.request.title}'"
+                        ),
                     )
                 )
             },

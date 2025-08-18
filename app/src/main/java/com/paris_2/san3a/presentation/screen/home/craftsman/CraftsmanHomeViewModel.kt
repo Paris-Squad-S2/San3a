@@ -173,7 +173,8 @@ class CraftsmanHomeViewModel(
                             governorate?.name,
                             city?.name
                         ).joinToString(", "),
-                        imageUrl = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.imageUrl.orEmpty()
+                        imageUrl = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.title.orEmpty()
                     )
                 }.also { mappedJobs ->
                     updateState(
@@ -239,7 +240,8 @@ class CraftsmanHomeViewModel(
                             governorate?.name,
                             city?.name
                         ).joinToString(", "),
-                        imageUrl = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.imageUrl.orEmpty()
+                        imageUrl = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.title.orEmpty()
                     )
                 }.also { mappedJobs ->
                     val services = screenState.value.craftsmanHomeUiState.userServices.keys.toList()

@@ -3,6 +3,8 @@ package com.paris_2.san3a.presentation.screen.home.customer
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.domain.entity.RequestService
+import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
@@ -17,6 +19,7 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -280,18 +283,6 @@ class CustomerHomeViewModel(
             return
         }
 
-        val request = RequestServiceUiState(
-            serviceType = screenState.value.bottomSheetUiState.bottomSheetService?.title.orEmpty(), //TODO: replace it with id
-            title = screenState.value.bottomSheetUiState.bottomSheetSubtitle,
-            description = screenState.value.bottomSheetUiState.bottomSheetDescription,
-            governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId
-                ?: 0,
-            cityId = screenState.value.bottomSheetUiState.bottomSheetSelectedCityId ?: 0,
-            locationDetails = screenState.value.bottomSheetUiState.bottomSheetAddressDetails,
-            image = screenState.value.bottomSheetUiState.bottomSheetImages,
-            userId = screenState.value.customerUiState.id,
-            serviceId = screenState.value.bottomSheetUiState.bottomSheetServiceId,
-        )
         tryToExecute(
             execute = {
                 updateState(
@@ -299,7 +290,24 @@ class CustomerHomeViewModel(
                         buttonSheetState = AppButtonState.Loading
                     )
                 )
-                requestServicesUseCase(request.toRequestService())
+                requestServicesUseCase(
+                    RequestService(
+                        id = "",
+                        title = screenState.value.bottomSheetUiState.bottomSheetSubtitle,
+                        description = screenState.value.bottomSheetUiState.bottomSheetDescription,
+                        governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId
+                            ?: 0,
+                        cityId = screenState.value.bottomSheetUiState.bottomSheetSelectedCityId
+                            ?: 0,
+                        locationDetails = screenState.value.bottomSheetUiState.bottomSheetAddressDetails,
+                        image = screenState.value.bottomSheetUiState.bottomSheetImages,
+                        userId = screenState.value.customerUiState.id,
+                        selectedCraftsmanId = null,
+                        time = getCurrentDateTime(),
+                        requestStatus = RequestStatus.ONGOING,
+                        serviceId = screenState.value.bottomSheetUiState.bottomSheetServiceId
+                    )
+                )
             },
             onSuccess = {
                 updateState(
@@ -309,11 +317,10 @@ class CustomerHomeViewModel(
                         ),
                         buttonSheetState = AppButtonState.Enable,
                         showSnackBarSuccess = true,
-
                         )
                 )
                 hideSnackBar()
-                updateNumOfRequests(request.serviceId)
+                updateNumOfRequests(screenState.value.bottomSheetUiState.bottomSheetServiceId)
             },
             onError = {
                 updateState(

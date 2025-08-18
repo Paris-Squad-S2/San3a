@@ -38,22 +38,14 @@ fun RequestInfoSection(
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
+            AsyncImage(
                 modifier = Modifier
                     .size(48.dp)
-                    .clip(RoundedCornerShape(Theme.radius.full))
-                    .background(Theme.colors.additional.primary.blue.copy(alpha = 0.08f))
-                    .padding(8.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_waterdrops_bold), //TODO
-                    contentDescription = "",
-                    tint = Theme.colors.additional.primary.blue,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(24.dp),
-                )
-            }
+                    .clip(RoundedCornerShape(Theme.radius.extraLarge))
+                    .padding(8.dp),
+                model = request.serviceImageUri,
+                contentDescription = null
+            )
             Column(
                 modifier = Modifier
                     .padding(horizontal = 12.dp, vertical = 4.dp)

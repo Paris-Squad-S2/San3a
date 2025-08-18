@@ -3,10 +3,11 @@ package com.paris_2.san3a.presentation.screen.requestDetails.craftsman
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
-import com.paris_2.san3a.domain.entity.Notification
+import com.paris_2.san3a.domain.entity.NotificationToSend
 import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.GetServiceByIdUseCase
 import com.paris_2.san3a.domain.usecase.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.IncrementJobsDoneForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.UpdateEarningsForCraftsmanUseCase
@@ -18,7 +19,6 @@ import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseC
 import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.LocalDate
@@ -33,6 +33,7 @@ class CraftsmanRequestDetailsViewModel(
     private val addNotificationUseCase: AddNotificationUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
+    private val getServiceByIdUseCase: GetServiceByIdUseCase,
     private val incrementJobsDoneForCraftsmanUseCase: IncrementJobsDoneForCraftsmanUseCase,
     private val updateEarningsForCraftsmanUseCase: UpdateEarningsForCraftsmanUseCase,
     private val getUserUseCase: GetUserUseCase,
@@ -72,11 +73,37 @@ class CraftsmanRequestDetailsViewModel(
                     )
                 )
                 getCustomer(it.userId)
+                getServiceDetails(it.serviceId)
             },
             onError = {
                 updateState(
                     screenState.value.copy(
                         error = it.message ?: "An error occurred",
+                    )
+                )
+            }
+        )
+    }
+
+    private fun getServiceDetails(serviceId: String) {
+        tryToExecute(
+            execute = { getServiceByIdUseCase(serviceId) },
+            onSuccess = { service ->
+                updateState(
+                    screenState.value.copy(
+                        uiState = screenState.value.uiState.copy(
+                            request = screenState.value.uiState.request.copy(
+                                serviceType = service?.title ?: "Unknown Service",
+                                serviceImageUri = service?.imageUrl.orEmpty(),
+                            )
+                        )
+                    )
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while loading service details",
                     )
                 )
             }
@@ -197,12 +224,16 @@ class CraftsmanRequestDetailsViewModel(
                     )
                 )
                 addNotificationUseCase(
-                    Notification(
-                        id = "",
-                        title = "New Offer Received",
-                        caption = "You have received a new offer for your request ${screenState.value.uiState.request.title}",
-                        date = getCurrentDateTime(),
-                        userId = screenState.value.uiState.request.userId
+                    screenState.value.uiState.request.userId,
+                    NotificationToSend(
+                        title = mapOf(
+                            "en" to "New Offer Received",
+                            "ar" to "تم استلام عرض جديد"
+                        ),
+                        caption = mapOf(
+                            "en" to "You have received a new offer for your request ${screenState.value.uiState.request.title}",
+                            "ar" to "لقد استلمت عرضًا جديدًا لطلبك '${screenState.value.uiState.request.title}'"
+                        ),
                     )
                 )
             },
@@ -284,12 +315,16 @@ class CraftsmanRequestDetailsViewModel(
             onSuccess = {
                 Log.d("CraftsmanRequestDetailsVM", "Request marked as done successfully")
                 addNotificationUseCase(
-                    Notification(
-                        id = "",
-                        title = "Request Completed",
-                        caption = "Your request ${screenState.value.uiState.request.title} has been marked as done.",
-                        date = getCurrentDateTime(),
-                        userId = screenState.value.uiState.request.userId
+                    screenState.value.uiState.request.userId,
+                    NotificationToSend(
+                        title = mapOf(
+                            "en" to "Request Completed",
+                            "ar" to "تم الانتهاء من الطلب"
+                        ),
+                        caption = mapOf(
+                            "en" to "Your request ${screenState.value.uiState.request.title} has been marked as done.",
+                            "ar" to "تم الانتهاء من طلبك '${screenState.value.uiState.request.title}'"
+                        ),
                     )
                 )
                 navigateUp()

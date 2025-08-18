@@ -4,27 +4,24 @@ package com.paris_2.san3a.data.mapper
 import com.paris_2.san3a.data.source.remote.notification.dto.NotificationDto
 import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.domain.entity.Notification
-import kotlinx.datetime.LocalDateTime
+import com.paris_2.san3a.domain.entity.NotificationToSend
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-fun NotificationDto.toDomain(): Notification {
+fun NotificationDto.toDomain(language: String): Notification {
     return Notification(
         id = id,
-        title = title,
-        caption = caption,
-        date = runCatching { LocalDateTime.parse(date) }.getOrDefault(getCurrentDateTime()),
-        userId = userId
+        title = titleMap[language] ?: titleMap["en"] ?: "",
+        caption = captionMap[language] ?: captionMap["en"] ?: "",
+        dateTime = dateTime,
     )
 }
 
-fun Notification.toFirestoreDto(): NotificationDto {
+fun NotificationToSend.toFirestoreDto(): NotificationDto {
     return NotificationDto(
-        title = title,
-        caption = caption,
-        date = date.toString(),
-        userId = userId,
-        id = id
+        titleMap = title,
+        captionMap = caption,
+        dateTime = getCurrentDateTime(),
     )
 }
 
