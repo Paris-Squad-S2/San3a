@@ -5,17 +5,17 @@ import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.RequestService
-import com.paris_2.san3a.domain.entity.Stats
-import kotlinx.coroutines.flow.Flow
 import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.domain.entity.User
+import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     suspend fun addUser(phone: String)
     suspend fun saveAccountType(phone: String, accountType: AccountType)
-    suspend fun getAccountType(phone: String) : AccountType
-    suspend fun saveServices(phone: String, services:  List<String>, isCraftsman: Boolean)
-    fun getServices(phone: String, isCraftsman: Boolean) : Flow<List<Service>>
+    suspend fun getAccountType(phone: String): AccountType
+    suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean)
+    fun getServices(phone: String, isCraftsman: Boolean): Flow<List<Service>>
     suspend fun saveLocation(phone: String, location: Location)
     suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?)
     suspend fun saveWorkShowcase(phone: String, workMedia: List<Uri>?, workDescription: String)
@@ -25,20 +25,9 @@ interface UserRepository {
     suspend fun getUser(phone: String): User
     suspend fun getWorkMedia(phone: String): List<String>
     fun getStats(userId: String): Flow<Stats>
-
-    suspend fun addRatingForCraftsman(
-        userId: String,
-        craftsmanId: String,
-        rating: Float
-    )
-
+    suspend fun addRatingForCraftsman(userId: String, craftsmanId: String, rating: Float)
     fun getRatingForCraftsman(craftsmanId: String): Flow<Float>
-
-    suspend fun getCustomerRatingOnCraftsman(
-        craftsmanId: String,
-        userId: String
-    ): Float?
-
+    suspend fun getCustomerRatingOnCraftsman(craftsmanId: String, userId: String): Float?
     suspend fun updateEarningsForCraftsman(
         craftsmanId: String,
         userId: String,
@@ -46,7 +35,11 @@ interface UserRepository {
         earnings: Double
     )
 
-    suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String)
+    suspend fun incrementJobsDoneForCraftsman(
+        craftsmanId: String,
+        requestId: String,
+        userId: String
+    )
 
     fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestService>>
     suspend fun sendMessage(phoneNumber: String, message: String): Boolean

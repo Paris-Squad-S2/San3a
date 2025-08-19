@@ -4,7 +4,7 @@ import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
 import kotlinx.coroutines.flow.Flow
 
-interface HomeRepository {
+interface ServicesRepository {
     fun getAllServices(): Flow<List<Service>>
     suspend fun getServiceById(serviceId: String): Service?
     fun searchServices(query: String): Flow<List<Service>>

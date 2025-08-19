@@ -1,9 +1,9 @@
 package com.paris_2.san3a.domain.usecase
 
-import com.paris_2.san3a.domain.repository.HomeRepository
+import com.paris_2.san3a.domain.repository.ServicesRepository
 
 class GetAvailableJobsUseCase(
-    private val homeRepository: HomeRepository
+    private val servicesRepository: ServicesRepository
 ) {
-    operator fun invoke() = homeRepository.getAvailableJobs()
+    operator fun invoke() = servicesRepository.getAvailableJobs()
 }

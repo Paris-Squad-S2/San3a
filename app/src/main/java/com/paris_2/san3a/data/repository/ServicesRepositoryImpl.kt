@@ -13,7 +13,7 @@ import com.paris_2.san3a.domain.FailException
 import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
-import com.paris_2.san3a.domain.repository.HomeRepository
+import com.paris_2.san3a.domain.repository.ServicesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -26,7 +26,7 @@ class ServicesRepositoryImpl(
     private val firebaseStorageRemoteDataSource: StorageRemoteDataSource,
     private val networkConnectionChecker: NetworkConnectionChecker,
     private val localDataStore: LocalDataStore
-) : HomeRepository, BaseRepository() {
+) : ServicesRepository, BaseRepository() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAllServices(): Flow<List<Service>> {

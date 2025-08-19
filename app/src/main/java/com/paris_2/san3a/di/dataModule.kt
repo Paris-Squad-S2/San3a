@@ -28,7 +28,7 @@ import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSourceImpl
 import com.paris_2.san3a.data.source.remote.storage.FirebaseStorageDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
-import com.paris_2.san3a.domain.repository.HomeRepository
+import com.paris_2.san3a.domain.repository.ServicesRepository
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
@@ -40,7 +40,7 @@ val dataModule = module {
     singleOf(::FirebaseStorageDataSource) { bind<StorageRemoteDataSource>() }
     singleOf(::UserRemoteDataSourceImpl) { bind<UserRemoteDataSource>() }
     singleOf(::ServiceRemoteDataSourceImpl) { bind<ServiceRemoteDataSource>() }
-    singleOf(::ServicesRepositoryImpl) { bind<HomeRepository>() }
+    singleOf(::ServicesRepositoryImpl) { bind<ServicesRepository>() }
     singleOf(::MessagesRemoteDataSourceImp) { bind<MessagesRemoteDataSource>() }
     singleOf(::FirebaseStorageDataSource) { bind<StorageRemoteDataSource>() }
     singleOf(::AuthRemoteDataSourceImpl) { bind<AuthRemoteDataSource>() }

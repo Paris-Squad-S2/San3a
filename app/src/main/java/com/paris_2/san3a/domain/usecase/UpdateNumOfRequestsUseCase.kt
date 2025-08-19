@@ -1,11 +1,11 @@
 package com.paris_2.san3a.domain.usecase
 
-import com.paris_2.san3a.domain.repository.HomeRepository
+import com.paris_2.san3a.domain.repository.ServicesRepository
 
 class UpdateNumOfRequestsUseCase(
-    private val homeRepository: HomeRepository
+    private val servicesRepository: ServicesRepository
 ) {
     suspend operator fun invoke(serviceId: String) {
-        homeRepository.updateNumOfRequestService(serviceId)
+        servicesRepository.updateNumOfRequestService(serviceId)
     }
 }
