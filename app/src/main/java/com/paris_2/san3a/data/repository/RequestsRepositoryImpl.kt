@@ -1,12 +1,12 @@
 package com.paris_2.san3a.data.repository
 
-import android.util.Log
 import androidx.core.net.toUri
 import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.remote.requests.RequestRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
+import com.paris_2.san3a.data.source.remote.storage.dto.ImageDto
 import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
@@ -16,6 +16,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlin.collections.map
 
 class RequestsRepositoryImpl(
     private val requestRemoteDataSource: RequestRemoteDataSource,
@@ -129,13 +130,9 @@ class RequestsRepositoryImpl(
         safeCall(FailException("requestService")) {
             val imageUris = requestedService.image
             val imageUrls = if (imageUris.isNotEmpty()) {
-                val paths = imageUris.map { uri ->
-                    "${requestedService.title}/${uri.toUri().path?.substringAfterLast("/") ?: ""}.jpg"
-                }
-                firebaseStorageRemoteDataSource.saveImages(paths, imageUris.map { it.toUri() })
-                firebaseStorageRemoteDataSource.getImagesByPaths(
-                    paths,
-                    imageUris.map { it.toUri() })
+                val images = imageUris.toImageDto(requestedService.title)
+                firebaseStorageRemoteDataSource.saveImages(images)
+                firebaseStorageRemoteDataSource.getImagesByPaths(images)
             } else {
                 emptyList()
             }
@@ -144,15 +141,21 @@ class RequestsRepositoryImpl(
         }
     }
 
+    private fun List<String>.toImageDto(title: String): List<ImageDto> {
+        return this.map { uri ->
+            ImageDto(
+                path = "${title}/${uri.toUri().path?.substringAfterLast("/") ?: ""}.jpg",
+                uri = uri.toUri()
+            )
+        }
+    }
+
 
     override fun getAvailableJobs(): Flow<List<RequestService>> {
         validateNetworkConnection()
         return requestRemoteDataSource.getAvailableJobs()
             .map { dto -> dto.map { it.toEntity() } }
-            .catch {
-                Log.d("HomeRepositoryImpl", "Error fetching available jobs: ${it.message}")
-                throw FailException("getAvailableJobs")
-            }
+            .catch { throw FailException("getAvailableJobs failed: ${it.message ?: "Unknown error"}") }
     }
 
 }

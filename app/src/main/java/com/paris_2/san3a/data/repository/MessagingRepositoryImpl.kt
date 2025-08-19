@@ -7,10 +7,11 @@ import com.paris_2.san3a.data.mapper.toMessageList
 import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
-import com.paris_2.san3a.domain.exceptions.FailException
+import com.paris_2.san3a.data.source.remote.storage.dto.ImageDto
 import com.paris_2.san3a.domain.entity.Chat
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
+import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.repository.MessagingRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -56,15 +57,24 @@ class MessagingRepositoryImpl(
         chatId: String,
         receiverId: String
     ): List<String> {
-        val uris = messageContent.uris.map { it.toUri() }
-        val paths = uris.mapIndexed { index, uri ->
-            "user${receiverId}/chat${chatId}/${uri.lastPathSegment ?: "image_$index"}.jpg"
+        val images = messageContent.uris.mapIndexed { index, stringUri ->
+            createImageDto(stringUri, receiverId, chatId, index)
         }
-        storageRemoteDataSource.saveImages(
-            paths = paths,
-            uris = uris
+        storageRemoteDataSource.saveImages(images)
+        return storageRemoteDataSource.getImagesByPaths(images)
+    }
+
+    private fun createImageDto(
+        stringUri: String,
+        receiverId: String,
+        chatId: String,
+        index: Int
+    ): ImageDto {
+        val uri = stringUri.toUri()
+        return ImageDto(
+            path = "user${receiverId}/chat${chatId}/${uri.lastPathSegment ?: "image_$index"}.jpg",
+            uri = uri
         )
-        return storageRemoteDataSource.getImagesByPaths(paths, uris)
     }
 
     override suspend fun markMessagesAsSeen(chatId: String, userId: String) {

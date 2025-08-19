@@ -8,6 +8,7 @@ import com.paris_2.san3a.data.service.auth.WhatsAppMessage
 import com.paris_2.san3a.data.source.local.userPreferences.UserPreferencesLocalDataStore
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
+import com.paris_2.san3a.data.source.remote.storage.dto.ImageDto
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
 import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.entity.AccountSetupStep
@@ -18,6 +19,8 @@ import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -80,8 +83,8 @@ class UserRepositoryImpl(
             val profileUrl = profileUri?.let { uri ->
                 val path = "$PROFILE_IMAGE_PATH/$phone.jpg"
                 Log.d("UserRepositoryImpl", "savePersonalInfo: $path")
-                storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                storageRemoteDataSource.getImagesByPaths(listOf(path), listOf(uri)).firstOrNull()
+                storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
+                storageRemoteDataSource.getImagesByPaths(listOf(ImageDto(path, uri))).firstOrNull()
             }
             userRemoteDataSource.updatePersonalInfo(phone, fullName, profileUrl)
         }
@@ -93,10 +96,12 @@ class UserRepositoryImpl(
         workDescription: String
     ) =
         safeCall(FailException("Failed to save work showcase")) {
-            val mediaUrls = workMedia?.mapIndexedNotNull { index, uri ->
-                val path = "$WORK_SHOWCASE_PATH/$phone/media_$index.jpg"
-                storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                storageRemoteDataSource.getImagesByPaths(listOf(path), listOf(uri)).firstOrNull()
+
+            val mediaUrls = workMedia?.mapIndexed { index, uri ->
+                ImageDto("$WORK_SHOWCASE_PATH/$phone/media_$index.jpg", uri)
+            }?.let { imageDtos ->
+                storageRemoteDataSource.saveImages(imageDtos)
+                storageRemoteDataSource.getImagesByPaths(imageDtos)
             }
             userRemoteDataSource.updateWorkShowcase(phone, mediaUrls, workDescription)
         }
@@ -183,20 +188,25 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) {
+    override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) = coroutineScope {
         validateNetworkConnection()
         safeCall(FailException("Failed to upload national ID images")) {
-            val frontUrl = frontUri?.let { uri ->
-                val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
-                storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                storageRemoteDataSource.getImagesByPaths(listOf(path), listOf(uri)).firstOrNull()
+            val frontDeferred = frontUri?.let { uri ->
+                async {
+                    val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
+                    storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
+                    storageRemoteDataSource.getImagesByPaths(listOf(ImageDto(path, uri))).firstOrNull()
+                }
             }
-
-            val backUrl = backUri?.let { uri ->
-                val path = "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME"
-                storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                storageRemoteDataSource.getImagesByPaths(listOf(path), listOf(uri)).firstOrNull()
+            val backDeferred = backUri?.let { uri ->
+                async {
+                    val path = "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME"
+                    storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
+                    storageRemoteDataSource.getImagesByPaths(listOf(ImageDto(path, uri))).firstOrNull()
+                }
             }
+            val frontUrl = frontDeferred?.await()
+            val backUrl = backDeferred?.await()
             userRemoteDataSource.updateNationalIdImages(phone, frontUrl, backUrl)
         }
     }
