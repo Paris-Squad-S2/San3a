@@ -14,18 +14,20 @@ import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.City
 import com.paris_2.san3a.domain.entity.Governorate
 import com.paris_2.san3a.domain.entity.Service
-import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.domain.entity.User
+import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
+import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
+import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
+import kotlinx.coroutines.flow.Flow
 
 class AccountViewModel(
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
@@ -62,48 +64,39 @@ class AccountViewModel(
     private fun getPhoneNumber() {
         tryToExecute(
             execute = { getPhoneNumberUseCase() },
-            onSuccess = { phoneNumber ->
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            phoneNumber = phoneNumber
-                        )
-                    )
-                )
-                loadUserAndGoToLastStep()
-                getUserSelectedServices()
-                getWorkMedia()
-            },
-            onError = { errorMessage ->
-                updateState(
-                    screenState.value.copy(
-                        errorMassage = errorMessage.message,
-                    )
-                )
-            },
+            onSuccess = ::onGetPhoneNumberSuccess,
+            onError = ::onError,
         )
+    }
+
+    private fun onGetPhoneNumberSuccess(phoneNumber: String) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    phoneNumber = phoneNumber
+                )
+            )
+        )
+        loadUserAndGoToLastStep()
+        getUserSelectedServices()
+        getWorkMedia()
     }
 
     private fun getWorkMedia() {
         tryToExecute(
             execute = { setUpAccountUseCase.getWorkMedia(screenState.value.accountUiState.phoneNumber) },
-            onSuccess = { workMedia ->
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            workImagesUris = workMedia.map { it.toUri() }
-                        )
-                    )
+            onSuccess = ::onGetWorkMediaSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onGetWorkMediaSuccess(workMedia: List<String>) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    workImagesUris = workMedia.map { it.toUri() }
                 )
-            },
-            onError = { errorMessage ->
-                updateState(
-                    screenState.value.copy(
-                        errorMassage = errorMessage.message,
-                        isLoading = false
-                    )
-                )
-            }
+            )
         )
     }
 
@@ -115,122 +108,101 @@ class AccountViewModel(
                     isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN
                 )
             },
-            onEach = { services ->
-                val serviceUiStates = mapServiceToUiState(services ?: emptyList())
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            serviceUiState = screenState.value.accountUiState.serviceUiState.map { service ->
-                                service.copy(isSelected = serviceUiStates.any { service.id == it.id })
-                            },
-                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                serviceButtonState = if (serviceUiStates.isNotEmpty()) AppButtonState.Enable else AppButtonState.Disabled
+            onEach = ::onGetUserSelectedServicesEach,
+            onError = ::onError
+        )
+    }
 
-                            )
-                        )
+    private fun onGetUserSelectedServicesEach(services: List<Service>?) {
+        val serviceUiStates = mapServiceToUiState(services ?: emptyList())
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    serviceUiState = screenState.value.accountUiState.serviceUiState.map { service ->
+                        service.copy(isSelected = serviceUiStates.any { service.id == it.id })
+                    },
+                    accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                        serviceButtonState = if (serviceUiStates.isNotEmpty()) AppButtonState.Enable
+                        else AppButtonState.Disabled
                     )
                 )
-            },
-            onError = { errorMessage ->
-                updateState(
-                    screenState.value.copy(
-                        errorMassage = errorMessage.message,
-                        isLoading = false,
-                    )
-                )
-            }
+            )
         )
     }
 
     private fun loadUserAndGoToLastStep() {
         tryToExecute(
             execute = { getUserUseCase(screenState.value.accountUiState.phoneNumber) },
-            onSuccess = { user ->
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            userType = UserType.valueOf(user.accountType.name),
-                            locationUiState = user.location.toUiState(
-                                getLocationInfoUseCase.getGovernorateById(user.location.governmentId),
-                                getLocationInfoUseCase.getCityById(user.location.cityId)
-                            ),
-                            customerName = user.fullName,
-                            customerProfilePhotoUri = if (user.profilePhoto.isNotBlank()) user.profilePhoto.toUri() else null,
-                            frontOfNationalIdUri = if (user.nationalIdFrontImage.isNotBlank()) user.nationalIdFrontImage.toUri() else null,
-                            backOfNationalIdUri = if (user.nationalIdBackImage.isNotBlank()) user.nationalIdBackImage.toUri() else null,
-                            workDescription = user.workDescription,
-                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                userTypeButtonState = if (user.accountType.name.isNotBlank()) AppButtonState.Enable else AppButtonState.Disabled,
-                                profileButtonState = if (user.fullName.isNotBlank()) AppButtonState.Enable else AppButtonState.Disabled,
-                                locationButtonState = if (user.location.governmentId == 0) AppButtonState.Enable else AppButtonState.Disabled,
-                                verifyIdentityButtonState = if (user.nationalIdBackImage.isNotBlank() && user.nationalIdFrontImage.isNotEmpty()) AppButtonState.Enable else AppButtonState.Disabled,
-                            )
-                        )
-                    )
-                )
-                _currentScreen.intValue = when (accountSetupStep) {
-                    AccountSetupStep.ACCOUNT_TYPE -> 0
-                    AccountSetupStep.SERVICES -> 1
-                    AccountSetupStep.PERSONAL_INFO -> 2
-                    AccountSetupStep.LOCATION, AccountSetupStep.WORK_SHOWCASE -> 3
-                    AccountSetupStep.UPLOAD_NATIONAL_ID -> 4
-                    AccountSetupStep.COMPLETED -> 5
-                }
-            },
-            onError = { errorMessage ->
-                updateState(
-                    screenState.value.copy(
-                        errorMassage = errorMessage.message,
-                        isLoading = false
-                    )
-                )
-            }
+            onSuccess = ::onLoadUserAndGoToLastStepSuccess,
+            onError = ::onError
         )
+    }
+
+    private suspend fun onLoadUserAndGoToLastStepSuccess(user: User) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    userType = UserType.valueOf(user.accountType.name),
+                    locationUiState = user.location.toUiState(
+                        getLocationInfoUseCase.getGovernorateById(user.location.governmentId),
+                        getLocationInfoUseCase.getCityById(user.location.cityId)
+                    ),
+                    customerName = user.fullName,
+                    customerProfilePhotoUri = if (user.profilePhoto.isNotBlank()) user.profilePhoto.toUri() else null,
+                    frontOfNationalIdUri = if (user.nationalIdFrontImage.isNotBlank()) user.nationalIdFrontImage.toUri() else null,
+                    backOfNationalIdUri = if (user.nationalIdBackImage.isNotBlank()) user.nationalIdBackImage.toUri() else null,
+                    workDescription = user.workDescription,
+                    accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                        userTypeButtonState = if (user.accountType.name.isNotBlank()) AppButtonState.Enable else AppButtonState.Disabled,
+                        profileButtonState = if (user.fullName.isNotBlank()) AppButtonState.Enable else AppButtonState.Disabled,
+                        locationButtonState = if (user.location.governmentId == 0) AppButtonState.Enable else AppButtonState.Disabled,
+                        verifyIdentityButtonState = if (user.nationalIdBackImage.isNotBlank() && user.nationalIdFrontImage.isNotEmpty()) AppButtonState.Enable else AppButtonState.Disabled,
+                    )
+                )
+            )
+        )
+        getAccountSetupStep()
+    }
+
+    private fun getAccountSetupStep() {
+        _currentScreen.intValue = when (accountSetupStep) {
+            AccountSetupStep.ACCOUNT_TYPE -> 0
+            AccountSetupStep.SERVICES -> 1
+            AccountSetupStep.PERSONAL_INFO -> 2
+            AccountSetupStep.LOCATION, AccountSetupStep.WORK_SHOWCASE -> 3
+            AccountSetupStep.UPLOAD_NATIONAL_ID -> 4
+            AccountSetupStep.COMPLETED -> 5
+        }
     }
 
     private fun getAllServices() {
         updateState(screenState.value.copy(isLoading = true))
-
         tryToExecute(
             execute = { getAllServicesUseCase() },
-            onSuccess = { services ->
-                services.collect {
-                    val serviceUiStates = mapServiceToUiState(it)
-                    updateState(
-                        screenState.value.copy(
-                            accountUiState = screenState.value.accountUiState.copy(
-                                serviceUiState = serviceUiStates
-                            ),
-                            isLoading = false,
-                            errorMassage = null
-                        )
-                    )
-                }
-
-            },
-            onError = { errorMessage ->
-                updateState(
-                    screenState.value.copy(
-                        errorMassage = errorMessage.message,
-                        isLoading = false
-                    )
-                )
-            },
+            onSuccess = ::onGetAllServicesSuccess,
+            onError = ::onError,
         )
+    }
+
+    private suspend fun onGetAllServicesSuccess(services: Flow<List<Service>>) {
+        services.collect {
+            val serviceUiStates = mapServiceToUiState(it)
+            updateState(
+                screenState.value.copy(
+                    accountUiState = screenState.value.accountUiState.copy(
+                        serviceUiState = serviceUiStates
+                    ),
+                    isLoading = false,
+                    errorMassage = null
+                )
+            )
+        }
     }
 
     override fun onToggleServiceClicked(serviceId: String) {
         val updatedServices = screenState.value.accountUiState.serviceUiState.map {
             if (it.id == serviceId) {
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                serviceButtonState = AppButtonState.Enable
-                            )
-                        )
-                    )
-                )
+                changeAppButtonStateInService(AppButtonState.Enable)
                 it.copy(isSelected = !it.isSelected)
             } else {
                 it
@@ -245,30 +217,13 @@ class AccountViewModel(
         )
 
         if (screenState.value.accountUiState.serviceUiState.any { it.isSelected }) {
-            updateState(
-                screenState.value.copy(
-                    accountUiState = screenState.value.accountUiState.copy(
-                        accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                            serviceButtonState = AppButtonState.Enable
-                        )
-                    )
-                )
-            )
+            changeAppButtonStateInService(AppButtonState.Enable)
         } else {
-            updateState(
-                screenState.value.copy(
-                    accountUiState = screenState.value.accountUiState.copy(
-                        accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                            serviceButtonState = AppButtonState.Disabled
-                        )
-                    )
-                )
-            )
+            changeAppButtonStateInService(AppButtonState.Disabled)
         }
     }
 
     override fun onUserTypeSelected(type: UserType) {
-        // need to observe the state of current item
         Log.d("AccountSetup", "onUserTypeSelected: ${type.name}")
         val updatedUiState = screenState.value.copy(
             accountUiState = screenState.value.accountUiState.copy(
@@ -290,25 +245,9 @@ class AccountViewModel(
             )
         )
         if (screenState.value.accountUiState.customerName.isNotBlank()) {
-            updateState(
-                screenState.value.copy(
-                    accountUiState = screenState.value.accountUiState.copy(
-                        accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                            profileButtonState = AppButtonState.Enable
-                        )
-                    )
-                )
-            )
+            changeAppButtonStateInProfile(AppButtonState.Enable)
         } else {
-            updateState(
-                screenState.value.copy(
-                    accountUiState = screenState.value.accountUiState.copy(
-                        accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                            profileButtonState = AppButtonState.Disabled
-                        )
-                    )
-                )
-            )
+            changeAppButtonStateInProfile(AppButtonState.Disabled)
         }
     }
 
@@ -341,15 +280,7 @@ class AccountViewModel(
             )
         )
         if (screenState.value.accountUiState.backOfNationalIdUri != null)
-            updateState(
-                screenState.value.copy(
-                    accountUiState = screenState.value.accountUiState.copy(
-                        accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                            verifyIdentityButtonState = AppButtonState.Enable
-                        )
-                    )
-                )
-            )
+            changeAppButtonStateInVerifyIdentity(AppButtonState.Enable)
     }
 
     fun onBackNationalIdSelected(uri: Uri) {
@@ -361,19 +292,10 @@ class AccountViewModel(
             )
         )
         if (screenState.value.accountUiState.frontOfNationalIdUri != null)
-            updateState(
-                screenState.value.copy(
-                    accountUiState = screenState.value.accountUiState.copy(
-                        accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                            verifyIdentityButtonState = AppButtonState.Enable
-                        )
-                    )
-                )
-            )
+            changeAppButtonStateInVerifyIdentity(AppButtonState.Enable)
     }
 
     fun onWorkImageSelected(uris: List<Uri>) {
-
         val lastWorkImagesUris = screenState.value.accountUiState.workImagesUris
 
         val filteredUris = uris.filter { uri ->
@@ -391,17 +313,8 @@ class AccountViewModel(
         )
 
         if (!screenState.value.accountUiState.workImagesUris.isNullOrEmpty()) {
-            updateState(
-                screenState.value.copy(
-                    accountUiState = screenState.value.accountUiState.copy(
-                        accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                            workShowCaseButtonState = AppButtonState.Enable
-                        )
-                    )
-                )
-            )
+            changeAppButtonStateInWorkShowCase(AppButtonState.Enable)
         }
-
     }
 
     override fun onDeleteWorkImageClicked(uri: Uri) {
@@ -413,15 +326,7 @@ class AccountViewModel(
             )
         )
         if (screenState.value.accountUiState.workImagesUris.isNullOrEmpty()) {
-            updateState(
-                screenState.value.copy(
-                    accountUiState = screenState.value.accountUiState.copy(
-                        accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                            workShowCaseButtonState = AppButtonState.Disabled
-                        )
-                    )
-                )
-            )
+            changeAppButtonStateInWorkShowCase(AppButtonState.Disabled)
         }
     }
 
@@ -432,52 +337,20 @@ class AccountViewModel(
         when (_currentScreen.intValue) {
             1 -> {
                 if (screenState.value.accountUiState.serviceUiState.isNotEmpty())
-                    updateState(
-                        screenState.value.copy(
-                            accountUiState = screenState.value.accountUiState.copy(
-                                accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                    serviceButtonState = AppButtonState.Enable
-                                )
-                            )
-                        )
-                    )
+                    changeAppButtonStateInService(AppButtonState.Enable)
             }
 
             2 -> {
                 if (screenState.value.accountUiState.customerName.isBlank()) {
-                    updateState(
-                        screenState.value.copy(
-                            accountUiState = screenState.value.accountUiState.copy(
-                                accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                    profileButtonState = AppButtonState.Disabled
-                                )
-                            )
-                        )
-                    )
+                    changeAppButtonStateInProfile(AppButtonState.Disabled)
                 } else {
-                    updateState(
-                        screenState.value.copy(
-                            accountUiState = screenState.value.accountUiState.copy(
-                                accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                    profileButtonState = AppButtonState.Enable
-                                )
-                            )
-                        )
-                    )
+                    changeAppButtonStateInProfile(AppButtonState.Enable)
                 }
             }
 
             3 -> {
                 if (!screenState.value.accountUiState.workImagesUris.isNullOrEmpty()) {
-                    updateState(
-                        screenState.value.copy(
-                            accountUiState = screenState.value.accountUiState.copy(
-                                accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                    workShowCaseButtonState = AppButtonState.Enable
-                                )
-                            )
-                        )
-                    )
+                    changeAppButtonStateInWorkShowCase(AppButtonState.Enable)
                 }
             }
 
@@ -495,7 +368,6 @@ class AccountViewModel(
             }
 
             2 -> UiText.StringResource(R.string.personalize_your_profile)
-
             3 -> when (screenState.value.accountUiState.userType) {
                 UserType.CUSTOMER -> UiText.StringResource(R.string.where_are_you_located)
                 UserType.CRAFTSMAN -> UiText.StringResource(R.string.show_us_your_work)
@@ -503,7 +375,6 @@ class AccountViewModel(
             }
 
             4 -> UiText.StringResource(R.string.verify_your_identity_optional)
-
             else -> UiText.DynamicString("")
         }
     }
@@ -518,7 +389,6 @@ class AccountViewModel(
             }
 
             2 -> UiText.StringResource(R.string.use_to_personalize_experience_skip)
-
             3 -> when (screenState.value.accountUiState.userType) {
                 UserType.CUSTOMER -> UiText.StringResource(R.string.location_improves_accuracy_update_later)
                 UserType.CRAFTSMAN -> UiText.StringResource(R.string.add_photos_or_video_build_trust)
@@ -526,7 +396,6 @@ class AccountViewModel(
             }
 
             4 -> UiText.StringResource(R.string.upload_id_build_trust_get_jobs)
-
             else -> UiText.DynamicString("")
         }
     }
@@ -546,49 +415,37 @@ class AccountViewModel(
     private fun getGovernments() {
         tryToExecute(
             execute = { getLocationInfoUseCase.getGovernments() },
-            onSuccess = { governments ->
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            governments = governments
-                        )
-                    )
+            onSuccess = ::onGetGovernmentsSuccess,
+            onError = ::onError,
+        )
+    }
+
+    private fun onGetGovernmentsSuccess(governments: List<Governorate>) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    governments = governments
                 )
-            },
-            onError = { errorMessage ->
-                updateState(
-                    screenState.value.copy(
-                        errorMassage = errorMessage.message,
-                        isLoading = false
-                    )
-                )
-            },
+            )
         )
     }
 
     fun getCities(governorateId: Int) {
         tryToExecute(
-            execute = {
-                getLocationInfoUseCase.getCities(governorateId)
-            },
-            onSuccess = { cities ->
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            cities = cities,
-                            locationType = LocationBottomSheetContentType.CITY
-                        )
-                    )
+            execute = { getLocationInfoUseCase.getCities(governorateId) },
+            onSuccess = ::onGetCitiesSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onGetCitiesSuccess(cities: List<City>) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    cities = cities,
+                    locationType = LocationBottomSheetContentType.CITY
                 )
-            },
-            onError = { errorMessage ->
-                updateState(
-                    screenState.value.copy(
-                        errorMassage = errorMessage.message,
-                        isLoading = false
-                    )
-                )
-            }
+            )
         )
     }
 
@@ -679,8 +536,6 @@ class AccountViewModel(
         )
     }
 
-
-    // Next Button actions
     override fun onUserTypeButtonClicked() {
         tryToExecute(
             execute = {
@@ -718,9 +573,7 @@ class AccountViewModel(
                     phone = screenState.value.accountUiState.phoneNumber,
                     step = AccountSetupStep.SERVICES
                 )
-                if (_currentScreen.intValue < stepsCount - 1) {
-                    _currentScreen.intValue++
-                }
+                incrementCurrentScreen()
             },
             onError = {
                 updateState(
@@ -740,15 +593,7 @@ class AccountViewModel(
     override fun onServiceButtonClicked() {
         tryToExecute(
             execute = {
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                serviceButtonState = AppButtonState.Loading
-                            )
-                        )
-                    )
-                )
+                changeAppButtonStateInService(AppButtonState.Loading)
                 val selectedServices =
                     screenState.value.accountUiState.serviceUiState.filter { it.isSelected }
                 val isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN
@@ -764,9 +609,7 @@ class AccountViewModel(
                     phone = screenState.value.accountUiState.phoneNumber,
                     step = AccountSetupStep.PERSONAL_INFO
                 )
-                if (_currentScreen.intValue < stepsCount - 1) {
-                    _currentScreen.intValue++
-                }
+                incrementCurrentScreen()
             },
             onError = {
                 updateState(
@@ -790,25 +633,9 @@ class AccountViewModel(
                 val profilePhotoUri =
                     screenState.value.accountUiState.customerProfilePhotoUri
                 if (fullName.isNotBlank()) {
-                    updateState(
-                        screenState.value.copy(
-                            accountUiState = screenState.value.accountUiState.copy(
-                                accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                    profileButtonState = AppButtonState.Enable
-                                )
-                            )
-                        )
-                    )
+                    changeAppButtonStateInProfile(AppButtonState.Enable)
                 }
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                profileButtonState = AppButtonState.Loading
-                            )
-                        )
-                    )
-                )
+                changeAppButtonStateInProfile(AppButtonState.Loading)
                 setUpAccountUseCase.savePersonalInfo(
                     phone = screenState.value.accountUiState.phoneNumber,
                     fullName,
@@ -819,15 +646,7 @@ class AccountViewModel(
             onSuccess = {
                 if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
                     if (!screenState.value.accountUiState.workImagesUris.isNullOrEmpty()) {
-                        updateState(
-                            screenState.value.copy(
-                                accountUiState = screenState.value.accountUiState.copy(
-                                    accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                        workShowCaseButtonState = AppButtonState.Enable
-                                    )
-                                )
-                            )
-                        )
+                        changeAppButtonStateInWorkShowCase(AppButtonState.Enable)
                     }
                     setUpAccountUseCase.updateUserProgress(
                         phone = screenState.value.accountUiState.phoneNumber,
@@ -839,9 +658,7 @@ class AccountViewModel(
                         step = AccountSetupStep.LOCATION
                     )
                 }
-                if (_currentScreen.intValue < stepsCount - 1) {
-                    _currentScreen.intValue++
-                }
+                incrementCurrentScreen()
             },
             onError = {
                 updateState(
@@ -886,12 +703,9 @@ class AccountViewModel(
                         .setPopUpTo(
                             Destinations.Account(accountSetupStep),
                             inclusive = true
-                        )
-                        .build()
+                        ).build()
                 )
-                if (_currentScreen.intValue < stepsCount - 1) {
-                    _currentScreen.intValue++
-                }
+                incrementCurrentScreen()
             },
             onError = {
                 updateState(
@@ -911,15 +725,7 @@ class AccountViewModel(
     override fun onShowWorkButtonClicked() {
         tryToExecute(
             execute = {
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                workShowCaseButtonState = AppButtonState.Loading
-                            )
-                        )
-                    )
-                )
+                changeAppButtonStateInWorkShowCase(AppButtonState.Loading)
                 setUpAccountUseCase.saveWorkShowcase(
                     phone = screenState.value.accountUiState.phoneNumber,
                     workMedia = screenState.value.accountUiState.workImagesUris,
@@ -931,9 +737,7 @@ class AccountViewModel(
                     phone = screenState.value.accountUiState.phoneNumber,
                     step = AccountSetupStep.UPLOAD_NATIONAL_ID
                 )
-                if (_currentScreen.intValue < stepsCount - 1) {
-                    _currentScreen.intValue++
-                }
+                incrementCurrentScreen()
             },
             onError = {
                 updateState(
@@ -953,30 +757,19 @@ class AccountViewModel(
     override fun onVerifyIdentityButtonClicked() {
         tryToExecute(
             execute = {
-                updateState(
-                    screenState.value.copy(
-                        accountUiState = screenState.value.accountUiState.copy(
-                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                                verifyIdentityButtonState = AppButtonState.Loading
-                            )
-                        )
-                    )
-                )
-
+                changeAppButtonStateInVerifyIdentity(AppButtonState.Loading)
                 setUpAccountUseCase.uploadNationalIdImages(
                     phone = screenState.value.accountUiState.phoneNumber,
                     screenState.value.accountUiState.frontOfNationalIdUri,
                     screenState.value.accountUiState.backOfNationalIdUri
                 )
-
                 navigate(
                     Destinations.CraftManGraph,
                     navOptions = NavOptions.Builder()
                         .setPopUpTo(
                             Destinations.Account(accountSetupStep),
                             inclusive = true
-                        )
-                        .build()
+                        ).build()
                 )
             },
             onSuccess = {
@@ -990,12 +783,9 @@ class AccountViewModel(
                         .setPopUpTo(
                             Destinations.Account(accountSetupStep),
                             inclusive = true
-                        )
-                        .build()
+                        ).build()
                 )
-                if (_currentScreen.intValue < stepsCount - 1) {
-                    _currentScreen.intValue++
-                }
+                incrementCurrentScreen()
             },
             onError = {
                 updateState(
@@ -1012,4 +802,66 @@ class AccountViewModel(
         )
     }
 
+    private fun incrementCurrentScreen() {
+        if (_currentScreen.intValue < stepsCount - 1) {
+            _currentScreen.intValue++
+        }
+    }
+
+    private fun onError(throwable: Throwable) {
+        updateState(
+            screenState.value.copy(
+                errorMassage = throwable.message,
+                isLoading = false
+            )
+        )
+    }
+
+    private fun changeAppButtonStateInService(appButtonState: AppButtonState) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                        serviceButtonState = appButtonState
+                    )
+                )
+            )
+        )
+    }
+
+    private fun changeAppButtonStateInProfile(appButtonState: AppButtonState) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                        profileButtonState = appButtonState
+                    )
+                )
+            )
+        )
+    }
+
+    private fun changeAppButtonStateInVerifyIdentity(appButtonState: AppButtonState) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                        verifyIdentityButtonState = appButtonState
+                    )
+                )
+            )
+        )
+    }
+
+    private fun changeAppButtonStateInWorkShowCase(appButtonState: AppButtonState) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                        workShowCaseButtonState = appButtonState
+                    )
+                )
+            )
+        )
+    }
 }

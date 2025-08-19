@@ -4,6 +4,9 @@ import com.paris_2.san3a.domain.entity.AccountSetupStep
 import kotlinx.serialization.Serializable
 
 @Serializable
+sealed interface Destination
+
+@Serializable
 sealed interface Destinations : Graph {
 
     @Serializable

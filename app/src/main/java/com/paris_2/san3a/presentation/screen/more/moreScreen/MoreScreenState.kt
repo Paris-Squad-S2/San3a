@@ -34,7 +34,6 @@ enum class LanguageUiState(name: String) {
 data class UserUiState(
     val imageUrl: Uri? = null,
     val name: String = "",
-    val review: Int = 0,
     val rating: Float = 0.0f,
     val phoneNumber: String = "",
     val isVerify: Boolean = false,

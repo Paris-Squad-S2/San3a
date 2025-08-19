@@ -1,15 +1,15 @@
 package com.paris_2.san3a.presentation.screen.home.craftsman
 
 import android.util.Log
-import com.paris_2.san3a.domain.usecase.GetAvailableJobsUseCase
-import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.GetRecentRelatedJobsUseCase
-import com.paris_2.san3a.domain.usecase.GetStatsUseCase
-import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetAvailableJobsUseCase
+import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
+import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetRecentRelatedJobsUseCase
+import com.paris_2.san3a.domain.usecase.user.GetStatsUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersCountUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetOffersCountUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 

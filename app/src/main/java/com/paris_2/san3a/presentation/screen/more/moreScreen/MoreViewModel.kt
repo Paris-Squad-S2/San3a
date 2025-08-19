@@ -4,17 +4,16 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
-import com.paris_2.san3a.domain.NoInternetConnectionException
+import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.User
-import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
-import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.SetLoginUseCase
-import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.domain.usecase.user.CustomizeProfileSettingsUseCase
+import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.user.GetVersionNameUseCase
+import com.paris_2.san3a.domain.usecase.user.SavePhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.mapper.toUserUiState
@@ -30,7 +29,6 @@ import kotlinx.coroutines.launch
 
 class MoreViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
-    private val setLoginUseCase: SetLoginUseCase,
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
@@ -435,7 +433,6 @@ class MoreViewModel(
         tryToExecute(
             execute = {
                 savePhoneNumberUseCase("")
-                setLoginUseCase(false)
             },
             onSuccess = ::onLogoutSuccess,
             onError = ::onLogoutError

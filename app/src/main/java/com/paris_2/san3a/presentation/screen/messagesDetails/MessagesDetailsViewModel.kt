@@ -6,11 +6,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.messages.DeleteChatByIdUseCase
-import com.paris_2.san3a.domain.usecase.messages.GetMessagesByChatIdUseCase
-import com.paris_2.san3a.domain.usecase.messages.MarkMessagesAsSeenUseCase
-import com.paris_2.san3a.domain.usecase.messages.SendMessageUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.messaging.DeleteChatByIdUseCase
+import com.paris_2.san3a.domain.usecase.messaging.GetMessagesByChatIdUseCase
+import com.paris_2.san3a.domain.usecase.messaging.MarkMessagesAsSeenUseCase
+import com.paris_2.san3a.domain.usecase.messaging.SendMessageUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel

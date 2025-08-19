@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.paris_2.san3a.presentation.screen.account.components.AccountAppButton
 import com.paris_2.san3a.presentation.screen.account.components.AccountProgressIndicator
 import com.paris_2.san3a.presentation.screen.account.components.AccountTypeContent
 import com.paris_2.san3a.presentation.screen.account.components.LocationContent
@@ -31,20 +32,12 @@ import com.paris_2.san3a.presentation.screen.account.components.ServicesContent
 import com.paris_2.san3a.presentation.screen.account.components.ShowYourWorkContent
 import com.paris_2.san3a.presentation.screen.account.components.VerifyIdentityContent
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
-import com.paris_2.san3a.presentation.shared.components.AppButton
-import com.paris_2.san3a.presentation.shared.components.AppButtonSize
-import com.paris_2.san3a.presentation.shared.components.AppButtonType
-import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.asString
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
-    val progress = viewModel.progress
-    val title = viewModel.getTitle()
-    val description = viewModel.getDescription()
-    val textButton = viewModel.getButtonText()
     val currentScreen by viewModel.currentScreen
     val uiState by viewModel.screenState.collectAsState()
     val context = LocalContext.current
@@ -94,11 +87,11 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
     }
 
     AccountScreenContent(
-        title = title.asString(),
-        description = description.asString(),
-        textButton = textButton.asString(),
+        title = viewModel.getTitle().asString(),
+        description = viewModel.getDescription().asString(),
+        textButton = viewModel.getButtonText().asString(),
         currentScreen = currentScreen,
-        progress = progress,
+        progress = viewModel.progress,
         onCustomerProfilePhotoClick = { profileImagePickerLauncher.launch(arrayOf("image/*")) },
         onFrontNationalIdClick = { frontNationalIdPickerLauncher.launch(arrayOf("image/*")) },
         onBackNationalIdClick = { backNationalIdPickerLauncher.launch(arrayOf("image/*")) },
@@ -123,17 +116,13 @@ fun AccountScreenContent(
     uiState: AccountScreenUiState,
     modifier: Modifier = Modifier,
 ) {
-
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
             .background(Theme.colors.background.screen)
             .safeContentPadding()
-            .padding(top = 16.dp, bottom = 16.dp)
-            .padding(horizontal = 16.dp)
-
+            .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -151,7 +140,9 @@ fun AccountScreenContent(
             text = title,
             color = Theme.colors.shade.primary,
             style = Theme.textStyle.display.xLarge,
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         )
         Text(
             text = description,
@@ -165,20 +156,10 @@ fun AccountScreenContent(
                     onUserTypeSelected = interactionListener::onUserTypeSelected,
                     selectedType = uiState.accountUiState.userType
                 )
-
-                AppButton(
-                    onClick = interactionListener::onUserTypeButtonClicked,
-                    type = AppButtonType.Primary,
-                    text = textButton,
-                    state = uiState.accountUiState.accountButtonState.userTypeButtonState,
-                    modifier = Modifier.fillMaxWidth(),
-                    size = AppButtonSize.Large,
-                    loadingIcon = {
-                        LoadingScreen(
-                            modifier = modifier.size(25.dp),
-                            background = Theme.colors.button.primary
-                        )
-                    }
+                AccountAppButton(
+                    onClickButton = interactionListener::onUserTypeButtonClicked,
+                    textButton = textButton,
+                    state = uiState.accountUiState.accountButtonState.userTypeButtonState
                 )
             }
 
@@ -188,19 +169,10 @@ fun AccountScreenContent(
                     onChipClick = interactionListener::onToggleServiceClicked,
                     modifier = Modifier.padding(vertical = 32.dp)
                 )
-                AppButton(
-                    onClick = interactionListener::onServiceButtonClicked,
-                    type = AppButtonType.Primary,
-                    text = textButton,
-                    state = uiState.accountUiState.accountButtonState.serviceButtonState,
-                    modifier = Modifier.fillMaxWidth(),
-                    size = AppButtonSize.Large,
-                    loadingIcon = {
-                        LoadingScreen(
-                            modifier = modifier.size(25.dp),
-                            background = Theme.colors.button.primary
-                        )
-                    }
+                AccountAppButton(
+                    onClickButton = interactionListener::onServiceButtonClicked,
+                    textButton = textButton,
+                    state = uiState.accountUiState.accountButtonState.serviceButtonState
                 )
             }
 
@@ -212,19 +184,10 @@ fun AccountScreenContent(
                     onAddPhotoClick = onCustomerProfilePhotoClick,
                     profilePhotoUri = uiState.accountUiState.customerProfilePhotoUri
                 )
-                AppButton(
-                    onClick = interactionListener::onProfileButtonClicked,
-                    type = AppButtonType.Primary,
-                    text = textButton,
-                    state = uiState.accountUiState.accountButtonState.profileButtonState,
-                    modifier = Modifier.fillMaxWidth(),
-                    size = AppButtonSize.Large,
-                    loadingIcon = {
-                        LoadingScreen(
-                            modifier = modifier.size(25.dp),
-                            background = Theme.colors.button.primary
-                        )
-                    }
+                AccountAppButton(
+                    onClickButton = interactionListener::onProfileButtonClicked,
+                    textButton = textButton,
+                    state = uiState.accountUiState.accountButtonState.profileButtonState
                 )
             }
 
@@ -247,22 +210,12 @@ fun AccountScreenContent(
                         onAddressDetailsChange = interactionListener::onAddressDetailsChanged,
                         locationBottomSheetContentType = uiState.accountUiState.locationType
                     )
-                    AppButton(
-                        onClick = interactionListener::onLocationButtonClicked,
-                        type = AppButtonType.Primary,
-                        text = textButton,
-                        state = uiState.accountUiState.accountButtonState.locationButtonState,
-                        modifier = Modifier.fillMaxWidth(),
-                        size = AppButtonSize.Large,
-                        loadingIcon = {
-                            LoadingScreen(
-                                modifier = modifier.size(25.dp),
-                                background = Theme.colors.button.primary
-                            )
-                        }
+                    AccountAppButton(
+                        onClickButton = interactionListener::onLocationButtonClicked,
+                        textButton = textButton,
+                        state = uiState.accountUiState.accountButtonState.locationButtonState
                     )
                 }
-
                 UserType.CRAFTSMAN -> {
                     ShowYourWorkContent(
                         modifier = Modifier.padding(vertical = 32.dp),
@@ -272,30 +225,18 @@ fun AccountScreenContent(
                         onDescriptionChanged = interactionListener::onDescriptionChanged,
                         onDeleteImage = interactionListener::onDeleteWorkImageClicked
                     )
-                    AppButton(
-                        onClick = interactionListener::onShowWorkButtonClicked,
-                        type = AppButtonType.Primary,
-                        text = textButton,
-                        state = uiState.accountUiState.accountButtonState.workShowCaseButtonState,
-                        modifier = Modifier.fillMaxWidth(),
-                        size = AppButtonSize.Large,
-                        loadingIcon = {
-                            LoadingScreen(
-                                modifier = modifier.size(25.dp),
-                                background = Theme.colors.button.primary
-                            )
-                        }
-
+                    AccountAppButton(
+                        onClickButton = interactionListener::onShowWorkButtonClicked,
+                        textButton = textButton,
+                        state = uiState.accountUiState.accountButtonState.workShowCaseButtonState
                     )
                 }
-
                 else -> {}
             }
 
             4 -> when (uiState.accountUiState.userType) {
                 UserType.CRAFTSMAN -> {
                     VerifyIdentityContent(
-
                         modifier = Modifier.padding(
                             top = 32.dp, bottom = 12.dp
                         ),
@@ -305,27 +246,13 @@ fun AccountScreenContent(
                         backOfNationalIdUri = uiState.accountUiState.backOfNationalIdUri,
                         onVerifyLaterClick = interactionListener::onVerifyIdentityButtonClicked
                     )
-
-                    AppButton(
-                        onClick = interactionListener::onVerifyIdentityButtonClicked,
-                        type = AppButtonType.Primary,
-                        text = textButton,
-                        state = uiState.accountUiState.accountButtonState.verifyIdentityButtonState,
-                        modifier = Modifier.fillMaxWidth(),
-                        size = AppButtonSize.Large,
-                        loadingIcon = {
-                            LoadingScreen(
-                                modifier.size(25.dp),
-                                background = Theme.colors.button.primary
-                            )
-                        }
-
+                    AccountAppButton(
+                        onClickButton = interactionListener::onVerifyIdentityButtonClicked,
+                        textButton = textButton,
+                        state = uiState.accountUiState.accountButtonState.verifyIdentityButtonState
                     )
-
                 }
-
-                else -> {
-                }
+                else -> {}
             }
         }
     }

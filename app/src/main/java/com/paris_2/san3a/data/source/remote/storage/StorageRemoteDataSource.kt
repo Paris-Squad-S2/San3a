@@ -1,9 +1,9 @@
 package com.paris_2.san3a.data.source.remote.storage
 
-import android.net.Uri
+import com.paris_2.san3a.data.source.remote.storage.dto.ImageDto
 
 interface StorageRemoteDataSource {
-    suspend fun saveImages(paths: List<String>, uris: List<Uri>)
-    suspend fun getImagesByPaths(paths: List<String>,uris: List<Uri>):List<String>
-    suspend fun deleteImages(paths: List<String>)
+    suspend fun saveImages(images: List<ImageDto>)
+    suspend fun getImagesByPaths(images: List<ImageDto>): List<String>
+    suspend fun deleteImages(images: List<ImageDto>)
 }

@@ -18,7 +18,6 @@ fun InstallSavedAppLanguage(
     context: Context,
     mainViewModel: MainViewModel = koinViewModel()
 ){
-
     LaunchedEffect(key1 = Unit) {
         mainViewModel.getLastSelectedAppLanguage().collectLatest { language ->
             withContext(Dispatchers.Main) {

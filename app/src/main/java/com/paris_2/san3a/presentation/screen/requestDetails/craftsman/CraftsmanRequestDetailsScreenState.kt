@@ -6,8 +6,10 @@ import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.presentation.shared.components.OfferDetailsUIState
 import com.paris_2.san3a.presentation.shared.components.OfferStatus
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import com.paris_2.san3a.presentation.utill.getTimeAgo
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 
 data class CraftsmanRequestDetailsScreenState(
@@ -45,8 +47,9 @@ fun OfferToAddUiState.toOffer(craftsManId: String, requestId: String): Offer {
         price = this.price.toDoubleOrNull() ?: 0.0,
         preferredDate = this.preferredDate?: LocalDate(0, 0, 0),
         preferredTime = this.preferredTime?: LocalTime(0, 0),
+        createdAt = getCurrentDateTime(),
         messageToCustomer = this.messageToCustomer,
-        isAccepted = false
+        isAccepted = false,
     )
 }
 
@@ -59,8 +62,8 @@ data class RequestOfferUiState(
     val craftsmanReviewsNumber: Int = 150,
     val requestId: String = "",
     val price: Double = 0.0,
-    val time: String = "Tomorrow at 10:00 AM",
-    val postedTime: String = "1 hour ago", //TODO
+    val time: String = "",
+    val postedTime: LocalDateTime?,
     val messageToCustomer: String = "",
     val isAccepted: Boolean = false,
 )
@@ -72,7 +75,7 @@ fun Offer.toOfferUiState(): RequestOfferUiState {
         requestId = this.requestId,
         price = this.price,
         time = "${this.preferredDate} ${this.preferredTime}",
-        postedTime = "1 hour ago", // TODO: Replace with actual time logic
+        postedTime = this.createdAt,
         messageToCustomer = this.messageToCustomer,
         isAccepted = this.isAccepted
     )
@@ -116,7 +119,7 @@ data class RequestServiceUIState(
     val description: String = "Loading...",
     val location: String = "Loading...",
     val locationDetails: String = "Loading...",
-    val time: String = "Loading...",
+    val time: LocalDateTime? = null,
     val state: String = "Loading...",
     val serviceId: String = "",
     val images: List<String> = emptyList(),
@@ -132,7 +135,7 @@ fun RequestService.toRequestServiceUIState(location: String): RequestServiceUISt
         description = this.description,
         location = location,
         locationDetails = this.locationDetails,
-        time = getTimeAgo(this.time),
+        time = this.time,
         images = this.image,
         selectedCraftsmanId = this.selectedCraftsmanId
     )

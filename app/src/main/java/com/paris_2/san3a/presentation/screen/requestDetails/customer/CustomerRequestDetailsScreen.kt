@@ -2,7 +2,6 @@ package com.paris_2.san3a.presentation.screen.requestDetails.customer
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -10,13 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
@@ -35,7 +32,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CustomerRequestDetailsScreen(
-    viewModel: CustomerRequestDetailsRequestDetailsViewModel = koinViewModel()
+    viewModel: CustomerRequestDetailsViewModel = koinViewModel()
 ) {
     val state by viewModel.screenState.collectAsState()
     CustomerRequestDetailsScreenContent(state, viewModel)
@@ -57,15 +54,6 @@ private fun CustomerRequestDetailsScreenContent(
             AppBar(
                 onBackClick = interactionListener::onClickBack,
                 title = stringResource(R.string.request_details),
-                actionIcon = {
-                    Icon(
-                        modifier = Modifier
-                            .clickable(onClick = interactionListener::onClickActonDots),
-                        painter = painterResource(R.drawable.ic_menu_dots_outline),
-                        contentDescription = null,
-                        tint = Theme.colors.shade.primary
-                    )
-                }
             )
         },
         containerColor = Theme.colors.background.screen,
