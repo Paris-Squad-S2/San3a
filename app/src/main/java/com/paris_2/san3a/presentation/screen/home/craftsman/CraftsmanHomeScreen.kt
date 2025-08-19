@@ -1,7 +1,6 @@
 package com.paris_2.san3a.presentation.screen.home.craftsman
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,23 +36,19 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.datetime.LocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 
-
 @Composable
 fun CraftsmanHomeScreen(
     viewModel: CraftsmanHomeViewModel = koinViewModel()
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
-    CraftsmanHomeContent(
-        action = viewModel,
-        state = state
-    )
+    CraftsmanHomeContent(action = viewModel, state = state)
 }
 
 @Composable
 fun CraftsmanHomeContent(
     action: CraftsmanInteractionListener,
-    modifier: Modifier = Modifier,
     state: CraftsmanHomeState,
+    modifier: Modifier = Modifier,
 ) {
     AppScaffold(
         modifier = modifier
@@ -88,7 +83,6 @@ fun CraftsmanHomeContent(
                                 greeting,
                                 state.craftsmanHomeUiState.currentUserName
                             ),
-
                             style = Theme.textStyle.title.small,
                             color = Theme.colors.shade.primary,
                         )
@@ -131,7 +125,6 @@ fun CraftsmanHomeContent(
                         modifier = Modifier.padding(start = 16.dp)
                     )
                 }
-
                 item {
                     StatsContainer(
                         jobsDone = state.craftsmanHomeUiState.stats.jobsDone,
@@ -139,10 +132,8 @@ fun CraftsmanHomeContent(
                         rating = state.craftsmanHomeUiState.stats.rating
                     )
                 }
-
-
                 item {
-                    if(state.craftsmanHomeUiState.recentRelatedJobs.isNotEmpty()) {
+                    if (state.craftsmanHomeUiState.recentRelatedJobs.isNotEmpty()) {
                         Text(
                             text = stringResource(
                                 R.string.recent_jobs,
@@ -170,7 +161,6 @@ fun CraftsmanHomeContent(
                         }
                     }
                 }
-
                 if (state.craftsmanHomeUiState.availableJobs.isNotEmpty()) {
                     item {
                         Text(
@@ -310,7 +300,6 @@ private fun Preview() {
 
         action = object : CraftsmanInteractionListener {
             override fun onNotificationClick() {}
-            override fun onSearch(query: String) {}
             override fun onJobClick(serviceId: String) {}
         }
 

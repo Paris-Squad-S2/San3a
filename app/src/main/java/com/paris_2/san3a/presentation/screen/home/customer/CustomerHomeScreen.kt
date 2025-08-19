@@ -54,23 +54,20 @@ import com.paris_2.san3a.presentation.shared.components.SearchBar
 import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
-import java.util.Locale
 
 @Composable
 fun CustomerHomeScreen(
     viewModel: CustomerHomeViewModel = koinViewModel(),
 ) {
-    val customerScreenState by viewModel.screenState.collectAsStateWithLifecycle()
-    CustomerHomeScreenContent(
-        state = customerScreenState,
-        action = viewModel
-    )
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    CustomerHomeScreenContent(action = viewModel, state = state)
 }
 
 @Composable
 private fun CustomerHomeScreenContent(
-    state: CustomerHomeUiState,
     action: CustomerHomeInteractionListener,
+    state: CustomerHomeUiState,
+    modifier: Modifier = Modifier,
 ) {
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents(),
@@ -265,7 +262,7 @@ private fun CustomerHomeScreenContent(
     }
 
     AppScaffold(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Theme.colors.background.card)
             .statusBarsPadding(),
@@ -334,11 +331,9 @@ private fun CustomerHomeScreenContent(
                 item {
                     SearchBar(
                         value = state.customerUiState.searchQuery,
-                        onValueChange = { action.onSearch(it) },
+                        onValueChange = action::onSearch,
                         hint = stringResource(R.string.search),
                         onMicClick = {
-
-
                             if (ContextCompat.checkSelfPermission(
                                     context,
                                     Manifest.permission.RECORD_AUDIO
@@ -353,8 +348,9 @@ private fun CustomerHomeScreenContent(
                             .padding(top = 16.dp, bottom = 24.dp)
                     )
                 }
-
-                if (state.customerUiState.mostRequestedServices.isNotEmpty() && state.customerUiState.searchQuery.isEmpty()) {
+                if (state.customerUiState.mostRequestedServices.isNotEmpty() &&
+                    state.customerUiState.searchQuery.isEmpty()
+                ) {
                     item {
                         MostRequestedServices(
                             services = state.customerUiState.mostRequestedServices,
@@ -362,8 +358,6 @@ private fun CustomerHomeScreenContent(
                         )
                     }
                 }
-
-
                 if (state.customerUiState.searchQuery.isNotEmpty() && servicesToDisplay.isEmpty()) {
                     item {
                         PlaceHolderScreen(
@@ -394,9 +388,7 @@ private fun CustomerHomeScreenContent(
                             isLarge = false,
                             modifier = Modifier
                                 .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
-                            onclick = {
-                                action.onServiceClick(service)
-                            }
+                            onclick = { action.onServiceClick(service) }
                         )
                     }
                 }
@@ -406,13 +398,12 @@ private fun CustomerHomeScreenContent(
                             title = stringResource(R.string.got_a_skill_start_earning),
                             caption = stringResource(R.string.create_your_craftsman_account_and_get_job_requests),
                             buttonTitle = stringResource(R.string.become_a_craftsman),
-                            onClick = { action.onBecomeCraftsmanClick() },
+                            onClick = action::onBecomeCraftsmanClick,
                             modifier = Modifier
                                 .padding(vertical = 12.dp)
                         )
                     }
                 }
-
             }
         }
     )
