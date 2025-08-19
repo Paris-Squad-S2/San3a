@@ -9,14 +9,15 @@ import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 data class VerificationScreenState(
     val verificationUiState: VerificationUiState = VerificationUiState(),
     val isLoading: Boolean = false,
-    @StringRes val successMessageSnackBar: Int? = null,
-    @StringRes val errorMessage: Int? = null,
+    val successMessageSnackBar: UiText? = null,
+    val errorMessage: UiText? = null,
     val showSnackBarSuccess: Boolean = false,
     val showSnackBarError: Boolean = false,
     val isNoInternet: Boolean = false,
@@ -27,7 +28,7 @@ data class VerificationUiState(
     val frontOfNationalIdUri: Uri? = null,
     val backOfNationalIdUri: Uri? = null,
     val phoneNumber: String = "",
-    @StringRes val errorMessage: Int? = null,
+    val errorMessage: UiText? = null,
 )
 
 class VerificationViewModel(
@@ -64,7 +65,7 @@ class VerificationViewModel(
     private fun onGetPhoneNumberError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.phone_number_not_found,
+                errorMessage = UiText.StringResource( R.string.phone_number_not_found),
                 isLoading = false,
                 isNoInternet = false,
                 showSnackBarError = true,
@@ -131,7 +132,7 @@ class VerificationViewModel(
                 showSnackBarSuccess = true,
                 showSnackBarError = false,
                 verificationButtonState = AppButtonState.Enable,
-                successMessageSnackBar = R.string.r_string_national_id_images_uploaded_successfully
+                successMessageSnackBar = UiText.StringResource(R.string.r_string_national_id_images_uploaded_successfully)
             )
         )
         hideSnackBar()
@@ -156,7 +157,7 @@ class VerificationViewModel(
         } else {
             updateState(
                 screenState.value.copy(
-                    errorMessage = R.string.national_id_images_uploaded_failed,
+                    errorMessage =UiText.StringResource( R.string.national_id_images_uploaded_failed),
                     isNoInternet = false,
                     isLoading = false,
                     showSnackBarError = true,
