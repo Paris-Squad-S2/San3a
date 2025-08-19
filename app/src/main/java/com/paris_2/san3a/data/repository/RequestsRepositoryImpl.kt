@@ -23,6 +23,7 @@ class RequestsRepositoryImpl(
 ) : RequestsRepository, BaseRepository() {
 
     override suspend fun addOffer(offer: Offer) {
+        validateNetworkConnection()
         requestRemoteDataSource.addOffer(offer.toDto())
     }
 
@@ -136,7 +137,6 @@ class RequestsRepositoryImpl(
                 }
                 false -> emptyList()
             }
-
             requestRemoteDataSource.requestService(requestedService.toDto(imageUrls))
         }
     }

@@ -17,13 +17,13 @@ import kotlinx.coroutines.flow.map
 
 class NotificationRepositoryImpl(
     private val notificationRemoteDataSource: NotificationRemoteDataSource,
-    private val locaDataSource: UserPreferencesLocalDataStore,
+    private val userPreferencesLocalDataStore: UserPreferencesLocalDataStore,
 ) : NotificationRepository, BaseRepository() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getNotifications(userId: String): Flow<List<Notification>> {
         validateNetworkConnection()
-        return locaDataSource.getLatestSelectedAppLanguage().flatMapLatest { language ->
+        return userPreferencesLocalDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
             notificationRemoteDataSource.getNotifications(userId)
                 .map { dtoList -> dtoList.map { it.toDomain(language) } }
                 .catch { throw FailException("Failed to get notifications: ${it.message}") }

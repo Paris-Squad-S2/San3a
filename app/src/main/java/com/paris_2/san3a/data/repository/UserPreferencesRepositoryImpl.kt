@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.catch
 class UserPreferencesRepositoryImpl(
     private val userPreferencesLocalDataStore: UserPreferencesLocalDataStore
 ): UserPreferencesRepository, BaseRepository() {
+
     override suspend fun setDarkTheme(isDarkTheme: Boolean) {
         safeCall(FailException("Failed to set dark theme")) {
             userPreferencesLocalDataStore.setDarkTheme(isDarkTheme)
