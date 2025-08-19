@@ -33,12 +33,6 @@ class UserPreferencesRepositoryImpl(
         }
     }
 
-    override suspend fun getVersionName(): String {
-        return safeCall(FailException("Failed to get version name")) {
-            userPreferencesLocalDataStore.getVersionName()
-        }
-    }
-
     override suspend fun setOnboardingCompleted() {
         safeCall(FailException("Failed to set onboarding completed")) {
             userPreferencesLocalDataStore.setOnboardingCompleted()

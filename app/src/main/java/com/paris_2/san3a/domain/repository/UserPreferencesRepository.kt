@@ -7,7 +7,6 @@ interface UserPreferencesRepository {
     suspend fun isDarkThemeEnabled(): Flow<Boolean>
     fun getLatestSelectedAppLanguage(): Flow<String>
     suspend fun updateAppLanguage(newLanguage: String): Boolean
-    suspend fun getVersionName(): String
     suspend fun isOnboardingCompleted(): Boolean
     suspend fun setOnboardingCompleted()
 }

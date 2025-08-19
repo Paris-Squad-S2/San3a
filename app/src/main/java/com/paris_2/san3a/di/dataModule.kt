@@ -10,14 +10,10 @@ import com.google.firebase.storage.FirebaseStorage
 import com.paris_2.san3a.data.repository.ServicesRepositoryImpl
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
-import com.paris_2.san3a.data.source.local.appVersion.AppVersionDataSource
-import com.paris_2.san3a.data.source.local.appVersion.AppVersionDataSourceImpl
-import com.paris_2.san3a.data.source.local.userPreferences.UserPreferencesLocalDataStore
-import com.paris_2.san3a.data.source.local.userPreferences.UserPreferencesLocalDataStoreImpl
 import com.paris_2.san3a.data.source.local.location.LocationLocalDataSource
 import com.paris_2.san3a.data.source.local.location.LocationLocalDataSourceImpl
-import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
-import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSourceImpl
+import com.paris_2.san3a.data.source.local.userPreferences.UserPreferencesLocalDataStore
+import com.paris_2.san3a.data.source.local.userPreferences.UserPreferencesLocalDataStoreImpl
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSourceImp
 import com.paris_2.san3a.data.source.remote.notification.NotificationRemoteDataSource
@@ -47,9 +43,7 @@ val dataModule = module {
     singleOf(::UserRemoteDataSourceImpl) { bind<UserRemoteDataSource>() }
     singleOf(::ServiceRemoteDataSourceImpl) { bind<ServiceRemoteDataSource>() }
     singleOf(::ServicesRepositoryImpl) { bind<ServicesRepository>() }
-    singleOf(::AuthRemoteDataSourceImpl) { bind<AuthRemoteDataSource>() }
     singleOf(::LocationLocalDataSourceImpl) { bind<LocationLocalDataSource>() }
-    singleOf(::AppVersionDataSourceImpl) { bind<AppVersionDataSource>() }
     singleOf(::UserPreferencesLocalDataStoreImpl) { bind<UserPreferencesLocalDataStore>() }
     singleOf(::NotificationRemoteDataSourceImpl) { bind<NotificationRemoteDataSource>() }
     singleOf(::RequestRemoteDataSourceImpl) { bind<RequestRemoteDataSource>() }

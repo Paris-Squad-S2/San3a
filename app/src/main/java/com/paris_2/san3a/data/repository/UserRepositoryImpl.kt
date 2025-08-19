@@ -4,9 +4,8 @@ import android.net.Uri
 import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.repository.shared.BaseRepository
-import com.paris_2.san3a.data.service.auth.WhatsAppMessage
+import com.paris_2.san3a.data.source.remote.user.dto.OtpMessageDto
 import com.paris_2.san3a.data.source.local.userPreferences.UserPreferencesLocalDataStore
-import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.dto.ImageDto
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
@@ -30,7 +29,6 @@ import kotlinx.coroutines.flow.map
 class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
     private val storageRemoteDataSource: StorageRemoteDataSource,
-    private val authRemoteDataSource: AuthRemoteDataSource,
     private val userPreferencesLocalDataStore: UserPreferencesLocalDataStore
 ) : UserRepository, BaseRepository() {
 
@@ -223,8 +221,8 @@ class UserRepositoryImpl(
         message: String,
     ): Boolean {
         return safeNetworkCall(FailException("register error")) {
-            val body = WhatsAppMessage(phoneNumber = phoneNumber, message = message)
-            authRemoteDataSource.sendOtpMessage(body).success ?: false
+            val messageDto = OtpMessageDto(phoneNumber = phoneNumber, message = message)
+            userRemoteDataSource.sendOtpMessage(messageDto).success ?: false
         }
     }
 
