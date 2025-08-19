@@ -45,7 +45,6 @@ import com.paris_2.san3a.domain.usecase.requests.GetCraftManOfferOnRequestUseCas
 import com.paris_2.san3a.domain.usecase.requests.GetOffersCountUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetRequestDetailsByIdUseCase
-import com.paris_2.san3a.domain.usecase.requests.GetYourOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
@@ -91,7 +90,6 @@ val useCaseModule = module {
     factoryOf(::GetOffersCountUseCase)
     factoryOf(::GetRequestDetailsByIdUseCase)
     factoryOf(::AddOfferUseCase)
-    factoryOf(::GetYourOfferUseCase)
     factoryOf(::GetAcceptedOffersUseCase)
     factoryOf(::GetCraftManOfferOnRequestUseCase)
     factoryOf(::GetCraftsManRequestsUseCase)

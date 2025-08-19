@@ -54,20 +54,6 @@ class RequestsRepositoryImpl(
         }
     }
 
-    override suspend fun getYourOffer(craftsmanId: String): List<Offer> {
-        validateNetworkConnection()
-        return safeCall(FailException("Failed to fetch your offers for craftsman ID: $craftsmanId")) {
-            requestRemoteDataSource.getCraftsmanOffers(craftsmanId).map { it.toEntity() }
-        }
-    }
-
-    override suspend fun assignRequestToCraftsman(requestId: String, craftsmanId: String) {
-        validateNetworkConnection()
-        return safeCall(FailException("Failed to assign request to craftsman")) {
-            requestRemoteDataSource.assignRequestToCraftsman(requestId, craftsmanId)
-        }
-    }
-
     override suspend fun acceptOffer(offerId: String, craftsmanId: String, requestId: String) {
         validateNetworkConnection()
         safeCall(FailException("Failed to accept offer with ID: $offerId")) {

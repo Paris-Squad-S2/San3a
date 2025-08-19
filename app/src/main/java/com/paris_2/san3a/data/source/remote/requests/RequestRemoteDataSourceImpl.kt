@@ -40,16 +40,6 @@ class RequestRemoteDataSourceImpl(
         )
     }
 
-    override suspend fun getCraftsmanOffers(craftsmanId: String): List<OfferDto> {
-        return fireStoreService.getCollection(
-            path = OFFERS_COLLECTION,
-            fromJson = OfferDto::fromJson,
-            queryBuilder = { query ->
-                query.whereEqualTo("craftsmanId", craftsmanId)
-            }
-        )
-    }
-
     override suspend fun assignRequestToCraftsman(requestId: String, craftsmanId: String) {
         fireStoreService.updateDoc(
             path = "$SERVICE_REQUESTS_COLLECTION/$requestId",

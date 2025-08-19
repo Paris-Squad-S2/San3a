@@ -6,11 +6,10 @@ class GetLocationInfoUseCase(private val locationRepository: LocationRepository)
     suspend fun getGovernments() = locationRepository.getGovernorates()
 
     suspend fun getCities(governorateId: Int) =
-        locationRepository.getCitiesInGovernment(governorateId = governorateId)
+        locationRepository.getCitiesInGovernment(governorateId)
 
     suspend fun getGovernorateById(governorateId: Int) =
-        locationRepository.getGovernorateById(governorateId = governorateId)
+        locationRepository.getGovernorateById(governorateId)
 
-    suspend fun getCityById(cityId: Int) =
-        locationRepository.getCityById(cityId = cityId)
+    suspend fun getCityById(cityId: Int) = locationRepository.getCityById(cityId)
 }
