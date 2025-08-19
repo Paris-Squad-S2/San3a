@@ -57,7 +57,7 @@ The app makes it easy to find, book, and chat with trusted service providers in 
 > [Design Here](https://www.figma.com/design/c6UGcyi8PhugXrPTJOqzEd/San3a?node-id=3309-11976&t=EkAAzxic57qtGlIp-0 "Design Here")
 
 # 📸 UI Preview
-| On Borading        | Auth               | OTP               |
+| Onboarding         | Auth               | OTP               |
 |--------------------|--------------------|--------------------|
 |<img src="https://github.com/user-attachments/assets/ef318eff-222f-48aa-8aae-62b4e441b9ad" width="400"/>|<img src="https://github.com/user-attachments/assets/82094ab3-62bf-441b-b464-0830fd96d849" width="400"/>|<img src="https://github.com/user-attachments/assets/73fd443f-d152-4737-9439-d125d2e336ee" width="400"/>|
 
