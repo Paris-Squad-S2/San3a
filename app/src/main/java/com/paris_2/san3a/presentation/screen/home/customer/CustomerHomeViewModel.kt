@@ -12,8 +12,8 @@ import com.paris_2.san3a.domain.usecase.services.GetMostRequestedServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
-import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
+import com.paris_2.san3a.domain.usecase.requests.RequestServiceUseCase
+import com.paris_2.san3a.domain.usecase.services.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations

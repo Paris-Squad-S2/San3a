@@ -26,18 +26,6 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
-
-    override fun searchServices(query: String): Flow<List<ServiceDto>> {
-        return fireStoreService.streamCollection(
-            path = SERVICES_COLLECTION,
-            fromJson = ServiceDto::fromJson,
-            queryBuilder = { query ->
-                query.startAt(query)
-                    .endAt("$query\uf8ff")
-            }
-        )
-    }
-
     override fun getMostRequestedServices(): Flow<List<ServiceDto>> {
         return fireStoreService.streamCollection(
             path = SERVICES_COLLECTION,

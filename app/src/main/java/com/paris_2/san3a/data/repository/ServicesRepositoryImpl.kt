@@ -52,20 +52,6 @@ class ServicesRepositoryImpl(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun searchServices(query: String): Flow<List<Service>> {
-        validateNetworkConnection()
-        return userPreferencesLocalDataStore.getLatestSelectedAppLanguage()
-            .flatMapLatest { language ->
-                userPreferencesLocalDataStore.isDarkThemeEnabled()
-                    .flatMapLatest { isDarkModeEnabled ->
-                        serviceRemoteDataSource.searchServices(query)
-                            .map { it.toEntity(isDarkModeEnabled, language) }
-                            .catch { throw FailException("searchServices") }
-                    }
-            }
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getMostRequestedServices(): Flow<List<Service>> {
         validateNetworkConnection()
         return userPreferencesLocalDataStore.isDarkThemeEnabled()

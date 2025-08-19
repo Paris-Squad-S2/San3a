@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface ServicesRepository {
     fun getAllServices(): Flow<List<Service>>
     suspend fun getServiceById(serviceId: String): Service?
-    fun searchServices(query: String): Flow<List<Service>>
     fun getMostRequestedServices(): Flow<List<Service>>
     suspend fun updateNumOfRequestService(serviceId: String)
 }

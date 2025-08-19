@@ -1,4 +1,4 @@
-package com.paris_2.san3a.domain.usecase
+package com.paris_2.san3a.domain.usecase.user
 
 import com.paris_2.san3a.domain.repository.UserRepository
 
@@ -10,5 +10,11 @@ class UpdateEarningsForCraftsmanUseCase(
         userId: String,
         requestId: String,
         earnings: Double
-    ) = userRepository.updateEarningsForCraftsman(craftsmanId = craftsmanId,userId = userId, requestId, earnings)
+    ) =
+        userRepository.updateEarningsForCraftsman(
+            craftsmanId = craftsmanId,
+            userId = userId,
+            requestId = requestId,
+            earnings = earnings
+        )
 }

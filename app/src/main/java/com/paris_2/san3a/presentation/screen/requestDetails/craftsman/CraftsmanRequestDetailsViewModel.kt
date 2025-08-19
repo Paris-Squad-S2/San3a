@@ -10,7 +10,7 @@ import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.services.GetServiceByIdUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.user.IncrementJobsDoneForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.UpdateEarningsForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.UpdateEarningsForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.messaging.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requests.AddOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.CancelRequestUseCase
