@@ -28,7 +28,7 @@ fun AccountAppButton(
         size = AppButtonSize.Large,
         loadingIcon = {
             LoadingScreen(
-                modifier = modifier.size(25.dp),
+                modifier = Modifier.size(25.dp),
                 background = Theme.colors.button.primary
             )
         }
