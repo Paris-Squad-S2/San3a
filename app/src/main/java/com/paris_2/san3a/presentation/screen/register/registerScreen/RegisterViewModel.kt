@@ -8,7 +8,7 @@ class RegisterViewModel : BaseViewModel<RegisterUiState>(RegisterUiState()),
     RegisterInteractionListener {
 
     override fun onPhoneNumberChanged(phone: String) {
-        val cleanedPhone = phone.removePrefix("+20")
+        val cleanedPhone = phone.removePrefix("+964")
         val isValid = cleanedPhone.length == 10 && cleanedPhone.all { it.isDigit() }
 
         updateState(

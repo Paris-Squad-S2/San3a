@@ -233,7 +233,7 @@ fun PhoneNumberInput(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        val dialCode = "+20"
+        val dialCode = "+964"
         val numberOnly = phoneNumber.removePrefix(dialCode)
 
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -256,8 +256,8 @@ fun PhoneNumberInput(
                     ) {
                         Spacer(modifier = Modifier.width(10.dp))
                         Image(
-                            painter = painterResource(R.drawable.ic_eg_flag),
-                            contentDescription = "Egypt Flag",
+                            painter = painterResource(R.drawable.ic_iraq_flag),
+                            contentDescription = "Iraq Flag",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .width(20.dp)
@@ -282,7 +282,6 @@ fun PhoneNumberInput(
                 }
             )
         }
-
 
     }
 }
