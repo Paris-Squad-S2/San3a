@@ -1,6 +1,5 @@
 package com.paris_2.san3a.domain.repository
 
-import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
 import kotlinx.coroutines.flow.Flow
 
@@ -10,6 +9,4 @@ interface ServicesRepository {
     fun searchServices(query: String): Flow<List<Service>>
     fun getMostRequestedServices(): Flow<List<Service>>
     suspend fun updateNumOfRequestService(serviceId: String)
-    suspend fun requestService(requestedService: RequestService)
-    fun getAvailableJobs(): Flow<List<RequestService>>
 }

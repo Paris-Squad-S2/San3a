@@ -1,9 +1,12 @@
 package com.paris_2.san3a.data.repository
 
+import android.util.Log
+import androidx.core.net.toUri
 import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.remote.requests.RequestRemoteDataSource
+import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
@@ -16,6 +19,7 @@ import kotlinx.coroutines.flow.map
 
 class RequestsRepositoryImpl(
     private val requestRemoteDataSource: RequestRemoteDataSource,
+    private val firebaseStorageRemoteDataSource: StorageRemoteDataSource,
 ) : RequestsRepository, BaseRepository() {
 
     override suspend fun addOffer(offer: Offer) {
@@ -133,4 +137,36 @@ class RequestsRepositoryImpl(
             .map { list -> list.map { it.toEntity() } }
             .catch { throw FailException("Failed to get recent related jobs: $relatedJobsIds") }
     }
+
+    override suspend fun requestService(requestedService: RequestService) {
+        validateNetworkConnection()
+        safeCall(FailException("requestService")) {
+            val imageUris = requestedService.image
+            val imageUrls = if (imageUris.isNotEmpty()) {
+                val paths = imageUris.map { uri ->
+                    "${requestedService.title}/${uri.toUri().path?.substringAfterLast("/") ?: ""}.jpg"
+                }
+                firebaseStorageRemoteDataSource.saveImages(paths, imageUris.map { it.toUri() })
+                firebaseStorageRemoteDataSource.getImagesByPaths(
+                    paths,
+                    imageUris.map { it.toUri() })
+            } else {
+                emptyList()
+            }
+
+            requestRemoteDataSource.requestService(requestedService.toDto(imageUrls))
+        }
+    }
+
+
+    override fun getAvailableJobs(): Flow<List<RequestService>> {
+        validateNetworkConnection()
+        return requestRemoteDataSource.getAvailableJobs()
+            .map { dto -> dto.map { it.toEntity() } }
+            .catch {
+                Log.d("HomeRepositoryImpl", "Error fetching available jobs: ${it.message}")
+                throw FailException("getAvailableJobs")
+            }
+    }
+
 }

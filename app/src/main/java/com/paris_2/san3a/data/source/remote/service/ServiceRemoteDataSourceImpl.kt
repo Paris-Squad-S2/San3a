@@ -60,25 +60,8 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
-    override fun getAvailableJobs(): Flow<List<RequestServiceDto>> {
-        return fireStoreService.streamCollection(
-            path = SERVICE_REQUESTS_COLLECTION,
-            fromJson = RequestServiceDto::fromJson,
-        )
-    }
-
-    override suspend fun requestService(requestedServiceDto: RequestServiceDto): String {
-        return fireStoreService.addToCollection(
-            path = SERVICE_REQUESTS_COLLECTION,
-            data = requestedServiceDto.toJson()
-        )
-    }
-
-
-    companion object {
+    private companion object {
         const val SERVICES_COLLECTION = "services"
-        const val SERVICE_REQUESTS_COLLECTION = "service_requests"
         const val NUMBER_OF_REQUESTS_FIELD = "numberOfRequests"
-
     }
 }

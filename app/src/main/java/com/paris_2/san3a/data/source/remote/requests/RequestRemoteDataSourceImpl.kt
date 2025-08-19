@@ -4,6 +4,7 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.Query
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.source.remote.requests.dto.OfferDto
+import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSourceImpl
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -185,6 +186,22 @@ class RequestRemoteDataSourceImpl(
             }
         )
     }
+
+
+    override fun getAvailableJobs(): Flow<List<RequestServiceDto>> {
+        return fireStoreService.streamCollection(
+            path = SERVICE_REQUESTS_COLLECTION,
+            fromJson = RequestServiceDto::fromJson,
+        )
+    }
+
+    override suspend fun requestService(requestedServiceDto: RequestServiceDto): String {
+        return fireStoreService.addToCollection(
+            path = SERVICE_REQUESTS_COLLECTION,
+            data = requestedServiceDto.toJson()
+        )
+    }
+
 
     private companion object {
         const val SERVICE_REQUESTS_COLLECTION = "service_requests"

@@ -20,4 +20,6 @@ interface RequestRemoteDataSource {
     suspend fun markRequestAsDone(requestId: String)
     fun getAcceptedOfferOnRequestUseCase(requestId: String): Flow<OfferDto?>
     fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>>
+    suspend fun requestService(requestedServiceDto: RequestServiceDto): String
+    fun getAvailableJobs(): Flow<List<RequestServiceDto>>
 }
