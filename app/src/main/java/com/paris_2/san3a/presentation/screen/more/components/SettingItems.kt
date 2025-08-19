@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.more.moreScreen.MoreInteractionListener
@@ -43,7 +44,7 @@ fun SettingItems(
                         onClick = moreInteractionListener::onClickSwitchAccountToCustomer
                     ),
                     icon = R.drawable.ic_home_outline,
-                    label = R.string.switch_to_customer,
+                    label = stringResource(R.string.switch_to_customer),
                     isLoading = isLoadingChangeAccount,
                     onClickItem = moreInteractionListener::onClickSwitchAccountToCustomer
                 )
@@ -56,7 +57,7 @@ fun SettingItems(
                         onClick = moreInteractionListener::onClickSwitchAccountToCraftsman
                     ),
                     icon = R.drawable.ic_sledgehammer_outline,
-                    label = R.string.switch_to_craftsman,
+                    label =stringResource( R.string.switch_to_craftsman),
                     isLoading = isLoadingChangeAccount,
                     onClickItem = moreInteractionListener::onClickSwitchAccountToCraftsman
                 )
@@ -66,7 +67,7 @@ fun SettingItems(
         SettingHorizontalDivider()
         SettingItem(
             icon = R.drawable.ic_moon_outline,
-            label = R.string.dark_mode,
+            label = stringResource(R.string.dark_mode),
             hasSwitchIcon = true,
             isCheckSwitch = isDarkMode,
             onCheckedChange = moreInteractionListener::onChangeToDarkMode
@@ -79,7 +80,7 @@ fun SettingItems(
                 onClick = moreInteractionListener::onClickLanguage
             ),
             icon = R.drawable.ic_language_circle_outline,
-            label = R.string.language,
+            label = stringResource(R.string.language),
             onClickItem = moreInteractionListener::onClickLanguage
         )
         SettingHorizontalDivider()
@@ -90,7 +91,7 @@ fun SettingItems(
                 onClick = moreInteractionListener::onClickLocation
             ),
             icon = R.drawable.ic_location_outline,
-            label = R.string.my_location,
+            label =stringResource( R.string.my_location),
             onClickItem = moreInteractionListener::onClickLocation
         )
         SettingHorizontalDivider()
@@ -101,7 +102,7 @@ fun SettingItems(
                 onClick = moreInteractionListener::onClickMyService
             ),
             icon = R.drawable.ic_sledgehammer_outline,
-            label = R.string.my_services,
+            label = stringResource(R.string.my_services),
             onClickItem = moreInteractionListener::onClickMyService
         )
         AnimatedVisibility(isCraftsman) {
@@ -115,7 +116,7 @@ fun SettingItems(
                         onClick = moreInteractionListener::onClickVerification
                     ),
                     icon = R.drawable.ic_verified_check_outline,
-                    label = R.string.verification,
+                    label = stringResource(R.string.verification),
                     onClickItem = moreInteractionListener::onClickVerification
                 )
             }

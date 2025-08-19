@@ -1,9 +1,9 @@
 package com.paris_2.san3a.presentation.screen.more.locationScreen
-import androidx.annotation.StringRes
 import com.paris_2.san3a.domain.entity.City
 import com.paris_2.san3a.domain.entity.Governorate
 import com.paris_2.san3a.presentation.screen.more.components.SelectionItemData
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
+import com.paris_2.san3a.presentation.shared.utils.UiText
 
 data class LocationScreenState(
     val locationUiState: LocationUiState = LocationUiState(),
@@ -13,8 +13,8 @@ data class LocationScreenState(
     val showSnackBarSuccess: Boolean = false,
     val isGovernorateSheetVisible: Boolean = false,
     val isStreetSheetVisible: Boolean = false,
-    @StringRes val errorMessage: Int? = null,
-    @StringRes val successMessageSnackBar: Int? = null,
+    val errorMessage: UiText? = null,
+    val successMessageSnackBar: UiText? = null,
     val locationButtonState: AppButtonState = AppButtonState.Enable
 )
 

@@ -2,7 +2,7 @@ package com.paris_2.san3a.presentation.screen.more.moreScreen
 
 import android.net.Uri
 import androidx.annotation.StringRes
-import com.paris_2.san3a.presentation.utill.UiText
+import com.paris_2.san3a.presentation.shared.utils.UiText
 
 data class MoreScreenState(
     val moreUiState: MoreUiState = MoreUiState(),

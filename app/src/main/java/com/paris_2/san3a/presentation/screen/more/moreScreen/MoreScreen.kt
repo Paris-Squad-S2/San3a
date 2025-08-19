@@ -223,28 +223,26 @@ private fun MoreScreenContent(
                 AnimatedVisibility(moreScreenState.showSnackBarError) {
                     moreScreenState.errorMessage?.let {uiText ->
                         SnackBar(
-                            uiText = uiText.asString(),
+                            text = uiText.asString(),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .statusBarsPadding()
                                 .padding(horizontal = 12.dp, vertical = 16.dp)
                                 .align(Alignment.TopCenter),
                             onClick = moreInteractionListener::onDismissSnackBar,
-                            text = 0,
                         )
                     }
                 }
                 AnimatedVisibility(moreScreenState.showSnackBarSuccess) {
                     moreScreenState.successMessageSnackBar?.let {
                         SnackBar(
-                            uiText = it.asString(),
+                            text = it.asString(),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .statusBarsPadding()
                                 .padding(horizontal = 12.dp, vertical = 16.dp)
                                 .align(Alignment.TopCenter),
                             onClick = moreInteractionListener::onDismissSnackBar,
-                            text = 0
                         )
                     }
                 }
