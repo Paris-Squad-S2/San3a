@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
@@ -56,7 +57,7 @@ fun GovernmentBottomSheet(
                     when (it) {
                         LocationBottomSheetContentType.GOVERNMENT -> {
                             Text(
-                                text = "Choose Government",
+                                text = stringResource(R.string.choose_government),
                                 style = Theme.textStyle.title.medium,
                                 modifier = Modifier.weight(1F),
                                 color = Theme.colors.shade.primary
@@ -65,7 +66,7 @@ fun GovernmentBottomSheet(
 
                         LocationBottomSheetContentType.CITY -> {
                             Text(
-                                text = "Choose City",
+                                text = stringResource(R.string.choose_city),
                                 style = Theme.textStyle.title.medium,
                                 modifier = Modifier.weight(1F),
                                 color = Theme.colors.shade.primary

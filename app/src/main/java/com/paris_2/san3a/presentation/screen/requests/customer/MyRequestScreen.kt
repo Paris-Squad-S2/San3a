@@ -188,6 +188,7 @@ private fun RequestList(
         items(requests) { request ->
             RequestCard(
                 requestUi = request,
+                onClick = { interactionListener.onRequestClick(request.id) },
                 onActionClick = {
                     if (request.status == RequestStatus.ONGOING && request.offer.craftsMan.phoneNumber.isBlank()) {
                         interactionListener.onRequestClick(request.id)

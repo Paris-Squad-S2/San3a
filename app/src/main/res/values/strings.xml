@@ -338,4 +338,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="see_more">See more</string>
     <string name="min_ago">%1$d min ago</string>
     <string name="h_ago">%1$d h ago</string>
+    <string name="choose_city">Choose City</string>
+    <string name="choose_government">Choose Government</string>
 </resources>
