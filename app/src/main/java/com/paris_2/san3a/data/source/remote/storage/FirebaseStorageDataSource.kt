@@ -55,7 +55,7 @@ class FirebaseStorageDataSource(
         images: List<ImageDto>,
         e: Exception,
     ): List<String> {
-        val errorCode = (e as? StorageException)?.errorCode
+        val errorCode = if (e is StorageException) e.errorCode else null
         if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND || errorCode == StorageException.ERROR_BUCKET_NOT_FOUND) {
             saveImages(images)
             return getImagesByPaths(images)
@@ -69,7 +69,7 @@ class FirebaseStorageDataSource(
         e: Exception,
         operationType: StorageOperationType,
     ): Exception {
-        val errorCode = (e as? StorageException)?.errorCode //TODO: refactor the cast to avoid the exception
+        val errorCode = if (e is StorageException) e.errorCode else null
         when (errorCode) {
             StorageException.ERROR_OBJECT_NOT_FOUND -> {
                 return ImageNotFoundException(paths.toOneString(), e.message.orEmpty())
