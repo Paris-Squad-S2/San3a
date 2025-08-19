@@ -23,14 +23,8 @@ class FirebaseStorageDataSource(
         }
     }
 
-    private fun isFirebaseStorageUri(uri: Uri): Boolean {
-        return try {
-            fireStorage.getReferenceFromUrl(uri.toString())
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
+    private fun isFirebaseStorageUri(uri: Uri): Boolean =
+        runCatching { fireStorage.getReferenceFromUrl(uri.toString()) }.isSuccess
 
     override suspend fun getImagesByPaths(paths: List<String>, uris: List<Uri>): List<String> {
         return try {
@@ -51,7 +45,7 @@ class FirebaseStorageDataSource(
                     val imageRef = fireStorage.reference.child(path)
                     imageRef.delete().await()
                 }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             throw handleStorageException(paths, e, StorageOperationType.DELETE)
         }
     }
@@ -60,12 +54,12 @@ class FirebaseStorageDataSource(
         paths: List<String>,
         uris: List<Uri>,
         e: Exception,
-    ):List<String> {
+    ): List<String> {
         val errorCode = (e as? StorageException)?.errorCode
         if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND || errorCode == StorageException.ERROR_BUCKET_NOT_FOUND) {
             saveImages(paths, uris)
             return getImagesByPaths(paths, uris)
-        }else{
+        } else {
             throw handleStorageException(paths, e, StorageOperationType.GET)
         }
     }
@@ -75,7 +69,7 @@ class FirebaseStorageDataSource(
         e: Exception,
         operationType: StorageOperationType,
     ): Exception {
-        val errorCode = (e as? StorageException)?.errorCode
+        val errorCode = (e as? StorageException)?.errorCode //TODO: refactor the cast to avoid the exception
         when (errorCode) {
             StorageException.ERROR_OBJECT_NOT_FOUND -> {
                 return ImageNotFoundException(paths.toOneString(), e.message.orEmpty())

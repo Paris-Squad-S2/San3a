@@ -62,7 +62,5 @@ class NotificationRemoteDataSourceImpl(
         private const val NOTIFICATION_COLLECTION = "notifications"
         private const val USERS_COLLECTION = "users"
     }
-
-
 }
 
