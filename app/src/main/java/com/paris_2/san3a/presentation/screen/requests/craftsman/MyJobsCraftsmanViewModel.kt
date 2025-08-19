@@ -22,6 +22,7 @@ import com.paris_2.san3a.domain.usecase.requests.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -104,7 +105,7 @@ class MyJobsCraftsmanViewModel(
         updateState(
             screenState.value.copy(
                 isNoInternet = false,
-                errorMessage = R.string.phone_number_not_found,
+                errorMessage = UiText.StringResource(R.string.phone_number_not_found),
                 showSnackBarError = true,
                 isLoading = false
             )
@@ -180,7 +181,7 @@ class MyJobsCraftsmanViewModel(
                 MyJobsCraftsmanScreenState(
                     isLoading = false,
                     isNoInternet = false,
-                    errorMessage = R.string.occurred_while_fetching_requests,
+                    errorMessage = UiText.StringResource(R.string.occurred_while_fetching_requests),
                     showSnackBarError = true
                 )
             )
@@ -210,7 +211,7 @@ class MyJobsCraftsmanViewModel(
         updateState(
             screenState.value.copy(
                 isLoading = false,
-                errorMessage = R.string.error_fetching_offers,
+                errorMessage = UiText.StringResource(R.string.error_fetching_offers),
                 showSnackBarError = true
             )
         )
@@ -248,7 +249,7 @@ class MyJobsCraftsmanViewModel(
                     isLoading = false,
                     isNoInternet = false,
                     showSnackBarError = true,
-                    errorMessage = R.string.failed_to_load_offers_for_request
+                    errorMessage = UiText.StringResource(R.string.failed_to_load_offers_for_request)
                 )
             )
             hideSnackBar()
@@ -344,7 +345,7 @@ class MyJobsCraftsmanViewModel(
                     isLoading = false,
                     isNoInternet = false,
                     showSnackBarError = true,
-                    errorMessage = R.string.error_fetching_craftsman_details
+                    errorMessage = UiText.StringResource(R.string.error_fetching_craftsman_details)
                 )
             )
             hideSnackBar()
@@ -473,7 +474,7 @@ class MyJobsCraftsmanViewModel(
                     isLoading = false,
                     isNoInternet = false,
                     showSnackBarError = true,
-                    errorMessage = R.string.error_marking_request_as_done
+                    errorMessage = UiText.StringResource(R.string.error_marking_request_as_done)
                 )
             )
             hideSnackBar()
@@ -518,7 +519,7 @@ class MyJobsCraftsmanViewModel(
                     isLoading = false,
                     isNoInternet = false,
                     showSnackBarError = true,
-                    errorMessage = R.string.some_error_happened
+                    errorMessage = UiText.StringResource(R.string.some_error_happened)
                 )
             )
             hideSnackBar()
@@ -565,7 +566,7 @@ class MyJobsCraftsmanViewModel(
                     isLoading = false,
                     isNoInternet = false,
                     showSnackBarError = true,
-                    errorMessage = R.string.occurred_while_sending_message_to_customer
+                    errorMessage = UiText.StringResource(R.string.occurred_while_sending_message_to_customer)
                 )
             )
             hideSnackBar()

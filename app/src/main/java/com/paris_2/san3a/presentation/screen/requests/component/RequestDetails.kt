@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.screen.requests.component
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -21,15 +20,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
+import com.paris_2.san3a.presentation.shared.utils.UiText
 
 private data class OrderTrackItem(
-    @StringRes val status: Int,
+    val status: UiText,
     val isDone: Boolean,
     val icon: Int = R.drawable.ic_clipboard
 )
@@ -45,7 +44,7 @@ private fun orderTrackItems(currentStep: Int): List<OrderTrackItem> {
 
     return statuses.mapIndexed { index, status ->
         OrderTrackItem(
-            status = status,
+            status = UiText.StringResource(status),
             isDone = index <= currentStep,
         )
     }
@@ -99,7 +98,7 @@ fun RequestDetails(
                     if (item.isDone) Theme.colors.brand.primary else Theme.colors.shade.tertiary
                 )
                 Text(
-                    text = stringResource(item.status),
+                    text = item.status.asString(),
                     style = Theme.textStyle.body.small.semibold,
                     color = textColor.value,
                     modifier = Modifier
