@@ -1,54 +1,51 @@
 package com.paris_2.san3a.di
 
 import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
-import com.paris_2.san3a.domain.usecase.AddRatingForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.AddUserUseCase
-import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
-import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetAvailableJobsUseCase
-import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
-import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.GetCustomerRatingOnCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.GetRecentRelatedJobsUseCase
-import com.paris_2.san3a.domain.usecase.GetServiceByIdUseCase
-import com.paris_2.san3a.domain.usecase.GetStatsUseCase
-import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
-import com.paris_2.san3a.domain.usecase.GetWorkMediaUseCase
-import com.paris_2.san3a.domain.usecase.IncrementJobsDoneForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.IsLoggedInUseCase
-import com.paris_2.san3a.domain.usecase.IsOnboardingCompletedUseCase
-import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
-import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.SendOtpUseCase
-import com.paris_2.san3a.domain.usecase.SetLoginUseCase
-import com.paris_2.san3a.domain.usecase.SetOnboardingCompletedUseCase
-import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.domain.usecase.user.AddRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.AddUserUseCase
+import com.paris_2.san3a.domain.usecase.user.CustomizeProfileSettingsUseCase
+import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetAvailableJobsUseCase
+import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
+import com.paris_2.san3a.domain.usecase.services.GetMostRequestedServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.GetCustomerRatingOnCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetRecentRelatedJobsUseCase
+import com.paris_2.san3a.domain.usecase.services.GetServiceByIdUseCase
+import com.paris_2.san3a.domain.usecase.user.GetStatsUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.user.GetVersionNameUseCase
+import com.paris_2.san3a.domain.usecase.user.GetWorkMediaUseCase
+import com.paris_2.san3a.domain.usecase.user.IncrementJobsDoneForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.IsOnboardingCompletedUseCase
+import com.paris_2.san3a.domain.usecase.requests.RequestServiceUseCase
+import com.paris_2.san3a.domain.usecase.user.SavePhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.SendOtpUseCase
+import com.paris_2.san3a.domain.usecase.user.SetOnboardingCompletedUseCase
+import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetNotificationsUseCase
-import com.paris_2.san3a.domain.usecase.UpdateEarningsForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
-import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
-import com.paris_2.san3a.domain.usecase.messages.DeleteChatByIdUseCase
-import com.paris_2.san3a.domain.usecase.messages.GetChatsByUserIdUseCase
-import com.paris_2.san3a.domain.usecase.messages.GetMessagesByChatIdUseCase
-import com.paris_2.san3a.domain.usecase.messages.MarkMessagesAsSeenUseCase
-import com.paris_2.san3a.domain.usecase.messages.SendMessageUseCase
+import com.paris_2.san3a.domain.usecase.user.UpdateEarningsForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.services.UpdateNumOfRequestsUseCase
+import com.paris_2.san3a.domain.usecase.messaging.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.messaging.DeleteChatByIdUseCase
+import com.paris_2.san3a.domain.usecase.messaging.GetChatsByUserIdUseCase
+import com.paris_2.san3a.domain.usecase.messaging.GetMessagesByChatIdUseCase
+import com.paris_2.san3a.domain.usecase.messaging.MarkMessagesAsSeenUseCase
+import com.paris_2.san3a.domain.usecase.messaging.SendMessageUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.domain.usecase.notification.MarkNotificationsAsReadUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.AcceptOfferUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.AddOfferUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.CancelRequestUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetAcceptedOfferOnRequestUseCaseUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetAcceptedOffersUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetCraftManOfferOnRequestUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersCountUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetOffersUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetRequestDetailsByIdUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetYourOfferUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
+import com.paris_2.san3a.domain.usecase.requests.AcceptOfferUseCase
+import com.paris_2.san3a.domain.usecase.requests.AddOfferUseCase
+import com.paris_2.san3a.domain.usecase.requests.CancelRequestUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetAcceptedOfferOnRequestUseCaseUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetAcceptedOffersUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetCraftManOfferOnRequestUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetOffersCountUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetOffersUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetRequestDetailsByIdUseCase
+import com.paris_2.san3a.domain.usecase.requests.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
 import org.koin.core.module.dsl.factoryOf
@@ -71,8 +68,6 @@ val useCaseModule = module {
     factoryOf(::GetAvailableJobsUseCase)
     factoryOf(::GetMostRequestedServicesUseCase)
     factoryOf(::RequestServiceUseCase)
-    factoryOf(::IsLoggedInUseCase)
-    factoryOf(::SetLoginUseCase)
     factoryOf(::GetPhoneNumberUseCase)
     factoryOf(::CreateChatUseCase)
     factoryOf(::GetLocationInfoUseCase)
@@ -95,7 +90,6 @@ val useCaseModule = module {
     factoryOf(::GetOffersCountUseCase)
     factoryOf(::GetRequestDetailsByIdUseCase)
     factoryOf(::AddOfferUseCase)
-    factoryOf(::GetYourOfferUseCase)
     factoryOf(::GetAcceptedOffersUseCase)
     factoryOf(::GetCraftManOfferOnRequestUseCase)
     factoryOf(::GetCraftsManRequestsUseCase)
