@@ -1,4 +1,4 @@
-package com.paris_2.san3a.data.source.local
+package com.paris_2.san3a.data.source.local.userPreferences
 
 import kotlinx.coroutines.flow.Flow
 

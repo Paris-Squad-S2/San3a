@@ -5,7 +5,7 @@ import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.service.auth.WhatsAppMessage
-import com.paris_2.san3a.data.source.local.UserPreferencesLocalDataStore
+import com.paris_2.san3a.data.source.local.userPreferences.UserPreferencesLocalDataStore
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource

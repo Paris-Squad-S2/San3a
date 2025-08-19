@@ -1,12 +1,11 @@
-package com.paris_2.san3a.data.source.local
+package com.paris_2.san3a.data.source.local.appVersion
 
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 
-class AppVersionDataSource(private val context: Context) {
-
-    fun getVersionName(): String {
+class AppVersionDataSourceImpl(private val context: Context) : AppVersionDataSource {
+    override fun getVersionName(): String {
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 context.packageManager

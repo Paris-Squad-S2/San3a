@@ -1,10 +1,11 @@
-package com.paris_2.san3a.data.source.local
+package com.paris_2.san3a.data.source.local.userPreferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.paris_2.san3a.data.source.local.appVersion.AppVersionDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

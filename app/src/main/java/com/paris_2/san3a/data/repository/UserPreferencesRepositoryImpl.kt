@@ -1,7 +1,7 @@
 package com.paris_2.san3a.data.repository
 
 import com.paris_2.san3a.data.repository.shared.BaseRepository
-import com.paris_2.san3a.data.source.local.UserPreferencesLocalDataStore
+import com.paris_2.san3a.data.source.local.userPreferences.UserPreferencesLocalDataStore
 import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.Flow
