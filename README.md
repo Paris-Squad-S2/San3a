@@ -54,7 +54,7 @@ The app makes it easy to find, book, and chat with trusted service providers in 
    ```
 
 # 🎨 Figma UI Design Prototype
-> [Desing Here](https://www.figma.com/design/c6UGcyi8PhugXrPTJOqzEd/San3a?node-id=3309-11976&t=EkAAzxic57qtGlIp-0 "Desing Here")
+> [Design Here](https://www.figma.com/design/c6UGcyi8PhugXrPTJOqzEd/San3a?node-id=3309-11976&t=EkAAzxic57qtGlIp-0 "Design Here")
 
 # 📸 UI Preview
 | On Borading        | Auth               | OTP               |
