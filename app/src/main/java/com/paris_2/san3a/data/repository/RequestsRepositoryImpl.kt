@@ -48,16 +48,14 @@ class RequestsRepositoryImpl(
     }
 
     override suspend fun getRequestDetailsById(requestId: String): RequestService {
-        validateNetworkConnection()
-        return safeCall(FailException("Failed to fetch request details for request ID: $requestId")) {
+        return safeNetworkCall(FailException("Failed to fetch request details for request ID: $requestId")) {
             requestRemoteDataSource.getRequestDetailsById(requestId)?.toEntity()
                 ?: throw FailException("Request not found")
         }
     }
 
     override suspend fun acceptOffer(offerId: String, craftsmanId: String, requestId: String) {
-        validateNetworkConnection()
-        safeCall(FailException("Failed to accept offer with ID: $offerId")) {
+        safeNetworkCall(FailException("Failed to accept offer with ID: $offerId")) {
             coroutineScope {
                 val accept = async { requestRemoteDataSource.acceptOffer(offerId) }
                 val assign =
@@ -98,15 +96,13 @@ class RequestsRepositoryImpl(
     }
 
     override suspend fun cancelRequest(requestId: String) {
-        validateNetworkConnection()
-        safeCall(FailException("Failed to cancel request with ID: $requestId")) {
+        safeNetworkCall(FailException("Failed to cancel request with ID: $requestId")) {
             requestRemoteDataSource.cancelRequest(requestId)
         }
     }
 
     override suspend fun markRequestAsDone(requestId: String) {
-        validateNetworkConnection()
-        safeCall(FailException("Failed to mark request as done for request ID: $requestId")) {
+        safeNetworkCall(FailException("Failed to mark request as done for request ID: $requestId")) {
             requestRemoteDataSource.markRequestAsDone(requestId)
         }
     }
@@ -126,8 +122,7 @@ class RequestsRepositoryImpl(
     }
 
     override suspend fun requestService(requestedService: RequestService) {
-        validateNetworkConnection()
-        safeCall(FailException("requestService")) {
+        safeNetworkCall(FailException("requestService")) {
             val imageUris = requestedService.image
             val imageUrls = when (imageUris.isNotEmpty()) {
                 true -> {
@@ -149,7 +144,6 @@ class RequestsRepositoryImpl(
             )
         }
     }
-
 
     override fun getAvailableJobs(): Flow<List<RequestService>> {
         validateNetworkConnection()

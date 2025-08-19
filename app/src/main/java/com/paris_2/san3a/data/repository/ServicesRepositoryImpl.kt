@@ -39,8 +39,7 @@ class ServicesRepositoryImpl(
     }
 
     override suspend fun getServiceById(serviceId: String): Service? {
-        validateNetworkConnection()
-        return safeCall(FailException("getServiceById")) {
+        return safeNetworkCall(FailException("getServiceById")) {
             val isDarkModeEnabled = userPreferencesLocalDataStore.isDarkThemeEnabled().first()
             val language = userPreferencesLocalDataStore.getLatestSelectedAppLanguage().first()
             serviceRemoteDataSource.getServiceById(serviceId)?.toEntity(
@@ -65,8 +64,7 @@ class ServicesRepositoryImpl(
     }
 
     override suspend fun updateNumOfRequestService(serviceId: String) {
-        validateNetworkConnection()
-        safeCall(FailException("updateNumOfRequestService")) {
+        safeNetworkCall(FailException("updateNumOfRequestService")) {
             serviceRemoteDataSource.updateNumOfRequestService(serviceId)
         }
     }

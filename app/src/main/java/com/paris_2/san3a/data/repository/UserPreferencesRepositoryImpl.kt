@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.catch
 
 class UserPreferencesRepositoryImpl(
     private val userPreferencesLocalDataStore: UserPreferencesLocalDataStore
-): UserPreferencesRepository, BaseRepository() {
+) : UserPreferencesRepository, BaseRepository() {
 
     override suspend fun setDarkTheme(isDarkTheme: Boolean) {
         safeCall(FailException("Failed to set dark theme")) {
@@ -23,10 +23,9 @@ class UserPreferencesRepositoryImpl(
         }
     }
 
-    override fun getLatestSelectedAppLanguage(): Flow<String> {
-        return userPreferencesLocalDataStore.getLatestSelectedAppLanguage()
+    override fun getLatestSelectedAppLanguage(): Flow<String> =
+        userPreferencesLocalDataStore.getLatestSelectedAppLanguage()
             .catch { throw FailException("failed to get selected language") }
-    }
 
     override suspend fun updateAppLanguage(newLanguage: String): Boolean {
         return safeCall(FailException("Failed to update app language")) {

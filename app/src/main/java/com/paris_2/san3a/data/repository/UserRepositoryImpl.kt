@@ -35,15 +35,12 @@ class UserRepositoryImpl(
 ) : UserRepository, BaseRepository() {
 
     override suspend fun addUser(phone: String) =
-        validateNetworkConnection().also {
-            safeCall(FailException("Failed to add user")) {
-                userRemoteDataSource.addUser(phone)
-            }
+        safeNetworkCall(FailException("Failed to add user")) {
+            userRemoteDataSource.addUser(phone)
         }
 
     override suspend fun saveAccountType(phone: String, accountType: AccountType) {
-        validateNetworkConnection()
-        return safeCall(FailException("Failed to save account type")) {
+        return safeNetworkCall(FailException("Failed to save account type")) {
             userRemoteDataSource.saveAccountType(phone, accountType)
         }
     }
@@ -54,8 +51,7 @@ class UserRepositoryImpl(
         services: List<String>,
         isCraftsman: Boolean
     ) {
-        validateNetworkConnection()
-        safeCall(FailException("Failed to save services")) {
+        safeNetworkCall(FailException("Failed to save services")) {
             userRemoteDataSource.saveServices(phone, services, isCraftsman)
         }
     }
@@ -75,15 +71,13 @@ class UserRepositoryImpl(
     }
 
     override suspend fun saveLocation(phone: String, location: Location) {
-        validateNetworkConnection()
-        safeCall(FailException("Failed to save location")) {
+        safeNetworkCall(FailException("Failed to save location")) {
             userRemoteDataSource.updateLocation(phone, location)
         }
     }
 
     override suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?) {
-        validateNetworkConnection()
-        safeCall(FailException("Failed to save personal info")) {
+        safeNetworkCall(FailException("Failed to save personal info")) {
             val profileUrl = profileUri?.let { uri ->
                 val path = "$PROFILE_IMAGE_PATH/$phone.jpg"
                 Log.d("UserRepositoryImpl", "savePersonalInfo: $path")
@@ -99,30 +93,24 @@ class UserRepositoryImpl(
         workMedia: List<Uri>?,
         workDescription: String
     ) =
-        validateNetworkConnection().also {
-            safeCall(FailException("Failed to save work showcase")) {
-                val mediaUrls = workMedia?.mapIndexed { index, uri ->
-                    ImageDto("$WORK_SHOWCASE_PATH/$phone/media_$index.jpg", uri)
-                }?.let { imageDtos ->
-                    storageRemoteDataSource.saveImages(imageDtos)
-                    storageRemoteDataSource.getImagesByPaths(imageDtos)
-                }
-                userRemoteDataSource.updateWorkShowcase(phone, mediaUrls, workDescription)
+        safeNetworkCall(FailException("Failed to save work showcase")) {
+            val mediaUrls = workMedia?.mapIndexed { index, uri ->
+                ImageDto("$WORK_SHOWCASE_PATH/$phone/media_$index.jpg", uri)
+            }?.let { imageDtos ->
+                storageRemoteDataSource.saveImages(imageDtos)
+                storageRemoteDataSource.getImagesByPaths(imageDtos)
             }
+            userRemoteDataSource.updateWorkShowcase(phone, mediaUrls, workDescription)
         }
 
     override suspend fun getUserProgress(phone: String): AccountSetupStep =
-        validateNetworkConnection().let {
-            safeCall(FailException("Failed to get user progress")) {
-                userRemoteDataSource.getUserProgress(phone)
-            }
+        safeNetworkCall(FailException("Failed to get user progress")) {
+            userRemoteDataSource.getUserProgress(phone)
         }
 
     override suspend fun updateUserProgress(phone: String, step: AccountSetupStep) =
-        validateNetworkConnection().let {
-            safeCall(FailException("Failed to update user progress")) {
-                userRemoteDataSource.updateUserProgress(phone, step)
-            }
+        safeNetworkCall(FailException("Failed to update user progress")) {
+            userRemoteDataSource.updateUserProgress(phone, step)
         }
 
     override fun getStats(userId: String): Flow<Stats> {
@@ -148,8 +136,7 @@ class UserRepositoryImpl(
         craftsmanId: String,
         rating: Float
     ) {
-        validateNetworkConnection()
-        safeCall(FailException("Failed to add rating for craftsman")) {
+        safeNetworkCall(FailException("Failed to add rating for craftsman")) {
             userRemoteDataSource.addRatingForCraftsman(userId, craftsmanId, rating)
         }
     }
@@ -164,8 +151,7 @@ class UserRepositoryImpl(
         craftsmanId: String,
         userId: String
     ): Float? {
-        validateNetworkConnection()
-        return safeCall(FailException("Failed to get customer rating on craftsman")) {
+        return safeNetworkCall(FailException("Failed to get customer rating on craftsman")) {
             userRemoteDataSource.getCustomerRatingOnCraftsman(craftsmanId, userId)
         }
     }
@@ -176,8 +162,7 @@ class UserRepositoryImpl(
         requestId: String,
         earnings: Double
     ) {
-        validateNetworkConnection()
-        safeCall(FailException("Failed to update earnings for craftsman")) {
+        safeNetworkCall(FailException("Failed to update earnings for craftsman")) {
             userRemoteDataSource.updateEarningsForCraftsman(
                 craftsmanId = craftsmanId,
                 userId = userId,
@@ -192,16 +177,14 @@ class UserRepositoryImpl(
         requestId: String,
         userId: String
     ) {
-        validateNetworkConnection()
-        safeCall(FailException("Failed to increment jobs done for craftsman")) {
+        safeNetworkCall(FailException("Failed to increment jobs done for craftsman")) {
             userRemoteDataSource.incrementJobsDoneForCraftsman(craftsmanId, requestId, userId)
         }
     }
 
     override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) =
         coroutineScope {
-            validateNetworkConnection()
-            safeCall(FailException("Failed to upload national ID images")) {
+            safeNetworkCall(FailException("Failed to upload national ID images")) {
                 val frontDeferred = frontUri?.let { uri ->
                     async {
                         val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
@@ -225,27 +208,23 @@ class UserRepositoryImpl(
         }
 
     override suspend fun getUser(phone: String): User {
-        validateNetworkConnection()
-        return safeCall(FailException("Failed to get user")) {
+        return safeNetworkCall(FailException("Failed to get user")) {
             userRemoteDataSource.getUser(phone)
         }
     }
 
     override suspend fun getWorkMedia(phone: String): List<String> =
-        validateNetworkConnection().let {
-            safeCall(FailException("Failed to get work media")) {
-                userRemoteDataSource.getWorkMedia(phone)
-            }
+        safeNetworkCall(FailException("Failed to get work media")) {
+            userRemoteDataSource.getWorkMedia(phone)
         }
 
     override suspend fun sendMessage(
         phoneNumber: String,
         message: String,
     ): Boolean {
-        validateNetworkConnection()
-        return safeCall(FailException("register error")) {
+        return safeNetworkCall(FailException("register error")) {
             val body = WhatsAppMessage(phoneNumber = phoneNumber, message = message)
-            authRemoteDataSource.sendMessage(body).success ?: false
+            authRemoteDataSource.sendOtpMessage(body).success ?: false
         }
     }
 
@@ -261,11 +240,11 @@ class UserRepositoryImpl(
         }
     }
 
-    companion object {
-        private const val PROFILE_IMAGE_PATH = "profile_images"
-        private const val NATIONAL_ID_PATH = "national_ids"
-        private const val FRONT_IMAGE_NAME = "front.jpg"
-        private const val BACK_IMAGE_NAME = "back.jpg"
-        private const val WORK_SHOWCASE_PATH = "work_showcase"
+    private companion object {
+        const val PROFILE_IMAGE_PATH = "profile_images"
+        const val NATIONAL_ID_PATH = "national_ids"
+        const val FRONT_IMAGE_NAME = "front.jpg"
+        const val BACK_IMAGE_NAME = "back.jpg"
+        const val WORK_SHOWCASE_PATH = "work_showcase"
     }
 }

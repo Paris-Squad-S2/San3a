@@ -53,15 +53,7 @@ class UserPreferencesLocalDataStoreImpl(
     }
 
     override suspend fun getVersionName(): String {
-        saveVersionName()
-        return dataStore.data.map {
-            it[APP_VERSION_NAME] ?: DEFAULT_VERSION_NAME
-        }.first()
-    }
-
-    private suspend fun saveVersionName() {
-        val versionName = appVersionDataSource.getVersionName()
-        dataStore.setValue(APP_VERSION_NAME,versionName)
+        return appVersionDataSource.getVersionName()
     }
 
     override fun getLatestSelectedAppLanguage(): Flow<String> =
