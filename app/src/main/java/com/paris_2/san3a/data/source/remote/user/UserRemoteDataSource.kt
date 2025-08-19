@@ -62,6 +62,4 @@ interface UserRemoteDataSource {
     suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String)
 
     fun getJobsDoneForCraftsman(craftsmanId: String): Flow<Int>
-
-    fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>>
 }

@@ -4,7 +4,7 @@ import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.remote.requestDetails.RequestRemoteDataSource
-import com.paris_2.san3a.domain.FailException
+import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.repository.RequestsRepository
@@ -125,5 +125,12 @@ class RequestsRepositoryImpl(
         return requestRemoteDataSource.getAcceptedOfferOnRequestUseCase(requestId)
             .map { it?.toEntity() }
             .catch { throw FailException("Failed to fetch accepted offer for request ID: $requestId") }
+    }
+
+    override fun getRecentRelatedJobs(relatedJobsIds: List<String>): Flow<List<RequestService>> {
+        validateNetworkConnection()
+        return requestRemoteDataSource.getRecentRelatedJobs(relatedJobsIds)
+            .map { list -> list.map { it.toEntity() } }
+            .catch { throw FailException("Failed to get recent related jobs: $relatedJobsIds") }
     }
 }

@@ -7,7 +7,7 @@ import com.paris_2.san3a.data.mapper.toStates
 import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.local.UserPreferencesLocalDataStore
 import com.paris_2.san3a.data.source.local.location.LocationLocalDataSource
-import com.paris_2.san3a.domain.FailException
+import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.entity.City
 import com.paris_2.san3a.domain.entity.Governorate
 import com.paris_2.san3a.domain.repository.LocationRepository

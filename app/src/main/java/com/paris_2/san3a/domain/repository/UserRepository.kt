@@ -41,7 +41,6 @@ interface UserRepository {
         userId: String
     )
 
-    fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestService>>
     suspend fun sendMessage(phoneNumber: String, message: String): Boolean
     suspend fun savePhoneNumber(phoneNumber: String)
     suspend fun getPhoneNumber(): String

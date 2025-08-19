@@ -7,7 +7,7 @@ import com.paris_2.san3a.data.mapper.toMessageList
 import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.remote.messages.MessagesRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
-import com.paris_2.san3a.domain.FailException
+import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.entity.Chat
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent

@@ -9,11 +9,10 @@ import com.paris_2.san3a.data.source.local.UserPreferencesLocalDataStore
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
-import com.paris_2.san3a.domain.FailException
+import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
-import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.domain.entity.User
@@ -187,12 +186,6 @@ class UserRepositoryImpl(
         safeCall(FailException("Failed to increment jobs done for craftsman")) {
             userRemoteDataSource.incrementJobsDoneForCraftsman(craftsmanId, requestId, userId)
         }
-    }
-
-    override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestService>> {
-        return userRemoteDataSource.getRecentRelatedJobs(relatedJobs)
-            .map { list -> list.map { it.toEntity() } }
-            .catch { throw FailException("Failed to get recent related jobs: $relatedJobs") }
     }
 
     override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) {

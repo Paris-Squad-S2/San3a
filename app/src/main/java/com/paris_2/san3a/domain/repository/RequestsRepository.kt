@@ -19,4 +19,6 @@ interface RequestsRepository {
     suspend fun cancelRequest(requestId: String)
     suspend fun markRequestAsDone(requestId: String)
     fun getAcceptedOfferOnRequestUseCase(requestId: String): Flow<Offer?>
+    fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestService>>
+
 }

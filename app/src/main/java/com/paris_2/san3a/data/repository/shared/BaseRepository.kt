@@ -2,8 +2,8 @@ package com.paris_2.san3a.data.repository.shared
 
 import android.util.Log
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
-import com.paris_2.san3a.domain.NoInternetConnectionException
-import com.paris_2.san3a.domain.San3aException
+import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
+import com.paris_2.san3a.domain.exceptions.San3aException
 import org.koin.java.KoinJavaComponent.inject
 import kotlin.getValue
 

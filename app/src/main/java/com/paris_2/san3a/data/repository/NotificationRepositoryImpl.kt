@@ -5,7 +5,7 @@ import com.paris_2.san3a.data.mapper.toFirestoreDto
 import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.local.UserPreferencesLocalDataStore
 import com.paris_2.san3a.data.source.remote.notification.NotificationRemoteDataSource
-import com.paris_2.san3a.domain.FailException
+import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.entity.Notification
 import com.paris_2.san3a.domain.entity.NotificationToSend
 import com.paris_2.san3a.domain.repository.NotificationRepository

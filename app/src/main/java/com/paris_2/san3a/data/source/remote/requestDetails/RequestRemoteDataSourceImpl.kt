@@ -1,6 +1,7 @@
 package com.paris_2.san3a.data.source.remote.requestDetails
 
 import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.Query
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.source.remote.requestDetails.dto.OfferDto
 import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.flow
 
 class RequestRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
-): RequestRemoteDataSource {
+) : RequestRemoteDataSource {
 
     override suspend fun addOffer(offer: OfferDto) {
         fireStoreService.addToCollection(
@@ -33,7 +34,7 @@ class RequestRemoteDataSourceImpl(
 
     override suspend fun getRequestDetailsById(requestId: String): RequestServiceDto? {
         return fireStoreService.getDoc(
-            path = "$REQUEST_DETAILS_COLLECTION/$requestId",
+            path = "$SERVICE_REQUESTS_COLLECTION/$requestId",
             fromJson = RequestServiceDto::fromJson,
         )
     }
@@ -50,7 +51,7 @@ class RequestRemoteDataSourceImpl(
 
     override suspend fun assignRequestToCraftsman(requestId: String, craftsmanId: String) {
         fireStoreService.updateDoc(
-            path = "$REQUEST_DETAILS_COLLECTION/$requestId",
+            path = "$SERVICE_REQUESTS_COLLECTION/$requestId",
             data = mapOf(
                 "selectedCraftsmanId" to craftsmanId
             )
@@ -85,9 +86,9 @@ class RequestRemoteDataSourceImpl(
         )
     }
 
-    override fun getCustomerRequests(userId: String): Flow<List<RequestServiceDto>>{
+    override fun getCustomerRequests(userId: String): Flow<List<RequestServiceDto>> {
         return fireStoreService.streamCollection(
-            path = REQUEST_DETAILS_COLLECTION,
+            path = SERVICE_REQUESTS_COLLECTION,
             fromJson = RequestServiceDto::fromJson,
             queryBuilder = { query ->
                 query.whereEqualTo("userId", userId)
@@ -97,7 +98,7 @@ class RequestRemoteDataSourceImpl(
 
     override suspend fun cancelRequest(requestId: String) {
         fireStoreService.updateDoc(
-            path = "$REQUEST_DETAILS_COLLECTION/$requestId",
+            path = "$SERVICE_REQUESTS_COLLECTION/$requestId",
             data = mapOf(
                 "requestStatus" to "CANCELLED"
             )
@@ -106,7 +107,7 @@ class RequestRemoteDataSourceImpl(
 
     override suspend fun markRequestAsDone(requestId: String) {
         fireStoreService.updateDoc(
-            path = "$REQUEST_DETAILS_COLLECTION/$requestId",
+            path = "$SERVICE_REQUESTS_COLLECTION/$requestId",
             data = mapOf(
                 "requestStatus" to "COMPLETED"
             )
@@ -127,7 +128,7 @@ class RequestRemoteDataSourceImpl(
                 flow { emit(emptyList()) }
             } else {
                 fireStoreService.streamCollection(
-                    path = REQUEST_DETAILS_COLLECTION,
+                    path = SERVICE_REQUESTS_COLLECTION,
                     fromJson = RequestServiceDto::fromJson,
                     queryBuilder = { query ->
                         query.whereIn(FieldPath.documentId(), requestIds)
@@ -170,9 +171,23 @@ class RequestRemoteDataSourceImpl(
         }
     }
 
+    override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>> {
+        if (relatedJobs.isEmpty()) {
+            return flow { emit(emptyList()) }
+        }
+        return fireStoreService.streamCollection(
+            path = SERVICE_REQUESTS_COLLECTION,
+            fromJson = RequestServiceDto::fromJson,
+            queryBuilder = { query ->
+                query
+                    .whereIn("serviceId", relatedJobs)
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
+            }
+        )
+    }
 
-    companion object{
-        const val REQUEST_DETAILS_COLLECTION = "service_requests"
+    private companion object {
+        const val SERVICE_REQUESTS_COLLECTION = "service_requests"
         const val OFFERS_COLLECTION = "offers"
     }
 }

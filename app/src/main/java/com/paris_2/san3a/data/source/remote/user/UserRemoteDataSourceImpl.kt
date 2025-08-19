@@ -261,25 +261,10 @@ class UserRemoteDataSourceImpl(
         Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
     }
 
-    override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>> {
-        if (relatedJobs.isEmpty()) {
-            return flow { emit(emptyList()) }
-        }
-        return fireStoreService.streamCollection(
-            path = SERVICE_REQUESTS_COLLECTION,
-            fromJson = RequestServiceDto::fromJson,
-            queryBuilder = { query ->
-                query
-                    .whereIn("serviceId", relatedJobs)
-                    .orderBy("createdAt", Query.Direction.DESCENDING)
-            }
-        )
-    }
 
     companion object {
         private const val USERS_COLLECTION = "users"
         private const val CRAFTSMAN_STATUS_COLLECTION = "craftsmen"
-        private const val SERVICE_REQUESTS_COLLECTION = "service_requests"
         private const val OFFERED_SERVICES_COLLECTION = "offeredServices"
         private const val REQUESTED_SERVICES_PATH = "requestedServices"
         private const val SERVICES_COLLECTION = "services"
