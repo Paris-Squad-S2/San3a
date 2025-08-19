@@ -44,11 +44,6 @@ class UserRepositoryImpl(
     }
 
 
-    override suspend fun getAccountType(phone: String): AccountType =
-        safeCall(FailException("Failed to get account type")) {
-            userRemoteDataSource.getAccountType(phone)
-        }
-
     override suspend fun saveServices(
         phone: String,
         services: List<String>,

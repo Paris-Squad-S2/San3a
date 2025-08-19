@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 
 class ServiceRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
-): ServiceRemoteDataSource {
-    
+) : ServiceRemoteDataSource {
+
     override fun getAllServices(): Flow<List<ServiceDto>> {
         return fireStoreService.streamCollection(
             path = SERVICES_COLLECTION,
@@ -26,12 +26,6 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
-    override suspend fun requestService(requestedServiceDto: RequestServiceDto): String {
-        return fireStoreService.addToCollection(
-            path = SERVICE_REQUESTS_COLLECTION,
-            data = requestedServiceDto.toJson()
-        )
-    }
 
     override fun searchServices(query: String): Flow<List<ServiceDto>> {
         return fireStoreService.streamCollection(
@@ -56,13 +50,6 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
-    override fun getAvailableJobs(): Flow<List<RequestServiceDto>> {
-        return fireStoreService.streamCollection(
-            path = SERVICE_REQUESTS_COLLECTION,
-            fromJson = RequestServiceDto::fromJson,
-        )
-    }
-
     override suspend fun updateNumOfRequestService(serviceId: String) {
         Log.e("FirestorePath", "$SERVICES_COLLECTION/$serviceId")
         return fireStoreService.updateDoc(
@@ -72,6 +59,21 @@ class ServiceRemoteDataSourceImpl(
             )
         )
     }
+
+    override fun getAvailableJobs(): Flow<List<RequestServiceDto>> {
+        return fireStoreService.streamCollection(
+            path = SERVICE_REQUESTS_COLLECTION,
+            fromJson = RequestServiceDto::fromJson,
+        )
+    }
+
+    override suspend fun requestService(requestedServiceDto: RequestServiceDto): String {
+        return fireStoreService.addToCollection(
+            path = SERVICE_REQUESTS_COLLECTION,
+            data = requestedServiceDto.toJson()
+        )
+    }
+
 
     companion object {
         const val SERVICES_COLLECTION = "services"

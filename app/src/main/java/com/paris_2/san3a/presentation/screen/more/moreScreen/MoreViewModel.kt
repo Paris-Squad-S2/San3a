@@ -7,11 +7,11 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.User
-import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
+import com.paris_2.san3a.domain.usecase.user.CustomizeProfileSettingsUseCase
+import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.user.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase

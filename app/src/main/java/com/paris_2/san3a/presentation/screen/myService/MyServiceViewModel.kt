@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
-import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import com.paris_2.san3a.presentation.navigation.Destinations

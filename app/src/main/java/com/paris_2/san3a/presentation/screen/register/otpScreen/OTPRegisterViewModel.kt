@@ -9,8 +9,8 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
-import com.paris_2.san3a.domain.usecase.AddUserUseCase
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.user.AddUserUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.SendOtpUseCase
 import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase

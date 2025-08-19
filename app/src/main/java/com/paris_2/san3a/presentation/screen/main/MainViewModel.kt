@@ -1,7 +1,7 @@
 package com.paris_2.san3a.presentation.screen.main
 
 import androidx.lifecycle.viewModelScope
-import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
+import com.paris_2.san3a.domain.usecase.user.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.launch
 
