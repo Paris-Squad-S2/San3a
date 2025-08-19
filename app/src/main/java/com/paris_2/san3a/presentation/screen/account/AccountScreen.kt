@@ -33,7 +33,6 @@ import com.paris_2.san3a.presentation.screen.account.components.ShowYourWorkCont
 import com.paris_2.san3a.presentation.screen.account.components.VerifyIdentityContent
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
-import com.paris_2.san3a.presentation.shared.utils.asString
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
