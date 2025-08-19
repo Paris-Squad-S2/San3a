@@ -17,6 +17,7 @@ import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -178,7 +179,7 @@ class OTPRegisterViewModel(
                     updateState(
                         screenState.value.copy(
                             showBottomSheet = false,
-                            errorMessage = R.string.otp_code_is_wrong,
+                            errorMessage = UiText.StringResource(R.string.otp_code_is_wrong),
                             showSnackBarError = true,
                             isLoading = false
 
