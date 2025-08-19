@@ -3,7 +3,7 @@ package com.paris_2.san3a.data.repository
 import com.paris_2.san3a.data.mapper.toDomain
 import com.paris_2.san3a.data.mapper.toFirestoreDto
 import com.paris_2.san3a.data.repository.shared.BaseRepository
-import com.paris_2.san3a.data.source.local.LocalDataStore
+import com.paris_2.san3a.data.source.local.UserPreferencesLocalDataStore
 import com.paris_2.san3a.data.source.remote.notification.NotificationRemoteDataSource
 import com.paris_2.san3a.domain.FailException
 import com.paris_2.san3a.domain.entity.Notification
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 
 class NotificationRepositoryImpl(
     private val notificationRemoteDataSource: NotificationRemoteDataSource,
-    private val locaDataSource: LocalDataStore,
+    private val locaDataSource: UserPreferencesLocalDataStore,
 ) : NotificationRepository, BaseRepository() {
 
     @OptIn(ExperimentalCoroutinesApi::class)

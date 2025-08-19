@@ -2,7 +2,7 @@ package com.paris_2.san3a.data.source.local
 
 import kotlinx.coroutines.flow.Flow
 
-interface LocalDataStore {
+interface UserPreferencesLocalDataStore {
     suspend fun isOnboardingCompleted(): Boolean
     suspend fun setOnboardingCompleted(completed: Boolean = true)
     suspend fun savePhoneNumber(phoneNumber: String)

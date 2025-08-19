@@ -5,7 +5,7 @@ import androidx.core.net.toUri
 import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.repository.shared.BaseRepository
-import com.paris_2.san3a.data.source.local.LocalDataStore
+import com.paris_2.san3a.data.source.local.UserPreferencesLocalDataStore
 import com.paris_2.san3a.data.source.remote.service.ServiceRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.utils.NetworkConnectionChecker
@@ -25,7 +25,7 @@ class ServicesRepositoryImpl(
     private val serviceRemoteDataSource: ServiceRemoteDataSource,
     private val firebaseStorageRemoteDataSource: StorageRemoteDataSource,
     private val networkConnectionChecker: NetworkConnectionChecker,
-    private val localDataStore: LocalDataStore
+    private val userPreferencesLocalDataStore: UserPreferencesLocalDataStore
 ) : ServicesRepository, BaseRepository() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -35,8 +35,8 @@ class ServicesRepositoryImpl(
             throw NoInternetConnectionException()
         }
 
-        return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
-            localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
+        return userPreferencesLocalDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
+            userPreferencesLocalDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
                 serviceRemoteDataSource.getAllServices()
                     .map { dtoList ->
                         dtoList.toEntity(
@@ -52,8 +52,8 @@ class ServicesRepositoryImpl(
     override suspend fun getServiceById(serviceId: String): Service? {
         validateNetworkConnection()
         return safeCall(FailException("getServiceById")) {
-            val isDarkModeEnabled = localDataStore.isDarkThemeEnabled().first()
-            val language = localDataStore.getLatestSelectedAppLanguage().first()
+            val isDarkModeEnabled = userPreferencesLocalDataStore.isDarkThemeEnabled().first()
+            val language = userPreferencesLocalDataStore.getLatestSelectedAppLanguage().first()
             serviceRemoteDataSource.getServiceById(serviceId)?.toEntity(
                 isDarkTheme = isDarkModeEnabled,
                 language = language
@@ -64,8 +64,8 @@ class ServicesRepositoryImpl(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun searchServices(query: String): Flow<List<Service>> {
         validateNetworkConnection()
-        return localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
-            localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
+        return userPreferencesLocalDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
+            userPreferencesLocalDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
                 serviceRemoteDataSource.searchServices(query)
                     .map { it.toEntity(isDarkModeEnabled, language) }
                     .catch { throw FailException("searchServices") }
@@ -96,8 +96,8 @@ class ServicesRepositoryImpl(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getMostRequestedServices(): Flow<List<Service>> {
         validateNetworkConnection()
-        return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
-            localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
+        return userPreferencesLocalDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
+            userPreferencesLocalDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
                 serviceRemoteDataSource.getMostRequestedServices()
                     .map { it.toEntity(isDarkModeEnabled, language) }
                     .catch { throw FailException("getMostRequestedServices") }

@@ -5,7 +5,7 @@ import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.service.auth.WhatsAppMessage
-import com.paris_2.san3a.data.source.local.LocalDataStore
+import com.paris_2.san3a.data.source.local.UserPreferencesLocalDataStore
 import com.paris_2.san3a.data.source.remote.auth.AuthRemoteDataSource
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
@@ -29,7 +29,7 @@ class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
     private val storageRemoteDataSource: StorageRemoteDataSource,
     private val authRemoteDataSource: AuthRemoteDataSource,
-    private val localDataStore: LocalDataStore
+    private val userPreferencesLocalDataStore: UserPreferencesLocalDataStore
 ) : UserRepository, BaseRepository() {
 
     override suspend fun addUser(phone: String) =
@@ -64,8 +64,8 @@ class UserRepositoryImpl(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<Service>> {
         validateNetworkConnection()
-        return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
-            localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
+        return userPreferencesLocalDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
+            userPreferencesLocalDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
                 userRemoteDataSource.getServices(phone, isCraftsman)
                     .map { dtoList -> dtoList.toEntity(isDarkModeEnabled, language) }
                     .catch { throw FailException("Failed to get services for user: $phone, isCraftsman: $isCraftsman") }
@@ -238,13 +238,13 @@ class UserRepositoryImpl(
 
     override suspend fun savePhoneNumber(phoneNumber: String) {
         safeCall(FailException("save phone number error")) {
-            localDataStore.savePhoneNumber(phoneNumber)
+            userPreferencesLocalDataStore.savePhoneNumber(phoneNumber)
         }
     }
 
     override suspend fun getPhoneNumber(): String {
         return safeCall(FailException("get phone number error")) {
-            localDataStore.getPhoneNumber()
+            userPreferencesLocalDataStore.getPhoneNumber()
         }
     }
 

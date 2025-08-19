@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 
-class LocalDataStoreImpl(
+class UserPreferencesLocalDataStoreImpl(
     private val dataStore: DataStore<Preferences>,
     private val appVersionDataSource: AppVersionDataSource
-): LocalDataStore {
+): UserPreferencesLocalDataStore {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun isOnboardingCompleted(): Boolean = dataStore.data.mapLatest {
@@ -77,8 +77,6 @@ class LocalDataStoreImpl(
             preferences[key] = value
         }
     }
-
-
 
     companion object {
         private val KEY_ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")

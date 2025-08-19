@@ -11,8 +11,8 @@ import com.paris_2.san3a.data.repository.ServicesRepositoryImpl
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.FireStoreServiceImpl
 import com.paris_2.san3a.data.source.local.AppVersionDataSource
-import com.paris_2.san3a.data.source.local.LocalDataStore
-import com.paris_2.san3a.data.source.local.LocalDataStoreImpl
+import com.paris_2.san3a.data.source.local.UserPreferencesLocalDataStore
+import com.paris_2.san3a.data.source.local.UserPreferencesLocalDataStoreImpl
 import com.paris_2.san3a.data.source.local.location.LocationLocalDataSource
 import com.paris_2.san3a.data.source.local.location.LocationLocalDataSourceImpl
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSourceImpl
@@ -48,7 +48,7 @@ val dataModule = module {
     single { FirebaseFirestore.getInstance() }
     single { FirebaseStorage.getInstance() }
     single { AppVersionDataSource(get()) }
-    singleOf(::LocalDataStoreImpl) { bind<LocalDataStore>() }
+    singleOf(::UserPreferencesLocalDataStoreImpl) { bind<UserPreferencesLocalDataStore>() }
     single<DataStore<Preferences>> {
         PreferenceDataStoreFactory.create { get<Context>().preferencesDataStoreFile("app_datastore") }
     }
