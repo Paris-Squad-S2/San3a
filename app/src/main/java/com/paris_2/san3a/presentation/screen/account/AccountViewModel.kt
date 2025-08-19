@@ -13,6 +13,8 @@ import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.City
 import com.paris_2.san3a.domain.entity.Governorate
+import com.paris_2.san3a.domain.entity.Service
+import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
