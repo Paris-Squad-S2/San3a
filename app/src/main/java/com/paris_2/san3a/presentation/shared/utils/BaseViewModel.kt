@@ -42,8 +42,10 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
         onSuccess: (suspend (T) -> Unit)? = null,
         onError: (Throwable) -> Unit,
         scope: CoroutineScope = viewModelScope,
+        onRetry: (suspend () -> Unit) ?= {},
+        retryLimit: Int?=null,
         execute: suspend (CoroutineScope) -> T,
-    ): Job {
+        ): Job {
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             onError(throwable)
         }
@@ -54,6 +56,11 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
             } catch (e: Exception) {
                 Log.e("BaseViewModel", "tryToExecute: Error executing operation", e)
                 onError(e)
+            }finally {
+                retryLimit?.let {
+                    for (i in 0..it)
+                        onRetry?.invoke()
+                }
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.shared.components
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
@@ -23,7 +21,7 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 
 @Composable
 fun SnackBar(
-    @StringRes text: Int,
+    text:String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
@@ -45,7 +43,7 @@ fun SnackBar(
     ) {
 
         Text(
-            text = stringResource(id = text),
+            text = text,
             style = Theme.textStyle.body.medium.regular,
             color = Theme.colors.shade.primary,
             modifier = Modifier.padding(start = 12.dp)
@@ -60,7 +58,7 @@ private fun SnackBarErrorPreview() {
     San3aTheme {
         Column(Modifier.padding(50.dp)) {
             SnackBar(
-                text = R.string.some_error_happened,
+                text = "some_error_happened",
             )
 
         }

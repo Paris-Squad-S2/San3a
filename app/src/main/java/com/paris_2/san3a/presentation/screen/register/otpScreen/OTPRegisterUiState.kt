@@ -1,11 +1,11 @@
 package com.paris_2.san3a.presentation.screen.register.otpScreen
 
-import androidx.annotation.StringRes
+import com.paris_2.san3a.presentation.shared.utils.UiText
 
 data class OTPRegisterScreenState(
     val otpRegisterUiState: OTPRegisterUiState = OTPRegisterUiState(),
     val isLoading: Boolean = false,
-    @StringRes val errorMessage: Int? = null,
+    val errorMessage: UiText? = null,
     val showBottomSheet: Boolean = false,
     val isNoInternet: Boolean = false,
     val showSnackBarError: Boolean = false

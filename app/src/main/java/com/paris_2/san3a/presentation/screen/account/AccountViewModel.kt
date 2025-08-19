@@ -15,8 +15,8 @@ import com.paris_2.san3a.domain.entity.City
 import com.paris_2.san3a.domain.entity.Governorate
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
-import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
+import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase

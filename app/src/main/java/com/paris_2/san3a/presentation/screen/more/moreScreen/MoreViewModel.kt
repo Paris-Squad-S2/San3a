@@ -19,6 +19,7 @@ import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.mapper.toUserUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -70,7 +71,7 @@ class MoreViewModel(
     private fun onGetVersionNameError(throwable: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.occrus_error_when_get_version_name,
+                errorMessage = UiText.StringResource(resId = R.string.occrus_error_when_get_version_name),
                 showSnackBarError = true,
                 isNoInternet = false,
                 isLoading = false
@@ -104,7 +105,7 @@ class MoreViewModel(
     private fun onGetLanguageSelectedError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.occrus_error_when_get_languag_selected,
+                errorMessage = UiText.StringResource(resId = R.string.occrus_error_when_get_languag_selected),
                 showSnackBarError = true,
             )
         )
@@ -164,7 +165,7 @@ class MoreViewModel(
     private fun onGetDarkModeError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.occrus_error_when_get_dark_mode,
+                errorMessage =  UiText.StringResource(resId =R.string.occrus_error_when_get_dark_mode),
                 showSnackBarError = true,
             )
         )
@@ -214,7 +215,7 @@ class MoreViewModel(
         } else {
             updateState(
                 screenState.value.copy(
-                    errorMessage = R.string.user_information_not_found,
+                    errorMessage =  UiText.StringResource(resId =R.string.user_information_not_found),
                     isNoInternet = false,
                     isLoading = false,
                     showSnackBarError = true,
@@ -269,7 +270,7 @@ class MoreViewModel(
     private fun onGetPhoneNumberError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.phone_number_not_found,
+                errorMessage =  UiText.StringResource(resId =R.string.phone_number_not_found),
                 showSnackBarError = true,
                 showSnackBarSuccess = false
             )
@@ -402,7 +403,7 @@ class MoreViewModel(
             updateState(
                 screenState.value.copy(
                     isLoadingChangeAccount = false,
-                    errorMessage = R.string.occur_error_when_save_account_type,
+                    errorMessage =  UiText.StringResource(resId =R.string.occur_error_when_save_account_type),
                     showSnackBarError = true,
                     isNoInternet = false,
                     isLoading = false,
@@ -446,7 +447,7 @@ class MoreViewModel(
     private fun onLogoutError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.logout_failed,
+                errorMessage =  UiText.StringResource(resId =R.string.logout_failed),
                 isNoInternet = false,
                 isLoading = false,
                 showSnackBarError = true,
@@ -537,7 +538,7 @@ class MoreViewModel(
         updateState(
             screenState.value.copy(
                 showSnackBarSuccess = true,
-                successMessageSnackBar = R.string.occrus_user_information_saved_successfully,
+                successMessageSnackBar = UiText.StringResource(resId = R.string.occrus_user_information_saved_successfully),
                 isLoading = false,
                 isNoInternet = false,
                 showSnackBarError = false
@@ -554,7 +555,7 @@ class MoreViewModel(
         } else {
             updateState(
                 screenState.value.copy(
-                    errorMessage = R.string.occrus_error_when_saving_user_information,
+                    errorMessage =  UiText.StringResource(resId =R.string.occrus_error_when_saving_user_information),
                     isLoading = false
                 )
             )
@@ -594,7 +595,7 @@ class MoreViewModel(
     private fun onUpdateAppLanguageError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.occruc_error_when_language_app_updated,
+                errorMessage =  UiText.StringResource(resId =R.string.occruc_error_when_language_app_updated),
                 showSnackBarError = true,
                 showSnackBarSuccess = false,
                 isLoading = false,

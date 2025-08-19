@@ -122,7 +122,7 @@ fun MyServiceScreenContent(
                                 .statusBarsPadding()
                                 .padding(horizontal = 12.dp, vertical = 16.dp)
                                 .align(Alignment.TopCenter),
-                            text = it,
+                            text = it.asString(),
                             onClick = myServiceInteractionListener::onDismissSnack,
                         )
                     }
@@ -136,7 +136,7 @@ fun MyServiceScreenContent(
                                 .statusBarsPadding()
                                 .padding(horizontal = 12.dp, vertical = 16.dp)
                                 .align(Alignment.TopCenter),
-                            text = it,
+                            text = it.asString(),
                             onClick = myServiceInteractionListener::onDismissSnack,
                         )
                     }

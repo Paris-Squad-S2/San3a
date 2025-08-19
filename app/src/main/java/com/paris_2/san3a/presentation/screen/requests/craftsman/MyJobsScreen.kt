@@ -176,7 +176,7 @@ private fun MyRequestScreenContent(
             AnimatedVisibility(uiState.showSnackBarError) {
                 uiState.errorMessage?.let {
                     SnackBar(
-                        text = it,
+                        text = it.asString(),
                         modifier = Modifier
                             .fillMaxWidth()
                             .statusBarsPadding()

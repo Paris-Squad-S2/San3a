@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.screen.requests.craftsman
 
-import androidx.annotation.StringRes
 import coil3.Uri
 import coil3.toUri
 import com.paris_2.san3a.domain.entity.Offer
@@ -8,11 +7,12 @@ import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
+import com.paris_2.san3a.presentation.shared.utils.UiText
 
 data class MyJobsCraftsmanScreenState(
     val isLoading: Boolean = false,
     val myOffersCraftsmanUiState: MyOfferCraftsmanUiState = MyOfferCraftsmanUiState(),
-    @StringRes val errorMessage: Int? = null,
+    val errorMessage: UiText? = null,
     val isNoInternet: Boolean = false,
     val showSnackBarError: Boolean = false,
 )

@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.screen.more.components
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,7 +31,7 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 @Composable
 fun SettingItem(
     icon: Int,
-    @StringRes label: Int,
+    label: String,
     modifier: Modifier = Modifier,
     contentDescriptionIcon: String? = null,
     hasSwitchIcon: Boolean = false,
@@ -59,7 +58,7 @@ fun SettingItem(
             modifier = Modifier.size(20.dp)
         )
         Text(
-            text = stringResource(label),
+            text = label,
             style = Theme.textStyle.body.medium.medium,
             color = labelColor,
             modifier = Modifier.weight(1f)
@@ -104,7 +103,7 @@ private fun SettingItemPreview() {
     BasePreview {
         SettingItem(
             icon = R.drawable.ic_location_outline,
-            label = R.string.home,
+            label = stringResource(R.string.home),
             hasSwitchIcon = true,
             isCheckSwitch = true,
             onCheckedChange = {},
