@@ -3,21 +3,23 @@ package com.paris_2.san3a.data.repository
 import android.net.Uri
 import android.util.Log
 import com.paris_2.san3a.data.mapper.toEntity
-import com.paris_2.san3a.data.source.local.LocalDataStore
+import com.paris_2.san3a.data.repository.shared.BaseRepository
+import com.paris_2.san3a.data.source.remote.user.dto.OtpMessageDto
+import com.paris_2.san3a.data.source.local.userPreferences.UserPreferencesLocalDataStore
 import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
+import com.paris_2.san3a.data.source.remote.storage.dto.ImageDto
 import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
-import com.paris_2.san3a.data.utils.NetworkConnectionChecker
-import com.paris_2.san3a.domain.FailException
-import com.paris_2.san3a.domain.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
-import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.domain.entity.User
+import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -27,81 +29,58 @@ import kotlinx.coroutines.flow.map
 class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
     private val storageRemoteDataSource: StorageRemoteDataSource,
-    private val networkConnectionChecker: NetworkConnectionChecker,
-    private val localDataStore: LocalDataStore
-    ) : UserRepository, BaseRepository() {
+    private val userPreferencesLocalDataStore: UserPreferencesLocalDataStore
+) : UserRepository, BaseRepository() {
 
     override suspend fun addUser(phone: String) =
-        safeCall(FailException("Failed to add user")) {
+        safeNetworkCall(FailException("Failed to add user")) {
             userRemoteDataSource.addUser(phone)
         }
 
     override suspend fun saveAccountType(phone: String, accountType: AccountType) {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
-        return safeCall(FailException("Failed to save account type")) {
+        return safeNetworkCall(FailException("Failed to save account type")) {
             userRemoteDataSource.saveAccountType(phone, accountType)
         }
     }
 
-
-    override suspend fun getAccountType(phone: String): AccountType =
-        safeCall(FailException("Failed to get account type")) {
-            userRemoteDataSource.getAccountType(phone)
-        }
 
     override suspend fun saveServices(
         phone: String,
         services: List<String>,
         isCraftsman: Boolean
     ) {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
-        safeCall(FailException("Failed to save services")) {
+        safeNetworkCall(FailException("Failed to save services")) {
             userRemoteDataSource.saveServices(phone, services, isCraftsman)
         }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<Service>> {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
-        return localDataStore.isDarkThemeEnabled().flatMapLatest { isDarkModeEnabled ->
-            localDataStore.getLatestSelectedAppLanguage().flatMapLatest { language ->
-                userRemoteDataSource.getServices(phone, isCraftsman)
-                    .map { dtoList -> dtoList.toEntity(isDarkModeEnabled, language) }
-                    .catch { throw FailException("Failed to get services for user: $phone, isCraftsman: $isCraftsman") }
+        validateNetworkConnection()
+        return userPreferencesLocalDataStore.isDarkThemeEnabled()
+            .flatMapLatest { isDarkModeEnabled ->
+                userPreferencesLocalDataStore.getLatestSelectedAppLanguage()
+                    .flatMapLatest { language ->
+                        userRemoteDataSource.getServices(phone, isCraftsman)
+                            .map { dtoList -> dtoList.toEntity(isDarkModeEnabled, language) }
+                            .catch { throw FailException("Failed to get services for user: $phone, isCraftsman: $isCraftsman") }
+                    }
             }
-        }
     }
 
     override suspend fun saveLocation(phone: String, location: Location) {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
-        safeCall(FailException("Failed to save location")) {
+        safeNetworkCall(FailException("Failed to save location")) {
             userRemoteDataSource.updateLocation(phone, location)
         }
     }
 
     override suspend fun savePersonalInfo(phone: String, fullName: String, profileUri: Uri?) {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
-        safeCall(FailException("Failed to save personal info")) {
+        safeNetworkCall(FailException("Failed to save personal info")) {
             val profileUrl = profileUri?.let { uri ->
                 val path = "$PROFILE_IMAGE_PATH/$phone.jpg"
                 Log.d("UserRepositoryImpl", "savePersonalInfo: $path")
-                storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                storageRemoteDataSource.getImagesByPaths(listOf(path),listOf(uri)).firstOrNull()
+                storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
+                storageRemoteDataSource.getImagesByPaths(listOf(ImageDto(path, uri))).firstOrNull()
             }
             userRemoteDataSource.updatePersonalInfo(phone, fullName, profileUrl)
         }
@@ -112,26 +91,28 @@ class UserRepositoryImpl(
         workMedia: List<Uri>?,
         workDescription: String
     ) =
-        safeCall(FailException("Failed to save work showcase")) {
-            val mediaUrls = workMedia?.mapIndexedNotNull { index, uri ->
-                val path = "$WORK_SHOWCASE_PATH/$phone/media_$index.jpg"
-                storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                storageRemoteDataSource.getImagesByPaths(listOf(path),listOf(uri)).firstOrNull()
+        safeNetworkCall(FailException("Failed to save work showcase")) {
+            val mediaUrls = workMedia?.mapIndexed { index, uri ->
+                ImageDto("$WORK_SHOWCASE_PATH/$phone/media_$index.jpg", uri)
+            }?.let { imageDtos ->
+                storageRemoteDataSource.saveImages(imageDtos)
+                storageRemoteDataSource.getImagesByPaths(imageDtos)
             }
             userRemoteDataSource.updateWorkShowcase(phone, mediaUrls, workDescription)
         }
 
     override suspend fun getUserProgress(phone: String): AccountSetupStep =
-        safeCall(FailException("Failed to get user progress")) {
+        safeNetworkCall(FailException("Failed to get user progress")) {
             userRemoteDataSource.getUserProgress(phone)
         }
 
     override suspend fun updateUserProgress(phone: String, step: AccountSetupStep) =
-        safeCall(FailException("Failed to update user progress")) {
+        safeNetworkCall(FailException("Failed to update user progress")) {
             userRemoteDataSource.updateUserProgress(phone, step)
         }
 
     override fun getStats(userId: String): Flow<Stats> {
+        validateNetworkConnection()
         return combine(
             userRemoteDataSource.getJobsDoneForCraftsman(userId),
             userRemoteDataSource.getEarningsForCraftsman(userId),
@@ -153,20 +134,13 @@ class UserRepositoryImpl(
         craftsmanId: String,
         rating: Float
     ) {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
-        safeCall(FailException("Failed to add rating for craftsman")) {
+        safeNetworkCall(FailException("Failed to add rating for craftsman")) {
             userRemoteDataSource.addRatingForCraftsman(userId, craftsmanId, rating)
         }
     }
 
     override fun getRatingForCraftsman(craftsmanId: String): Flow<Float> {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
+        validateNetworkConnection()
         return userRemoteDataSource.getRatingForCraftsman(craftsmanId)
             .catch { throw FailException("Failed to get rating for craftsman: $craftsmanId") }
     }
@@ -175,11 +149,7 @@ class UserRepositoryImpl(
         craftsmanId: String,
         userId: String
     ): Float? {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
-        return safeCall(FailException("Failed to get customer rating on craftsman")) {
+        return safeNetworkCall(FailException("Failed to get customer rating on craftsman")) {
             userRemoteDataSource.getCustomerRatingOnCraftsman(craftsmanId, userId)
         }
     }
@@ -190,11 +160,7 @@ class UserRepositoryImpl(
         requestId: String,
         earnings: Double
     ) {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
-        safeCall(FailException("Failed to update earnings for craftsman")) {
+        safeNetworkCall(FailException("Failed to update earnings for craftsman")) {
             userRemoteDataSource.updateEarningsForCraftsman(
                 craftsmanId = craftsmanId,
                 userId = userId,
@@ -209,61 +175,74 @@ class UserRepositoryImpl(
         requestId: String,
         userId: String
     ) {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
-        safeCall(FailException("Failed to increment jobs done for craftsman")) {
+        safeNetworkCall(FailException("Failed to increment jobs done for craftsman")) {
             userRemoteDataSource.incrementJobsDoneForCraftsman(craftsmanId, requestId, userId)
         }
     }
 
-    override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestService>> {
-        return userRemoteDataSource.getRecentRelatedJobs(relatedJobs)
-            .map { list -> list.map { it.toEntity() } }
-            .catch { throw FailException("Failed to get recent related jobs: $relatedJobs") }
-    }
-
-    override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-        safeCall(FailException("Failed to upload national ID images")) {
-            val frontUrl = frontUri?.let { uri ->
-                val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
-                storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                storageRemoteDataSource.getImagesByPaths(listOf(path),listOf(uri)).firstOrNull()
+    override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) =
+        coroutineScope {
+            safeNetworkCall(FailException("Failed to upload national ID images")) {
+                val frontDeferred = frontUri?.let { uri ->
+                    async {
+                        val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
+                        storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
+                        storageRemoteDataSource.getImagesByPaths(listOf(ImageDto(path, uri)))
+                            .firstOrNull()
+                    }
+                }
+                val backDeferred = backUri?.let { uri ->
+                    async {
+                        val path = "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME"
+                        storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
+                        storageRemoteDataSource.getImagesByPaths(listOf(ImageDto(path, uri)))
+                            .firstOrNull()
+                    }
+                }
+                val frontUrl = frontDeferred?.await()
+                val backUrl = backDeferred?.await()
+                userRemoteDataSource.updateNationalIdImages(phone, frontUrl, backUrl)
             }
-
-            val backUrl = backUri?.let { uri ->
-                val path = "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME"
-                storageRemoteDataSource.saveImages(listOf(path), listOf(uri))
-                storageRemoteDataSource.getImagesByPaths(listOf(path),listOf(uri)).firstOrNull()
-            }
-            userRemoteDataSource.updateNationalIdImages(phone, frontUrl, backUrl)
         }
-    }
 
     override suspend fun getUser(phone: String): User {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-
-        return safeCall(FailException("Failed to get user")) {
+        return safeNetworkCall(FailException("Failed to get user")) {
             userRemoteDataSource.getUser(phone)
         }
     }
 
     override suspend fun getWorkMedia(phone: String): List<String> =
-        safeCall(FailException("Failed to get work media")) {
+        safeNetworkCall(FailException("Failed to get work media")) {
             userRemoteDataSource.getWorkMedia(phone)
         }
 
-    companion object {
-        private const val PROFILE_IMAGE_PATH = "profile_images"
-        private const val NATIONAL_ID_PATH = "national_ids"
-        private const val FRONT_IMAGE_NAME = "front.jpg"
-        private const val BACK_IMAGE_NAME = "back.jpg"
-        private const val WORK_SHOWCASE_PATH = "work_showcase"
+    override suspend fun sendMessage(
+        phoneNumber: String,
+        message: String,
+    ): Boolean {
+        return safeNetworkCall(FailException("register error")) {
+            val messageDto = OtpMessageDto(phoneNumber = phoneNumber, message = message)
+            userRemoteDataSource.sendOtpMessage(messageDto).success ?: false
+        }
+    }
+
+    override suspend fun savePhoneNumber(phoneNumber: String) {
+        safeCall(FailException("save phone number error")) {
+            userPreferencesLocalDataStore.savePhoneNumber(phoneNumber)
+        }
+    }
+
+    override suspend fun getPhoneNumber(): String {
+        return safeCall(FailException("get phone number error")) {
+            userPreferencesLocalDataStore.getPhoneNumber()
+        }
+    }
+
+    private companion object {
+        const val PROFILE_IMAGE_PATH = "profile_images"
+        const val NATIONAL_ID_PATH = "national_ids"
+        const val FRONT_IMAGE_NAME = "front.jpg"
+        const val BACK_IMAGE_NAME = "back.jpg"
+        const val WORK_SHOWCASE_PATH = "work_showcase"
     }
 }

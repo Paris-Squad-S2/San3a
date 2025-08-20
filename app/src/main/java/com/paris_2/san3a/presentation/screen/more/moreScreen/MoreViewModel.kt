@@ -4,22 +4,21 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
-import com.paris_2.san3a.domain.NoInternetConnectionException
+import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.User
-import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.GetVersionNameUseCase
-import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.SetLoginUseCase
-import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.domain.usecase.user.CustomizeProfileSettingsUseCase
+import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.user.SavePhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.mapper.toUserUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -29,14 +28,12 @@ import kotlinx.coroutines.launch
 
 class MoreViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
-    private val setLoginUseCase: SetLoginUseCase,
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
     private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
-    private val getVersionNameUseCase: GetVersionNameUseCase,
 ) : BaseViewModel<MoreScreenState>(MoreScreenState()), MoreInteractionListener {
 
     init {
@@ -45,40 +42,9 @@ class MoreViewModel(
 
 
     private fun fetchData() {
-        getVersionName()
         getPhoneNumber()
         getDarkMode()
         getLanguageSelected()
-    }
-
-    private fun getVersionName() {
-        tryToExecute(
-            execute = { getVersionNameUseCase() },
-            onSuccess = ::onGetVersionNameSuccess,
-            onError = ::onGetVersionNameError
-        )
-    }
-
-    private fun onGetVersionNameSuccess(versionName: String) {
-        updateState(
-            screenState.value.copy(
-                moreUiState = screenState.value.moreUiState.copy(
-                    versionNumber = versionName
-                )
-            )
-        )
-    }
-
-    private fun onGetVersionNameError(throwable: Throwable) {
-        updateState(
-            screenState.value.copy(
-                errorMessage = R.string.occrus_error_when_get_version_name,
-                showSnackBarError = true,
-                isNoInternet = false,
-                isLoading = false
-            )
-        )
-        hideSnackBar()
     }
 
     private fun getLanguageSelected() {
@@ -106,7 +72,7 @@ class MoreViewModel(
     private fun onGetLanguageSelectedError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.occrus_error_when_get_languag_selected,
+                errorMessage = UiText.StringResource(resId = R.string.occrus_error_when_get_languag_selected),
                 showSnackBarError = true,
             )
         )
@@ -166,7 +132,7 @@ class MoreViewModel(
     private fun onGetDarkModeError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.occrus_error_when_get_dark_mode,
+                errorMessage =  UiText.StringResource(resId =R.string.occrus_error_when_get_dark_mode),
                 showSnackBarError = true,
             )
         )
@@ -216,7 +182,7 @@ class MoreViewModel(
         } else {
             updateState(
                 screenState.value.copy(
-                    errorMessage = R.string.user_information_not_found,
+                    errorMessage =  UiText.StringResource(resId =R.string.user_information_not_found),
                     isNoInternet = false,
                     isLoading = false,
                     showSnackBarError = true,
@@ -271,7 +237,7 @@ class MoreViewModel(
     private fun onGetPhoneNumberError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.phone_number_not_found,
+                errorMessage =  UiText.StringResource(resId =R.string.phone_number_not_found),
                 showSnackBarError = true,
                 showSnackBarSuccess = false
             )
@@ -404,7 +370,7 @@ class MoreViewModel(
             updateState(
                 screenState.value.copy(
                     isLoadingChangeAccount = false,
-                    errorMessage = R.string.occur_error_when_save_account_type,
+                    errorMessage =  UiText.StringResource(resId =R.string.occur_error_when_save_account_type),
                     showSnackBarError = true,
                     isNoInternet = false,
                     isLoading = false,
@@ -434,7 +400,6 @@ class MoreViewModel(
         tryToExecute(
             execute = {
                 savePhoneNumberUseCase("")
-                setLoginUseCase(false)
             },
             onSuccess = ::onLogoutSuccess,
             onError = ::onLogoutError
@@ -449,7 +414,7 @@ class MoreViewModel(
     private fun onLogoutError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.logout_failed,
+                errorMessage =  UiText.StringResource(resId =R.string.logout_failed),
                 isNoInternet = false,
                 isLoading = false,
                 showSnackBarError = true,
@@ -540,7 +505,7 @@ class MoreViewModel(
         updateState(
             screenState.value.copy(
                 showSnackBarSuccess = true,
-                successMessageSnackBar = R.string.occrus_user_information_saved_successfully,
+                successMessageSnackBar = UiText.StringResource(resId = R.string.occrus_user_information_saved_successfully),
                 isLoading = false,
                 isNoInternet = false,
                 showSnackBarError = false
@@ -557,7 +522,7 @@ class MoreViewModel(
         } else {
             updateState(
                 screenState.value.copy(
-                    errorMessage = R.string.occrus_error_when_saving_user_information,
+                    errorMessage =  UiText.StringResource(resId =R.string.occrus_error_when_saving_user_information),
                     isLoading = false
                 )
             )
@@ -597,7 +562,7 @@ class MoreViewModel(
     private fun onUpdateAppLanguageError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = R.string.occruc_error_when_language_app_updated,
+                errorMessage =  UiText.StringResource(resId =R.string.occruc_error_when_language_app_updated),
                 showSnackBarError = true,
                 showSnackBarSuccess = false,
                 isLoading = false,

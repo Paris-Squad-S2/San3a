@@ -414,7 +414,7 @@ private fun CustomerHomeScreenContent(
         AnimatedVisibility(state.showSnackBarError) {
             state.errorMessage?.let {
                 SnackBar(
-                    text = R.string.error_occur_when_creating_request,
+                    text = stringResource(R.string.error_occur_when_creating_request),
                     modifier = Modifier
                         .fillMaxWidth()
                         .statusBarsPadding()
@@ -426,7 +426,7 @@ private fun CustomerHomeScreenContent(
         }
         AnimatedVisibility(state.showSnackBarSuccess) {
             SnackBar(
-                text = R.string.service_request_send_successfully,
+                text = stringResource( R.string.service_request_send_successfully),
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding()

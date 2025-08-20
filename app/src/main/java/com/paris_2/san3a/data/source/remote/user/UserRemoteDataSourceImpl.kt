@@ -2,17 +2,17 @@ package com.paris_2.san3a.data.source.remote.user
 
 import android.util.Log
 import com.google.firebase.firestore.FieldPath
-import com.google.firebase.firestore.Query
+import com.paris_2.san3a.data.source.remote.user.service.AuthApiServices
+import com.paris_2.san3a.data.source.remote.user.dto.OtpMessageDto
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.SetOperation
 import com.paris_2.san3a.data.service.firestore.WriteOperation
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
-import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
+import com.paris_2.san3a.data.source.remote.user.dto.OtpDto
 import com.paris_2.san3a.data.utils.roundFloat
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
-import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +23,12 @@ import kotlinx.coroutines.flow.flow
 
 class UserRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
+    private val authApiServices: AuthApiServices
 ) : UserRemoteDataSource {
+
+    override suspend fun sendOtpMessage(message: OtpMessageDto): OtpDto {
+        return authApiServices.sendOtpMessage(message)
+    }
 
     override suspend fun addUser(phone: String) {
         val data = mapOf(
@@ -43,14 +48,6 @@ class UserRemoteDataSourceImpl(
     override suspend fun updateUserProgress(phone: String, step: AccountSetupStep) {
         val data = mapOf("currentStep" to step.name)
         updateUserData(phone, data)
-    }
-
-    override suspend fun getAccountType(phone: String): AccountType {
-        val userData = fireStoreService.getDoc(
-            path = "$USERS_COLLECTION/$phone",
-            fromJson = { data, _ -> data["accountType"]?.toString() }
-        )
-        return AccountType.entries.find { it.name == userData } ?: AccountType.CUSTOMER
     }
 
     override suspend fun saveServices(
@@ -261,25 +258,9 @@ class UserRemoteDataSourceImpl(
         Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
     }
 
-    override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>> {
-        if (relatedJobs.isEmpty()) {
-            return flow { emit(emptyList()) }
-        }
-        return fireStoreService.streamCollection(
-            path = SERVICE_REQUESTS_COLLECTION,
-            fromJson = RequestServiceDto::fromJson,
-            queryBuilder = { query ->
-                query
-                    .whereIn("serviceId", relatedJobs)
-                    .orderBy("createdAt", Query.Direction.DESCENDING)
-            }
-        )
-    }
 
     companion object {
         private const val USERS_COLLECTION = "users"
-        private const val CRAFTSMAN_STATUS_COLLECTION = "craftsmen"
-        private const val SERVICE_REQUESTS_COLLECTION = "service_requests"
         private const val OFFERED_SERVICES_COLLECTION = "offeredServices"
         private const val REQUESTED_SERVICES_PATH = "requestedServices"
         private const val SERVICES_COLLECTION = "services"

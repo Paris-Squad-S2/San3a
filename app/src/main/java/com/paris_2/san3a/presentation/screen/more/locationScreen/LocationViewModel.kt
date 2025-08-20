@@ -3,12 +3,13 @@ package com.paris_2.san3a.presentation.screen.more.locationScreen
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.Location
-import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
+import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -75,7 +76,7 @@ class LocationViewModel(
         if (uiState.selectedGovernorateId == null || uiState.selectedCityId == null) {
             updateState(
                 screenState.value.copy(
-                    showSnackBarError = true, errorMessage = R.string.please_select_location
+                    showSnackBarError = true, errorMessage = UiText.StringResource(R.string.please_select_location)
                 )
             )
             hideSnackBar()
@@ -101,7 +102,7 @@ class LocationViewModel(
                 screenState.value.copy(
                     showSnackBarSuccess = true,
                     locationButtonState = AppButtonState.Enable,
-                    successMessageSnackBar = R.string.success_location_saved
+                    successMessageSnackBar = UiText.StringResource(R.string.success_location_saved)
                 )
             )
             hideSnackBar()
@@ -111,7 +112,7 @@ class LocationViewModel(
                 screenState.value.copy(
                     showSnackBarError = true,
                     locationButtonState = AppButtonState.Enable,
-                    errorMessage = R.string.some_error_happened
+                    errorMessage = UiText.StringResource(R.string.some_error_happened)
                 )
             )
             hideSnackBar()
@@ -149,7 +150,7 @@ class LocationViewModel(
             updateState(
                 screenState.value.copy(
                     showSnackBarError = true,
-                    errorMessage = R.string.some_error_happened,
+                    errorMessage = UiText.StringResource(R.string.some_error_happened),
                 )
             )
             hideSnackBar()
@@ -174,7 +175,7 @@ class LocationViewModel(
             updateState(
                 screenState.value.copy(
                     showSnackBarError = true,
-                    errorMessage = R.string.some_error_happened,
+                    errorMessage = UiText.StringResource(R.string.some_error_happened),
                 )
             )
             hideSnackBar()

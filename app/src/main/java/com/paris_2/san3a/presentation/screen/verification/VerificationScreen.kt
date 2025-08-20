@@ -199,7 +199,7 @@ fun VerificationScreenContent(
                                 .statusBarsPadding()
                                 .padding(start = 12.dp, end = 12.dp, top = 16.dp)
                                 .align(Alignment.TopCenter),
-                            text = verificationScreenState.errorMessage,
+                            text = verificationScreenState.errorMessage.asString(),
                             onClick = verificationInteractionListener::onDismissSnackBar
 
                         )
@@ -215,7 +215,7 @@ fun VerificationScreenContent(
                                 .padding(start = 12.dp, end = 12.dp, top = 16.dp)
                                 .align(Alignment.TopCenter),
 
-                            text = verificationScreenState.successMessageSnackBar,
+                            text = verificationScreenState.successMessageSnackBar.asString(),
                             onClick = verificationInteractionListener::onDismissSnackBar
 
                         )
@@ -246,8 +246,8 @@ private fun VerificationScreenContentPreview() {
 
             }
         },
-        onFrontOfNationalIdUploadClick = TODO(),
-        onBackOfNationalIdUploadClick = TODO()
+        onFrontOfNationalIdUploadClick = {},
+        onBackOfNationalIdUploadClick = {}
     )
 
 }

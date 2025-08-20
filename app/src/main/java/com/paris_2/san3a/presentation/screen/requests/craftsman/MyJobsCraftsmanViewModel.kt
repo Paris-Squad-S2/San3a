@@ -3,25 +3,28 @@ package com.paris_2.san3a.presentation.screen.requests.craftsman
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
-import com.paris_2.san3a.domain.NoInternetConnectionException
+import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.NotificationToSend
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.User
-import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.GetRatingForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.messages.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
+import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
+import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.messaging.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.GetCraftManOfferOnRequestUseCase
-import com.paris_2.san3a.domain.usecase.requestDetails.MarkRequestAsDoneUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetCraftManOfferOnRequestUseCase
+import com.paris_2.san3a.domain.usecase.requests.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
+import com.paris_2.san3a.domain.usecase.user.IncrementJobsDoneForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.UpdateEarningsForCraftsmanUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -32,6 +35,8 @@ class MyJobsCraftsmanViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
+    private val incrementJobsDoneForCraftsmanUseCase: IncrementJobsDoneForCraftsmanUseCase,
+    private val updateEarningsForCraftsmanUseCase: UpdateEarningsForCraftsmanUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
@@ -104,7 +109,7 @@ class MyJobsCraftsmanViewModel(
         updateState(
             screenState.value.copy(
                 isNoInternet = false,
-                errorMessage = R.string.phone_number_not_found,
+                errorMessage = UiText.StringResource(R.string.phone_number_not_found),
                 showSnackBarError = true,
                 isLoading = false
             )
@@ -180,7 +185,7 @@ class MyJobsCraftsmanViewModel(
                 MyJobsCraftsmanScreenState(
                     isLoading = false,
                     isNoInternet = false,
-                    errorMessage = R.string.occurred_while_fetching_requests,
+                    errorMessage = UiText.StringResource(R.string.occurred_while_fetching_requests),
                     showSnackBarError = true
                 )
             )
@@ -210,7 +215,7 @@ class MyJobsCraftsmanViewModel(
         updateState(
             screenState.value.copy(
                 isLoading = false,
-                errorMessage = R.string.error_fetching_offers,
+                errorMessage = UiText.StringResource(R.string.error_fetching_offers),
                 showSnackBarError = true
             )
         )
@@ -248,7 +253,7 @@ class MyJobsCraftsmanViewModel(
                     isLoading = false,
                     isNoInternet = false,
                     showSnackBarError = true,
-                    errorMessage = R.string.failed_to_load_offers_for_request
+                    errorMessage = UiText.StringResource(R.string.failed_to_load_offers_for_request)
                 )
             )
             hideSnackBar()
@@ -344,7 +349,7 @@ class MyJobsCraftsmanViewModel(
                     isLoading = false,
                     isNoInternet = false,
                     showSnackBarError = true,
-                    errorMessage = R.string.error_fetching_craftsman_details
+                    errorMessage = UiText.StringResource(R.string.error_fetching_craftsman_details)
                 )
             )
             hideSnackBar()
@@ -444,13 +449,31 @@ class MyJobsCraftsmanViewModel(
         )
     }
 
-    override fun onMarkAsDone(requestId: String, requestTitle: String, customerId: String) {
+    override fun onMarkAsDone(job: JobUiState) {
         tryToExecute(
-            execute = {
-                markRequestAsDoneUseCase(requestId)
+            execute = { scope ->
+                markRequestAsDoneUseCase(job.id)
+                val incrementJob = scope.async {
+                    incrementJobsDoneForCraftsmanUseCase(
+                        craftsmanId = screenState.value.myOffersCraftsmanUiState.craftsManId,
+                        requestId = job.id,
+                        userId = job.customerPhone
+                    )
+                }
+                val updateEarningsJob =
+                    scope.async {
+                        updateEarningsForCraftsmanUseCase(
+                            craftsmanId = screenState.value.myOffersCraftsmanUiState.craftsManId,
+                            userId = job.customerPhone,
+                            requestId = job.id,
+                            earnings = job.offer?.price ?: 0.0
+                        )
+                    }
+                incrementJob.await()
+                updateEarningsJob.await()
             },
             onSuccess = {
-                onMarkAsDoneSuccess(requestTitle, customerId)
+                onMarkAsDoneSuccess(job.title, job.customerPhone)
             },
             onError = ::onMarkAsDoneError
 
@@ -473,7 +496,7 @@ class MyJobsCraftsmanViewModel(
                     isLoading = false,
                     isNoInternet = false,
                     showSnackBarError = true,
-                    errorMessage = R.string.error_marking_request_as_done
+                    errorMessage = UiText.StringResource(R.string.error_marking_request_as_done)
                 )
             )
             hideSnackBar()
@@ -518,7 +541,7 @@ class MyJobsCraftsmanViewModel(
                     isLoading = false,
                     isNoInternet = false,
                     showSnackBarError = true,
-                    errorMessage = R.string.some_error_happened
+                    errorMessage = UiText.StringResource(R.string.some_error_happened)
                 )
             )
             hideSnackBar()
@@ -565,7 +588,7 @@ class MyJobsCraftsmanViewModel(
                     isLoading = false,
                     isNoInternet = false,
                     showSnackBarError = true,
-                    errorMessage = R.string.occurred_while_sending_message_to_customer
+                    errorMessage = UiText.StringResource(R.string.occurred_while_sending_message_to_customer)
                 )
             )
             hideSnackBar()

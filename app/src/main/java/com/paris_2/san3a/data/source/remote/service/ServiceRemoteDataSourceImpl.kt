@@ -5,13 +5,13 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
-import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
+import com.paris_2.san3a.data.source.remote.requests.dto.RequestServiceDto
 import kotlinx.coroutines.flow.Flow
 
 class ServiceRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
-): ServiceRemoteDataSource {
-    
+) : ServiceRemoteDataSource {
+
     override fun getAllServices(): Flow<List<ServiceDto>> {
         return fireStoreService.streamCollection(
             path = SERVICES_COLLECTION,
@@ -23,24 +23,6 @@ class ServiceRemoteDataSourceImpl(
         return fireStoreService.getDoc(
             path = "$SERVICES_COLLECTION/$serviceId",
             fromJson = ServiceDto::fromJson
-        )
-    }
-
-    override suspend fun requestService(requestedServiceDto: RequestServiceDto): String {
-        return fireStoreService.addToCollection(
-            path = SERVICE_REQUESTS_COLLECTION,
-            data = requestedServiceDto.toJson()
-        )
-    }
-
-    override fun searchServices(query: String): Flow<List<ServiceDto>> {
-        return fireStoreService.streamCollection(
-            path = SERVICES_COLLECTION,
-            fromJson = ServiceDto::fromJson,
-            queryBuilder = { query ->
-                query.startAt(query)
-                    .endAt("$query\uf8ff")
-            }
         )
     }
 
@@ -56,13 +38,6 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
-    override fun getAvailableJobs(): Flow<List<RequestServiceDto>> {
-        return fireStoreService.streamCollection(
-            path = SERVICE_REQUESTS_COLLECTION,
-            fromJson = RequestServiceDto::fromJson,
-        )
-    }
-
     override suspend fun updateNumOfRequestService(serviceId: String) {
         Log.e("FirestorePath", "$SERVICES_COLLECTION/$serviceId")
         return fireStoreService.updateDoc(
@@ -73,10 +48,8 @@ class ServiceRemoteDataSourceImpl(
         )
     }
 
-    companion object {
+    private companion object {
         const val SERVICES_COLLECTION = "services"
-        const val SERVICE_REQUESTS_COLLECTION = "service_requests"
         const val NUMBER_OF_REQUESTS_FIELD = "numberOfRequests"
-
     }
 }

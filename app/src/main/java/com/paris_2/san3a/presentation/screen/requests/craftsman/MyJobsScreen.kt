@@ -176,7 +176,7 @@ private fun MyRequestScreenContent(
             AnimatedVisibility(uiState.showSnackBarError) {
                 uiState.errorMessage?.let {
                     SnackBar(
-                        text = it,
+                        text = it.asString(),
                         modifier = Modifier
                             .fillMaxWidth()
                             .statusBarsPadding()
@@ -205,7 +205,7 @@ private fun JobsList(
                 jobUiState = job,
                 onViewDetailsRequest = { myJobCraftsmanInteractionListener.onViewRequestDetails(job.id) },
                 onSendMessage = { myJobCraftsmanInteractionListener.onSendMessageClick(job.customerPhone) },
-                onMarkAsDone = { myJobCraftsmanInteractionListener.onMarkAsDone(requestId = job.id, requestTitle = job.title, customerId = job.customerPhone) }
+                onMarkAsDone = { myJobCraftsmanInteractionListener.onMarkAsDone(job = job) }
             )
         }
     }
@@ -220,11 +220,7 @@ fun MyRequestScreenPreview() {
                 override fun onRetryClick() {}
                 override fun onDismissSnackBar() {}
 
-                override fun onMarkAsDone(
-                    requestId: String,
-                    requestTitle: String,
-                    customerId: String
-                ) {}
+                override fun onMarkAsDone(job: JobUiState) {}
 
                 override fun onSendMessageClick(phoneNumber: String) {}
 

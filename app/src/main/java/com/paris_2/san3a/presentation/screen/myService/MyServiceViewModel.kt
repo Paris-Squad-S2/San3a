@@ -1,29 +1,28 @@
 package com.paris_2.san3a.presentation.screen.myService
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.paris_2.san3a.R
-import com.paris_2.san3a.domain.NoInternetConnectionException
-import com.paris_2.san3a.domain.entity.Service
-import com.paris_2.san3a.domain.usecase.GetAllServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
-import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
+import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.ServiceUiState
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.flow.first
+import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class MyServiceScreenState(
     val myServiceUiState: List<ServiceUiState> = emptyList(),
     val isLoading: Boolean = false,
-    @StringRes val successMessageSnackBar: Int? = null,
-    @StringRes val errorMessage: Int? = null,
+    val successMessageSnackBar: UiText? = null,
+    val errorMessage: UiText? = null,
     val showSnackBarSuccess: Boolean = false,
     val showSnackBarError: Boolean = false,
     val isNoInternet: Boolean = false,
@@ -77,7 +76,7 @@ class MyServiceViewModel(
             onError = { errorMessage ->
                 updateState(
                     screenState.value.copy(
-                        errorMessage = R.string.error_occurred_while_fetching_services,
+                        errorMessage = UiText.StringResource(R.string.error_occurred_while_fetching_services),
                         isLoading = false,
                         showSnackBarError = true
                     )
@@ -109,7 +108,7 @@ class MyServiceViewModel(
                         screenState.value.copy(
                             isNoInternet = true,
                             isLoading = false,
-                            errorMessage = R.string.error_occurred_while_fetching_services,
+                            errorMessage = UiText.StringResource(R.string.error_occurred_while_fetching_services),
                             showSnackBarError = false,
                             showSnackBarSuccess = false,
                             successMessageSnackBar = null
@@ -118,7 +117,7 @@ class MyServiceViewModel(
                 } else {
                     updateState(
                         screenState.value.copy(
-                            errorMessage = R.string.service_not_found,
+                            errorMessage =UiText.StringResource( R.string.service_not_found),
                             isLoading = false,
                             showSnackBarError = true
                         )
@@ -158,7 +157,7 @@ class MyServiceViewModel(
             screenState.value.copy(
                 isLoading = false,
                 showSnackBarSuccess = true,
-                successMessageSnackBar = R.string.services_uploaded_successfully,
+                successMessageSnackBar = UiText.StringResource(R.string.services_uploaded_successfully),
                 showSnackBarError = false,
                 errorMessage = null,
                 serviceButtonState = AppButtonState.Enable
@@ -184,7 +183,7 @@ class MyServiceViewModel(
             updateState(
                 screenState.value.copy(
                     isLoading = false,
-                    errorMessage = R.string.occur_error_when_upload_service,
+                    errorMessage = UiText.StringResource( R.string.occur_error_when_upload_service),
                     showSnackBarError = true,
                     serviceButtonState = AppButtonState.Enable
                 )

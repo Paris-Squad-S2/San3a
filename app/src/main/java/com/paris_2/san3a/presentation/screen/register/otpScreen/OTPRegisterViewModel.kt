@@ -6,18 +6,18 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
 import com.paris_2.san3a.R
-import com.paris_2.san3a.domain.NoInternetConnectionException
+import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
-import com.paris_2.san3a.domain.usecase.AddUserUseCase
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.SavePhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.SendOtpUseCase
-import com.paris_2.san3a.domain.usecase.SetLoginUseCase
-import com.paris_2.san3a.domain.usecase.SetUpAccountUseCase
+import com.paris_2.san3a.domain.usecase.user.AddUserUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.user.SavePhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.SendOtpUseCase
+import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.navigation.Destination
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 class OTPRegisterViewModel(
     private val sendOtpUseCase: SendOtpUseCase,
     private val savePhoneNumberUseCase: SavePhoneNumberUseCase,
-    private val setLoginUseCase: SetLoginUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val addUserUseCase: AddUserUseCase,
@@ -162,7 +161,6 @@ class OTPRegisterViewModel(
                             )
                         )
                     )
-                    setLoginUseCase(true)
                 }
             },
             onSuccess = {
@@ -181,7 +179,7 @@ class OTPRegisterViewModel(
                     updateState(
                         screenState.value.copy(
                             showBottomSheet = false,
-                            errorMessage = R.string.otp_code_is_wrong,
+                            errorMessage = UiText.StringResource(R.string.otp_code_is_wrong),
                             showSnackBarError = true,
                             isLoading = false
 

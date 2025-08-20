@@ -1,13 +1,15 @@
 package com.paris_2.san3a.data.repository
 
+import androidx.core.net.toUri
 import com.paris_2.san3a.data.mapper.toDto
 import com.paris_2.san3a.data.mapper.toEntity
-import com.paris_2.san3a.data.source.remote.requestDetails.RequestDataSource
-import com.paris_2.san3a.data.utils.NetworkConnectionChecker
-import com.paris_2.san3a.domain.FailException
-import com.paris_2.san3a.domain.NoInternetConnectionException
+import com.paris_2.san3a.data.repository.shared.BaseRepository
+import com.paris_2.san3a.data.source.remote.requests.RequestRemoteDataSource
+import com.paris_2.san3a.data.source.remote.storage.StorageRemoteDataSource
+import com.paris_2.san3a.data.source.remote.storage.dto.ImageDto
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
+import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.repository.RequestsRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -16,55 +18,53 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 class RequestsRepositoryImpl(
-    private val requestDataSource: RequestDataSource,
-    private val networkConnectionChecker: NetworkConnectionChecker,
+    private val requestRemoteDataSource: RequestRemoteDataSource,
+    private val firebaseStorageRemoteDataSource: StorageRemoteDataSource,
 ) : RequestsRepository, BaseRepository() {
 
     override suspend fun addOffer(offer: Offer) {
-        requestDataSource.addOffer(offer.toDto())
+        validateNetworkConnection()
+        requestRemoteDataSource.addOffer(offer.toDto())
     }
 
     override fun getAcceptedOffers(requestId: String): Flow<List<Offer>> {
-        return requestDataSource.getAcceptedOffers(requestId)
-                .map { list -> list.map { it.toEntity() }}
-                .catch { throw FailException("Failed to fetch accepted offers for request ID: $requestId") }
-
+        validateNetworkConnection()
+        return requestRemoteDataSource.getAcceptedOffers(requestId)
+            .map { list -> list.map { it.toEntity() } }
+            .catch { throw FailException("Failed to fetch accepted offers for request ID: $requestId") }
     }
 
     override fun getOffers(requestId: String): Flow<List<Offer>> {
-        return requestDataSource.getOffers(requestId)
+        validateNetworkConnection()
+        return requestRemoteDataSource.getOffers(requestId)
             .map { list -> list.map { it.toEntity() } }
             .catch { throw FailException("Failed to fetch offers for request ID: $requestId") }
     }
 
     override fun getOffersCount(requestId: String): Flow<Int> {
-        return requestDataSource.getOffersCount(requestId)
+        validateNetworkConnection()
+        return requestRemoteDataSource.getOffersCount(requestId)
             .catch { throw FailException("Failed to fetch offers count for request ID: $requestId") }
     }
 
     override suspend fun getRequestDetailsById(requestId: String): RequestService {
-        return safeCall(FailException("Failed to fetch request details for request ID: $requestId")){
-            requestDataSource.getRequestDetailsById(requestId)?.toEntity() ?: throw FailException("Request not found")
-        }
-    }
-
-    override suspend fun getYourOffer(craftsmanId: String): List<Offer> {
-        return safeCall(FailException("Failed to fetch your offers for craftsman ID: $craftsmanId")) {
-            requestDataSource.getCraftsmanOffers(craftsmanId).map { it.toEntity() }
-        }
-    }
-
-    override suspend fun assignRequestToCraftsman(requestId: String, craftsmanId: String) {
-        return safeCall(FailException("Failed to assign request to craftsman")) {
-            requestDataSource.assignRequestToCraftsman(requestId, craftsmanId)
+        return safeNetworkCall(FailException("Failed to fetch request details for request ID: $requestId")) {
+            requestRemoteDataSource.getRequestDetailsById(requestId)?.toEntity()
+                ?: throw FailException("Request not found")
         }
     }
 
     override suspend fun acceptOffer(offerId: String, craftsmanId: String, requestId: String) {
-        safeCall(FailException("Failed to accept offer with ID: $offerId")) {
+        safeNetworkCall(FailException("Failed to accept offer with ID: $offerId")) {
             coroutineScope {
-                val accept = async { requestDataSource.acceptOffer(offerId) }
-                val assign = async { requestDataSource.assignRequestToCraftsman(requestId, craftsmanId) }
+                val accept = async { requestRemoteDataSource.acceptOffer(offerId) }
+                val assign =
+                    async {
+                        requestRemoteDataSource.assignRequestToCraftsman(
+                            requestId,
+                            craftsmanId
+                        )
+                    }
                 accept.await()
                 assign.await()
             }
@@ -72,16 +72,15 @@ class RequestsRepositoryImpl(
     }
 
     override fun getCustomerRequests(userId: String): Flow<List<RequestService>> {
-        return requestDataSource.getCustomerRequests(userId)
+        validateNetworkConnection()
+        return requestRemoteDataSource.getCustomerRequests(userId)
             .map { list -> list.map { it.toEntity() } }
             .catch { throw FailException("Failed to fetch customer requests for user ID: $userId") }
     }
 
     override fun getCraftsManRequests(userId: String): Flow<List<RequestService>> {
-        if (networkConnectionChecker.isConnected.value.not()) {
-            throw NoInternetConnectionException()
-        }
-        return requestDataSource.getCraftsManRequests(userId)
+        validateNetworkConnection()
+        return requestRemoteDataSource.getCraftsManRequests(userId)
             .map { list -> list.map { it.toEntity() } }
             .catch { throw FailException("Failed to fetch craftsman requests for user ID: $userId") }
     }
@@ -90,28 +89,66 @@ class RequestsRepositoryImpl(
         craftsManId: String,
         requestId: String
     ): Flow<Offer?> {
-        return requestDataSource.getCraftManOfferOnRequestUseCase(craftsManId, requestId)
+        validateNetworkConnection()
+        return requestRemoteDataSource.getCraftManOfferOnRequestUseCase(craftsManId, requestId)
             .map { it?.toEntity() }
             .catch { throw FailException("Failed to fetch craftsman offer for request ID: $requestId and craftsman ID: $craftsManId") }
     }
 
     override suspend fun cancelRequest(requestId: String) {
-        safeCall(FailException("Failed to cancel request with ID: $requestId")) {
-            requestDataSource.cancelRequest(requestId)
+        safeNetworkCall(FailException("Failed to cancel request with ID: $requestId")) {
+            requestRemoteDataSource.cancelRequest(requestId)
         }
     }
 
     override suspend fun markRequestAsDone(requestId: String) {
-        safeCall(FailException("Failed to mark request as done for request ID: $requestId")) {
-            requestDataSource.markRequestAsDone(requestId)
+        safeNetworkCall(FailException("Failed to mark request as done for request ID: $requestId")) {
+            requestRemoteDataSource.markRequestAsDone(requestId)
         }
     }
 
     override fun getAcceptedOfferOnRequestUseCase(requestId: String): Flow<Offer?> {
-        return requestDataSource.getAcceptedOfferOnRequestUseCase(requestId)
+        validateNetworkConnection()
+        return requestRemoteDataSource.getAcceptedOfferOnRequestUseCase(requestId)
             .map { it?.toEntity() }
             .catch { throw FailException("Failed to fetch accepted offer for request ID: $requestId") }
     }
 
+    override fun getRecentRelatedJobs(relatedJobsIds: List<String>): Flow<List<RequestService>> {
+        validateNetworkConnection()
+        return requestRemoteDataSource.getRecentRelatedJobs(relatedJobsIds)
+            .map { list -> list.map { it.toEntity() } }
+            .catch { throw FailException("Failed to get recent related jobs: $relatedJobsIds") }
+    }
 
+    override suspend fun requestService(requestedService: RequestService) {
+        safeNetworkCall(FailException("requestService")) {
+            val imageUris = requestedService.image
+            val imageUrls = when (imageUris.isNotEmpty()) {
+                true -> {
+                    val images = imageUris.toImageDto(requestedService.title)
+                    firebaseStorageRemoteDataSource.saveImages(images)
+                    firebaseStorageRemoteDataSource.getImagesByPaths(images)
+                }
+                false -> emptyList()
+            }
+            requestRemoteDataSource.requestService(requestedService.toDto(imageUrls))
+        }
+    }
+
+    private fun List<String>.toImageDto(title: String): List<ImageDto> {
+        return this.map { uri ->
+            ImageDto(
+                path = "${title}/${uri.toUri().path?.substringAfterLast("/") ?: ""}.jpg",
+                uri = uri.toUri()
+            )
+        }
+    }
+
+    override fun getAvailableJobs(): Flow<List<RequestService>> {
+        validateNetworkConnection()
+        return requestRemoteDataSource.getAvailableJobs()
+            .map { dto -> dto.map { it.toEntity() } }
+            .catch { throw FailException("getAvailableJobs failed: ${it.message ?: "Unknown error"}") }
+    }
 }

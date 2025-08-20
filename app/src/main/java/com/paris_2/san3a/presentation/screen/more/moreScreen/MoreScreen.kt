@@ -50,6 +50,7 @@ import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
+import com.paris_2.san3a.presentation.utill.getVersionName
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -182,7 +183,7 @@ private fun MoreScreenContent(
                         Text(
                             text = stringResource(
                                 R.string.version,
-                                moreScreenState.moreUiState.versionNumber
+                                getVersionName()
                             ),
                             style = Theme.textStyle.body.small.regular,
                             color = Theme.colors.shade.tertiary,
@@ -221,28 +222,28 @@ private fun MoreScreenContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 AnimatedVisibility(moreScreenState.showSnackBarError) {
-                    moreScreenState.errorMessage?.let {
+                    moreScreenState.errorMessage?.let {uiText ->
                         SnackBar(
-                            text = it,
+                            text = uiText.asString(),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .statusBarsPadding()
                                 .padding(horizontal = 12.dp, vertical = 16.dp)
                                 .align(Alignment.TopCenter),
-                            onClick = moreInteractionListener::onDismissSnackBar
+                            onClick = moreInteractionListener::onDismissSnackBar,
                         )
                     }
                 }
                 AnimatedVisibility(moreScreenState.showSnackBarSuccess) {
                     moreScreenState.successMessageSnackBar?.let {
                         SnackBar(
-                            text = it,
+                            text = it.asString(),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .statusBarsPadding()
                                 .padding(horizontal = 12.dp, vertical = 16.dp)
                                 .align(Alignment.TopCenter),
-                            onClick = moreInteractionListener::onDismissSnackBar
+                            onClick = moreInteractionListener::onDismissSnackBar,
                         )
                     }
                 }

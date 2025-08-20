@@ -119,7 +119,7 @@ private fun OTPRegisterScreenContent(
             AnimatedVisibility(otpRegisterScreenState.showSnackBarError) {
                 otpRegisterScreenState.errorMessage?.let {
                     SnackBar(
-                        text = it,
+                        text = it.asString(),
                         modifier = Modifier
                             .fillMaxWidth()
                             .statusBarsPadding()

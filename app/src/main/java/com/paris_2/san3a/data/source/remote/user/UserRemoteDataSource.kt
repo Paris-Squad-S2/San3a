@@ -1,15 +1,17 @@
 package com.paris_2.san3a.data.source.remote.user
 
-import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
+import com.paris_2.san3a.data.source.remote.user.dto.OtpMessageDto
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
+import com.paris_2.san3a.data.source.remote.user.dto.OtpDto
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
-import kotlinx.coroutines.flow.Flow
-import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
+import kotlinx.coroutines.flow.Flow
 
 interface UserRemoteDataSource {
+
+    suspend fun sendOtpMessage(message: OtpMessageDto): OtpDto
 
     suspend fun addUser(phone: String)
 
@@ -20,8 +22,6 @@ interface UserRemoteDataSource {
     suspend fun getUserProgress(phone: String): AccountSetupStep
 
     suspend fun saveAccountType(phone: String, accountType: AccountType)
-
-    suspend fun getAccountType(phone: String) : AccountType
 
     suspend fun saveServices(phone: String, services: List<String>, isCraftsman: Boolean)
 
@@ -59,9 +59,11 @@ interface UserRemoteDataSource {
 
     fun getEarningsForCraftsman(craftsmanId: String): Flow<Double>
 
-    suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String)
+    suspend fun incrementJobsDoneForCraftsman(
+        craftsmanId: String,
+        requestId: String,
+        userId: String
+    )
 
     fun getJobsDoneForCraftsman(craftsmanId: String): Flow<Int>
-
-    fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>>
 }
