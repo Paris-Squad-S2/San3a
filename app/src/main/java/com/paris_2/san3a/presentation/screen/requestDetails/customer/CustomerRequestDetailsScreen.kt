@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
+import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.presentation.screen.requestDetails.components.RequestInfoSection
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toOfferDetailsUIState
 import com.paris_2.san3a.presentation.screen.requests.component.RequestDetails
@@ -108,7 +109,9 @@ fun CustomerRequestDetailsContent(
 
         item {
             RequestDetails(
-                currentStep = if (state.offers.any { it.value.isAccepted }) {
+                currentStep = if (state.request.requestStatus != RequestStatus.ONGOING) {
+                    4
+                } else if (state.offers.any { it.value.isAccepted }) {
                     2
                 } else if (state.offers.isNotEmpty()) {
                     1

@@ -1,4 +1,4 @@
-package com.paris_2.san3a.data.source.remote.auth.dto
+package com.paris_2.san3a.data.source.remote.user.dto
 
 
 import kotlinx.serialization.SerialName

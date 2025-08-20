@@ -50,6 +50,7 @@ import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
+import com.paris_2.san3a.presentation.utill.getVersionName
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -182,7 +183,7 @@ private fun MoreScreenContent(
                         Text(
                             text = stringResource(
                                 R.string.version,
-                                moreScreenState.moreUiState.versionNumber
+                                getVersionName()
                             ),
                             style = Theme.textStyle.body.small.regular,
                             color = Theme.colors.shade.tertiary,

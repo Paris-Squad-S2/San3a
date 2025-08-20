@@ -54,7 +54,6 @@ import com.paris_2.san3a.presentation.shared.components.SearchBar
 import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
-import java.util.Locale
 
 @Composable
 fun CustomerHomeScreen(

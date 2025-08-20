@@ -56,12 +56,14 @@ fun RequestCard(
     modifier: Modifier = Modifier,
     requestUi: MyRequestCustomerUi = MyRequestCustomerUi(),
     onActionClick: () -> Unit,
+    onClick: () -> Unit = { }
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
         shape = RoundedCornerShape(16.dp),
+        onClick = onClick,
         colors = CardDefaults.cardColors(
             containerColor = Theme.colors.background.card
         )

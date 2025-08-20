@@ -16,7 +16,6 @@ import com.paris_2.san3a.domain.usecase.services.GetServiceByIdUseCase
 import com.paris_2.san3a.domain.usecase.user.GetStatsUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.user.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.user.GetWorkMediaUseCase
 import com.paris_2.san3a.domain.usecase.user.IncrementJobsDoneForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.user.IsOnboardingCompletedUseCase
@@ -83,7 +82,6 @@ val useCaseModule = module {
     factoryOf(::MarkNotificationsAsReadUseCase)
     factoryOf(::CustomizeProfileSettingsUseCase)
     factoryOf(::GetCustomerRequestsUseCase)
-    factoryOf(::GetVersionNameUseCase)
     factoryOf(::GetRequestDetailsByIdUseCase)
     factoryOf(::AcceptOfferUseCase)
     factoryOf(::GetOffersUseCase)

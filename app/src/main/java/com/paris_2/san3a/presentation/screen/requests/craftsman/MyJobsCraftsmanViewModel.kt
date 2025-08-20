@@ -20,6 +20,8 @@ import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCount
 import com.paris_2.san3a.domain.usecase.requests.GetCraftManOfferOnRequestUseCase
 import com.paris_2.san3a.domain.usecase.requests.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
+import com.paris_2.san3a.domain.usecase.user.IncrementJobsDoneForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.UpdateEarningsForCraftsmanUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
@@ -33,6 +35,8 @@ class MyJobsCraftsmanViewModel(
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
+    private val incrementJobsDoneForCraftsmanUseCase: IncrementJobsDoneForCraftsmanUseCase,
+    private val updateEarningsForCraftsmanUseCase: UpdateEarningsForCraftsmanUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
@@ -445,13 +449,31 @@ class MyJobsCraftsmanViewModel(
         )
     }
 
-    override fun onMarkAsDone(requestId: String, requestTitle: String, customerId: String) {
+    override fun onMarkAsDone(job: JobUiState) {
         tryToExecute(
-            execute = {
-                markRequestAsDoneUseCase(requestId)
+            execute = { scope ->
+                markRequestAsDoneUseCase(job.id)
+                val incrementJob = scope.async {
+                    incrementJobsDoneForCraftsmanUseCase(
+                        craftsmanId = screenState.value.myOffersCraftsmanUiState.craftsManId,
+                        requestId = job.id,
+                        userId = job.customerPhone
+                    )
+                }
+                val updateEarningsJob =
+                    scope.async {
+                        updateEarningsForCraftsmanUseCase(
+                            craftsmanId = screenState.value.myOffersCraftsmanUiState.craftsManId,
+                            userId = job.customerPhone,
+                            requestId = job.id,
+                            earnings = job.offer?.price ?: 0.0
+                        )
+                    }
+                incrementJob.await()
+                updateEarningsJob.await()
             },
             onSuccess = {
-                onMarkAsDoneSuccess(requestTitle, customerId)
+                onMarkAsDoneSuccess(job.title, job.customerPhone)
             },
             onError = ::onMarkAsDoneError
 

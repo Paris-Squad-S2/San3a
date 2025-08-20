@@ -1,7 +1,7 @@
 package com.paris_2.san3a.data.source.remote.requests
 
 import com.paris_2.san3a.data.source.remote.requests.dto.OfferDto
-import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
+import com.paris_2.san3a.data.source.remote.requests.dto.RequestServiceDto
 import kotlinx.coroutines.flow.Flow
 
 interface RequestRemoteDataSource {

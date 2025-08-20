@@ -1,4 +1,4 @@
-package com.paris_2.san3a.data.source.remote.user.dto
+package com.paris_2.san3a.data.source.remote.requests.dto
 
 import com.google.firebase.firestore.DocumentId
 
