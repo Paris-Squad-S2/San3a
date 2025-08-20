@@ -4,8 +4,6 @@ interface CraftsmanInteractionListener {
 
     fun onNotificationClick()
 
-    fun onSearch(query: String)
-
     fun onJobClick(serviceId: String)
 
 }
