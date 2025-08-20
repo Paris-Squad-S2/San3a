@@ -340,4 +340,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="h_ago">%1$d h ago</string>
     <string name="choose_city">Choose City</string>
     <string name="choose_government">Choose Government</string>
+    <string name="confirm_logout">Confirm Logout</string>
+
 </resources>
