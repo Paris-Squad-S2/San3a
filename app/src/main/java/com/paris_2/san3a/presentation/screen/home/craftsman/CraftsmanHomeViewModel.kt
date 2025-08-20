@@ -1,15 +1,15 @@
 package com.paris_2.san3a.presentation.screen.home.craftsman
 
-import android.util.Log
-import com.paris_2.san3a.domain.usecase.requests.GetAvailableJobsUseCase
+import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
-import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetAvailableJobsUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetOffersCountUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetRecentRelatedJobsUseCase
+import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.GetStatsUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
-import com.paris_2.san3a.domain.usecase.requests.GetOffersCountUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 
@@ -48,13 +48,7 @@ class CraftsmanHomeViewModel(
                 loadAvailableJobs()
                 loadRecentRelatedJobs()
             },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: "Unknown Error"
-                    )
-                )
-            }
+            onError = ::onError
         )
     }
 
@@ -74,21 +68,13 @@ class CraftsmanHomeViewModel(
                 loadStats()
                 getUserServices()
             },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: "Unknown Error"
-                    )
-                )
-            }
+            onError = ::onError
         )
     }
 
     private fun getNotificationsCount(userId: String) {
         tryToObserve(
-            observe = {
-                getUnReadNotificationsCountUseCase(userId)
-            },
+            observe = { getUnReadNotificationsCountUseCase(userId) },
             onEach = { count ->
                 updateState(
                     screenState.value.copy(
@@ -98,44 +84,32 @@ class CraftsmanHomeViewModel(
                     )
                 )
             },
-            onError = { exception ->
-                Log.e(
-                    "MessagesViewModel",
-                    "Error fetching notifications count: ${exception.message}"
-                )
-            },
+            onError = ::onError,
         )
     }
-
 
     private fun loadUserDate() {
         tryToExecute(
             execute = { getUserUseCase(screenState.value.craftsmanHomeUiState.phoneNumber) },
-            onSuccess = { user ->
-                val government =
-                    getLocationInfoUseCase.getGovernorateById(user.location.governmentId)
-                val city = getLocationInfoUseCase.getCityById(user.location.cityId)
-                updateState(
-                    screenState.value.copy(
-                        craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                            currentUserName = user.fullName,
-                            location = listOfNotNull(
-                                government?.name,
-                                city?.name
-                            ).joinToString(", "),
-                        )
-                    )
+            onSuccess = ::onLoadUserDateSuccess,
+            onError = ::onError
+        )
+    }
+
+    private suspend fun onLoadUserDateSuccess(user: User) {
+        val government =
+            getLocationInfoUseCase.getGovernorateById(user.location.governmentId)
+        val city = getLocationInfoUseCase.getCityById(user.location.cityId)
+        updateState(
+            screenState.value.copy(
+                craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                    currentUserName = user.fullName,
+                    location = listOfNotNull(
+                        government?.name,
+                        city?.name
+                    ).joinToString(", "),
                 )
-                Log.d("CraftsmanHomeViewModel", "User data loaded successfully: ${user.fullName}")
-            },
-            onError = {
-                Log.e("CraftsmanHomeViewModel", "Error loading user data: ${it.message}")
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: "Unknown Error"
-                    )
-                )
-            }
+            )
         )
     }
 
@@ -151,13 +125,7 @@ class CraftsmanHomeViewModel(
                     )
                 )
             },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: "Unknown Error"
-                    )
-                )
-            }
+            onError = ::onError
         )
     }
 
@@ -189,13 +157,7 @@ class CraftsmanHomeViewModel(
                     getOffersCountForRecentJobs()
                 }
             },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: "Unknown Error"
-                    )
-                )
-            }
+            onError = ::onError
         )
     }
 
@@ -205,9 +167,7 @@ class CraftsmanHomeViewModel(
 
         recentJobs.forEach { id, job ->
             tryToObserve(
-                observe = {
-                    getOffersCountUseCase(id)
-                },
+                observe = { getOffersCountUseCase(id) },
                 onEach = { offersCount ->
                     val updatedJob = job.copy(offersCount = offersCount ?: 0)
                     updateState(
@@ -221,9 +181,7 @@ class CraftsmanHomeViewModel(
                         )
                     )
                 },
-                onError = {
-                    Log.e("CraftsmanHomeViewModel", "Error loading offers count: ${it.message}")
-                }
+                onError = ::onError
             )
         }
     }
@@ -259,13 +217,7 @@ class CraftsmanHomeViewModel(
                     getOffersCountForAvailableJobs()
                 }
             },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: "Unknown Error"
-                    )
-                )
-            }
+            onError = ::onError
         )
     }
 
@@ -275,9 +227,7 @@ class CraftsmanHomeViewModel(
 
         availableJobs.forEach { id, job ->
             tryToObserve(
-                observe = {
-                    getOffersCountUseCase(id)
-                },
+                observe = { getOffersCountUseCase(id) },
                 onEach = { offersCount ->
                     val updatedJob = job.copy(offersCount = offersCount ?: 0)
                     updateState(
@@ -291,9 +241,7 @@ class CraftsmanHomeViewModel(
                         )
                     )
                 },
-                onError = {
-                    Log.e("CraftsmanHomeViewModel", "Error loading offers count: ${it.message}")
-                }
+                onError = ::onError
             )
         }
     }
@@ -301,8 +249,6 @@ class CraftsmanHomeViewModel(
     override fun onNotificationClick() {
         navigate(Destinations.Notification)
     }
-
-    override fun onSearch(query: String) {}
 
     override fun onJobClick(serviceId: String) {
         navigate(
@@ -313,4 +259,15 @@ class CraftsmanHomeViewModel(
         )
     }
 
+    private fun onError(throwable: Throwable) {
+        updateState(
+            screenState.value.copy(
+                errorMessage = throwable.message ?: UNKNOWN_ERROR
+            )
+        )
+    }
+
+    private companion object{
+        const val UNKNOWN_ERROR = "Unknown Error"
+    }
 }

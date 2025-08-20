@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
 import com.paris_2.san3a.R
-import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.usecase.user.AddUserUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.user.SavePhoneNumberUseCase
@@ -101,8 +101,8 @@ class OTPRegisterViewModel(
         }
     }
 
+    var timerJob: Job? = null
     private fun updateSecondLeft() {
-        var timerJob: Job? = null
 
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
@@ -175,7 +175,7 @@ class OTPRegisterViewModel(
                 )
                 if (screenState.value.otpRegisterUiState.otp == screenState.value.otpRegisterUiState.verificationId) {
                     navigateToNextScreen()
-                } else{
+                } else {
                     updateState(
                         screenState.value.copy(
                             showBottomSheet = false,
@@ -207,29 +207,34 @@ class OTPRegisterViewModel(
             execute = {
                 var destination: Destination = Destinations.Account(AccountSetupStep.ACCOUNT_TYPE)
                 try {
-                    setUpAccountUseCase.getUserProgress(screenState.value.otpRegisterUiState.phoneNumber).also { progress ->
-                        when (progress) {
-                            AccountSetupStep.ACCOUNT_TYPE -> {
-                                addUserUseCase(screenState.value.otpRegisterUiState.phoneNumber)
-                                destination = Destinations.Account(accountSetupStep = AccountSetupStep.ACCOUNT_TYPE)
-                            }
-                            AccountSetupStep.COMPLETED -> {
-                                val user = getUserUseCase(screenState.value.otpRegisterUiState.phoneNumber)
-                                destination = when (user.accountType) {
-                                    AccountType.CUSTOMER -> {
-                                        Destinations.CustomerGraph
-                                    }
+                    setUpAccountUseCase.getUserProgress(screenState.value.otpRegisterUiState.phoneNumber)
+                        .also { progress ->
+                            when (progress) {
+                                AccountSetupStep.ACCOUNT_TYPE -> {
+                                    addUserUseCase(screenState.value.otpRegisterUiState.phoneNumber)
+                                    destination =
+                                        Destinations.Account(accountSetupStep = AccountSetupStep.ACCOUNT_TYPE)
+                                }
 
-                                    AccountType.CRAFTSMAN -> {
-                                        Destinations.CraftManGraph
+                                AccountSetupStep.COMPLETED -> {
+                                    val user =
+                                        getUserUseCase(screenState.value.otpRegisterUiState.phoneNumber)
+                                    destination = when (user.accountType) {
+                                        AccountType.CUSTOMER -> {
+                                            Destinations.CustomerGraph
+                                        }
+
+                                        AccountType.CRAFTSMAN -> {
+                                            Destinations.CraftManGraph
+                                        }
                                     }
                                 }
-                            }
-                            else -> {
-                                destination = Destinations.Account(progress)
+
+                                else -> {
+                                    destination = Destinations.Account(progress)
+                                }
                             }
                         }
-                    }
                 } catch (_: Exception) {
                     addUserUseCase(screenState.value.otpRegisterUiState.phoneNumber)
                     destination = Destinations.Account(AccountSetupStep.ACCOUNT_TYPE)
@@ -254,10 +259,10 @@ class OTPRegisterViewModel(
     }
 
     override fun onClickResendCode() {
-        updateSecondLeft()
         if (screenState.value.otpRegisterUiState.secondLeft == 0) {
             sendOtpToPhoneNumber()
         }
+        updateSecondLeft()
     }
 
     override fun onClickBackButton() {

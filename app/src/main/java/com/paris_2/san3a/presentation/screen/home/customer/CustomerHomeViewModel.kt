@@ -1,20 +1,22 @@
 package com.paris_2.san3a.presentation.screen.home.customer
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.domain.entity.City
+import com.paris_2.san3a.domain.entity.Governorate
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
-import com.paris_2.san3a.domain.usecase.user.CustomizeProfileSettingsUseCase
+import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
+import com.paris_2.san3a.domain.usecase.requests.RequestServiceUseCase
 import com.paris_2.san3a.domain.usecase.services.GetMostRequestedServicesUseCase
+import com.paris_2.san3a.domain.usecase.services.UpdateNumOfRequestsUseCase
+import com.paris_2.san3a.domain.usecase.user.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.requests.RequestServiceUseCase
-import com.paris_2.san3a.domain.usecase.services.UpdateNumOfRequestsUseCase
-import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
@@ -22,6 +24,7 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -56,14 +59,12 @@ class CustomerHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         customerUiState = screenState.value.customerUiState.copy(
-                            currentLanguage = language ?: "en"
+                            currentLanguage = language ?: DEFAULT_LANGUAGE
                         )
                     )
                 )
             },
-            onError = {
-                Log.d("CustomerHomeViewModel", "Error getting current language: ${it.message}")
-            }
+            onError = ::onError
         )
     }
 
@@ -157,11 +158,9 @@ class CustomerHomeViewModel(
     }
 
     override fun addBottomSheetImages(newImages: List<String>) {
-
         val filteredNewImages = newImages.filter {
             !screenState.value.bottomSheetUiState.bottomSheetImages.contains(it)
         }
-
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
@@ -196,52 +195,44 @@ class CustomerHomeViewModel(
     override fun setBottomSheetSelectedGovernment(governmentId: Int) {
         tryToExecute(
             execute = { getLocationInfoUseCase.getGovernorateById(governmentId) },
-            onSuccess = { government ->
-                government?.let {
-                    updateState(
-                        screenState.value.copy(
-                            bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                                bottomSheetSelectedGovernmentName = government.name,
-                                bottomSheetSelectedGovernmentId = government.id,
-                                bottomSheetSelectedCityName = "",
-                                bottomSheetSelectedCityId = null,
-                            )
-                        )
-                    )
-                    getCities(government.id)
-                }
-            },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: UNKNOWN_ERROR
+            onSuccess = ::onGetGovernorateByIdSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onGetGovernorateByIdSuccess(government: Governorate?) {
+        government?.let {
+            updateState(
+                screenState.value.copy(
+                    bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                        bottomSheetSelectedGovernmentName = government.name,
+                        bottomSheetSelectedGovernmentId = government.id,
+                        bottomSheetSelectedCityName = "",
+                        bottomSheetSelectedCityId = null,
                     )
                 )
-            }
-        )
+            )
+            getCities(government.id)
+        }
     }
 
     override fun setBottomSheetSelectedCity(cityId: Int) {
         tryToExecute(
             execute = { getLocationInfoUseCase.getCityById(cityId) },
-            onSuccess = { city ->
-                updateState(
-                    screenState.value.copy(
-                        bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                            bottomSheetSelectedCityName = city?.name.orEmpty(),
-                            bottomSheetSelectedCityId = city?.id,
-                            isGovernmentSheetVisible = false
-                        )
-                    )
+            onSuccess = ::onGetCityByIdSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onGetCityByIdSuccess(city: City?) {
+        updateState(
+            screenState.value.copy(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                    bottomSheetSelectedCityName = city?.name.orEmpty(),
+                    bottomSheetSelectedCityId = city?.id,
+                    isGovernmentSheetVisible = false
                 )
-            },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: UNKNOWN_ERROR
-                    )
-                )
-            }
+            )
         )
     }
 
@@ -250,7 +241,6 @@ class CustomerHomeViewModel(
         if (show && currentGovernments.isEmpty()) {
             getGovernments()
         }
-
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
@@ -316,11 +306,7 @@ class CustomerHomeViewModel(
 
         tryToExecute(
             execute = {
-                updateState(
-                    screenState.value.copy(
-                        buttonSheetState = AppButtonState.Loading
-                    )
-                )
+                updateState(screenState.value.copy(buttonSheetState = AppButtonState.Loading))
                 requestServicesUseCase(
                     RequestService(
                         id = "",
@@ -336,7 +322,8 @@ class CustomerHomeViewModel(
                         selectedCraftsmanId = null,
                         time = getCurrentDateTime(),
                         requestStatus = RequestStatus.ONGOING,
-                        serviceId = screenState.value.bottomSheetUiState.bottomSheetService?.id ?: return@tryToExecute,
+                        serviceId = screenState.value.bottomSheetUiState.bottomSheetService?.id
+                            ?: return@tryToExecute,
                     )
                 )
             },
@@ -348,10 +335,13 @@ class CustomerHomeViewModel(
                         ),
                         buttonSheetState = AppButtonState.Enable,
                         showSnackBarSuccess = true,
-                        )
+                    )
                 )
                 hideSnackBar()
-                updateNumOfRequests(screenState.value.bottomSheetUiState.bottomSheetService?.id ?: return@tryToExecute)
+                updateNumOfRequests(
+                    screenState.value.bottomSheetUiState.bottomSheetService?.id
+                        ?: return@tryToExecute
+                )
             },
             onError = {
                 updateState(
@@ -369,70 +359,50 @@ class CustomerHomeViewModel(
     override fun updateNumOfRequests(serviceId: String) {
         tryToExecute(
             execute = { updateNumOfRequestsUseCase(serviceId) },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: UNKNOWN_ERROR
-                    )
-                )
-            }
+            onError = ::onError
         )
     }
 
     private fun getGovernments() {
         tryToExecute(
             execute = { getLocationInfoUseCase.getGovernments() },
-            onSuccess = { governments ->
-                updateState(
-                    screenState.value.copy(
-                        bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                            bottomSheetGovernments = governments,
-                            bottomSheetSelectedGovernmentName = "",
-                            locationBottomSheetType = LocationBottomSheetContentType.GOVERNMENT,
-                        ),
-                    )
-                )
-            },
-            onError = { errorMessage ->
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = errorMessage.message,
-                        isLoading = false
-                    )
-                )
-            },
+            onSuccess = ::onGetGovernmentsSuccess,
+            onError = ::onError,
+        )
+    }
+
+    private fun onGetGovernmentsSuccess(governments: List<Governorate>) {
+        updateState(
+            screenState.value.copy(
+                bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                    bottomSheetGovernments = governments,
+                    bottomSheetSelectedGovernmentName = "",
+                    locationBottomSheetType = LocationBottomSheetContentType.GOVERNMENT,
+                ),
+            )
         )
     }
 
     private fun getCities(governmentId: Int) {
         tryToExecute(
-            execute = {
-                getLocationInfoUseCase.getCities(
-                    governorateId = governmentId
-                )
-            },
-            onSuccess = { cities ->
-                if (cities.isNotEmpty()) {
-                    updateState(
-                        screenState.value.copy(
-                            bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                                bottomSheetCities = cities,
-                                bottomSheetSelectedCityName = "",
-                                locationBottomSheetType = LocationBottomSheetContentType.CITY,
-                            ),
-                        )
-                    )
-                }
-            },
-            onError = { errorMessage ->
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = errorMessage.message,
-                        isLoading = false
-                    )
-                )
-            }
+            execute = { getLocationInfoUseCase.getCities(governorateId = governmentId) },
+            onSuccess = ::onGetCitiesSuccess,
+            onError = ::onError
         )
+    }
+
+    private fun onGetCitiesSuccess(cities: List<City>) {
+        if (cities.isNotEmpty()) {
+            updateState(
+                screenState.value.copy(
+                    bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                        bottomSheetCities = cities,
+                        bottomSheetSelectedCityName = "",
+                        locationBottomSheetType = LocationBottomSheetContentType.CITY,
+                    ),
+                )
+            )
+        }
     }
 
     private fun loadServices() {
@@ -443,25 +413,21 @@ class CustomerHomeViewModel(
                     isCraftsman = false
                 )
             },
-            onSuccess = { services ->
-                services.collect { userServices ->
-                    updateState(
-                        screenState.value.copy(
-                            customerUiState = screenState.value.customerUiState.copy(
-                                services = userServices,
-                            )
-                        )
-                    )
-                }
-            },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: UNKNOWN_ERROR
+            onSuccess = ::onLoadServicesSuccess,
+            onError = ::onError
+        )
+    }
+
+    private suspend fun onLoadServicesSuccess(services: Flow<List<Service>>) {
+        services.collect { userServices ->
+            updateState(
+                screenState.value.copy(
+                    customerUiState = screenState.value.customerUiState.copy(
+                        services = userServices,
                     )
                 )
-            }
-        )
+            )
+        }
     }
 
     private fun loadMostRequestedServices() {
@@ -476,50 +442,38 @@ class CustomerHomeViewModel(
                     )
                 )
             },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: UNKNOWN_ERROR
-                    )
-                )
-            }
+            onError = ::onError
         )
     }
 
     private fun loadUserData() {
         tryToExecute(
             execute = { getUserUseCase(getPhoneNumberUseCase()) },
-            onSuccess = {
-                val governorate =
-                    getLocationInfoUseCase.getGovernorateById(it.location.governmentId)
-                val city = getLocationInfoUseCase.getCityById(it.location.cityId)
-                updateState(
-                    screenState.value.copy(
-                        customerUiState = screenState.value.customerUiState.copy(
-                            id = it.id,
-                            currentUserName = it.fullName,
-                            government = governorate?.name.orEmpty(),
-                            city = city?.name.orEmpty(),
-                        )
-                    )
-                )
-                getNotificationsCount(it.id)
-            },
-            onError = {
-                updateState(
-                    screenState.value.copy(
-                        errorMessage = it.message ?: UNKNOWN_ERROR
-                    )
-                )
-            }
+            onSuccess = ::onLoadUserDataSuccess,
+            onError = ::onError
         )
+    }
+
+    private suspend fun onLoadUserDataSuccess(user: User) {
+        val governorate =
+            getLocationInfoUseCase.getGovernorateById(user.location.governmentId)
+        val city = getLocationInfoUseCase.getCityById(user.location.cityId)
+        updateState(
+            screenState.value.copy(
+                customerUiState = screenState.value.customerUiState.copy(
+                    id = user.id,
+                    currentUserName = user.fullName,
+                    government = governorate?.name.orEmpty(),
+                    city = city?.name.orEmpty(),
+                )
+            )
+        )
+        getNotificationsCount(user.id)
     }
 
     private fun getNotificationsCount(userId: String) {
         tryToObserve(
-            observe = {
-                getUnReadNotificationsCountUseCase(userId)
-            },
+            observe = { getUnReadNotificationsCountUseCase(userId) },
             onEach = { count ->
                 updateState(
                     screenState.value.copy(
@@ -527,15 +481,9 @@ class CustomerHomeViewModel(
                     )
                 )
             },
-            onError = { exception ->
-                Log.e(
-                    "MessagesViewModel",
-                    "Error fetching notifications count: ${exception.message}"
-                )
-            },
+            onError = ::onError,
         )
     }
-
 
     override fun onNotificationClick() {
         navigate(Destinations.Notification)
@@ -606,8 +554,17 @@ class CustomerHomeViewModel(
         }
     }
 
+    private fun onError(throwable: Throwable) {
+        updateState(
+            screenState.value.copy(
+                errorMessage = throwable.message ?: UNKNOWN_ERROR,
+                isLoading = false
+            )
+        )
+    }
 
-    companion object {
+    private companion object {
         const val UNKNOWN_ERROR = "Unknown Error"
+        const val DEFAULT_LANGUAGE = "en"
     }
 }

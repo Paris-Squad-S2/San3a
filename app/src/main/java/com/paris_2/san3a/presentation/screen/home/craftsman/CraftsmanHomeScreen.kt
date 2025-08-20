@@ -1,7 +1,6 @@
 package com.paris_2.san3a.presentation.screen.home.craftsman
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,6 +28,7 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.StatsContainer
+import com.paris_2.san3a.presentation.screen.home.util.getGreetingMessage
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.NotificationIcon
@@ -37,23 +37,19 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.datetime.LocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 
-
 @Composable
 fun CraftsmanHomeScreen(
     viewModel: CraftsmanHomeViewModel = koinViewModel()
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
-    CraftsmanHomeContent(
-        action = viewModel,
-        state = state
-    )
+    CraftsmanHomeContent(action = viewModel, state = state)
 }
 
 @Composable
 fun CraftsmanHomeContent(
     action: CraftsmanInteractionListener,
-    modifier: Modifier = Modifier,
     state: CraftsmanHomeState,
+    modifier: Modifier = Modifier,
 ) {
     AppScaffold(
         modifier = modifier
@@ -77,18 +73,11 @@ fun CraftsmanHomeContent(
                         modifier = Modifier
                             .padding(start = 8.dp)
                     ) {
-                        val time = getCurrentDateTime()
-                        val greeting = if (time.hour in 5..11) {
-                            R.string.good_morning
-                        } else {
-                            R.string.good_afternoon
-                        }
                         Text(
                             text = stringResource(
-                                greeting,
+                                getCurrentDateTime().getGreetingMessage(),
                                 state.craftsmanHomeUiState.currentUserName
                             ),
-
                             style = Theme.textStyle.title.small,
                             color = Theme.colors.shade.primary,
                         )
@@ -131,7 +120,6 @@ fun CraftsmanHomeContent(
                         modifier = Modifier.padding(start = 16.dp)
                     )
                 }
-
                 item {
                     StatsContainer(
                         jobsDone = state.craftsmanHomeUiState.stats.jobsDone,
@@ -139,10 +127,8 @@ fun CraftsmanHomeContent(
                         rating = state.craftsmanHomeUiState.stats.rating
                     )
                 }
-
-
                 item {
-                    if(state.craftsmanHomeUiState.recentRelatedJobs.isNotEmpty()) {
+                    if (state.craftsmanHomeUiState.recentRelatedJobs.isNotEmpty()) {
                         Text(
                             text = stringResource(
                                 R.string.recent_jobs,
@@ -170,7 +156,6 @@ fun CraftsmanHomeContent(
                         }
                     }
                 }
-
                 if (state.craftsmanHomeUiState.availableJobs.isNotEmpty()) {
                     item {
                         Text(
@@ -310,7 +295,6 @@ private fun Preview() {
 
         action = object : CraftsmanInteractionListener {
             override fun onNotificationClick() {}
-            override fun onSearch(query: String) {}
             override fun onJobClick(serviceId: String) {}
         }
 
