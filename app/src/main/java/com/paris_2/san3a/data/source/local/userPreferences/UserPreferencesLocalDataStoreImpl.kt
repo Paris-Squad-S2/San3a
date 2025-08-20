@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.paris_2.san3a.data.source.local.appVersion.AppVersionDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.mapLatest
 
 class UserPreferencesLocalDataStoreImpl(
     private val dataStore: DataStore<Preferences>,
-    private val appVersionDataSource: AppVersionDataSource
 ): UserPreferencesLocalDataStore {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -52,18 +50,6 @@ class UserPreferencesLocalDataStoreImpl(
         return true
     }
 
-    override suspend fun getVersionName(): String {
-        saveVersionName()
-        return dataStore.data.map {
-            it[APP_VERSION_NAME] ?: DEFAULT_VERSION_NAME
-        }.first()
-    }
-
-    private suspend fun saveVersionName() {
-        val versionName = appVersionDataSource.getVersionName()
-        dataStore.setValue(APP_VERSION_NAME,versionName)
-    }
-
     override fun getLatestSelectedAppLanguage(): Flow<String> =
         dataStore.data.map {
             it[LOCAL_LANGUAGE] ?: ENGLISH
@@ -84,8 +70,6 @@ class UserPreferencesLocalDataStoreImpl(
         private val PHONE_NUMBER = stringPreferencesKey("phone_number")
         private val IS_DARK_THEME = booleanPreferencesKey("Is_Dark_Theme")
         private val LOCAL_LANGUAGE = stringPreferencesKey("LOCAL_LANGUAGE")
-        private val APP_VERSION_NAME = stringPreferencesKey("APP_VERSION_NAME")
         const val ENGLISH = "en"
-        const val DEFAULT_VERSION_NAME = "1.0.0"
     }
 }

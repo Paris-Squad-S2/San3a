@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.requests.customer
 
 import android.util.Log
+import com.paris_2.san3a.domain.entity.NotificationToSend
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.usecase.user.AddRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
@@ -9,12 +10,14 @@ import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messaging.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetAcceptedOfferOnRequestUseCaseUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetOffersCountUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.utill.roundFloat
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
@@ -28,6 +31,7 @@ class MyRequestCustomerViewModel(
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val getCustomerRatingOnCraftsmanUseCase: GetCustomerRatingOnCraftsmanUseCase,
     private val addRatingForCraftsmanUseCase: AddRatingForCraftsmanUseCase,
+    private val addNotificationUseCase: AddNotificationUseCase,
     private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val createChatUseCase: CreateChatUseCase,
     private val getAllServicesUseCase: GetAllServicesUseCase,
@@ -489,6 +493,19 @@ class MyRequestCustomerViewModel(
                 )
             },
             onSuccess = {
+                addNotificationUseCase(
+                    screenState.value.myRequestCustomerUiState.craftsmanToRate,
+                    NotificationToSend(
+                        title = mapOf(
+                            "en" to "You got a new Rating",
+                            "ar" to "لقد حصلت على تقييم جديد"
+                        ),
+                        caption = mapOf(
+                            "en" to "You have been rated by ${screenState.value.myRequestCustomerUiState.rating.roundFloat()} by a customer.",
+                            "ar" to "لقد تم تقييمك بـ ${screenState.value.myRequestCustomerUiState.rating.roundFloat()} من قبل عميل."
+                        ),
+                    )
+                )
                 updateState(
                     screenState.value.copy(
                         myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(

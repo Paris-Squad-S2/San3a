@@ -32,8 +32,7 @@ class MessagingRepositoryImpl(
     }
 
     override suspend fun sendMessage(message: Message) {
-        validateNetworkConnection()
-        safeCall(FailException("Message $message is not send")) {
+        safeNetworkCall(FailException("Message $message is not send")) {
             when (message.messageContent) {
                 is MessageContent.Audio -> null
                 is MessageContent.Image -> {
@@ -78,8 +77,7 @@ class MessagingRepositoryImpl(
     }
 
     override suspend fun markMessagesAsSeen(chatId: String, userId: String) {
-        validateNetworkConnection()
-        safeCall(FailException("Messages with chat id $chatId and user id $userId is cant be marked as seen")) {
+        safeNetworkCall(FailException("Messages with chat id $chatId and user id $userId is cant be marked as seen")) {
             messagesRemoteDataSource.markMessagesAsSeen(chatId, userId)
         }
     }
@@ -92,15 +90,13 @@ class MessagingRepositoryImpl(
     }
 
     override suspend fun createChat(participants: List<String>): String {
-        validateNetworkConnection()
-        return safeCall(FailException("Failed to create chat with participants: $participants")) {
+        return safeNetworkCall(FailException("Failed to create chat with participants: $participants")) {
             messagesRemoteDataSource.addChat(participants)
         }
     }
 
     override suspend fun deleteChatById(chatId: String) {
-        validateNetworkConnection()
-        safeCall(FailException("Failed to delete chat with ID: $chatId")) {
+        safeNetworkCall(FailException("Failed to delete chat with ID: $chatId")) {
             messagesRemoteDataSource.deleteChat(chatId)
         }
     }

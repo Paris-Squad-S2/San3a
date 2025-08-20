@@ -11,7 +11,6 @@ import com.paris_2.san3a.domain.usecase.user.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.user.GetVersionNameUseCase
 import com.paris_2.san3a.domain.usecase.user.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
@@ -35,7 +34,6 @@ class MoreViewModel(
     private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
     private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
-    private val getVersionNameUseCase: GetVersionNameUseCase,
 ) : BaseViewModel<MoreScreenState>(MoreScreenState()), MoreInteractionListener {
 
     init {
@@ -44,40 +42,9 @@ class MoreViewModel(
 
 
     private fun fetchData() {
-        getVersionName()
         getPhoneNumber()
         getDarkMode()
         getLanguageSelected()
-    }
-
-    private fun getVersionName() {
-        tryToExecute(
-            execute = { getVersionNameUseCase() },
-            onSuccess = ::onGetVersionNameSuccess,
-            onError = ::onGetVersionNameError
-        )
-    }
-
-    private fun onGetVersionNameSuccess(versionName: String) {
-        updateState(
-            screenState.value.copy(
-                moreUiState = screenState.value.moreUiState.copy(
-                    versionNumber = versionName
-                )
-            )
-        )
-    }
-
-    private fun onGetVersionNameError(throwable: Throwable) {
-        updateState(
-            screenState.value.copy(
-                errorMessage = UiText.StringResource(resId = R.string.occrus_error_when_get_version_name),
-                showSnackBarError = true,
-                isNoInternet = false,
-                isLoading = false
-            )
-        )
-        hideSnackBar()
     }
 
     private fun getLanguageSelected() {

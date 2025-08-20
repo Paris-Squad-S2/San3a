@@ -31,15 +31,13 @@ class NotificationRepositoryImpl(
     }
 
     override suspend fun addNotification(userId: String, notification: NotificationToSend): String {
-        validateNetworkConnection()
-        return safeCall(FailException("Failed to add notification")) {
+        return safeNetworkCall(FailException("Failed to add notification")) {
             notificationRemoteDataSource.addNotification(userId, notification.toFirestoreDto())
         }
     }
 
     override suspend fun markNotificationsAsRead(userId: String) {
-        validateNetworkConnection()
-        return safeCall(FailException("Failed to mark notifications as read")) {
+        return safeNetworkCall(FailException("Failed to mark notifications as read")) {
             notificationRemoteDataSource.markNotificationsAsRead(userId)
         }
     }

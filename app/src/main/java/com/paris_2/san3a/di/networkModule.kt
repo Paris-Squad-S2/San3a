@@ -1,9 +1,8 @@
 package com.paris_2.san3a.di
 
-import com.paris_2.san3a.data.service.auth.AuthApiServices
+import com.paris_2.san3a.data.source.remote.user.service.AuthApiServices
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

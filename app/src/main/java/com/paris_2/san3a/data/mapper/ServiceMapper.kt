@@ -2,7 +2,7 @@ package com.paris_2.san3a.data.mapper
 
 import com.paris_2.san3a.data.source.remote.requests.dto.OfferDto
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
-import com.paris_2.san3a.data.source.remote.user.dto.RequestServiceDto
+import com.paris_2.san3a.data.source.remote.requests.dto.RequestServiceDto
 import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
