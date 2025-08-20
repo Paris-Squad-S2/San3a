@@ -46,7 +46,7 @@ fun LogoutBottomSheet(
                     .padding(top = 10.dp, bottom = 20.dp, start = 10.dp, end = 10.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.change_language),
+                    text = stringResource(R.string.confirm_logout),
                     color = Theme.colors.shade.primary,
                     style = Theme.textStyle.title.small,
                     modifier = Modifier.align(Alignment.CenterStart)
@@ -57,7 +57,8 @@ fun LogoutBottomSheet(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_close),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = Theme.colors.shade.secondary
                     )
                 }
             }
