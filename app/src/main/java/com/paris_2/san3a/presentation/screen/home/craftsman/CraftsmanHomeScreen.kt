@@ -28,6 +28,7 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.StatsContainer
+import com.paris_2.san3a.presentation.screen.home.util.getGreetingMessage
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.NotificationIcon
@@ -72,15 +73,9 @@ fun CraftsmanHomeContent(
                         modifier = Modifier
                             .padding(start = 8.dp)
                     ) {
-                        val time = getCurrentDateTime()
-                        val greeting = if (time.hour in 5..11) {
-                            R.string.good_morning
-                        } else {
-                            R.string.good_afternoon
-                        }
                         Text(
                             text = stringResource(
-                                greeting,
+                                getCurrentDateTime().getGreetingMessage(),
                                 state.craftsmanHomeUiState.currentUserName
                             ),
                             style = Theme.textStyle.title.small,

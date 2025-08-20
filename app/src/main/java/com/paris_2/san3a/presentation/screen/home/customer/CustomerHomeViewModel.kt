@@ -8,15 +8,15 @@ import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
-import com.paris_2.san3a.domain.usecase.CustomizeProfileSettingsUseCase
-import com.paris_2.san3a.domain.usecase.GetLocationInfoUseCase
-import com.paris_2.san3a.domain.usecase.GetMostRequestedServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.GetUserServicesUseCase
-import com.paris_2.san3a.domain.usecase.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.RequestServiceUseCase
-import com.paris_2.san3a.domain.usecase.UpdateNumOfRequestsUseCase
+import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
+import com.paris_2.san3a.domain.usecase.requests.RequestServiceUseCase
+import com.paris_2.san3a.domain.usecase.services.GetMostRequestedServicesUseCase
+import com.paris_2.san3a.domain.usecase.services.UpdateNumOfRequestsUseCase
+import com.paris_2.san3a.domain.usecase.user.CustomizeProfileSettingsUseCase
+import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSheetContentType
@@ -306,11 +306,7 @@ class CustomerHomeViewModel(
 
         tryToExecute(
             execute = {
-                updateState(
-                    screenState.value.copy(
-                        buttonSheetState = AppButtonState.Loading
-                    )
-                )
+                updateState(screenState.value.copy(buttonSheetState = AppButtonState.Loading))
                 requestServicesUseCase(
                     RequestService(
                         id = "",

@@ -39,6 +39,7 @@ import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.presentation.screen.account.components.LocationContent
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.RequestBottomSheetContent
 import com.paris_2.san3a.presentation.screen.home.customer.component.MostRequestedServices
+import com.paris_2.san3a.presentation.screen.home.util.getGreetingMessage
 import com.paris_2.san3a.presentation.shared.components.AdCard
 import com.paris_2.san3a.presentation.shared.components.AddPhotos
 import com.paris_2.san3a.presentation.shared.components.AddPhotosContent
@@ -283,15 +284,9 @@ private fun CustomerHomeScreenContent(
                         modifier = Modifier
                             .padding(start = 16.dp)
                     ) {
-                        val time = getCurrentDateTime()
-                        val greeting = if (time.hour in 5..11) {
-                            R.string.good_morning
-                        } else {
-                            R.string.good_afternoon
-                        }
                         Text(
                             text = stringResource(
-                                greeting,
+                                getCurrentDateTime().getGreetingMessage(),
                                 state.customerUiState.currentUserName
                             ),
 
