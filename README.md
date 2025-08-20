@@ -65,12 +65,9 @@ The app makes it easy to find, book, and chat with trusted service providers in 
 
 > Craftsman Flow - Dark Theme - Arabic
 
-| Craftsman Registration        | Profile         |
-|--------------------|--------------------|
-|![customer regestration](https://github.com/user-attachments/assets/402521de-35b0-4de9-b56d-e39512a3c603)|![profile info](https://github.com/user-attachments/assets/e58f4c2b-62ce-4999-873a-fcd13abe3747)|
-
-
-
+| Craftsman Registration        | Profile         | Add Offer |Chating |
+|--------------------|--------------------|--------------------|--------------------|
+|![customer regestration](https://github.com/user-attachments/assets/402521de-35b0-4de9-b56d-e39512a3c603)|![profile info](https://github.com/user-attachments/assets/e58f4c2b-62ce-4999-873a-fcd13abe3747)|![add offer](https://github.com/user-attachments/assets/e7ad3fc9-9309-4a57-bc8d-5c9713f57cd8)|![chat](https://github.com/user-attachments/assets/e9da3078-643a-4683-9ece-caebb7540fbd)|
 
 
 
