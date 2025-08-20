@@ -78,7 +78,7 @@ The app makes it easy to find, book, and chat with trusted service providers in 
 | Muhammed Wael      | [@MuhammedWael9991](https://github.com/MuhammedWael9991) |
 | Mahmoud Abdelnaby  | [@M-Abdelnabi](https://github.com/M-Abdelnabi)      |
 | Joseph Sameh Fouad | [@Joseph-Sameh-0](https://github.com/Joseph-Sameh-0)  |
-| Ahmed Naser        | [@ahmedNaser7](https://github.com/ahmedNaser7)      |
+| Ahmed Abdelnasser        | [@ahmedNaser7](https://github.com/ahmedNaser7)      |
 | Renad Alalfy       | [@Renad-Alalfy](https://github.com/Renad-Alalfy)    |
 | Zeinab             | [@Zeinab979](https://github.com/Zeinab979)        |
 | Mustafa Ibrahim    | [@MustafaIbrahim96](https://github.com/MustafaIbrahim96) |
@@ -94,7 +94,7 @@ The app makes it easy to find, book, and chat with trusted service providers in 
 
 - Clone the repository:
 > ```
-> https://github.com/Paris-Squad-S2/San3a.git
+> git clone https://github.com/Paris-Squad-S2/San3a.git
 >```
 
 - Open in Android Studio (latest version).
