@@ -57,9 +57,21 @@ The app makes it easy to find, book, and chat with trusted service providers in 
 > [Design Here](https://www.figma.com/design/c6UGcyi8PhugXrPTJOqzEd/San3a?node-id=3309-11976&t=EkAAzxic57qtGlIp-0 "Design Here")
 
 # 📸 UI Preview
-| Onboarding         | Auth               | OTP               |
-|--------------------|--------------------|--------------------|
-|<img src="https://github.com/user-attachments/assets/ef318eff-222f-48aa-8aae-62b4e441b9ad" width="400"/>|<img src="https://github.com/user-attachments/assets/82094ab3-62bf-441b-b464-0830fd96d849" width="400"/>|<img src="https://github.com/user-attachments/assets/73fd443f-d152-4737-9439-d125d2e336ee" width="400"/>|
+> Customer Flow - Light Theme - English
+
+| Onboarding         | Auth               | Customer Registration |Request Service|
+|--------------------|--------------------|--------------------|--------------------|
+|![onBording](https://github.com/user-attachments/assets/c6227765-9d58-48dd-8503-eb3442a1ef1a)|![auth](https://github.com/user-attachments/assets/2c5072ed-bbb3-4e94-95d7-758f91b42393)|![customer regestration](https://github.com/user-attachments/assets/b90ffd2b-a097-4af0-ae47-e17fd02fb2b9)|![request service ](https://github.com/user-attachments/assets/52d32f9c-f4dc-4c29-8f71-05bd9b479a1a)|
+
+> Craftsman Flow - Dark Theme - Arabic
+
+| Craftsman Registration        | Profile         |
+|--------------------|--------------------|
+|![customer regestration](https://github.com/user-attachments/assets/402521de-35b0-4de9-b56d-e39512a3c603)|![profile info](https://github.com/user-attachments/assets/e58f4c2b-62ce-4999-873a-fcd13abe3747)|
+
+
+
+
 
 
 # 👨‍💻 Contributors
