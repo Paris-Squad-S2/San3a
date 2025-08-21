@@ -1,9 +1,5 @@
 package com.paris_2.san3a.presentation.screen.account
 
-import android.content.Intent
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,6 +27,8 @@ import com.paris_2.san3a.presentation.screen.account.components.ProfileContent
 import com.paris_2.san3a.presentation.screen.account.components.ServicesContent
 import com.paris_2.san3a.presentation.screen.account.components.ShowYourWorkContent
 import com.paris_2.san3a.presentation.screen.account.components.VerifyIdentityContent
+import com.paris_2.san3a.presentation.screen.account.components.rememberMultipleImagePickerLauncher
+import com.paris_2.san3a.presentation.screen.account.components.rememberSingleImagePickerLauncher
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
@@ -41,49 +39,25 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
     val uiState by viewModel.screenState.collectAsState()
     val context = LocalContext.current
 
-    val profileImagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri: Uri? ->
-        uri?.let {
-            context.contentResolver.takePersistableUriPermission(
-                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            viewModel.onCustomerProfilePhotoSelected(it)
-        }
-    }
+    val profileImagePickerLauncher = rememberSingleImagePickerLauncher(
+        context = context,
+        onImageSelected = viewModel::onCustomerProfilePhotoSelected
+    )
 
-    val frontNationalIdPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri: Uri? ->
-        uri?.let {
-            context.contentResolver.takePersistableUriPermission(
-                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            viewModel.onFrontNationalIdSelected(it)
-        }
-    }
+    val frontNationalIdPickerLauncher = rememberSingleImagePickerLauncher(
+        context = context,
+        onImageSelected = viewModel::onFrontNationalIdSelected
+    )
 
-    val backNationalIdPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri: Uri? ->
-        uri?.let {
-            context.contentResolver.takePersistableUriPermission(
-                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            viewModel.onBackNationalIdSelected(it)
-        }
-    }
+    val backNationalIdPickerLauncher = rememberSingleImagePickerLauncher(
+        context = context,
+        onImageSelected = viewModel::onBackNationalIdSelected
+    )
 
-    val workImagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenMultipleDocuments()
-    ) { uris: List<Uri>? ->
-        uris?.forEach { uri ->
-            context.contentResolver.takePersistableUriPermission(
-                uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            viewModel.onWorkImageSelected(uris)
-        }
-    }
+    val workImagePickerLauncher = rememberMultipleImagePickerLauncher(
+        context = context,
+        onImagesSelected = viewModel::onWorkImageSelected
+    )
 
     AccountScreenContent(
         title = viewModel.getTitle().asString(),
