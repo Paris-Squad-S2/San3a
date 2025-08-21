@@ -372,7 +372,7 @@ private fun CustomerHomeScreenContent(
                             color = Theme.colors.shade.primary,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 16.dp, bottom = 16.dp)
+                                .padding(start = 16.dp, bottom = 16.dp, top = 16.dp)
                         )
                     }
                     items(servicesToDisplay) { service ->
@@ -395,7 +395,7 @@ private fun CustomerHomeScreenContent(
                             buttonTitle = stringResource(R.string.become_a_craftsman),
                             onClick = action::onBecomeCraftsmanClick,
                             modifier = Modifier
-                                .padding(vertical = 12.dp)
+                                .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
                         )
                     }
                 }
