@@ -8,7 +8,7 @@ import com.paris_2.san3a.domain.usecase.requests.GetOffersCountUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetRecentRelatedJobsUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.GetStatsUseCase
-import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserSelectedServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
@@ -19,7 +19,7 @@ class CraftsmanHomeViewModel(
     private val getAvailableJobsUseCase: GetAvailableJobsUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getOffersCountUseCase: GetOffersCountUseCase,
-    private val getUserServicesUseCase: GetUserServicesUseCase,
+    private val getUserSelectedServicesUseCase: GetUserSelectedServicesUseCase,
     private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getUserUseCase: GetUserUseCase,
@@ -32,7 +32,7 @@ class CraftsmanHomeViewModel(
     private fun getUserServices() {
         tryToObserve(
             observe = {
-                getUserServicesUseCase(
+                getUserSelectedServicesUseCase(
                     screenState.value.craftsmanHomeUiState.phoneNumber,
                     isCraftsman = true
                 )

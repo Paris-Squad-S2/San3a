@@ -101,7 +101,7 @@ fun AdCard(
             onClick = onClick,
             type = AppButtonType.Primary,
             text = buttonTitle,
-            size = AppButtonSize.Large,
+            size = AppButtonSize.Small,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)

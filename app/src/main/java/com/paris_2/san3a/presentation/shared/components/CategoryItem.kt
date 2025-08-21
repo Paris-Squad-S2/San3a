@@ -70,7 +70,7 @@ fun CategoryItemLarge(
     ){
         Column(
             modifier = Modifier
-                .padding(start = 16.dp , top = 16.dp , bottom = 16.dp)
+                .padding(16.dp)
         ) {
             AsyncImage(
                 modifier = Modifier

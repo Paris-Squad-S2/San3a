@@ -68,6 +68,20 @@ class UserRepositoryImpl(
             }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getUserSelectedServices(phone: String, isCraftsman: Boolean): Flow<List<Service>> {
+        validateNetworkConnection()
+        return userPreferencesLocalDataStore.isDarkThemeEnabled()
+            .flatMapLatest { isDarkModeEnabled ->
+                userPreferencesLocalDataStore.getLatestSelectedAppLanguage()
+                    .flatMapLatest { language ->
+                        userRemoteDataSource.getUserSelectedServices(phone, isCraftsman)
+                            .map { dtoList -> dtoList.toEntity(isDarkModeEnabled, language) }
+                            .catch { throw FailException("Failed to get services for user: $phone, isCraftsman: $isCraftsman") }
+                    }
+            }
+    }
+
     override suspend fun saveLocation(phone: String, location: Location) {
         safeNetworkCall(FailException("Failed to save location")) {
             userRemoteDataSource.updateLocation(phone, location)
