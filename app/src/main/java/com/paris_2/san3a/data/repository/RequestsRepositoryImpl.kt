@@ -120,9 +120,9 @@ class RequestsRepositoryImpl(
             .catch { throw FailException("Failed to fetch accepted offer for request ID: $requestId") }
     }
 
-    override fun getRecentRelatedJobs(relatedJobsIds: List<String>): Flow<List<RequestService>> {
+    override fun getRecentRelatedJobs(relatedJobsIds: List<String>, userId: String): Flow<List<RequestService>> {
         validateNetworkConnection()
-        return requestRemoteDataSource.getRecentRelatedJobs(relatedJobsIds)
+        return requestRemoteDataSource.getRecentRelatedJobs(relatedJobsIds, userId)
             .map { list -> list.map { it.toEntity() } }
             .catch { throw FailException("Failed to get recent related jobs: $relatedJobsIds") }
     }
@@ -151,9 +151,9 @@ class RequestsRepositoryImpl(
         }
     }
 
-    override fun getAvailableJobs(): Flow<List<RequestService>> {
+    override fun getAvailableJobs(userId: String): Flow<List<RequestService>> {
         validateNetworkConnection()
-        return requestRemoteDataSource.getAvailableJobs()
+        return requestRemoteDataSource.getAvailableJobs(userId)
             .map { dto -> dto.map { it.toEntity() } }
             .catch { throw FailException("getAvailableJobs failed: ${it.message ?: "Unknown error"}") }
     }

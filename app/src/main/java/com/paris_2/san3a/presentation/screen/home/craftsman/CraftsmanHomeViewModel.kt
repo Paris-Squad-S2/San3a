@@ -131,7 +131,7 @@ class CraftsmanHomeViewModel(
 
     fun loadRecentRelatedJobs() {
         tryToObserve(
-            observe = { getRecentRelatedJobsUseCase(screenState.value.craftsmanHomeUiState.userServices.keys.toList()) },
+            observe = { getRecentRelatedJobsUseCase(screenState.value.craftsmanHomeUiState.userServices.keys.toList(), screenState.value.craftsmanHomeUiState.phoneNumber) },
             onEach = { jobs ->
                 jobs?.map { job ->
                     val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
@@ -188,7 +188,7 @@ class CraftsmanHomeViewModel(
 
     fun loadAvailableJobs() {
         tryToObserve(
-            observe = getAvailableJobsUseCase::invoke,
+            observe = { getAvailableJobsUseCase(screenState.value.craftsmanHomeUiState.phoneNumber) },
             onEach = { jobs ->
                 jobs?.map { job ->
                     val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)

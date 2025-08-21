@@ -167,7 +167,7 @@ class RequestRemoteDataSourceImpl(
         }
     }
 
-    override fun getRecentRelatedJobs(relatedJobs: List<String>): Flow<List<RequestServiceDto>> {
+    override fun getRecentRelatedJobs(relatedJobs: List<String>, userId: String): Flow<List<RequestServiceDto>> {
         if (relatedJobs.isEmpty()) {
             return flow { emit(emptyList()) }
         }
@@ -176,6 +176,7 @@ class RequestRemoteDataSourceImpl(
             fromJson = RequestServiceDto::fromJson,
             queryBuilder = { query ->
                 query
+                    .whereNotEqualTo("userId", userId)
                     .whereEqualTo("requestStatus", "ONGOING")
                     .whereIn("serviceId", relatedJobs)
                     .orderBy("createdAt", Query.Direction.DESCENDING)
@@ -184,12 +185,13 @@ class RequestRemoteDataSourceImpl(
     }
 
 
-    override fun getAvailableJobs(): Flow<List<RequestServiceDto>> {
+    override fun getAvailableJobs(userId: String): Flow<List<RequestServiceDto>> {
         return fireStoreService.streamCollection(
             path = SERVICE_REQUESTS_COLLECTION,
             fromJson = RequestServiceDto::fromJson,
             queryBuilder = { query ->
                 query
+                    .whereNotEqualTo("userId", userId)
                     .whereEqualTo("requestStatus", "ONGOING")
                     .orderBy("createdAt", Query.Direction.DESCENDING)
             }
