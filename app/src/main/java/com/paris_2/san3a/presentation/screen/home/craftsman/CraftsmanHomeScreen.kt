@@ -149,6 +149,7 @@ fun CraftsmanHomeContent(
                                     offers = it.offersCount,
                                     description = it.description,
                                     location = it.location,
+                                    maxWidth = 300,
                                     imageUri = it.imageUrl,
                                     onClick = { action.onJobClick(it.id) }
                                 )
