@@ -136,7 +136,7 @@ fun CraftsmanHomeContent(
                             ),
                             style = Theme.textStyle.title.medium,
                             color = Theme.colors.shade.primary,
-                            modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
+                            modifier = Modifier.padding(start = 16.dp, bottom = 16.dp, top = 8.dp)
                         )
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = 16.dp),
@@ -163,7 +163,7 @@ fun CraftsmanHomeContent(
                             text = stringResource(R.string.available_jobs),
                             style = Theme.textStyle.title.medium,
                             color = Theme.colors.shade.primary,
-                            modifier = Modifier.padding(start = 16.dp)
+                            modifier = Modifier.padding(start = 16.dp, top = 8.dp)
                         )
                     }
                     items(state.craftsmanHomeUiState.availableJobs.values.toList()) {
