@@ -225,6 +225,8 @@ class MessagesDetailsViewModel(
         tryToExecute(
             execute = {
                 deleteChatByIdUseCase(chatId)
+            },
+            onSuccess = {
                 updateState(
                     screenState.value.copy(
                         showDeleteChatBottomSheet = false

@@ -6,7 +6,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,6 +60,7 @@ private fun OTPRegisterScreenContent(
             .background(Theme.colors.background.screen)
             .navigationBarsPadding()
             .statusBarsPadding()
+            .padding(top = 16.dp)
     ) {
         when {
             otpRegisterScreenState.isNoInternet -> {
@@ -82,20 +82,22 @@ private fun OTPRegisterScreenContent(
                 Column(
                     modifier = modifier
                         .fillMaxSize()
-
                 ) {
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
+                    Box (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ){
                         AppBackButton(
                             onClickBackButton = otpRegisterListenerInteraction::onClickBackButton,
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
                         Image(
-                            modifier = Modifier.size(200.dp),
+                            modifier = Modifier
+                                .size(200.dp)
+                                .align(Alignment.Center),
                             painter = painterResource(R.drawable.image_otp),
                             contentDescription = stringResource(R.string.otp_image)
                         )
-
                     }
 
                     VerificationCodeContent(

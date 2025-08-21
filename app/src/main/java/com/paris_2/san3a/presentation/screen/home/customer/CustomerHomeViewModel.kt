@@ -15,7 +15,7 @@ import com.paris_2.san3a.domain.usecase.services.GetMostRequestedServicesUseCase
 import com.paris_2.san3a.domain.usecase.services.UpdateNumOfRequestsUseCase
 import com.paris_2.san3a.domain.usecase.user.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetSortedServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
@@ -37,7 +37,7 @@ class CustomerHomeViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
-    private val getCustomerServiceUseCase: GetUserServicesUseCase,
+    private val getSortedServicesUseCase: GetSortedServicesUseCase,
     private val customizeProfileSettingsUseCase: CustomizeProfileSettingsUseCase,
 ) : CustomerHomeInteractionListener, BaseViewModel<CustomerHomeUiState>(CustomerHomeUiState()) {
 
@@ -408,7 +408,7 @@ class CustomerHomeViewModel(
     private fun loadServices() {
         tryToExecute(
             execute = {
-                getCustomerServiceUseCase(
+                getSortedServicesUseCase(
                     phoneNumber = getPhoneNumberUseCase(),
                     isCraftsman = false
                 )

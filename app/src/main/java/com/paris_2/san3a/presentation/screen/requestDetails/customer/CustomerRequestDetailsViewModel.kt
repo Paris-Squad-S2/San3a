@@ -11,6 +11,7 @@ import com.paris_2.san3a.domain.usecase.services.GetServiceByIdUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messaging.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.requests.AcceptOfferUseCase
+import com.paris_2.san3a.domain.usecase.requests.DeleteRequestByIdUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetRequestDetailsByIdUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.first
 
 class CustomerRequestDetailsViewModel(
     private val getRequestDetailsByIdUseCase: GetRequestDetailsByIdUseCase,
+    private val deleteRequestByIdUseCase: DeleteRequestByIdUseCase,
     private val getOffersUseCase: GetOffersUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
@@ -87,7 +89,7 @@ class CustomerRequestDetailsViewModel(
                             request = screenState.value.uiState.request.copy(
                                 serviceType = service?.title ?: "Unknown Service",
                                 serviceImageUri = service?.imageUrl.orEmpty(),
-                            )
+                            ),
                         )
                     )
                 )
@@ -147,7 +149,7 @@ class CustomerRequestDetailsViewModel(
                                     offers = screenState.value.uiState.offers.toMutableMap()
                                         .apply {
                                             this[offer.key] = offerUiState
-                                        }
+                                        },
                                 )
                             )
                         )
@@ -229,6 +231,71 @@ class CustomerRequestDetailsViewModel(
                     )
                 )
             }
+        )
+    }
+
+    override fun onClickActonDots() {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    showDropMenu = true
+                )
+            )
+        )
+    }
+
+    override fun onDismissDropMenu() {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    showDropMenu = false
+                )
+            )
+        )
+    }
+
+    override fun onDropMenuItemClick() {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    showDeleteRequestBottomSheet = true
+                )
+            )
+        )
+    }
+
+    override fun onDeleteButtonClick() {
+        tryToExecute(
+            execute = {
+                deleteRequestByIdUseCase(requestId)
+            },
+            onSuccess = {
+                updateState(
+                    screenState.value.copy(
+                        uiState = screenState.value.uiState.copy(
+                            showDeleteRequestBottomSheet = false
+                        )
+                    )
+                )
+                navigateUp()
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        error = it.message ?: "An error occurred while deleting the request",
+                    )
+                )
+            }
+        )
+    }
+
+    override fun onDismissDeleteBottomSheet() {
+        updateState(
+            screenState.value.copy(
+                uiState = screenState.value.uiState.copy(
+                    showDeleteRequestBottomSheet = false
+                )
+            )
         )
     }
 }

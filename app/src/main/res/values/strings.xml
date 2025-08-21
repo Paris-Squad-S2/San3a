@@ -272,7 +272,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="choose_district">Choose District</string>
     <string name="success_location_saved">Location saved successfully</string>
     <string name="error_general">Something went wrong</string>
-    <string name="please_select_location">Please Select Governorate or District </string>
+    <string name="please_select_location_and_write_address_in_details">Please Select Governorate or District and write address in details</string>
     <string name="ongoing">Ongoing</string>
     <string name="completed">Completed</string>
     <string name="canceled">Cancel</string>
@@ -329,7 +329,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="occurred_while_sending_message_to_customer">occurred while sending message to customer</string>
     <string name="service_request_send_successfully">service request send successfully</string>
     <string name="error_occur_when_creating_request">Error occur when creating request</string>
-    <string name="good_afternoon">good afternoon, %1$s!</string>
+    <string name="good_afternoon">Good afternoon, %1$s!</string>
     <string name="jobs_done">Jobs Done</string>
     <string name="earnings">Earnings</string>
     <string name="rating">Rating</string>
@@ -341,5 +341,15 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="choose_city">Choose City</string>
     <string name="choose_government">Choose Government</string>
     <string name="confirm_logout">Confirm Logout</string>
+    <string name="delete_request">Delete Request</string>
+    <string name="delete_request_icon">Delete request icon</string>
+    <string name="delete_this_request">Delete this request</string>
+    <string name="the_request_will_be_deleted_from_your_device_this_action_can_t_be_undone">The request will be deleted from your device. This action can’t be undone.</string>
+    <string name="cleaning">Cleaning</string>
+    <string name="ac_repair">AC Repair</string>
+    <string name="plumping">Plumping</string>
+    <string name="electrical">Electrical</string>
+    <string name="painting">Painting</string>
+    <string name="landscaping">Landscaping</string>
 
 </resources>

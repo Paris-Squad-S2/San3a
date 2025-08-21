@@ -27,6 +27,8 @@ interface UserRemoteDataSource {
 
     fun getServices(phone: String, isCraftsman: Boolean): Flow<List<ServiceDto>>
 
+    fun getUserSelectedServices(phone: String, isCraftsman: Boolean): Flow<List<ServiceDto>>
+
     suspend fun updateLocation(phone: String, location: Location)
 
     suspend fun updatePersonalInfo(phone: String, fullName: String, profilePhoto: String?)

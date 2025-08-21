@@ -25,6 +25,7 @@ data class LocationUiState(
     val cities: List<City> = emptyList(),
     val selectedCityName: String = "",
     val selectedCityId: Int? = null,
+    val addressInDetails: String = "",
     val activeBottomSheet: LocationBottomSheetType? = null,
 )
 

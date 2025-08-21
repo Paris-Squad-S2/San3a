@@ -10,6 +10,7 @@ interface RequestsRepository {
     fun getOffers(requestId: String): Flow<List<Offer>>
     fun getOffersCount(requestId: String): Flow<Int>
     suspend fun getRequestDetailsById(requestId: String): RequestService
+    suspend fun deleteRequestById(requestId: String)
     suspend fun acceptOffer(offerId: String, craftsmanId: String, requestId: String)
     fun getCustomerRequests(userId: String): Flow<List<RequestService>>
     fun getCraftsManRequests(userId: String): Flow<List<RequestService>>
@@ -17,7 +18,7 @@ interface RequestsRepository {
     suspend fun cancelRequest(requestId: String)
     suspend fun markRequestAsDone(requestId: String)
     fun getAcceptedOfferOnRequestUseCase(requestId: String): Flow<Offer?>
-    fun getRecentRelatedJobs(relatedJobsIds: List<String>): Flow<List<RequestService>>
+    fun getRecentRelatedJobs(relatedJobsIds: List<String>, userId: String): Flow<List<RequestService>>
     suspend fun requestService(requestedService: RequestService)
-    fun getAvailableJobs(): Flow<List<RequestService>>
+    fun getAvailableJobs(userId: String): Flow<List<RequestService>>
 }
