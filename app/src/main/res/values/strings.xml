@@ -345,5 +345,11 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="delete_request_icon">Delete request icon</string>
     <string name="delete_this_request">Delete this request</string>
     <string name="the_request_will_be_deleted_from_your_device_this_action_can_t_be_undone">The request will be deleted from your device. This action can’t be undone.</string>
+    <string name="cleaning">Cleaning</string>
+    <string name="ac_repair">AC Repair</string>
+    <string name="plumping">Plumping</string>
+    <string name="electrical">Electrical</string>
+    <string name="painting">Painting</string>
+    <string name="landscaping">Landscaping</string>
 
 </resources>
