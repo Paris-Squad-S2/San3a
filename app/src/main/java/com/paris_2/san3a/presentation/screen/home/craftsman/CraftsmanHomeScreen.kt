@@ -91,7 +91,7 @@ fun CraftsmanHomeContent(
                                 contentDescription = "",
                                 tint = Theme.colors.shade.secondary,
                                 modifier = Modifier
-                                    .size(16.dp)
+                                    .size(20.dp)
                                     .padding(end = 4.dp)
                             )
                             Text(
