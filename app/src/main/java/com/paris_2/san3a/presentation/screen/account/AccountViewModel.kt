@@ -463,7 +463,6 @@ class AccountViewModel(
 
     override fun onGovernmentSelected(governorate: Governorate) {
         getCities(governorate.id)
-        onCitiesBottomSheetVisibilityToggled()
         updateGovernmentLocation(governorate)
     }
 
@@ -494,31 +493,11 @@ class AccountViewModel(
         )
     }
 
-    private fun onCitiesBottomSheetVisibilityToggled() {
-        updateState(
-            screenState.value.copy(
-                accountUiState = screenState.value.accountUiState.copy(
-                    isCitiesBottomSheetShowed = !screenState.value.accountUiState.isCitiesBottomSheetShowed
-                )
-            )
-        )
-    }
-
     override fun onGovernmentBottomSheetDismissed() {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
                     isGovernmentBottomSheetShowed = false
-                )
-            )
-        )
-    }
-
-    override fun onCitiesBottomSheetDismissed() {
-        updateState(
-            screenState.value.copy(
-                accountUiState = screenState.value.accountUiState.copy(
-                    isCitiesBottomSheetShowed = false
                 )
             )
         )

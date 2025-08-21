@@ -14,7 +14,6 @@ interface AccountInteractionListener {
     fun onDescriptionChanged(description: String)
     fun onGovernmentBottomSheetVisibilityToggled()
     fun onGovernmentBottomSheetDismissed()
-    fun onCitiesBottomSheetDismissed()
     fun onAddressDetailsChanged(addressDetails: String)
     fun onUserTypeButtonClicked()
     fun onServiceButtonClicked()

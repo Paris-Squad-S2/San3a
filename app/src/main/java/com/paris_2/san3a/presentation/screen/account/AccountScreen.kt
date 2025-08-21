@@ -173,8 +173,6 @@ fun AccountScreenContent(
                         onGovernmentDismissRequest = interactionListener::onGovernmentBottomSheetDismissed,
                         governments = uiState.accountUiState.governments,
                         onGovernmentSelected = interactionListener::onGovernmentSelected,
-                        isCitiesSheetShowed = uiState.accountUiState.isCitiesBottomSheetShowed,
-                        onCitiesDismissRequest = interactionListener::onCitiesBottomSheetDismissed,
                         onCitiesSelected = interactionListener::onCitiesSelected,
                         cities = uiState.accountUiState.cities,
                         government = uiState.accountUiState.locationUiState.governorate?.name.orEmpty(),
