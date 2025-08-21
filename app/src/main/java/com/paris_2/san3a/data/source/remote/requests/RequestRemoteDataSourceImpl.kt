@@ -170,6 +170,7 @@ class RequestRemoteDataSourceImpl(
             fromJson = RequestServiceDto::fromJson,
             queryBuilder = { query ->
                 query
+                    .whereEqualTo("requestStatus", "ONGOING")
                     .whereIn("serviceId", relatedJobs)
                     .orderBy("createdAt", Query.Direction.DESCENDING)
             }
@@ -181,6 +182,11 @@ class RequestRemoteDataSourceImpl(
         return fireStoreService.streamCollection(
             path = SERVICE_REQUESTS_COLLECTION,
             fromJson = RequestServiceDto::fromJson,
+            queryBuilder = { query ->
+                query
+                    .whereEqualTo("requestStatus", "ONGOING")
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
+            }
         )
     }
 
