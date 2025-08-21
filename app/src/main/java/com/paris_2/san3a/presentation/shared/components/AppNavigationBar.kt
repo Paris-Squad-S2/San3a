@@ -104,7 +104,7 @@ private fun RowScope.AppNavBarItem(
             )
             Text(
                 text = stringResource(currentItem.label),
-                style = Theme.textStyle.label.medium.semibold,
+                style = if (isSelected) Theme.textStyle.label.medium.semibold else Theme.textStyle.label.medium.medium,
                 color = animateColorAsState(
                     targetValue = if (isSelected) Theme.colors.brand.primary else Theme.colors.shade.tertiary,
                     label = "NavBarItemTextColor",

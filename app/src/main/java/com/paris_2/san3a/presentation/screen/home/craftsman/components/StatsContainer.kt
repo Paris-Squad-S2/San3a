@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -18,11 +17,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.utill.formatToCurrency
 
 @Composable
 fun StatsContainer(
@@ -35,12 +36,12 @@ fun StatsContainer(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .height(94.dp)
             .clip(RoundedCornerShape(Theme.radius.extraLarge))
             .background(Theme.colors.background.card)
     ){
         Row(
             modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             StatsColumn(
                 modifier = Modifier.weight(1f),
@@ -53,8 +54,7 @@ fun StatsContainer(
 
             VerticalDivider(
                 modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .padding(horizontal = 12.dp),
+                    .padding(vertical = 16.dp),
                 color = Theme.colors.stroke.primary,
                 thickness = 1.dp
             )
@@ -65,13 +65,12 @@ fun StatsContainer(
                 contentDescription = stringResource(R.string.earnings),
                 iconTint = Theme.colors.additional.primary.green,
                 label = stringResource(R.string.earnings),
-                value = stringResource(R.string.egp, earnings)
+                value = stringResource(R.string.egp, earnings.toLong().formatToCurrency())
             )
 
             VerticalDivider(
                 modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .padding(horizontal = 12.dp),
+                    .padding(vertical = 16.dp),
                 color = Theme.colors.stroke.primary,
                 thickness = 1.dp
             )
@@ -98,7 +97,7 @@ private fun StatsColumn(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
@@ -111,12 +110,15 @@ private fun StatsColumn(
             text = label,
             style = Theme.textStyle.label.medium.regular,
             color = Theme.colors.shade.secondary,
+            textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 4.dp)
         )
         Text(
             text = value,
             style = Theme.textStyle.body.small.semibold,
+            textAlign = TextAlign.Center,
             color = Theme.colors.shade.primary,
+            modifier = Modifier.padding(bottom = 4.dp)
         )
     }
 }
