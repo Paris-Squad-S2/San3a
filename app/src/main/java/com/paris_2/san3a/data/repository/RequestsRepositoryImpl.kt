@@ -54,6 +54,12 @@ class RequestsRepositoryImpl(
         }
     }
 
+    override suspend fun deleteRequestById(requestId: String) {
+        return safeNetworkCall(FailException("Failed to delete request with ID: $requestId")) {
+            requestRemoteDataSource.deleteRequestById(requestId)
+        }
+    }
+
     override suspend fun acceptOffer(offerId: String, craftsmanId: String, requestId: String) {
         safeNetworkCall(FailException("Failed to accept offer with ID: $offerId")) {
             coroutineScope {

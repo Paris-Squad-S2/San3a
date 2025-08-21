@@ -38,6 +38,7 @@ import com.paris_2.san3a.domain.usecase.notification.MarkNotificationsAsReadUseC
 import com.paris_2.san3a.domain.usecase.requests.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.AddOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.CancelRequestUseCase
+import com.paris_2.san3a.domain.usecase.requests.DeleteRequestByIdUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetAcceptedOfferOnRequestUseCaseUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetAcceptedOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftManOfferOnRequestUseCase
@@ -83,10 +84,10 @@ val useCaseModule = module {
     factoryOf(::CustomizeProfileSettingsUseCase)
     factoryOf(::GetCustomerRequestsUseCase)
     factoryOf(::GetRequestDetailsByIdUseCase)
+    factoryOf(::DeleteRequestByIdUseCase)
     factoryOf(::AcceptOfferUseCase)
     factoryOf(::GetOffersUseCase)
     factoryOf(::GetOffersCountUseCase)
-    factoryOf(::GetRequestDetailsByIdUseCase)
     factoryOf(::AddOfferUseCase)
     factoryOf(::GetAcceptedOffersUseCase)
     factoryOf(::GetCraftManOfferOnRequestUseCase)

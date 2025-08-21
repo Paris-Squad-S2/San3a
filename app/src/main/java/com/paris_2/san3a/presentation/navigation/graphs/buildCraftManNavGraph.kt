@@ -6,7 +6,7 @@ import androidx.navigation.navigation
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.home.craftsman.CraftsmanHomeScreen
 import com.paris_2.san3a.presentation.screen.messages.MessagesScreen
-import com.paris_2.san3a.presentation.screen.messagesDetails.MessageDetails
+import com.paris_2.san3a.presentation.screen.messagesDetails.MessageDetailsScreen
 import com.paris_2.san3a.presentation.screen.more.locationScreen.LocationScreen
 import com.paris_2.san3a.presentation.screen.more.moreScreen.MoreScreen
 import com.paris_2.san3a.presentation.screen.myService.MyServiceScreen
@@ -19,7 +19,7 @@ fun NavGraphBuilder.buildCraftManNavGraph() {
     navigation<Destinations.CraftManGraph>(startDestination = Destinations.Home) {
         composable<Destinations.Home> { CraftsmanHomeScreen() }
         composable<Destinations.Messages> { MessagesScreen() }
-        composable<Destinations.MessageDetails> { MessageDetails() }
+        composable<Destinations.MessageDetails> { MessageDetailsScreen() }
         composable<Destinations.Requests> { MyJobsScreen() }
         composable<Destinations.RequestDetails> { CraftsManRequestDetailsScreen() }
         composable<Destinations.Notification> { NotificationScreen() }

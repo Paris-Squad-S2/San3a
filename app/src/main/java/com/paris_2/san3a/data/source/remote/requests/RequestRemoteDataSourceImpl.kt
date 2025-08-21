@@ -39,6 +39,12 @@ class RequestRemoteDataSourceImpl(
         )
     }
 
+    override suspend fun deleteRequestById(requestId: String) {
+        return fireStoreService.deleteDoc(
+            path = "$SERVICE_REQUESTS_COLLECTION/$requestId",
+        )
+    }
+
     override suspend fun assignRequestToCraftsman(requestId: String, craftsmanId: String) {
         fireStoreService.updateDoc(
             path = "$SERVICE_REQUESTS_COLLECTION/$requestId",

@@ -120,7 +120,6 @@ data class RequestServiceUIState(
     val location: String = "Loading...",
     val locationDetails: String = "Loading...",
     val time: LocalDateTime? = null,
-    val state: String = "Loading...",
     val serviceId: String = "",
     val images: List<String> = emptyList(),
     val selectedCraftsmanId: String? = null,

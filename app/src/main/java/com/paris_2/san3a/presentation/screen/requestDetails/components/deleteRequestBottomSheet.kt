@@ -1,4 +1,4 @@
-package com.paris_2.san3a.presentation.screen.messagesDetails.components
+package com.paris_2.san3a.presentation.screen.requestDetails.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -26,10 +26,10 @@ import com.paris_2.san3a.presentation.shared.utils.BasePreview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeleteChatBottomSheet(
+fun DeleteRequestBottomSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
-    onDeleteChat: () -> Unit = {},
+    onDeleteRequest: () -> Unit = {},
     buttonState: AppButtonState,
     isVisible: Boolean = true,
 ) {
@@ -48,17 +48,17 @@ fun DeleteChatBottomSheet(
                     .size(120.dp)
                     .padding(bottom = 8.dp),
                 painter = painterResource(R.drawable.img_trash),
-                contentDescription = stringResource(R.string.delete_chat_icon)
+                contentDescription = stringResource(R.string.delete_request_icon)
             )
             Text(
                 modifier = Modifier.padding(bottom = 8.dp),
-                text = stringResource(R.string.delete_this_chat),
+                text = stringResource(R.string.delete_this_request),
                 style = Theme.textStyle.title.small,
                 color = Theme.colors.shade.primary
             )
             Text(
                 modifier = Modifier.padding(bottom = 24.dp),
-                text = stringResource(R.string.the_chat_will_be_deleted_from_your_device_this_action_can_t_be_undone),
+                text = stringResource(R.string.the_request_will_be_deleted_from_your_device_this_action_can_t_be_undone),
                 style = Theme.textStyle.body.medium.regular,
                 color = Theme.colors.shade.secondary,
                 textAlign = TextAlign.Center
@@ -68,9 +68,9 @@ fun DeleteChatBottomSheet(
                     .fillMaxWidth()
                     .padding(bottom = 12.dp),
                 type = AppButtonType.Primary,
-                onClick = onDeleteChat,
+                onClick = onDeleteRequest,
                 enablePrimaryBackgroundColor = Theme.colors.additional.primary.error,
-                text = stringResource(R.string.delete_chat),
+                text = stringResource(R.string.delete_request),
                 size = AppButtonSize.Large,
                 state = buttonState,
             )
@@ -90,9 +90,9 @@ fun DeleteChatBottomSheet(
 
 @PreviewLightDark
 @Composable
-fun DeleteChatBottomSheetPreview() {
+fun DeleteRequestBottomSheetPreview() {
     BasePreview {
-        DeleteChatBottomSheet(
+        DeleteRequestBottomSheet(
             onDismissRequest = {},
             isVisible = true,
             buttonState = AppButtonState.Enable,

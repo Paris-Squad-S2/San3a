@@ -54,13 +54,12 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun MessageDetails(
+fun MessageDetailsScreen(
     viewModel: MessagesDetailsViewModel = koinViewModel(),
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
     when {
-
         state.errorMessage != null -> {
             LostConnectionScreen(
                 onRetry = viewModel::onRetryClick,

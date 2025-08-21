@@ -8,6 +8,7 @@ interface RequestRemoteDataSource {
     suspend fun addOffer(offer: OfferDto)
     fun getAcceptedOffers(requestId: String): Flow<List<OfferDto>>
     suspend fun getRequestDetailsById(requestId: String):RequestServiceDto?
+    suspend fun deleteRequestById(requestId: String)
     suspend fun assignRequestToCraftsman(requestId: String, craftsmanId: String)
     fun getOffers(requestId: String): Flow<List<OfferDto>>
     fun getOffersCount(requestId: String): Flow<Int>
