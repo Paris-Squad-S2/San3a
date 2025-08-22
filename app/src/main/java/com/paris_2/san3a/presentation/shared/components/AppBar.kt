@@ -47,15 +47,16 @@ fun AppBar(
             }
         }
         leadingIcon?.invoke()
-        title?.let {
+        if (title != null) {
             Text(
                 text = title,
                 modifier = Modifier.weight(1F),
                 style = Theme.textStyle.title.small,
                 color = Theme.colors.shade.primary,
             )
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
         }
-        Spacer(modifier = Modifier.weight(1f))
         actionIcon()
     }
 
