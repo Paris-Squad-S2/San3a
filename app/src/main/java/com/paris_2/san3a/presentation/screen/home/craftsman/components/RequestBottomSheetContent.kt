@@ -20,10 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -37,10 +39,11 @@ fun RequestBottomSheetContent(
     title: String,
     imageUrl: String,
     subTitle: String,
-    modifier: Modifier = Modifier,
-    optionalText: String? = null,
     step: Int,
     buttonTitle: String,
+    colorCode: String?,
+    modifier: Modifier = Modifier,
+    optionalText: String? = null,
     horizontalContentPadding: Dp = 16.dp,
     buttonIsActive: Boolean = false,
     onClickBack: (() -> Unit)? = null,
@@ -71,7 +74,7 @@ fun RequestBottomSheetContent(
                 Text(
                     text = title,
                     style = Theme.textStyle.label.medium.medium,
-                    color = Theme.colors.additional.primary.blue
+                    color = colorCode?.takeIf { it.isNotBlank() }?.let { Color(it.toColorInt()) } ?: Theme.colors.additional.primary.blue
                 )
             }
             Row(
@@ -195,6 +198,7 @@ private fun Preview() {
         subTitle = "What do you need help with?",
         optionalText = "(Optional)",
         buttonTitle = "Next",
+        colorCode = "#FF4C8FD3",
         onButtonClick = {},
         onExitClick = {},
         step = 1,

@@ -146,7 +146,8 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.SELECT_SERVICE -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.what_do_you_need_help_with),
                         buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetSubtitle.isNotEmpty(),
@@ -165,7 +166,7 @@ private fun CustomerHomeScreenContent(
                                 action.setBottomSheetServiceSubTitle(it)
                             },
                             modifier = Modifier,
-                            hint = stringResource(R.string.select_a_service)
+                            hint = state.bottomSheetUiState.bottomSheetService?.hint.orEmpty()
                         )
                     }
                 }
@@ -173,7 +174,8 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.PROBLEM_DESCRIPTION -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.describe_the_problem_in_detail),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetDescription.isNotEmpty(),
                         onButtonClick = { action.nextBottomSheetStep() },
@@ -193,7 +195,8 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.SELECT_LOCATION -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.where_are_you_from),
                         buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetAddressDetails.isNotEmpty() &&
@@ -230,7 +233,8 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.IMAGE_UPLOAD -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.add_some_photos),
                         optionalText = stringResource(R.string.optional),
                         buttonTitle = stringResource(R.string.create_request),
