@@ -7,7 +7,6 @@ import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.presentation.shared.components.OfferDetailsUIState
 import com.paris_2.san3a.presentation.shared.components.OfferStatus
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
-import com.paris_2.san3a.presentation.utill.getTimeAgo
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -62,7 +61,7 @@ data class RequestOfferUiState(
     val craftsmanReviewsNumber: Int = 150,
     val requestId: String = "",
     val price: Double = 0.0,
-    val time: String = "",
+    val dateTime: LocalDateTime? = null,
     val postedTime: LocalDateTime?,
     val messageToCustomer: String = "",
     val isAccepted: Boolean = false,
@@ -74,7 +73,7 @@ fun Offer.toOfferUiState(): RequestOfferUiState {
         craftsmanId = this.craftsmanId,
         requestId = this.requestId,
         price = this.price,
-        time = "${this.preferredDate} ${this.preferredTime}",
+        dateTime = LocalDateTime(this.preferredDate, this.preferredTime),
         postedTime = this.createdAt,
         messageToCustomer = this.messageToCustomer,
         isAccepted = this.isAccepted
@@ -98,7 +97,7 @@ fun RequestOfferUiState.toOfferDetailsUIState(offerAccepted: Boolean = false): O
         reviewsNumber = this.craftsmanReviewsNumber,
         description = this.messageToCustomer,
         amount = this.price.toString(),
-        time = this.time,
+        dateTime = this.dateTime,
         postedTime = this.postedTime,
         status = if (offerAccepted) OfferStatus.YOUR_ACCEPTED_OFFER else if (this.isAccepted) OfferStatus.OFFER_ACCEPTED else OfferStatus.PENDING_OFFER,
         isVerify = false

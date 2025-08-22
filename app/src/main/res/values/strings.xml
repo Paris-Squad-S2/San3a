@@ -302,7 +302,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="offers_count">%1$d offers</string>
     <string name="add_your_offer">Add Your Offer</string>
     <string name="offer_hint">Be competitive but fair. Consider materials and time.</string>
-    <string name="your_price">Your price (Eg)</string>
+    <string name="your_price">Your price (EGP)</string>
     <string name="price_placeholder">e.g., 25,000</string>
     <string name="preferred_date">Preferred Date</string>
     <string name="select_date">Select date</string>
@@ -337,6 +337,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="see_less">See less</string>
     <string name="see_more">See more</string>
     <string name="min_ago">%1$d min ago</string>
+    <string name="just_now">Just now</string>
     <string name="h_ago">%1$d h ago</string>
     <string name="choose_city">Choose City</string>
     <string name="choose_government">Choose Government</string>
@@ -351,5 +352,10 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="electrical">Electrical</string>
     <string name="painting">Painting</string>
     <string name="landscaping">Landscaping</string>
+    <string name="tomorrow_time">Tomorrow, %1$s:%2$s %3$s</string>
+    <string name="today_time">Today, %1$s:%2$s %3$s</string>
+    <string name="date_time">%1$s, %2$s:%3$s %4$s</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
 
 </resources>

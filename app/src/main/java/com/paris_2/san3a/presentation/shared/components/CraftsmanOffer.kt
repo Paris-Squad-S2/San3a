@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.shared.components
 
+import android.content.Context
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -31,7 +32,10 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
+import com.paris_2.san3a.presentation.utill.format
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import com.paris_2.san3a.presentation.utill.getTimeAgo
+import com.paris_2.san3a.presentation.utill.plusNDays
 import kotlinx.datetime.LocalDateTime
 
 enum class OfferStatus {
@@ -46,8 +50,8 @@ data class OfferDetailsUIState(
     val rate: Float = 4.7f,
     val reviewsNumber: Int = 121,
     val description: String = "I can fix this today. I have 10+ years experience with kitchen plumbing.",
-    val amount: String = "50,000 IQD",
-    val time: String = "Tomorrow, 2:00 PM",
+    val amount: String = "50,000",
+    val dateTime: LocalDateTime? = null,
     val postedTime: LocalDateTime? = null,
     val status: OfferStatus = OfferStatus.PENDING_OFFER,
     val isVerify: Boolean = true
@@ -135,11 +139,11 @@ fun CraftsManOffer(
             name = offerDetails.name,
             postedTime = getTimeAgo(offerDetails.postedTime, LocalContext.current),
             description = offerDetails.description,
-            amount = offerDetails.amount,
-            rate = offerDetails.rate, // TODO( hide it untile we made it ),
+            amount = stringResource(R.string.egp, offerDetails.amount),
+            rate = offerDetails.rate,
             reviewsNumber = offerDetails.reviewsNumber,
             status = offerDetails.status,
-            time = offerDetails.time,
+            time = offerDetails.dateTime?.format(LocalContext.current).orEmpty(),
             stickyFooter = {
                 if (showActionButtons) {
                     when {
@@ -232,4 +236,3 @@ fun CardsPreview() {
         }
     }
 }
-

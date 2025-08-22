@@ -14,10 +14,9 @@ fun getTimeAgo(dateTime: LocalDateTime?, context: Context): String {
     if (dateTime == null) return ""
     val duration = now.toInstant(timeZone) - dateTime.toInstant(timeZone)
     val hours = duration.inWholeHours
-    return if (hours == 0L) {
-        val minutes = duration.inWholeMinutes
-        context.getString(R.string.min_ago, minutes)
-    } else {
-        context.getString(R.string.h_ago, hours)
+    return when {
+        hours > 0L -> context.getString(R.string.h_ago, hours)
+        duration.inWholeMinutes == 0L -> context.getString(R.string.just_now)
+        else -> context.getString(R.string.min_ago, duration.inWholeMinutes)
     }
 }
