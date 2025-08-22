@@ -151,7 +151,8 @@ class CraftsmanHomeViewModel(
                                 recentRelatedJobs = mappedJobs?.associate { requestService ->
                                     requestService.id to requestService
                                 }.orEmpty()
-                            )
+                            ),
+                            isRecentRelatedJobsLoading = false
                         )
                     )
                     getOffersCountForRecentJobs()
@@ -211,7 +212,8 @@ class CraftsmanHomeViewModel(
                                 availableJobs = filteredJobs?.associate { requestService ->
                                     requestService.id to requestService
                                 } ?: emptyMap()
-                            )
+                            ),
+                            isAvailableJobsLoading = false
                         )
                     )
                     getOffersCountForAvailableJobs()
@@ -259,9 +261,22 @@ class CraftsmanHomeViewModel(
         )
     }
 
+    override fun onRetry() {
+        updateState(
+            screenState.value.copy(
+                errorMessage = null,
+                isAvailableJobsLoading = true,
+                isRecentRelatedJobsLoading = true,
+            )
+        )
+        loadPhoneNumber()
+    }
+
     private fun onError(throwable: Throwable) {
         updateState(
             screenState.value.copy(
+                isAvailableJobsLoading = false,
+                isRecentRelatedJobsLoading = false,
                 errorMessage = throwable.message ?: UNKNOWN_ERROR
             )
         )
