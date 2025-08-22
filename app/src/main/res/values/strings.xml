@@ -302,7 +302,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="offers_count">%1$d offers</string>
     <string name="add_your_offer">Add Your Offer</string>
     <string name="offer_hint">Be competitive but fair. Consider materials and time.</string>
-    <string name="your_price">Your price (IQD)</string>
+    <string name="your_price">Your price (Eg)</string>
     <string name="price_placeholder">e.g., 25,000</string>
     <string name="preferred_date">Preferred Date</string>
     <string name="select_date">Select date</string>

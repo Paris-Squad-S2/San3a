@@ -51,7 +51,7 @@ private fun MyRequestScreenContent(
         rating = state.myRequestCustomerUiState.rating,
         onDismiss = myRequestCustomerInteractionListener::onRatingDismiss,
         onRatingChange = { rating ->
-            myRequestCustomerInteractionListener.onRatingChange(rating)
+            myRequestCustomerInteractionListener.onRatingChange(rating.toFloat())
         },
         onAddRating = {
             myRequestCustomerInteractionListener.onRatingCraftsMan()
