@@ -61,7 +61,7 @@ fun Offers(
             onPrimaryButtonClick = {},
             modifier = Modifier
                 .padding(top = 22.dp)
-                .graphicsLayer { rotationZ = -8f }
+                .graphicsLayer { rotationZ = -7f }
                 .offset(y = 70.dp, x = (-8).dp),
             offerDetails = OfferDetailsUIState(
                 name = stringResource(R.string.muhammed_ali),

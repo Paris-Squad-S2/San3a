@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -60,6 +62,7 @@ private fun OTPRegisterScreenContent(
             .background(Theme.colors.background.screen)
             .navigationBarsPadding()
             .statusBarsPadding()
+            .imePadding()
             .padding(top = 16.dp)
     ) {
         when {
@@ -79,37 +82,42 @@ private fun OTPRegisterScreenContent(
             }
 
             else -> {
-                Column(
+                LazyColumn(
                     modifier = modifier
                         .fillMaxSize()
                 ) {
-                    Box (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ){
-                        AppBackButton(
-                            onClickBackButton = otpRegisterListenerInteraction::onClickBackButton,
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-                        Image(
+                    item {
+
+                        Box(
                             modifier = Modifier
-                                .size(200.dp)
-                                .align(Alignment.Center),
-                            painter = painterResource(R.drawable.image_otp),
-                            contentDescription = stringResource(R.string.otp_image)
-                        )
+                                .fillMaxWidth()
+                        ) {
+                            AppBackButton(
+                                onClickBackButton = otpRegisterListenerInteraction::onClickBackButton,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+                            Image(
+                                modifier = Modifier
+                                    .size(200.dp)
+                                    .align(Alignment.Center),
+                                painter = painterResource(R.drawable.image_otp),
+                                contentDescription = stringResource(R.string.otp_image)
+                            )
+                        }
                     }
 
-                    VerificationCodeContent(
-                        otpRegisterScreenState.otpRegisterUiState.phoneNumber,
-                        otpRegisterScreenState.otpRegisterUiState.otp,
-                        otpRegisterScreenState.otpRegisterUiState.secondLeft,
-                        otpRegisterScreenState.otpRegisterUiState.loadingVerifyButton,
-                        otpRegisterListenerInteraction::onOtpTextChange,
-                        otpRegisterListenerInteraction::onClickVerify,
-                        otpRegisterListenerInteraction::onClickResendCode,
-                        Modifier.weight(1f)
-                    )
+                    item {
+                        VerificationCodeContent(
+                            otpRegisterScreenState.otpRegisterUiState.phoneNumber,
+                            otpRegisterScreenState.otpRegisterUiState.otp,
+                            otpRegisterScreenState.otpRegisterUiState.secondLeft,
+                            otpRegisterScreenState.otpRegisterUiState.loadingVerifyButton,
+                            otpRegisterListenerInteraction::onOtpTextChange,
+                            otpRegisterListenerInteraction::onClickVerify,
+                            otpRegisterListenerInteraction::onClickResendCode,
+                            Modifier.padding(bottom = 16.dp)
+                        )
+                    }
                 }
             }
         }
