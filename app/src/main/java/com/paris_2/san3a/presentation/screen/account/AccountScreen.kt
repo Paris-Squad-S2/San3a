@@ -210,9 +210,7 @@ fun AccountScreenContent(
             4 -> when (uiState.accountUiState.userType) {
                 UserType.CRAFTSMAN -> {
                     VerifyIdentityContent(
-                        modifier = Modifier.padding(
-                            top = 32.dp, bottom = 12.dp
-                        ),
+                        modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
                         onFrontOfNationalIdUploadClick = onFrontNationalIdClick,
                         onBackOfNationalIdUploadClick = onBackNationalIdClick,
                         frontOfNationalIdUri = uiState.accountUiState.frontOfNationalIdUri,

@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.account.components
 
 import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,12 +31,13 @@ fun VerifyIdentityContent(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Bottom
     ) {
         Text(
             text = stringResource(R.string.upload_front_of_national_id),
             style = Theme.textStyle.body.medium.regular,
             color = Theme.colors.shade.primary,
-            modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
+            modifier = Modifier.padding(bottom = 12.dp)
         )
         AddSingleDocumentPhoto(
             imageUri = frontOfNationalIdUri,
