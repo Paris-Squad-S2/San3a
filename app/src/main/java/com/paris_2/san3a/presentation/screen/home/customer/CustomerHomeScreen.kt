@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -281,6 +282,7 @@ private fun CustomerHomeScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Theme.colors.background.card),
+                spaceBetween = false,
                 actionIcon = {
                     NotificationIcon(
                         modifier = Modifier.padding(end = 8.dp),
@@ -291,7 +293,8 @@ private fun CustomerHomeScreenContent(
                 leadingIcon = {
                     Column(
                         modifier = Modifier
-                            .padding(start = 16.dp)
+                            .padding(start = 16.dp, end = 8.dp)
+                            .weight(1f),
                     ) {
                         Text(
                             text = stringResource(
@@ -300,6 +303,8 @@ private fun CustomerHomeScreenContent(
                             ),
                             style = Theme.textStyle.body.medium.medium,
                             color = Theme.colors.shade.primary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                         )
                         Row(
                             modifier = Modifier.padding(top = 4.dp),
@@ -310,13 +315,15 @@ private fun CustomerHomeScreenContent(
                                 contentDescription = "",
                                 tint = Theme.colors.shade.secondary,
                                 modifier = Modifier
-                                    .size(16.dp)
+                                    .size(20.dp)
                                     .padding(end = 4.dp)
                             )
                             Text(
                                 text = "${state.customerUiState.government}, ${state.customerUiState.city}",
                                 style = Theme.textStyle.body.small.medium,
-                                color = Theme.colors.shade.secondary
+                                color = Theme.colors.shade.secondary,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
                             )
                         }
                     }

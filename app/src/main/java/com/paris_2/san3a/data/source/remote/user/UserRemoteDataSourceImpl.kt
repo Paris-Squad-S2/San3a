@@ -95,7 +95,10 @@ class UserRemoteDataSourceImpl(
                                 allServices.filter { service -> !docsList.contains(service.id) }
                     }
                 } else {
-                    flow { emit(emptyList()) }
+                    fireStoreService.streamCollection(
+                        path = SERVICES_COLLECTION,
+                        fromJson = ServiceDto::fromJson,
+                    )
                 }
             }
         }

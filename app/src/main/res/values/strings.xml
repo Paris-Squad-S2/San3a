@@ -275,7 +275,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="please_select_location_and_write_address_in_details">Please Select Governorate or District and write address in details</string>
     <string name="ongoing">Ongoing</string>
     <string name="completed">Completed</string>
-    <string name="canceled">Cancel</string>
+    <string name="canceled">Canceled</string>
     <string name="view_offers">View Offers</string>
     <string name="rate">Rate</string>
     <string name="no_service_requests_yet">No Service Requests Yet</string>

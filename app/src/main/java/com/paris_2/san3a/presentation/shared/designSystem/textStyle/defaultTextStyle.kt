@@ -92,17 +92,17 @@ val defaultTextStyle = San3aTextStyle(
             regular = TextStyle(
                 fontFamily = plus_jakarta,
                 fontWeight = FontWeight.Normal,
-                fontSize = 14.sp
+                fontSize = 12.sp
             ),
             medium = TextStyle(
                 fontFamily = plus_jakarta,
                 fontWeight = FontWeight.Medium,
-                fontSize = 14.sp
+                fontSize = 12.sp
             ),
             semibold = TextStyle(
                 fontFamily = plus_jakarta,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 14.sp
+                fontSize = 12.sp
             )
         )
     )
