@@ -123,7 +123,7 @@ fun AppButton(
                     style = if (size == AppButtonSize.Large)
                         Theme.textStyle.body.medium.medium
                     else
-                        Theme.textStyle.body.small.regular,
+                        Theme.textStyle.body.small.medium,
                     color = buttonContentColor
                 )
             }
