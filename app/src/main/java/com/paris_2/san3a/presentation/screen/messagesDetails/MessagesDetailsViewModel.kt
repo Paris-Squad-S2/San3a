@@ -65,7 +65,7 @@ class MessagesDetailsViewModel(
                 updateState(
                     screenState.value.copy(
                         chatTitle = FAKE_USER_NAME,
-                        profilePhoto = FAKE_IMAGE_URL,
+                        profilePhoto = fakeImage,
                     )
                 )
                 Log.d("MessagesDetailsViewModel", "getTheOtherUserData error: ${it.message}", it)
@@ -259,8 +259,6 @@ class MessagesDetailsViewModel(
 
     companion object {
         const val IMAGE_TYPE = "image/*"
-        const val FAKE_IMAGE_URL =
-            "https://firebasestorage.googleapis.com/v0/b/cell-monitor21.appspot.com/o/user2%2Fchat8%2F1000179245.jpg?alt=media&token=714e333b-7fc6-4be3-83a6-30d6b7f7fd4e"
         const val FAKE_USER_NAME = "Unknown User"
     }
 

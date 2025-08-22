@@ -14,8 +14,8 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 fun LocalDateTime.minusNHours(n: Int): LocalDateTime {
-    val tz = TimeZone.Companion.currentSystemDefault()
-    val duration = Duration.Companion.parse("PT${n}H")
+    val tz = TimeZone.currentSystemDefault()
+    val duration = Duration.parse("PT${n}H")
     return this.toInstant(tz)
         .minus(duration)
         .toLocalDateTime(tz)
@@ -23,8 +23,8 @@ fun LocalDateTime.minusNHours(n: Int): LocalDateTime {
 
 @OptIn(ExperimentalTime::class)
 fun LocalDateTime.plusNHours(n: Int): LocalDateTime {
-    val tz = TimeZone.Companion.currentSystemDefault()
-    val duration = Duration.Companion.parse("PT${n}H")
+    val tz = TimeZone.currentSystemDefault()
+    val duration = Duration.parse("PT${n}H")
     return this.toInstant(tz)
         .plus(duration)
         .toLocalDateTime(tz)
