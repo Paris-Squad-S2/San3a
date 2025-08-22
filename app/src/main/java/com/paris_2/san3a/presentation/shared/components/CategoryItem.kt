@@ -140,7 +140,9 @@ fun CategoryItemSmall(
                 Text(
                     text = description,
                     style = Theme.textStyle.body.medium.regular,
-                    color = Theme.colors.shade.secondary
+                    color = Theme.colors.shade.secondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         }
