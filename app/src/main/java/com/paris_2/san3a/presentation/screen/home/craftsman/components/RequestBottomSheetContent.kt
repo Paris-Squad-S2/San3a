@@ -166,15 +166,22 @@ fun RequestBottomSheetContent(
                     .padding(horizontal = 16.dp)
             )
         }
-        Icon(
-            painter = painterResource(R.drawable.ic_close),
-            contentDescription = null,
+        Box(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(end = 16.dp)
+                .size(40.dp)
                 .clickable { onExitClick() },
-            tint = Theme.colors.shade.secondary
-        )
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_close),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(20.dp),
+                tint = Theme.colors.shade.secondary
+            )
+        }
 
     }
 }
