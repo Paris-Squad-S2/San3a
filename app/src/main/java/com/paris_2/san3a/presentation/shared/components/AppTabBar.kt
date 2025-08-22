@@ -4,6 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -41,12 +43,10 @@ fun AppTabBar(
     PrimaryTabRow(
         selectedTabIndex = selectedIndex,
         containerColor = Theme.colors.background.card,
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         divider = {
             Box(
                 Modifier
-                    .fillMaxWidth()
                     .height(1.dp)
                     .background(Theme.colors.stroke.primary)
             )
@@ -62,14 +62,21 @@ fun AppTabBar(
         }) {
         tabItems.forEachIndexed { index, title ->
             val interactionSource = remember { MutableInteractionSource() }
-            Tab(
-                selected = selectedIndex == index,
-                onClick = { onTabSelected(index) },
-                interactionSource = interactionSource,
-                modifier = Modifier.indication(
-                    interactionSource = interactionSource, indication = null
-                ),
-                text = { TextTabBar(selectedIndex, index, title) })
+            Box(
+                modifier = Modifier
+                    .height(48.dp)
+                    .background(
+                        color = Theme.colors.background.card,
+                        shape = RoundedCornerShape(topStart = Theme.radius.full, topEnd = Theme.radius.full)
+                    )
+                    .indication(interactionSource = interactionSource, indication = null)
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null
+                    ) { onTabSelected(index) }
+            ) {
+                TextTabBar(selectedIndex, index, title, modifier = Modifier.align(Alignment.Center))
+            }
         }
     }
 }
@@ -86,7 +93,7 @@ private fun TextTabBar(
     Text(
         text = title,
         color = animatedColor,
-        style = if (selectedIndex == index) Theme.textStyle.label.medium.medium else Theme.textStyle.label.medium.regular,
+        style = if (selectedIndex == index) Theme.textStyle.body.medium.medium else Theme.textStyle.body.medium.regular,
         textAlign = TextAlign.Center,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
