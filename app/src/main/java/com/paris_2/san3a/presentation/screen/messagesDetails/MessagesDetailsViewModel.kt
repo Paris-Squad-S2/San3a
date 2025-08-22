@@ -14,6 +14,7 @@ import com.paris_2.san3a.domain.usecase.messaging.SendMessageUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.utill.fakeImage
 
 class MessagesDetailsViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
@@ -55,7 +56,7 @@ class MessagesDetailsViewModel(
                 updateState(
                     screenState.value.copy(
                         chatTitle = user.fullName,
-                        profilePhoto = user.profilePhoto,
+                        profilePhoto = user.profilePhoto ?: fakeImage,
                     )
                 )
                 loadMessages(chatId)

@@ -4,6 +4,7 @@ import com.paris_2.san3a.domain.entity.Offer
 import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.User
+import com.paris_2.san3a.presentation.utill.fakeImage
 import com.paris_2.san3a.presentation.shared.components.OfferDetailsUIState
 import com.paris_2.san3a.presentation.shared.components.OfferStatus
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
@@ -83,7 +84,7 @@ fun Offer.toOfferUiState(): RequestOfferUiState {
 fun User.toRequestOfferUiState(request: RequestOfferUiState, craftsmanRate: Float): RequestOfferUiState {
     return request.copy(
         craftsmanId = this.id,
-        craftsmanImageUrl = this.profilePhoto,
+        craftsmanImageUrl = this.profilePhoto ?: fakeImage,
         craftsmanName = this.fullName,
         craftsmanRate = craftsmanRate,
     )
