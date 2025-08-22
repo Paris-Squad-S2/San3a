@@ -160,8 +160,8 @@ fun AddSinglePhotoCircle(
                 gapLength = 6.dp,
                 shape = CircleShape
             )
-            .padding(16.dp)
-            .clickable { onTap() },
+            .clickable { onTap() }
+            .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
 
