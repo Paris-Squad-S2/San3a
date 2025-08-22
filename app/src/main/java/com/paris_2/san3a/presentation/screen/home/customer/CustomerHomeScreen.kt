@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -136,6 +137,9 @@ private fun CustomerHomeScreenContent(
     if (state.bottomSheetUiState.bottomSheetState) {
         BottomSheet(
             isVisible = true,
+            modifier = Modifier
+                .navigationBarsPadding(),
+            horizontalPadding = 0.dp,
             onDismissRequest = { action.onDismissBottomSheet() }
         ) {
             when (state.bottomSheetUiState.bottomSheetStep) {
@@ -147,6 +151,7 @@ private fun CustomerHomeScreenContent(
                         buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetSubtitle.isNotEmpty(),
                         step = 1,
+                        horizontalContentPadding = 0.dp,
                         onButtonClick = { action.nextBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() },
                     ) {

@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
@@ -34,6 +35,7 @@ fun BottomSheet(
     onDismissRequest: () -> Unit = {},
     isVisible: Boolean = true,
     skipPartiallyExpanded: Boolean = true,
+    horizontalPadding: Dp = 16.dp,
     header: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit = {},
 ) {
@@ -61,7 +63,7 @@ fun BottomSheet(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = horizontalPadding)
             ) {
                 header?.invoke()
                 content()

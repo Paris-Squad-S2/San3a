@@ -54,6 +54,7 @@ fun RequestTitleContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
+                .padding(horizontal = 16.dp)
                 .border(
                     width = 1.dp,
                     color = Theme.colors.stroke.primary,
@@ -81,8 +82,7 @@ fun RequestTitleContent(
             }
         )
         LazyRow(
-            modifier = Modifier
-                .padding(top = 12.dp),
+            modifier = Modifier.padding(top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = 16.dp)
         ) {

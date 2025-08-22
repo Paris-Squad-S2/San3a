@@ -3,7 +3,6 @@ package com.paris_2.san3a.presentation.screen.home.craftsman.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,9 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
@@ -42,6 +41,7 @@ fun RequestBottomSheetContent(
     optionalText: String? = null,
     step: Int,
     buttonTitle: String,
+    horizontalContentPadding: Dp = 16.dp,
     buttonIsActive: Boolean = false,
     onClickBack: (() -> Unit)? = null,
     onButtonClick: () -> Unit,
@@ -53,12 +53,12 @@ fun RequestBottomSheetContent(
         modifier = modifier
             .fillMaxWidth()
             .background(Theme.colors.background.bottomSheet)
-            .padding(horizontal = 16.dp)
-            .padding(top = 20.dp)
+            .padding(top = 20.dp, bottom = 16.dp)
     ) {
         Column {
             Row(
-                modifier = Modifier,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -77,6 +77,7 @@ fun RequestBottomSheetContent(
             Row(
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 20.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 Text(
                     text = subTitle,
@@ -91,10 +92,17 @@ fun RequestBottomSheetContent(
                     )
                 }
             }
-            content()
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = horizontalContentPadding)
+            ) {
+                content()
+            }
             Row(
                 modifier = Modifier
                     .padding(top = 24.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 if (onClickBack != null) {
                     Box(
@@ -155,6 +163,7 @@ fun RequestBottomSheetContent(
                 step = step, modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 24.dp)
+                    .padding(horizontal = 16.dp)
             )
         }
         Icon(
@@ -162,6 +171,7 @@ fun RequestBottomSheetContent(
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.TopEnd)
+                .padding(end = 16.dp)
                 .clickable { onExitClick() },
             tint = Theme.colors.shade.secondary
         )
