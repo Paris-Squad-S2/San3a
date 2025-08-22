@@ -94,8 +94,8 @@ fun AppTextField(
                         text = it,
                         style = Theme.textStyle.body.medium.regular,
                         color = Theme.colors.shade.tertiary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        maxLines = if (singleLine) 1 else Int.MAX_VALUE,
+                        overflow = if (singleLine) TextOverflow.Ellipsis else TextOverflow.Clip
                     )
                 }
             },

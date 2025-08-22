@@ -34,7 +34,6 @@ fun ShowYourWorkContent(
             onAddPhotoClick = onAddWorkImagesClick,
             onDeletePhotoClick = onDeleteImage,
             modifier = Modifier
-                .height(96.dp)
                 .fillMaxWidth()
         )
         Row(
@@ -55,10 +54,9 @@ fun ShowYourWorkContent(
             value = workDescription,
             onValueChange = onDescriptionChanged,
             placeholder = stringResource(R.string.mention_your_years_of_experience),
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             singleLine = false,
-            minLines = 2
+            minLines = 3
         )
     }
 }

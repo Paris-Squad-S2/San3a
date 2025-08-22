@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -53,6 +54,7 @@ fun AddWorkPhotosComponent(
     if (images == null) {
         Box(
             modifier = modifier
+                .height(96.dp)
                 .clip(RoundedCornerShape(Theme.radius.large))
                 .background(Theme.colors.background.bottomSheet)
                 .dashedBorder(
@@ -84,17 +86,14 @@ fun AddWorkPhotosComponent(
         }
     } else {
         LazyRow(
-            modifier = modifier
-                .clip(RoundedCornerShape(Theme.radius.large))
-                .background(Theme.colors.background.bottomSheet)
-                .padding(8.dp)
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(images) { uri ->
                 Box(
                     Modifier
-                        .size(80.dp)
-                        .padding(4.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(Theme.radius.large))
                         .border(1.dp, Theme.colors.background.bottomSheet)
                 ) {
                     AsyncImage(
@@ -102,8 +101,8 @@ fun AddWorkPhotosComponent(
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
+                            .size(64.dp)
                     )
-
 
                     Box(
                         modifier = Modifier
@@ -130,9 +129,8 @@ fun AddWorkPhotosComponent(
             item {
                 Box(
                     modifier = Modifier
-                        .size(80.dp)
-                        .padding(4.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(Theme.radius.large))
                         .background(Theme.colors.background.bottomSheet)
                         .clickable { onAddPhotoClick() },
                     contentAlignment = Alignment.Center
