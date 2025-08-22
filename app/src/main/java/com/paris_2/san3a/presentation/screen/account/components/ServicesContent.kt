@@ -9,8 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import com.paris_2.san3a.presentation.screen.account.ServiceUiState
 import com.paris_2.san3a.presentation.shared.components.AppChip
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
@@ -22,37 +24,6 @@ fun ServicesContent(
     onChipClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val selectedColors =
-        remember { mutableStateMapOf<String, androidx.compose.ui.graphics.Color>() }
-
-    val primaryColors = listOf(
-        Theme.colors.additional.primary.error,
-        Theme.colors.additional.primary.success,
-        Theme.colors.additional.primary.warning,
-        Theme.colors.additional.primary.purple,
-        Theme.colors.additional.primary.red,
-        Theme.colors.additional.primary.blue,
-        Theme.colors.additional.primary.turquoise,
-        Theme.colors.additional.primary.yellow,
-        Theme.colors.additional.primary.green
-    )
-
-    val usedColorIndices = remember { mutableSetOf<Int>() }
-
-    fun getUniqueRandomColor(): androidx.compose.ui.graphics.Color {
-
-        if (usedColorIndices.size == primaryColors.size) {
-            usedColorIndices.clear()
-        }
-
-        var colorIndex: Int
-        do {
-            colorIndex = primaryColors.indices.random()
-        } while (colorIndex in usedColorIndices)
-        usedColorIndices.add(colorIndex)
-        return primaryColors[colorIndex]
-    }
-
     Column(
         modifier = modifier.background(Theme.colors.background.screen)
     ) {
@@ -61,16 +32,13 @@ fun ServicesContent(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             services.forEach { service ->
-                val chipColor = selectedColors.getOrPut(service.id) {
-                    getUniqueRandomColor()
-                }
                 AppChip(
                     onClick = { onChipClick(service.id) },
                     label = service.serviceTitle,
                     isSelected = service.isSelected,
                     hasBackgroundColor = true,
                     unSelectedColor = Theme.colors.background.card,
-                    selectedColor = chipColor,
+                    selectedColor = service.colorCode.takeIf { it.isNotBlank() }?.let { Color(it.toColorInt()) } ?: Theme.colors.additional.primary.blue,
                 )
             }
         }
