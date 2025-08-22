@@ -20,7 +20,7 @@ fun TextSection(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp, vertical = 32.dp)
     ) {
         Text(
             text = page.title,
@@ -33,7 +33,7 @@ fun TextSection(
             text = page.description,
             style = Theme.textStyle.body.large.regular,
             color = Theme.colors.shade.secondary,
-            modifier = Modifier.padding(bottom = 50.dp),
+            modifier = Modifier.padding(bottom = 18.dp),
             fontSize = 16.sp
         )
     }

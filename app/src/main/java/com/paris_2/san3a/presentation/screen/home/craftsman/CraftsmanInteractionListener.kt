@@ -5,5 +5,6 @@ interface CraftsmanInteractionListener {
     fun onNotificationClick()
 
     fun onJobClick(serviceId: String)
+    fun onRetry()
 
 }

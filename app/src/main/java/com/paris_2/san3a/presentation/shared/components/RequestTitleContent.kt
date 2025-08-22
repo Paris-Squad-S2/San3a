@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -54,6 +55,7 @@ fun RequestTitleContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
+                .padding(horizontal = 16.dp)
                 .border(
                     width = 1.dp,
                     color = Theme.colors.stroke.primary,
@@ -73,7 +75,9 @@ fun RequestTitleContent(
                         Text(
                             text = hint,
                             style = Theme.textStyle.body.medium.regular,
-                            color = Theme.colors.shade.tertiary
+                            color = Theme.colors.shade.tertiary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                     innerTextField()
@@ -81,8 +85,7 @@ fun RequestTitleContent(
             }
         )
         LazyRow(
-            modifier = Modifier
-                .padding(top = 12.dp),
+            modifier = Modifier.padding(top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = 16.dp)
         ) {

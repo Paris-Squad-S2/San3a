@@ -6,11 +6,10 @@ import androidx.navigation.toRoute
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
-import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserSelectedServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
-import com.paris_2.san3a.presentation.screen.account.ServiceUiState
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
@@ -18,24 +17,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-data class MyServiceScreenState(
-    val myServiceUiState: List<ServiceUiState> = emptyList(),
-    val isLoading: Boolean = false,
-    val successMessageSnackBar: UiText? = null,
-    val errorMessage: UiText? = null,
-    val showSnackBarSuccess: Boolean = false,
-    val showSnackBarError: Boolean = false,
-    val isNoInternet: Boolean = false,
-    val phoneNumber: String = "",
-    val isCraftsman: Boolean = false,
-    val serviceButtonState: AppButtonState = AppButtonState.Enable
-)
-
-
 class MyServiceViewModel(
     private val getAllServicesUseCase: GetAllServicesUseCase,
     private val setUpAccountUseCase: SetUpAccountUseCase,
-    private val getUserServicesUseCase: GetUserServicesUseCase,
+    private val getUserSelectedServicesUseCase: GetUserSelectedServicesUseCase,
     saveStateHandle: SavedStateHandle,
 ) : BaseViewModel<MyServiceScreenState>(MyServiceScreenState()),
     MyServiceInteractionListener {
@@ -57,7 +42,7 @@ class MyServiceViewModel(
         updateState(screenState.value.copy(isLoading = true))
         tryToExecute(
             execute = {
-                getUserServicesUseCase(
+                getUserSelectedServicesUseCase(
                     phoneNumber = phoneNumber,
                     isCraftsman = isCraftsman
                 ).first()

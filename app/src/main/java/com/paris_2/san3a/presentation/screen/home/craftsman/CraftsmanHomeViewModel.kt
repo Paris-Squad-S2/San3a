@@ -8,7 +8,7 @@ import com.paris_2.san3a.domain.usecase.requests.GetOffersCountUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetRecentRelatedJobsUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.GetStatsUseCase
-import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserSelectedServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
@@ -19,7 +19,7 @@ class CraftsmanHomeViewModel(
     private val getAvailableJobsUseCase: GetAvailableJobsUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getOffersCountUseCase: GetOffersCountUseCase,
-    private val getUserServicesUseCase: GetUserServicesUseCase,
+    private val getUserSelectedServicesUseCase: GetUserSelectedServicesUseCase,
     private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getUserUseCase: GetUserUseCase,
@@ -32,7 +32,7 @@ class CraftsmanHomeViewModel(
     private fun getUserServices() {
         tryToObserve(
             observe = {
-                getUserServicesUseCase(
+                getUserSelectedServicesUseCase(
                     screenState.value.craftsmanHomeUiState.phoneNumber,
                     isCraftsman = true
                 )
@@ -131,7 +131,7 @@ class CraftsmanHomeViewModel(
 
     fun loadRecentRelatedJobs() {
         tryToObserve(
-            observe = { getRecentRelatedJobsUseCase(screenState.value.craftsmanHomeUiState.userServices.keys.toList()) },
+            observe = { getRecentRelatedJobsUseCase(screenState.value.craftsmanHomeUiState.userServices.keys.toList(), screenState.value.craftsmanHomeUiState.phoneNumber) },
             onEach = { jobs ->
                 jobs?.map { job ->
                     val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
@@ -151,7 +151,8 @@ class CraftsmanHomeViewModel(
                                 recentRelatedJobs = mappedJobs?.associate { requestService ->
                                     requestService.id to requestService
                                 }.orEmpty()
-                            )
+                            ),
+                            isRecentRelatedJobsLoading = false
                         )
                     )
                     getOffersCountForRecentJobs()
@@ -188,7 +189,7 @@ class CraftsmanHomeViewModel(
 
     fun loadAvailableJobs() {
         tryToObserve(
-            observe = getAvailableJobsUseCase::invoke,
+            observe = { getAvailableJobsUseCase(screenState.value.craftsmanHomeUiState.phoneNumber) },
             onEach = { jobs ->
                 jobs?.map { job ->
                     val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
@@ -211,7 +212,8 @@ class CraftsmanHomeViewModel(
                                 availableJobs = filteredJobs?.associate { requestService ->
                                     requestService.id to requestService
                                 } ?: emptyMap()
-                            )
+                            ),
+                            isAvailableJobsLoading = false
                         )
                     )
                     getOffersCountForAvailableJobs()
@@ -259,9 +261,22 @@ class CraftsmanHomeViewModel(
         )
     }
 
+    override fun onRetry() {
+        updateState(
+            screenState.value.copy(
+                errorMessage = null,
+                isAvailableJobsLoading = true,
+                isRecentRelatedJobsLoading = true,
+            )
+        )
+        loadPhoneNumber()
+    }
+
     private fun onError(throwable: Throwable) {
         updateState(
             screenState.value.copy(
+                isAvailableJobsLoading = false,
+                isRecentRelatedJobsLoading = false,
                 errorMessage = throwable.message ?: UNKNOWN_ERROR
             )
         )

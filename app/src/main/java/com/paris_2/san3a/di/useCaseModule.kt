@@ -14,7 +14,7 @@ import com.paris_2.san3a.domain.usecase.user.GetCustomerRatingOnCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetRecentRelatedJobsUseCase
 import com.paris_2.san3a.domain.usecase.services.GetServiceByIdUseCase
 import com.paris_2.san3a.domain.usecase.user.GetStatsUseCase
-import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetSortedServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.user.GetWorkMediaUseCase
 import com.paris_2.san3a.domain.usecase.user.IncrementJobsDoneForCraftsmanUseCase
@@ -38,6 +38,7 @@ import com.paris_2.san3a.domain.usecase.notification.MarkNotificationsAsReadUseC
 import com.paris_2.san3a.domain.usecase.requests.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.AddOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.CancelRequestUseCase
+import com.paris_2.san3a.domain.usecase.requests.DeleteRequestByIdUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetAcceptedOfferOnRequestUseCaseUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetAcceptedOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftManOfferOnRequestUseCase
@@ -47,6 +48,7 @@ import com.paris_2.san3a.domain.usecase.requests.GetRequestDetailsByIdUseCase
 import com.paris_2.san3a.domain.usecase.requests.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserSelectedServicesUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -70,7 +72,8 @@ val useCaseModule = module {
     factoryOf(::GetPhoneNumberUseCase)
     factoryOf(::CreateChatUseCase)
     factoryOf(::GetLocationInfoUseCase)
-    factoryOf(::GetUserServicesUseCase)
+    factoryOf(::GetSortedServicesUseCase)
+    factoryOf(::GetUserSelectedServicesUseCase)
     factoryOf(::GetUserUseCase)
     factoryOf(::AddUserUseCase)
     factoryOf(::GetWorkMediaUseCase)
@@ -83,10 +86,10 @@ val useCaseModule = module {
     factoryOf(::CustomizeProfileSettingsUseCase)
     factoryOf(::GetCustomerRequestsUseCase)
     factoryOf(::GetRequestDetailsByIdUseCase)
+    factoryOf(::DeleteRequestByIdUseCase)
     factoryOf(::AcceptOfferUseCase)
     factoryOf(::GetOffersUseCase)
     factoryOf(::GetOffersCountUseCase)
-    factoryOf(::GetRequestDetailsByIdUseCase)
     factoryOf(::AddOfferUseCase)
     factoryOf(::GetAcceptedOffersUseCase)
     factoryOf(::GetCraftManOfferOnRequestUseCase)

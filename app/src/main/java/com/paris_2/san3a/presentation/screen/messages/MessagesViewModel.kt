@@ -7,6 +7,7 @@ import com.paris_2.san3a.domain.usecase.messaging.GetChatsByUserIdUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.utill.fakeImage
 
 class MessagesViewModel(
     private val getChatsByUserIdUseCase: GetChatsByUserIdUseCase,
@@ -88,7 +89,7 @@ class MessagesViewModel(
                             chatsMap = screenState.value.chatsMap.toMutableMap().apply {
                                 this[chatId] = chatUI.copy(
                                     theOtherUserName = user.fullName,
-                                    theOtherProfilePhoto = user.profilePhoto,
+                                    theOtherProfilePhoto = user.profilePhoto ?: fakeImage,
                                 )
                             }
                         )
@@ -100,7 +101,7 @@ class MessagesViewModel(
                             chatsMap = screenState.value.chatsMap.toMutableMap().apply {
                                 this[chatId] = chatUI.copy(
                                     theOtherUserName = "Unknown User",
-                                    theOtherProfilePhoto = FAKE_IMAGE_URL,
+                                    theOtherProfilePhoto = fakeImage,
                                 )
                             }
                         )
@@ -129,11 +130,5 @@ class MessagesViewModel(
         navigate(
             Destinations.MessageDetails(chatId, screenState.value.currentUserId, otherUserId),
         )
-    }
-
-    companion object {
-        const val FAKE_IMAGE_URL =
-            "https://firebasestorage.googleapis.com/v0/b/cell-monitor21.appspot.com/o/user2%2Fchat8%2F1000179245.jpg?alt=media&token=714e333b-7fc6-4be3-83a6-30d6b7f7fd4e"
-
     }
 }

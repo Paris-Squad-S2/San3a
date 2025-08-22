@@ -8,7 +8,8 @@ import com.paris_2.san3a.presentation.screen.account.UserType
 import kotlinx.datetime.LocalDateTime
 
 data class CraftsmanHomeState(
-    val isLoading: Boolean = false,
+    val isRecentRelatedJobsLoading: Boolean = true,
+    val isAvailableJobsLoading: Boolean = true,
     val errorMessage: String? = null,
     val craftsmanHomeUiState: CraftsmanHomeUiState = CraftsmanHomeUiState()
 )

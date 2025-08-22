@@ -3,7 +3,6 @@ package com.paris_2.san3a.presentation.screen.home.craftsman.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -38,10 +39,12 @@ fun RequestBottomSheetContent(
     title: String,
     imageUrl: String,
     subTitle: String,
-    modifier: Modifier = Modifier,
-    optionalText: String? = null,
     step: Int,
     buttonTitle: String,
+    colorCode: String?,
+    modifier: Modifier = Modifier,
+    optionalText: String? = null,
+    horizontalContentPadding: Dp = 16.dp,
     buttonIsActive: Boolean = false,
     onClickBack: (() -> Unit)? = null,
     onButtonClick: () -> Unit,
@@ -53,12 +56,12 @@ fun RequestBottomSheetContent(
         modifier = modifier
             .fillMaxWidth()
             .background(Theme.colors.background.bottomSheet)
-            .padding(horizontal = 16.dp)
-            .padding(top = 20.dp)
+            .padding(top = 20.dp, bottom = 16.dp)
     ) {
         Column {
             Row(
-                modifier = Modifier,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -71,12 +74,13 @@ fun RequestBottomSheetContent(
                 Text(
                     text = title,
                     style = Theme.textStyle.label.medium.medium,
-                    color = Theme.colors.additional.primary.blue
+                    color = colorCode?.takeIf { it.isNotBlank() }?.let { Color(it.toColorInt()) } ?: Theme.colors.additional.primary.blue
                 )
             }
             Row(
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 20.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 Text(
                     text = subTitle,
@@ -91,10 +95,17 @@ fun RequestBottomSheetContent(
                     )
                 }
             }
-            content()
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = horizontalContentPadding)
+            ) {
+                content()
+            }
             Row(
                 modifier = Modifier
                     .padding(top = 24.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 if (onClickBack != null) {
                     Box(
@@ -155,16 +166,25 @@ fun RequestBottomSheetContent(
                 step = step, modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 24.dp)
+                    .padding(horizontal = 16.dp)
             )
         }
-        Icon(
-            painter = painterResource(R.drawable.ic_close),
-            contentDescription = null,
+        Box(
             modifier = Modifier
                 .align(Alignment.TopEnd)
+                .padding(end = 16.dp)
+                .size(40.dp)
                 .clickable { onExitClick() },
-            tint = Theme.colors.shade.secondary
-        )
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_close),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(20.dp),
+                tint = Theme.colors.shade.secondary
+            )
+        }
 
     }
 }
@@ -178,6 +198,7 @@ private fun Preview() {
         subTitle = "What do you need help with?",
         optionalText = "(Optional)",
         buttonTitle = "Next",
+        colorCode = "#FF4C8FD3",
         onButtonClick = {},
         onExitClick = {},
         step = 1,

@@ -1,9 +1,5 @@
 package com.paris_2.san3a.presentation.screen.account
 
-import android.content.Intent
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,9 +8,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,6 +28,8 @@ import com.paris_2.san3a.presentation.screen.account.components.ProfileContent
 import com.paris_2.san3a.presentation.screen.account.components.ServicesContent
 import com.paris_2.san3a.presentation.screen.account.components.ShowYourWorkContent
 import com.paris_2.san3a.presentation.screen.account.components.VerifyIdentityContent
+import com.paris_2.san3a.presentation.screen.account.components.rememberMultipleImagePickerLauncher
+import com.paris_2.san3a.presentation.screen.account.components.rememberSingleImagePickerLauncher
 import com.paris_2.san3a.presentation.shared.components.AppBackButton
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
@@ -41,49 +40,25 @@ fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
     val uiState by viewModel.screenState.collectAsState()
     val context = LocalContext.current
 
-    val profileImagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri: Uri? ->
-        uri?.let {
-            context.contentResolver.takePersistableUriPermission(
-                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            viewModel.onCustomerProfilePhotoSelected(it)
-        }
-    }
+    val profileImagePickerLauncher = rememberSingleImagePickerLauncher(
+        context = context,
+        onImageSelected = viewModel::onCustomerProfilePhotoSelected
+    )
 
-    val frontNationalIdPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri: Uri? ->
-        uri?.let {
-            context.contentResolver.takePersistableUriPermission(
-                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            viewModel.onFrontNationalIdSelected(it)
-        }
-    }
+    val frontNationalIdPickerLauncher = rememberSingleImagePickerLauncher(
+        context = context,
+        onImageSelected = viewModel::onFrontNationalIdSelected
+    )
 
-    val backNationalIdPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri: Uri? ->
-        uri?.let {
-            context.contentResolver.takePersistableUriPermission(
-                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            viewModel.onBackNationalIdSelected(it)
-        }
-    }
+    val backNationalIdPickerLauncher = rememberSingleImagePickerLauncher(
+        context = context,
+        onImageSelected = viewModel::onBackNationalIdSelected
+    )
 
-    val workImagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenMultipleDocuments()
-    ) { uris: List<Uri>? ->
-        uris?.forEach { uri ->
-            context.contentResolver.takePersistableUriPermission(
-                uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            viewModel.onWorkImageSelected(uris)
-        }
-    }
+    val workImagePickerLauncher = rememberMultipleImagePickerLauncher(
+        context = context,
+        onImagesSelected = viewModel::onWorkImageSelected
+    )
 
     AccountScreenContent(
         title = viewModel.getTitle().asString(),
@@ -120,7 +95,8 @@ fun AccountScreenContent(
         modifier = modifier
             .fillMaxSize()
             .background(Theme.colors.background.screen)
-            .safeContentPadding()
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
         Row(
@@ -177,7 +153,7 @@ fun AccountScreenContent(
 
             2 -> {
                 ProfileContent(
-                    modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+                    modifier = Modifier.padding(top = 32.dp),
                     name = uiState.accountUiState.customerName,
                     onNameChanged = interactionListener::onCustomerNameChanged,
                     onAddPhotoClick = onCustomerProfilePhotoClick,
@@ -199,8 +175,6 @@ fun AccountScreenContent(
                         onGovernmentDismissRequest = interactionListener::onGovernmentBottomSheetDismissed,
                         governments = uiState.accountUiState.governments,
                         onGovernmentSelected = interactionListener::onGovernmentSelected,
-                        isCitiesSheetShowed = uiState.accountUiState.isCitiesBottomSheetShowed,
-                        onCitiesDismissRequest = interactionListener::onCitiesBottomSheetDismissed,
                         onCitiesSelected = interactionListener::onCitiesSelected,
                         cities = uiState.accountUiState.cities,
                         government = uiState.accountUiState.locationUiState.governorate?.name.orEmpty(),
@@ -236,9 +210,7 @@ fun AccountScreenContent(
             4 -> when (uiState.accountUiState.userType) {
                 UserType.CRAFTSMAN -> {
                     VerifyIdentityContent(
-                        modifier = Modifier.padding(
-                            top = 32.dp, bottom = 12.dp
-                        ),
+                        modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
                         onFrontOfNationalIdUploadClick = onFrontNationalIdClick,
                         onBackOfNationalIdUploadClick = onBackNationalIdClick,
                         frontOfNationalIdUri = uiState.accountUiState.frontOfNationalIdUri,

@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +34,7 @@ fun AppBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .heightIn(min = 56.dp)
             .background(color = if (showBackGround) Theme.colors.background.card else Color.Unspecified)
             .padding(8.dp),
 
@@ -47,15 +50,16 @@ fun AppBar(
             }
         }
         leadingIcon?.invoke()
-        title?.let {
+        if (title != null) {
             Text(
                 text = title,
                 modifier = Modifier.weight(1F),
                 style = Theme.textStyle.title.small,
                 color = Theme.colors.shade.primary,
             )
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
         }
-        Spacer(modifier = Modifier.weight(1f))
         actionIcon()
     }
 

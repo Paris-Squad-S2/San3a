@@ -146,6 +146,7 @@ fun RequestCard(
                         onClick = onActionClick,
                         type = AppButtonType.Secondary,
                         size = AppButtonSize.Small,
+                        enableSecondaryBackgroundColor = Theme.colors.shade.quinary,
                         icon = buttonConfig.icon,
                         iconPosition = IconPosition.Start,
                     )

@@ -17,6 +17,7 @@ import com.paris_2.san3a.domain.usecase.requests.CancelRequestUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetRequestDetailsByIdUseCase
 import com.paris_2.san3a.domain.usecase.requests.MarkRequestAsDoneUseCase
+import com.paris_2.san3a.presentation.utill.fakeImage
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import kotlinx.coroutines.async
@@ -485,7 +486,7 @@ class CraftsmanRequestDetailsViewModel(
                             customer = Customer(
                                 id = it.id,
                                 name = it.fullName,
-                                profilePhoto = it.profilePhoto
+                                profilePhoto = it.profilePhoto ?: fakeImage
                             )
                         )
                     )
