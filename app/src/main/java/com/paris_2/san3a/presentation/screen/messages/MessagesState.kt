@@ -21,7 +21,7 @@ data class ChatUI(
     val lastMessageReceiverId: String,
     val lastMessage: String,
     val theOtherUserId: String,
-    val theOtherUserName: String = "Unknown User",
+    val theOtherUserName: String? = null,
     val theOtherProfilePhoto: String = "",
 )
 

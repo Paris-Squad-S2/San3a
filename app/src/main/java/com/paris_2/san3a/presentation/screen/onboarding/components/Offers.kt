@@ -19,11 +19,8 @@ import com.paris_2.san3a.presentation.shared.components.CraftsManOffer
 import com.paris_2.san3a.presentation.shared.components.OfferDetailsUIState
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import com.paris_2.san3a.presentation.utill.minusNHours
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Duration
+import com.paris_2.san3a.presentation.utill.plusNDays
+import com.paris_2.san3a.presentation.utill.plusNHours
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -52,8 +49,8 @@ fun Offers(
                 reviewsNumber = 121,
                 description = stringResource(R.string.i_can_fix_this_today_i_have_10_years_experience_with_kitchen_plumbing),
                 amount = stringResource(R.string._50_000_iqd),
-                time = stringResource(R.string.tomorrow_2_00_pm),
-                postedTime = minusNHours(getCurrentDateTime(), 5),
+                dateTime = getCurrentDateTime().plusNDays(1).plusNHours(1),
+                postedTime = getCurrentDateTime().minusNHours(5),
             ),
             painter = painterResource(id = R.drawable.img_avatar1),
             addShadow = true,
@@ -72,8 +69,8 @@ fun Offers(
                 reviewsNumber = 140,
                 description = stringResource(R.string.professional_plumber_with_quick_response_time_i_can_come_today_evening),
                 amount = stringResource(R.string._35_000_iqd),
-                time = "Tomorrow, 3:00 PM",
-                postedTime = minusNHours(getCurrentDateTime(), 7),
+                dateTime = getCurrentDateTime().plusNDays(1).plusNHours(2),
+                postedTime = getCurrentDateTime().minusNHours(7),
             ),
             painter = painterResource(id = R.drawable.img_avatar2),
             addShadow = true,
@@ -91,8 +88,8 @@ fun Offers(
                 reviewsNumber = 95,
                 description = stringResource(R.string.experienced_in_residential_plumbing_available_for_urgent_jobs_right_now),
                 amount = stringResource(R.string._45_000_iqd),
-                time = stringResource(R.string.tomorrow_1_00_pm),
-                postedTime = minusNHours(getCurrentDateTime(), 2),
+                dateTime = getCurrentDateTime().plusNDays(1),
+                postedTime = getCurrentDateTime().minusNHours(2),
             ),
             painter = painterResource(id = R.drawable.img_avatar3),
             addShadow = true,

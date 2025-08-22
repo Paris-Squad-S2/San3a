@@ -114,7 +114,7 @@ fun ChatList(
                 chatsMap[chatId]?.let { chatUI ->
                     ChatCard(
                         onChatClick = { messagesInteractionListener.onChatClick(chatUI.chatId, chatUI.theOtherUserId) },
-                        name = chatUI.theOtherUserName,
+                        name = chatUI.theOtherUserName ?: stringResource(R.string.loading),
                         imageUrl = chatUI.theOtherProfilePhoto,
                         lastMessage = chatUI.lastMessage,
                         unreadMessagesCount = chatUI.unreadMessagesCount,

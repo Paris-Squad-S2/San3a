@@ -45,8 +45,7 @@ fun AdCard(
     val shouldMirror = layoutDirection == LayoutDirection.Rtl
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(Theme.radius.tripleXLarge),
         border = BorderStroke(1.dp, Theme.colors.brand.secondary),
         colors = CardDefaults.cardColors(
@@ -101,7 +100,7 @@ fun AdCard(
             onClick = onClick,
             type = AppButtonType.Primary,
             text = buttonTitle,
-            size = AppButtonSize.Large,
+            size = AppButtonSize.Small,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)

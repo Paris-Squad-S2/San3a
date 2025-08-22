@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,14 +64,14 @@ fun CategoryItemLarge(
 ){
     Box(
         modifier = modifier
-            .width(200.dp)
+            .widthIn(max = 250.dp)
             .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
             .background(Theme.colors.background.card)
             .clickable { onclick() }
     ){
         Column(
             modifier = Modifier
-                .padding(start = 16.dp , top = 16.dp , bottom = 16.dp)
+                .padding(16.dp)
         ) {
             AsyncImage(
                 modifier = Modifier
@@ -84,6 +85,8 @@ fun CategoryItemLarge(
                 text = title,
                 style = Theme.textStyle.body.medium.medium,
                 color = Theme.colors.shade.primary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
             Text(
@@ -137,7 +140,9 @@ fun CategoryItemSmall(
                 Text(
                     text = description,
                     style = Theme.textStyle.body.medium.regular,
-                    color = Theme.colors.shade.secondary
+                    color = Theme.colors.shade.secondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         }

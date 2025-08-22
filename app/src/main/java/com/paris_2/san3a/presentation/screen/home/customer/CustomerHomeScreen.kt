@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -39,6 +40,7 @@ import com.paris_2.san3a.data.utils.getCurrentDateTime
 import com.paris_2.san3a.presentation.screen.account.components.LocationContent
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.RequestBottomSheetContent
 import com.paris_2.san3a.presentation.screen.home.customer.component.MostRequestedServices
+import com.paris_2.san3a.presentation.screen.home.util.getGreetingMessage
 import com.paris_2.san3a.presentation.shared.components.AdCard
 import com.paris_2.san3a.presentation.shared.components.AddPhotos
 import com.paris_2.san3a.presentation.shared.components.AddPhotosContent
@@ -59,17 +61,15 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CustomerHomeScreen(
     viewModel: CustomerHomeViewModel = koinViewModel(),
 ) {
-    val customerScreenState by viewModel.screenState.collectAsStateWithLifecycle()
-    CustomerHomeScreenContent(
-        state = customerScreenState,
-        action = viewModel
-    )
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    CustomerHomeScreenContent(action = viewModel, state = state)
 }
 
 @Composable
 private fun CustomerHomeScreenContent(
-    state: CustomerHomeUiState,
     action: CustomerHomeInteractionListener,
+    state: CustomerHomeUiState,
+    modifier: Modifier = Modifier,
 ) {
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents(),
@@ -137,17 +137,22 @@ private fun CustomerHomeScreenContent(
     if (state.bottomSheetUiState.bottomSheetState) {
         BottomSheet(
             isVisible = true,
+            modifier = Modifier
+                .navigationBarsPadding(),
+            horizontalPadding = 0.dp,
             onDismissRequest = { action.onDismissBottomSheet() }
         ) {
             when (state.bottomSheetUiState.bottomSheetStep) {
                 BottomSheetStep.SELECT_SERVICE -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.what_do_you_need_help_with),
                         buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetSubtitle.isNotEmpty(),
                         step = 1,
+                        horizontalContentPadding = 0.dp,
                         onButtonClick = { action.nextBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() },
                     ) {
@@ -161,7 +166,7 @@ private fun CustomerHomeScreenContent(
                                 action.setBottomSheetServiceSubTitle(it)
                             },
                             modifier = Modifier,
-                            hint = stringResource(R.string.select_a_service)
+                            hint = state.bottomSheetUiState.bottomSheetService?.hint.orEmpty()
                         )
                     }
                 }
@@ -169,7 +174,8 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.PROBLEM_DESCRIPTION -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.describe_the_problem_in_detail),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetDescription.isNotEmpty(),
                         onButtonClick = { action.nextBottomSheetStep() },
@@ -189,7 +195,8 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.SELECT_LOCATION -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.where_are_you_from),
                         buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetAddressDetails.isNotEmpty() &&
@@ -226,7 +233,8 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.IMAGE_UPLOAD -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.add_some_photos),
                         optionalText = stringResource(R.string.optional),
                         buttonTitle = stringResource(R.string.create_request),
@@ -264,7 +272,7 @@ private fun CustomerHomeScreenContent(
     }
 
     AppScaffold(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Theme.colors.background.card)
             .statusBarsPadding(),
@@ -285,24 +293,16 @@ private fun CustomerHomeScreenContent(
                         modifier = Modifier
                             .padding(start = 16.dp)
                     ) {
-                        val time = getCurrentDateTime()
-                        val greeting = if (time.hour in 5..11) {
-                            R.string.good_morning
-                        } else {
-                            R.string.good_afternoon
-                        }
                         Text(
                             text = stringResource(
-                                greeting,
+                                getCurrentDateTime().getGreetingMessage(),
                                 state.customerUiState.currentUserName
                             ),
-
-                            style = Theme.textStyle.title.small,
+                            style = Theme.textStyle.body.medium.medium,
                             color = Theme.colors.shade.primary,
                         )
                         Row(
-                            modifier = Modifier
-                                .padding(top = 8.dp),
+                            modifier = Modifier.padding(top = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
@@ -333,11 +333,9 @@ private fun CustomerHomeScreenContent(
                 item {
                     SearchBar(
                         value = state.customerUiState.searchQuery,
-                        onValueChange = { action.onSearch(it) },
+                        onValueChange = action::onSearch,
                         hint = stringResource(R.string.search),
                         onMicClick = {
-
-
                             if (ContextCompat.checkSelfPermission(
                                     context,
                                     Manifest.permission.RECORD_AUDIO
@@ -352,8 +350,9 @@ private fun CustomerHomeScreenContent(
                             .padding(top = 16.dp, bottom = 24.dp)
                     )
                 }
-
-                if (state.customerUiState.mostRequestedServices.isNotEmpty() && state.customerUiState.searchQuery.isEmpty()) {
+                if (state.customerUiState.mostRequestedServices.isNotEmpty() &&
+                    state.customerUiState.searchQuery.isEmpty()
+                ) {
                     item {
                         MostRequestedServices(
                             services = state.customerUiState.mostRequestedServices,
@@ -361,8 +360,6 @@ private fun CustomerHomeScreenContent(
                         )
                     }
                 }
-
-
                 if (state.customerUiState.searchQuery.isNotEmpty() && servicesToDisplay.isEmpty()) {
                     item {
                         PlaceHolderScreen(
@@ -382,7 +379,7 @@ private fun CustomerHomeScreenContent(
                             color = Theme.colors.shade.primary,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 16.dp, bottom = 16.dp)
+                                .padding(start = 16.dp, bottom = 16.dp, top = 16.dp)
                         )
                     }
                     items(servicesToDisplay) { service ->
@@ -393,9 +390,7 @@ private fun CustomerHomeScreenContent(
                             isLarge = false,
                             modifier = Modifier
                                 .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
-                            onclick = {
-                                action.onServiceClick(service)
-                            }
+                            onclick = { action.onServiceClick(service) }
                         )
                     }
                 }
@@ -405,13 +400,12 @@ private fun CustomerHomeScreenContent(
                             title = stringResource(R.string.got_a_skill_start_earning),
                             caption = stringResource(R.string.create_your_craftsman_account_and_get_job_requests),
                             buttonTitle = stringResource(R.string.become_a_craftsman),
-                            onClick = { action.onBecomeCraftsmanClick() },
+                            onClick = action::onBecomeCraftsmanClick,
                             modifier = Modifier
-                                .padding(vertical = 12.dp)
+                                .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
                         )
                     }
                 }
-
             }
         }
     )
@@ -434,7 +428,7 @@ private fun CustomerHomeScreenContent(
         }
         AnimatedVisibility(state.showSnackBarSuccess) {
             SnackBar(
-                text = stringResource( R.string.service_request_send_successfully),
+                text = stringResource(R.string.service_request_send_successfully),
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding()

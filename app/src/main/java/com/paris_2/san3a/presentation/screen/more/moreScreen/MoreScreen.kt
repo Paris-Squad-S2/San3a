@@ -148,7 +148,7 @@ private fun MoreScreenContent(
 
                         AnimatedVisibility(
                             visible = !moreScreenState.moreUiState.userUiState.isCraftsman,
-                            modifier = Modifier.padding(top = 8.dp)
+                            modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
                         ) {
                             BecomeCraftsmanCard(moreInteractionListener::onClickBecomeACraftsman)
                         }

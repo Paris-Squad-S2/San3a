@@ -109,7 +109,12 @@ fun LocationScreenContent(
                         )
                 ) {
                     AppTextField(
-                        value = state.locationUiState.selectedGovernorateName,
+                        value = listOf(
+                            state.locationUiState.selectedGovernorateName,
+                            state.locationUiState.selectedCityName
+                        )
+                            .filter { it.isNotEmpty() }
+                            .joinToString(separator = ", "),
                         onValueChange = {},
                         placeholder = stringResource(R.string.choose_governorate),
                         readOnly = true,
@@ -136,30 +141,14 @@ fun LocationScreenContent(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(
-                            onClick = {
-                                locationInteractionListener.onShowBottomSheet(
-                                    LocationBottomSheetType.CITY
-                                )
-                            },
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        )
-                ) {
-                    AppTextField(
-                        value = state.locationUiState.selectedCityName,
-                        onValueChange = {},
-                        placeholder = stringResource(R.string.choose_district),
-                        label = null,
-                        keyboardOptions = KeyboardOptions.Default,
-                        readOnly = true,
-                        enabled = false,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+                AppTextField(
+                    value = state.locationUiState.addressInDetails,
+                    onValueChange = locationInteractionListener::onAddressInDetailsChange,
+                    placeholder = stringResource(R.string.enter_your_location_in_details),
+                    label = null,
+                    keyboardOptions = KeyboardOptions.Default,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 Spacer(modifier = Modifier.weight(1f))
 
@@ -233,6 +222,7 @@ fun LocationScreenPreview() {
             locationInteractionListener = object : LocationInteractionListener {
                 override fun onGovernorateSelected(governorateId: Int) {}
                 override fun onCityChanged(cityId: Int) {}
+                override fun onAddressInDetailsChange(address: String) {}
                 override fun onClickSave() {}
                 override fun onClickRetry() {}
                 override fun onNavigateBack() {}

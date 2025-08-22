@@ -73,10 +73,10 @@ class LocationViewModel(
     override fun onClickSave() {
         val uiState = screenState.value.locationUiState
 
-        if (uiState.selectedGovernorateId == null || uiState.selectedCityId == null) {
+        if (uiState.selectedGovernorateId == null || uiState.selectedCityId == null || uiState.addressInDetails.isBlank()) {
             updateState(
                 screenState.value.copy(
-                    showSnackBarError = true, errorMessage = UiText.StringResource(R.string.please_select_location)
+                    showSnackBarError = true, errorMessage = UiText.StringResource(R.string.please_select_location_and_write_address_in_details)
                 )
             )
             hideSnackBar()
@@ -89,12 +89,13 @@ class LocationViewModel(
             )
         )
 
-        tryToExecute(execute = {
+        tryToExecute(
+            execute = {
             val phone = getPhoneNumberUseCase()
             val location = Location(
                 governmentId = uiState.selectedGovernorateId,
                 cityId = uiState.selectedCityId,
-                addressInDetails = "${uiState.selectedGovernorateName}, ${uiState.selectedCityName}"
+                addressInDetails = uiState.addressInDetails
             )
             setUpAccountUseCase.saveLocation(phone, location)
         }, onSuccess = {
@@ -182,6 +183,21 @@ class LocationViewModel(
         })
     }
 
+    override fun onAddressInDetailsChange(address: String) {
+        updateState(
+            screenState.value.copy(
+                locationUiState = screenState.value.locationUiState.copy(
+                    addressInDetails = address
+                ),
+                locationButtonState = if (address.isNotBlank() && screenState.value.locationUiState.selectedGovernorateId != null && screenState.value.locationUiState.selectedCityId != null) {
+                    AppButtonState.Enable
+                } else {
+                    AppButtonState.Disabled
+                }
+            )
+        )
+    }
+
     override fun onShowBottomSheet(type: LocationBottomSheetType) {
         updateState(
             screenState.value.copy(
@@ -219,7 +235,13 @@ class LocationViewModel(
                         selectedGovernorateId = governorate?.id,
                         selectedCityName = city?.name.orEmpty(),
                         selectedCityId = city?.id,
-                    )
+                        addressInDetails = location.addressInDetails,
+                    ),
+                    locationButtonState = if (user.location.addressInDetails.isNotBlank() && governorate != null && city != null) {
+                        AppButtonState.Enable
+                    } else {
+                        AppButtonState.Disabled
+                    },
                 )
             )
             fetchCities(governorate?.id ?: 0)

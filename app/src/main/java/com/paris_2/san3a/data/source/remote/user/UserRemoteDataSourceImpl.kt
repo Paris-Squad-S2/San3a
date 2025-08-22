@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class UserRemoteDataSourceImpl(
     private val fireStoreService: FireStoreService,
@@ -75,6 +76,33 @@ class UserRemoteDataSourceImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getServices(phone: String, isCraftsman: Boolean): Flow<List<ServiceDto>> {
+        val path = if (isCraftsman) {
+            "$USERS_COLLECTION/$phone/$OFFERED_SERVICES_COLLECTION"
+        } else {
+            "$USERS_COLLECTION/$phone/$REQUESTED_SERVICES_PATH"
+        }
+        return fireStoreService.streamCollection(
+            path = path,
+            fromJson = { _, serviceId -> serviceId },
+        ).let { docsFlow ->
+            docsFlow.flatMapLatest { docsList ->
+                if (docsList.isNotEmpty()) {
+                    fireStoreService.streamCollection(
+                        path = SERVICES_COLLECTION,
+                        fromJson = ServiceDto::fromJson,
+                    ).map { allServices ->
+                        allServices.filter { service -> docsList.contains(service.id) } +
+                                allServices.filter { service -> !docsList.contains(service.id) }
+                    }
+                } else {
+                    flow { emit(emptyList()) }
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getUserSelectedServices(phone: String, isCraftsman: Boolean): Flow<List<ServiceDto>> {
         val path = if (isCraftsman) {
             "$USERS_COLLECTION/$phone/$OFFERED_SERVICES_COLLECTION"
         } else {

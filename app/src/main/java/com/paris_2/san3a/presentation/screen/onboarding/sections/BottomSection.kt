@@ -30,7 +30,7 @@ fun BottomSection(
             .fillMaxWidth()
             .padding(bottom = 24.dp)
             .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.CenterVertically
     ) {
         ProgressIndicator(
             pageSize = pages.size,

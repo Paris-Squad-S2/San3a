@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -22,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.radius.defaultSan3aRadius
@@ -37,11 +37,18 @@ fun RequestCardForCraftsMan(
     imageUri: String,
     description: String,
     location: String,
+    maxWidth: Int? = null,
     onClick: () -> Unit
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .then(
+                if (maxWidth != null) {
+                    Modifier.widthIn(max = maxWidth.dp)
+                } else {
+                    Modifier.fillMaxWidth()
+                }
+            )
             .clip(RoundedCornerShape(defaultSan3aRadius.extraExtraLarge))
             .background(Theme.colors.background.card)
             .clickable { onClick() }
@@ -49,12 +56,13 @@ fun RequestCardForCraftsMan(
         verticalArrangement = Arrangement.Center
     )
     {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             AsyncImage(
                 modifier = Modifier
-                    .size(48.dp)
                     .clip(RoundedCornerShape(Theme.radius.extraLarge))
-                    .padding(bottom = 12.dp),
+                    .size(48.dp),
                 model = imageUri,
                 contentDescription = null
             )
@@ -65,7 +73,9 @@ fun RequestCardForCraftsMan(
                 Text(
                     text = title,
                     style = Theme.textStyle.body.medium.semibold,
-                    color = Theme.colors.shade.primary
+                    color = Theme.colors.shade.primary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Row(
                     modifier = Modifier
@@ -86,12 +96,11 @@ fun RequestCardForCraftsMan(
                     )
                     Text(
                         text = stringResource(R.string.number_of_offers, offers),
-                        style = Theme.textStyle.body.medium.semibold,
+                        style = Theme.textStyle.body.small.semibold,
                         color = Theme.colors.brand.primary
                     )
                 }
             }
-
         }
 
         HorizontalDivider(
@@ -119,7 +128,7 @@ fun RequestCardForCraftsMan(
                     contentDescription = "",
                     tint = Theme.colors.shade.secondary,
                     modifier = Modifier
-                        .size(16.dp)
+                        .size(20.dp)
                         .padding(end = 4.dp)
                 )
                 Text(

@@ -32,10 +32,8 @@ fun SelectionItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
-            .background(
-                color = Theme.colors.background.bottomSheetCard,
-            )
             .clip(shape)
+            .background(Theme.colors.background.bottomSheetCard)
             .clickable { onClick() }
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically

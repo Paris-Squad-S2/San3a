@@ -34,11 +34,9 @@ fun ProfileContent(
             value = name,
             onValueChange = onNameChanged,
             placeholder = stringResource(R.string.enter_your_full_name),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(top = 32.dp)
         )
-        Row(
-            modifier = modifier,
-        ) {
+        Row {
             Text(
                 text = stringResource(R.string.set_your_profile_photo),
                 style = Theme.textStyle.body.medium.regular,
@@ -51,7 +49,7 @@ fun ProfileContent(
             )
         }
         AddSinglePhotoCircle(
-            modifier = modifier.padding(bottom = 32.dp),
+            modifier = Modifier.padding(bottom = 32.dp),
             onTap = onAddPhotoClick,
             imageUri = profilePhotoUri
         )

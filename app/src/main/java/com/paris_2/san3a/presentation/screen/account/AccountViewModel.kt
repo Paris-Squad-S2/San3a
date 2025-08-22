@@ -18,7 +18,7 @@ import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.user.GetUserServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserSelectedServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.mapper.mapServiceToUiState
@@ -35,7 +35,7 @@ class AccountViewModel(
     private val setUpAccountUseCase: SetUpAccountUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
     private val getUserUseCase: GetUserUseCase,
-    private val getUserServicesUseCase: GetUserServicesUseCase,
+    private val getUserSelectedServicesUseCase: GetUserSelectedServicesUseCase,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<AccountScreenUiState>(AccountScreenUiState()), AccountInteractionListener {
 
@@ -103,7 +103,7 @@ class AccountViewModel(
     private fun getUserSelectedServices() {
         tryToObserve(
             observe = {
-                getUserServicesUseCase(
+                getUserSelectedServicesUseCase(
                     phoneNumber = screenState.value.accountUiState.phoneNumber,
                     isCraftsman = screenState.value.accountUiState.userType == UserType.CRAFTSMAN
                 )
@@ -148,7 +148,7 @@ class AccountViewModel(
                         getLocationInfoUseCase.getCityById(user.location.cityId)
                     ),
                     customerName = user.fullName,
-                    customerProfilePhotoUri = if (user.profilePhoto.isNotBlank()) user.profilePhoto.toUri() else null,
+                    customerProfilePhotoUri = if (!user.profilePhoto.isNullOrBlank()) user.profilePhoto.toUri() else null,
                     frontOfNationalIdUri = if (user.nationalIdFrontImage.isNotBlank()) user.nationalIdFrontImage.toUri() else null,
                     backOfNationalIdUri = if (user.nationalIdBackImage.isNotBlank()) user.nationalIdBackImage.toUri() else null,
                     workDescription = user.workDescription,
@@ -463,7 +463,6 @@ class AccountViewModel(
 
     override fun onGovernmentSelected(governorate: Governorate) {
         getCities(governorate.id)
-        onCitiesBottomSheetVisibilityToggled()
         updateGovernmentLocation(governorate)
     }
 
@@ -494,31 +493,11 @@ class AccountViewModel(
         )
     }
 
-    private fun onCitiesBottomSheetVisibilityToggled() {
-        updateState(
-            screenState.value.copy(
-                accountUiState = screenState.value.accountUiState.copy(
-                    isCitiesBottomSheetShowed = !screenState.value.accountUiState.isCitiesBottomSheetShowed
-                )
-            )
-        )
-    }
-
     override fun onGovernmentBottomSheetDismissed() {
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
                     isGovernmentBottomSheetShowed = false
-                )
-            )
-        )
-    }
-
-    override fun onCitiesBottomSheetDismissed() {
-        updateState(
-            screenState.value.copy(
-                accountUiState = screenState.value.accountUiState.copy(
-                    isCitiesBottomSheetShowed = false
                 )
             )
         )

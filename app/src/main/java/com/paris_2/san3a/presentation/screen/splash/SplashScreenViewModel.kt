@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.splash
 
+import androidx.navigation.NavOptions
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
@@ -56,7 +57,7 @@ class SplashScreenViewModel(
 
     private fun handleNewUserDestination() {
         tryToExecute(
-            execute = {isOnboardingCompletedUseCase()},
+            execute = { isOnboardingCompletedUseCase() },
             onSuccess = {
                 updateState(
                     newState = screenState.value.copy(
@@ -81,7 +82,7 @@ class SplashScreenViewModel(
                     )
                 )
             },
-            onError =::handleError
+            onError = ::handleError
         )
     }
 
@@ -145,14 +146,19 @@ class SplashScreenViewModel(
                 )
                 delay(1000)
                 if (screenState.value.destination != null) {
-                    navigate(screenState.value.destination!!)
+                    navigate(
+                        screenState.value.destination ?: Destinations.OnBoarding,
+                        navOptions = NavOptions.Builder()
+                            .setPopUpTo(Destinations.Splash, inclusive = true)
+                            .build()
+                    )
                 }
             },
             onError = ::handleError
         )
     }
 
-    private fun handleError(error: Throwable){
+    private fun handleError(error: Throwable) {
         updateState(
             newState = screenState.value.copy(
                 error = error.message,

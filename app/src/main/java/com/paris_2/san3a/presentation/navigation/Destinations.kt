@@ -7,6 +7,9 @@ import kotlinx.serialization.Serializable
 sealed interface Destination
 
 @Serializable
+sealed interface Graph : Destination
+
+@Serializable
 sealed interface Destinations : Graph {
 
     @Serializable
