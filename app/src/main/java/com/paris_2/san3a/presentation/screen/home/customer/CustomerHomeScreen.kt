@@ -294,13 +294,11 @@ private fun CustomerHomeScreenContent(
                                 getCurrentDateTime().getGreetingMessage(),
                                 state.customerUiState.currentUserName
                             ),
-
-                            style = Theme.textStyle.title.small,
+                            style = Theme.textStyle.body.medium.medium,
                             color = Theme.colors.shade.primary,
                         )
                         Row(
-                            modifier = Modifier
-                                .padding(top = 8.dp),
+                            modifier = Modifier.padding(top = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
@@ -426,7 +424,7 @@ private fun CustomerHomeScreenContent(
         }
         AnimatedVisibility(state.showSnackBarSuccess) {
             SnackBar(
-                text = stringResource( R.string.service_request_send_successfully),
+                text = stringResource(R.string.service_request_send_successfully),
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding()
