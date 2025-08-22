@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppButton
+import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
@@ -59,6 +60,7 @@ fun VerifyIdentityContent(
         AppButton(
             text = stringResource(R.string.i_ll_verify_later),
             onClick = onVerifyLaterClick,
+            size = AppButtonSize.Large,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp),
