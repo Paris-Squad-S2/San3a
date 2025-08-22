@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
@@ -153,7 +152,7 @@ fun AddSinglePhotoCircle(
 ) {
     Box(
         modifier = modifier
-            .size(80.dp)
+            .size(96.dp)
             .clip(CircleShape)
             .background(Theme.colors.background.bottomSheet)
             .dashedBorder(
@@ -163,6 +162,7 @@ fun AddSinglePhotoCircle(
                 gapLength = 6.dp,
                 shape = CircleShape
             )
+            .padding(16.dp)
             .clickable { onTap() },
         contentAlignment = Alignment.Center
     ) {

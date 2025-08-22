@@ -153,7 +153,7 @@ fun AccountScreenContent(
 
             2 -> {
                 ProfileContent(
-                    modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+                    modifier = Modifier.padding(top = 32.dp),
                     name = uiState.accountUiState.customerName,
                     onNameChanged = interactionListener::onCustomerNameChanged,
                     onAddPhotoClick = onCustomerProfilePhotoClick,
