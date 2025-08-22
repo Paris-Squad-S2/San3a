@@ -148,7 +148,7 @@ class AccountViewModel(
                         getLocationInfoUseCase.getCityById(user.location.cityId)
                     ),
                     customerName = user.fullName,
-                    customerProfilePhotoUri = if (user.profilePhoto.isNotBlank()) user.profilePhoto.toUri() else null,
+                    customerProfilePhotoUri = if (!user.profilePhoto.isNullOrBlank()) user.profilePhoto.toUri() else null,
                     frontOfNationalIdUri = if (user.nationalIdFrontImage.isNotBlank()) user.nationalIdFrontImage.toUri() else null,
                     backOfNationalIdUri = if (user.nationalIdBackImage.isNotBlank()) user.nationalIdBackImage.toUri() else null,
                     workDescription = user.workDescription,

@@ -44,13 +44,14 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.BottomSheet
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import kotlin.math.ceil
 
 @Composable
 fun RatingBottomSheet(
     isVisible: Boolean,
     rating: Float,
     onDismiss: () -> Unit,
-    onRatingChange: (Float) -> Unit,
+    onRatingChange: (Int) -> Unit,
     onAddRating: () -> Unit,
 ) {
     BottomSheet(
@@ -114,7 +115,7 @@ fun RatingBottomSheet(
 fun StarRatingBar(
     modifier: Modifier = Modifier,
     rating: Float,
-    onRatingChange: (Float) -> Unit,
+    onRatingChange: (Int) -> Unit,
     maxRating: Int = 5,
     starSize: Dp = 32.dp,
     spacing: Dp = 6.dp,
@@ -137,7 +138,7 @@ fun StarRatingBar(
                     val effectiveX =
                         if (layoutDirection == LayoutDirection.Rtl) size.width - x else x
                     val newRating = (effectiveX / starPlusSpacing).coerceIn(0f, maxRating.toFloat())
-                    onRatingChange(newRating)
+                    onRatingChange(ceil(newRating).toInt())
                 }
             }
             .pointerInput(maxRating, starSize, spacing) {
@@ -148,18 +149,14 @@ fun StarRatingBar(
                     val x =
                         if (layoutDirection == LayoutDirection.Rtl) size.width - offset.x else offset.x
                     val newRating = (x / starPlusSpacing).coerceIn(0f, maxRating.toFloat())
-                    onRatingChange(newRating)
+                    onRatingChange(ceil(newRating).toInt())
                 }
             },
         horizontalArrangement = Arrangement.spacedBy(spacing),
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (i in 1..maxRating) {
-            val fillFraction = when {
-                rating >= i -> 1f
-                rating < i - 1 -> 0f
-                else -> rating - (i - 1)
-            }
+            val fillFraction = if (rating >= i) 1f else 0f
 
             StarIcon(
                 modifier = Modifier.size(starSize),
@@ -224,7 +221,7 @@ fun PreviewStarRatingBar() {
         isVisible = true,
         rating = currentRating,
         onDismiss = {},
-        onRatingChange = { currentRating = it },
+        onRatingChange = { currentRating = it.toFloat() },
         onAddRating = {}
     )
 }

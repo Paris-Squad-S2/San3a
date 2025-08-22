@@ -11,7 +11,8 @@ fun mapServiceToUiState(services: List<Service>): List<ServiceUiState> {
                 serviceTitle = it.title,
                 serviceDescription = it.description,
                 isSelected = false,
-                serviceImage = it.imageUrl
+                serviceImage = it.imageUrl,
+                colorCode = it.colorCode
             )
         }
     }

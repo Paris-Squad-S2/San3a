@@ -22,7 +22,7 @@
     <string name="seen_icon">Seen Icon</string>
     <string name="play_icon">Play Icon</string>
     <string name="no_audio_wave_available">No audio wave available</string>
-    <string name="craftman">CraftMan</string>
+    <string name="craftman">Craftsman</string>
     <string name="customer">Customer</string>
     <string name="home">Home</string>
     <string name="my_request">My Request</string>
@@ -57,7 +57,7 @@
     <string name="and">" and "</string>
     <string name="what_s_your_name">What’s Your Name?</string>
     <string name="enter_your_full_name">Enter your full name</string>
-    <string name="set_your_profile_photo">Set Your Profile Photo</string>
+    <string name="set_your_profile_photo">Set Your Profile Photo </string>
     <string name="optional"> (optional)</string>
     <string name="i_need_help_with_a_service">I need help with a service</string>
     <string name="craftsman">Craftsman</string>
@@ -195,7 +195,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="become_a_craftsman">Become a Craftsman</string>
     <string name="select_a_service">Select a service</string>
     <string name="describe_the_problem_in_detail">Describe the problem in detail</string>
-    <string name="describe_your_problem">Describe your problem</string>
+    <string name="describe_your_problem">Please provide as much detail as possible to help craftsmen understand your needs…</string>
     <string name="where_are_you_from">Where are you from?</string>
     <string name="add_some_photos">Add some photos</string>
     <string name="create_request">Create Request</string>
@@ -302,7 +302,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="offers_count">%1$d offers</string>
     <string name="add_your_offer">Add Your Offer</string>
     <string name="offer_hint">Be competitive but fair. Consider materials and time.</string>
-    <string name="your_price">Your price (IQD)</string>
+    <string name="your_price">Your price (EGP)</string>
     <string name="price_placeholder">e.g., 25,000</string>
     <string name="preferred_date">Preferred Date</string>
     <string name="select_date">Select date</string>
@@ -337,6 +337,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="see_less">See less</string>
     <string name="see_more">See more</string>
     <string name="min_ago">%1$d min ago</string>
+    <string name="just_now">Just now</string>
     <string name="h_ago">%1$d h ago</string>
     <string name="choose_city">Choose City</string>
     <string name="choose_government">Choose Government</string>
@@ -351,5 +352,11 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="electrical">Electrical</string>
     <string name="painting">Painting</string>
     <string name="landscaping">Landscaping</string>
+    <string name="tomorrow_time">Tomorrow, %1$s:%2$s %3$s</string>
+    <string name="today_time">Today, %1$s:%2$s %3$s</string>
+    <string name="date_time">%1$s, %2$s:%3$s %4$s</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+    <string name="loading">Loading…</string>
 
 </resources>

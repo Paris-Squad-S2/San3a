@@ -47,6 +47,7 @@ data class ServiceUiState(
     val serviceTitle: String = "",
     val serviceDescription: String = "",
     val serviceImage: String = "",
+    val colorCode: String = "#FF4C8FD3",
     val isSelected: Boolean = false,
 )
 

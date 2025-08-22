@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -136,17 +137,22 @@ private fun CustomerHomeScreenContent(
     if (state.bottomSheetUiState.bottomSheetState) {
         BottomSheet(
             isVisible = true,
+            modifier = Modifier
+                .navigationBarsPadding(),
+            horizontalPadding = 0.dp,
             onDismissRequest = { action.onDismissBottomSheet() }
         ) {
             when (state.bottomSheetUiState.bottomSheetStep) {
                 BottomSheetStep.SELECT_SERVICE -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.what_do_you_need_help_with),
                         buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetSubtitle.isNotEmpty(),
                         step = 1,
+                        horizontalContentPadding = 0.dp,
                         onButtonClick = { action.nextBottomSheetStep() },
                         onExitClick = { action.onDismissBottomSheet() },
                     ) {
@@ -160,7 +166,7 @@ private fun CustomerHomeScreenContent(
                                 action.setBottomSheetServiceSubTitle(it)
                             },
                             modifier = Modifier,
-                            hint = stringResource(R.string.select_a_service)
+                            hint = state.bottomSheetUiState.bottomSheetService?.hint.orEmpty()
                         )
                     }
                 }
@@ -168,7 +174,8 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.PROBLEM_DESCRIPTION -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.describe_the_problem_in_detail),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetDescription.isNotEmpty(),
                         onButtonClick = { action.nextBottomSheetStep() },
@@ -188,7 +195,8 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.SELECT_LOCATION -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.where_are_you_from),
                         buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetAddressDetails.isNotEmpty() &&
@@ -225,7 +233,8 @@ private fun CustomerHomeScreenContent(
                 BottomSheetStep.IMAGE_UPLOAD -> {
                     RequestBottomSheetContent(
                         title = state.bottomSheetUiState.bottomSheetService?.title.orEmpty(),
-                        imageUrl = state.bottomSheetUiState.bottomSheetService?.imageUrl.orEmpty(),
+                        imageUrl = state.bottomSheetUiState.bottomSheetService?.iconImageUrl.orEmpty(),
+                        colorCode = state.bottomSheetUiState.bottomSheetService?.colorCode,
                         subTitle = stringResource(R.string.add_some_photos),
                         optionalText = stringResource(R.string.optional),
                         buttonTitle = stringResource(R.string.create_request),
@@ -289,13 +298,11 @@ private fun CustomerHomeScreenContent(
                                 getCurrentDateTime().getGreetingMessage(),
                                 state.customerUiState.currentUserName
                             ),
-
-                            style = Theme.textStyle.title.small,
+                            style = Theme.textStyle.body.medium.medium,
                             color = Theme.colors.shade.primary,
                         )
                         Row(
-                            modifier = Modifier
-                                .padding(top = 8.dp),
+                            modifier = Modifier.padding(top = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
@@ -421,7 +428,7 @@ private fun CustomerHomeScreenContent(
         }
         AnimatedVisibility(state.showSnackBarSuccess) {
             SnackBar(
-                text = stringResource( R.string.service_request_send_successfully),
+                text = stringResource(R.string.service_request_send_successfully),
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding()

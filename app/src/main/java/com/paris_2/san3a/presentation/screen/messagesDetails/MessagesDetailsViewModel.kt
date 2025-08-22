@@ -14,6 +14,7 @@ import com.paris_2.san3a.domain.usecase.messaging.SendMessageUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.utill.fakeImage
 
 class MessagesDetailsViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
@@ -55,7 +56,7 @@ class MessagesDetailsViewModel(
                 updateState(
                     screenState.value.copy(
                         chatTitle = user.fullName,
-                        profilePhoto = user.profilePhoto,
+                        profilePhoto = user.profilePhoto ?: fakeImage,
                     )
                 )
                 loadMessages(chatId)
@@ -64,7 +65,7 @@ class MessagesDetailsViewModel(
                 updateState(
                     screenState.value.copy(
                         chatTitle = FAKE_USER_NAME,
-                        profilePhoto = FAKE_IMAGE_URL,
+                        profilePhoto = fakeImage,
                     )
                 )
                 Log.d("MessagesDetailsViewModel", "getTheOtherUserData error: ${it.message}", it)
@@ -258,8 +259,6 @@ class MessagesDetailsViewModel(
 
     companion object {
         const val IMAGE_TYPE = "image/*"
-        const val FAKE_IMAGE_URL =
-            "https://firebasestorage.googleapis.com/v0/b/cell-monitor21.appspot.com/o/user2%2Fchat8%2F1000179245.jpg?alt=media&token=714e333b-7fc6-4be3-83a6-30d6b7f7fd4e"
         const val FAKE_USER_NAME = "Unknown User"
     }
 

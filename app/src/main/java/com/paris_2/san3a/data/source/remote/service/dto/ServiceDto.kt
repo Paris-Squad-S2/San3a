@@ -10,6 +10,9 @@ data class ServiceDto(
     val suggestions: Map<String, List<String>>,
     val imageUrl: String,
     val darkImageUrl: String,
+    val hint: Map<String, String>,
+    val iconImageUrl: String,
+    val colorCode: String,
 ){
     companion object {
 
@@ -28,13 +31,22 @@ data class ServiceDto(
                 ?.mapValues { (it.value as? List<*>)?.filterIsInstance<String>() ?: emptyList() }
                 as? Map<String, List<String>> ?: emptyMap()
 
+            val hintMap = (data["hint"] as? Map<*, *>)?.filterKeys { it is String }
+                ?.mapValues { it.value as? String ?: "" } as? Map<String, String> ?: emptyMap()
+
+            val iconImageUrl = data["iconImgUrl"] as? String ?: ""
+            val colorCode = data["colorCode"] as? String ?: ""
+
             return ServiceDto(
                 id = id,
                 title = titleMap,
                 description = descriptionMap,
                 imageUrl = imageUrl,
                 darkImageUrl = darkImageUrl,
-                suggestions = suggestionsMap
+                suggestions = suggestionsMap,
+                hint = hintMap,
+                iconImageUrl = iconImageUrl,
+                colorCode = colorCode
             )
         }
     }

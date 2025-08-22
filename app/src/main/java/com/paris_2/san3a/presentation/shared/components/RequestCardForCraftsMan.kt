@@ -37,11 +37,18 @@ fun RequestCardForCraftsMan(
     imageUri: String,
     description: String,
     location: String,
+    maxWidth: Int? = null,
     onClick: () -> Unit
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .then(
+                if (maxWidth != null) {
+                    Modifier.widthIn(max = maxWidth.dp)
+                } else {
+                    Modifier.fillMaxWidth()
+                }
+            )
             .clip(RoundedCornerShape(defaultSan3aRadius.extraExtraLarge))
             .background(Theme.colors.background.card)
             .clickable { onClick() }
@@ -49,9 +56,9 @@ fun RequestCardForCraftsMan(
         verticalArrangement = Arrangement.Center
     )
     {
-        Row (
+        Row(
             verticalAlignment = Alignment.CenterVertically,
-        ){
+        ) {
             AsyncImage(
                 modifier = Modifier
                     .clip(RoundedCornerShape(Theme.radius.extraLarge))
@@ -66,7 +73,9 @@ fun RequestCardForCraftsMan(
                 Text(
                     text = title,
                     style = Theme.textStyle.body.medium.semibold,
-                    color = Theme.colors.shade.primary
+                    color = Theme.colors.shade.primary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Row(
                     modifier = Modifier
@@ -92,7 +101,6 @@ fun RequestCardForCraftsMan(
                     )
                 }
             }
-
         }
 
         HorizontalDivider(

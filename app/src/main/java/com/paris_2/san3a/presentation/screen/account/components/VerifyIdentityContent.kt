@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.account.components
 
 import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.AppButton
+import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
@@ -29,12 +31,13 @@ fun VerifyIdentityContent(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Bottom
     ) {
         Text(
             text = stringResource(R.string.upload_front_of_national_id),
             style = Theme.textStyle.body.medium.regular,
             color = Theme.colors.shade.primary,
-            modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
+            modifier = Modifier.padding(bottom = 12.dp)
         )
         AddSingleDocumentPhoto(
             imageUri = frontOfNationalIdUri,
@@ -59,6 +62,7 @@ fun VerifyIdentityContent(
         AppButton(
             text = stringResource(R.string.i_ll_verify_later),
             onClick = onVerifyLaterClick,
+            size = AppButtonSize.Large,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp),

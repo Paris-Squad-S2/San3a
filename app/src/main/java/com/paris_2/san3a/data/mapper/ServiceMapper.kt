@@ -19,6 +19,9 @@ fun ServiceDto.toEntity(isDarkTheme: Boolean, language: String): Service {
         description = description[language] ?: description["en"] ?: "",
         imageUrl = if (isDarkTheme) darkImageUrl else imageUrl,
         suggestions = suggestions[language] ?: suggestions["en"] ?: emptyList(),
+        hint = hint[language] ?: hint["en"] ?: "",
+        iconImageUrl = iconImageUrl,
+        colorCode = colorCode
     )
 }
 
