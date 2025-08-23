@@ -191,7 +191,7 @@ class CraftsmanHomeViewModel(
                     )
                     updateState(
                         screenState.value.copy(
-                            isScreenLoading = false
+                            isScreenLoading = (screenState.value.isRecentJobsSuccess && screenState.value.isAvailableJobsSuccess).not()
                         )
                     )
                 },
