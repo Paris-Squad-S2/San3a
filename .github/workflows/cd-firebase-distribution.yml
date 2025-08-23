@@ -34,9 +34,13 @@ jobs:
           echo "CI_VERSION_NAME=1.0.${{ github.run_number }}" >> "$GITHUB_ENV"
 
 
-      - name: Build release singed APK
+      - name: Build release signed APK
         run: ./gradlew app:assembleRelease -PversionName=$CI_VERSION_NAME -PversionCode=$CI_VERSION_CODE
 
+      - name: Find generated APK
+        run: |
+          find app/build -name "*.apk" -type f
+          echo "APK_FILE=$(find app/build -name "*.apk" -type f | head -1)" >> $GITHUB_ENV
 
       - name: Upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -44,6 +48,5 @@ jobs:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: testers
-
-          file: app/build/outputs/apk/release/app-release.apk
+          file: ${{ env.APK_FILE }}
           debug: false
