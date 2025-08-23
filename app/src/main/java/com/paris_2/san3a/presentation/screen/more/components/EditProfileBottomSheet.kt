@@ -74,6 +74,7 @@ fun EditProfileBottomSheet(
             state = AppButtonState.Enable,
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(bottom = 16.dp)
                 .navigationBarsPadding(),
             onClick = onUpdateProfileClick,
         )
