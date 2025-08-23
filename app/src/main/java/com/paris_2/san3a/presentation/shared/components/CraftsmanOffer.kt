@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.shared.components
 
-import android.content.Context
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -33,9 +32,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 import com.paris_2.san3a.presentation.utill.format
-import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import com.paris_2.san3a.presentation.utill.getTimeAgo
-import com.paris_2.san3a.presentation.utill.plusNDays
 import kotlinx.datetime.LocalDateTime
 
 enum class OfferStatus {

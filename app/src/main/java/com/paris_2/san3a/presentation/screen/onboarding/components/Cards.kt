@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.onboarding.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
@@ -32,19 +34,76 @@ data class CardItem(
 @Composable
 fun Cards() {
     val cards = listOf(
-        CardItem(stringResource(id = R.string.cleaning), R.drawable.ic_washing_machine_bold, backgroundColor = Theme.colors.additional.primary.purple, textColor = Theme.colors.background.card, iconColor = Theme.colors.additional.primary.purple, iconBackgroundColor = Theme.colors.background.card),
-        CardItem(stringResource(id = R.string.ac_repair), R.drawable.ic_conditioner_bold, Theme.colors.background.card, Theme.colors.additional.secondary.red, Theme.colors.shade.primary, Theme.colors.additional.primary.red),
-        CardItem(stringResource(id = R.string.plumping), R.drawable.ic_waterdrops_bold, Theme.colors.background.card, Theme.colors.additional.secondary.blue, Theme.colors.shade.primary, Theme.colors.additional.primary.blue),
-        CardItem(stringResource(id = R.string.electrical), R.drawable.ic_plug_circle_bold, Theme.colors.additional.primary.turquoise, Theme.colors.background.card, Theme.colors.background.card, Theme.colors.additional.primary.turquoise),
-        CardItem(stringResource(id = R.string.painting), R.drawable.ic_paint_roller_bold, Theme.colors.additional.primary.yellow, Theme.colors.background.card, Theme.colors.background.card, Theme.colors.additional.primary.yellow),
-        CardItem(stringResource(id = R.string.landscaping), R.drawable.ic_leaf_bold, Theme.colors.background.card, Theme.colors.additional.secondary.green, Theme.colors.shade.primary, Theme.colors.additional.primary.green),
-        CardItem(stringResource(id = R.string.cleaning), R.drawable.ic_washing_machine_bold, Theme.colors.background.card, Theme.colors.additional.secondary.purple, Theme.colors.shade.primary, Theme.colors.additional.primary.purple),
-        CardItem(stringResource(id = R.string.ac_repair), R.drawable.ic_conditioner_bold, Theme.colors.additional.primary.red, Theme.colors.background.card, Theme.colors.background.card, Theme.colors.additional.primary.red)
+        CardItem(
+            stringResource(id = R.string.cleaning),
+            R.drawable.ic_washing_machine_bold,
+            backgroundColor = Theme.colors.additional.primary.purple,
+            textColor = Theme.colors.background.card,
+            iconColor = Theme.colors.additional.primary.purple,
+            iconBackgroundColor = Theme.colors.background.card
+        ),
+        CardItem(
+            stringResource(id = R.string.ac_repair),
+            R.drawable.ic_conditioner_bold,
+            Theme.colors.background.card,
+            Theme.colors.additional.secondary.red,
+            Theme.colors.shade.primary,
+            Theme.colors.additional.primary.red
+        ),
+        CardItem(
+            stringResource(id = R.string.plumping),
+            R.drawable.ic_waterdrops_bold,
+            Theme.colors.background.card,
+            Theme.colors.additional.secondary.blue,
+            Theme.colors.shade.primary,
+            Theme.colors.additional.primary.blue
+        ),
+        CardItem(
+            stringResource(id = R.string.electrical),
+            R.drawable.ic_plug_circle_bold,
+            Theme.colors.additional.primary.turquoise,
+            Theme.colors.background.card,
+            Theme.colors.background.card,
+            Theme.colors.additional.primary.turquoise
+        ),
+        CardItem(
+            stringResource(id = R.string.painting),
+            R.drawable.ic_paint_roller_bold,
+            Theme.colors.additional.primary.yellow,
+            Theme.colors.background.card,
+            Theme.colors.background.card,
+            Theme.colors.additional.primary.yellow
+        ),
+        CardItem(
+            stringResource(id = R.string.landscaping),
+            R.drawable.ic_leaf_bold,
+            Theme.colors.background.card,
+            Theme.colors.additional.secondary.green,
+            Theme.colors.shade.primary,
+            Theme.colors.additional.primary.green
+        ),
+        CardItem(
+            stringResource(id = R.string.cleaning),
+            R.drawable.ic_washing_machine_bold,
+            Theme.colors.background.card,
+            Theme.colors.additional.secondary.purple,
+            Theme.colors.shade.primary,
+            Theme.colors.additional.primary.purple
+        ),
+        CardItem(
+            stringResource(id = R.string.ac_repair),
+            R.drawable.ic_conditioner_bold,
+            Theme.colors.additional.primary.red,
+            Theme.colors.background.card,
+            Theme.colors.background.card,
+            Theme.colors.additional.primary.red
+        )
     )
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Theme.colors.background.screen)
+            .background(Theme.colors.background.screen),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         cards.chunked(2).forEachIndexed { index, pair ->
             val card1 = pair[0]
@@ -82,6 +141,31 @@ fun Cards() {
     }
 }
 
+@Preview(
+    name = "Phone - Dark",
+    device = Devices.PIXEL_4,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showSystemUi = true,
+    showBackground = true
+)
+@Preview(
+    name = "Tablet",
+    device = Devices.TABLET,
+    showSystemUi = true,
+    showBackground = true
+)
+@Preview(
+    name = "Foldable",
+    device = Devices.FOLDABLE,
+    showSystemUi = true,
+    showBackground = true
+)
+@Preview(
+    name = "Foldable",
+    device = Devices.PIXEL,
+    showSystemUi = true,
+    showBackground = true
+)
 @Preview(showBackground = true)
 @Composable
 fun CardsPreview() {

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
@@ -21,9 +20,7 @@ import com.paris_2.san3a.presentation.utill.getCurrentDateTime
 import com.paris_2.san3a.presentation.utill.minusNHours
 import com.paris_2.san3a.presentation.utill.plusNDays
 import com.paris_2.san3a.presentation.utill.plusNHours
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 @Composable
 fun Offers(
     modifier: Modifier = Modifier
@@ -31,18 +28,17 @@ fun Offers(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp)
             .graphicsLayer {
                 clip = false
             },
-        contentAlignment = Alignment.TopCenter
     ) {
         CraftsManOffer(
             onSecondaryButtonClick = {},
             onPrimaryButtonClick = {},
             modifier = Modifier
-                .graphicsLayer { rotationZ = 8f }
-                .offset(y = 20.dp),
+                .graphicsLayer { rotationZ = 5f }
+                .offset(x = 0.dp,y = (-3.48).dp)
+               ,
             offerDetails = OfferDetailsUIState(
                 name = stringResource(R.string.ahmed_al_rashid),
                 rate = 4.7f,
@@ -60,9 +56,9 @@ fun Offers(
             onSecondaryButtonClick = {},
             onPrimaryButtonClick = {},
             modifier = Modifier
-                .padding(top = 22.dp)
-                .graphicsLayer { rotationZ = -8f }
-                .offset(y = 70.dp, x = (-8).dp),
+                .padding(top = 64.dp)
+                .graphicsLayer { rotationZ = -5f }
+                .offset(x = 0.dp, y = (-3.48).dp),
             offerDetails = OfferDetailsUIState(
                 name = stringResource(R.string.muhammed_ali),
                 rate = 4.8f,
@@ -80,8 +76,9 @@ fun Offers(
             onSecondaryButtonClick = {},
             onPrimaryButtonClick = {},
             modifier = Modifier
+                .padding(top = 140.dp)
                 .graphicsLayer { rotationZ = 5f }
-                .offset(y = 165.dp, x = 6.dp),
+                .offset(x = 0.dp, y = (-3.48).dp),
             offerDetails = OfferDetailsUIState(
                 name = stringResource(R.string.ahmed_mosa),
                 rate = 4.5f,
