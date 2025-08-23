@@ -118,7 +118,7 @@ private fun StatsColumn(
             style = Theme.textStyle.body.small.semibold,
             textAlign = TextAlign.Center,
             color = Theme.colors.shade.primary,
-            modifier = Modifier.padding(bottom = 4.dp)
+            modifier = Modifier.padding(bottom = 16.dp)
         )
     }
 }
