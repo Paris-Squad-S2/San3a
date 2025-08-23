@@ -20,4 +20,6 @@ interface MoreInteractionListener {
     fun onDismissSnackBar()
     fun onClickLogoutArrow()
     fun onDismissLogoutBottomSheet()
+    fun onUpdateProfileClick()
+
 }

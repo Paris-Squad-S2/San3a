@@ -197,12 +197,13 @@ private fun MoreScreenContent(
 
                         AnimatedVisibility(moreScreenState.showEditProfileBottomSheet) {
                             EditProfileBottomSheet(
-                                name = moreScreenState.moreUiState.userUiState.name,
-                                profileUri = moreScreenState.moreUiState.userUiState.imageUrl,
+                                name = moreScreenState.moreUiState.editUiState.name,
+                                profileUri = moreScreenState.moreUiState.editUiState.imageUrl,
                                 onNameChange = moreInteractionListener::onNameValueChange,
                                 onDismissRequest = moreInteractionListener::onCloseEditProfileBottomSheet,
                                 isVisible = moreScreenState.showEditProfileBottomSheet,
-                                onPickImageClick = { onPickImageClick() }
+                                onPickImageClick = { onPickImageClick() },
+                                onUpdateProfileClick = moreInteractionListener::onUpdateProfileClick,
                             )
                         }
 
@@ -211,7 +212,7 @@ private fun MoreScreenContent(
                                 isVisible = moreScreenState.showLanguageBottomSheet,
                                 onDismissRequest = moreInteractionListener::onCloseSelectedLanguageBottomSheet,
                                 selectedLanguage = moreScreenState.moreUiState.selectedLanguage,
-                                onLanguageSelected =  moreInteractionListener::onLanguageSelected,
+                                onLanguageSelected = moreInteractionListener::onLanguageSelected,
                             )
                         }
                     }
@@ -222,7 +223,7 @@ private fun MoreScreenContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 AnimatedVisibility(moreScreenState.showSnackBarError) {
-                    moreScreenState.errorMessage?.let {uiText ->
+                    moreScreenState.errorMessage?.let { uiText ->
                         SnackBar(
                             text = uiText.asString(),
                             modifier = Modifier
@@ -286,6 +287,7 @@ fun MoreScreenContentPreview() {
             override fun onDismissSnackBar() {}
             override fun onClickLogoutArrow() {}
             override fun onDismissLogoutBottomSheet() {}
+            override fun onUpdateProfileClick() {}
         }, onPickImageClick = {})
     }
 }
