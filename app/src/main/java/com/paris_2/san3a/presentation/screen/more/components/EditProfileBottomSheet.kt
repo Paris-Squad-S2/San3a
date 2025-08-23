@@ -31,6 +31,7 @@ fun EditProfileBottomSheet(
     isVisible: Boolean,
     onDismissRequest: () -> Unit,
     onUpdateProfileClick: () -> Unit,
+    isChanged: Boolean
 ) {
     BottomSheet(
         isVisible = isVisible,
@@ -71,7 +72,7 @@ fun EditProfileBottomSheet(
             type = AppButtonType.Primary,
             size = AppButtonSize.Large,
             text = stringResource(R.string.update),
-            state = AppButtonState.Enable,
+            state = if (isChanged) AppButtonState.Enable else AppButtonState.Disabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)

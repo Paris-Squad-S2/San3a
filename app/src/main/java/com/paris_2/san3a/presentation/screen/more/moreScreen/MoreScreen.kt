@@ -204,6 +204,8 @@ private fun MoreScreenContent(
                                 isVisible = moreScreenState.showEditProfileBottomSheet,
                                 onPickImageClick = { onPickImageClick() },
                                 onUpdateProfileClick = moreInteractionListener::onUpdateProfileClick,
+                                isChanged = moreScreenState.moreUiState.editUiState.name != moreScreenState.moreUiState.userUiState.name ||
+                                        moreScreenState.moreUiState.editUiState.imageUrl != moreScreenState.moreUiState.userUiState.imageUrl
                             )
                         }
 
