@@ -1,7 +1,6 @@
 package com.paris_2.san3a.presentation.screen.onboarding
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +28,11 @@ import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
+import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 
 @Composable
 fun OnBoardingScreen(
@@ -48,6 +52,7 @@ fun OnBoardingScreen(
                     .padding(horizontal = 60.dp)
             )
         }
+
         state.isCompleted.not() -> {
             OnBoardingScreenContent(
                 pages = pages,
@@ -72,52 +77,101 @@ fun OnBoardingScreenContent(
         interactionListener.onPageChanged(pagerState.currentPage)
     }
 
-    Box(
-        modifier
+    Column(
+        verticalArrangement = Arrangement.spacedBy(32.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .background(Theme.colors.background.screen)
-    ) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .navigationBarsPadding()
-        ) {
-            AppButton(
-                type = AppButtonType.Secondary,
-                onClick = interactionListener::onSkipClicked,
-                text = stringResource(R.string.skip),
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(top = 24.dp, end = 16.dp, bottom = 32.dp),
-            )
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.weight(1f)
-            ) { index ->
-                TopSection(
-                    page = pages[index]
-                )
-            }
-            TextSection(
-                page = pages[pagerState.currentPage]
-            )
-            BottomSection(
-                onNextClick = {
-                    interactionListener.onNextClicked()
-                    coroutineScope.launch {
-                        if (pagerState.currentPage < pages.lastIndex) {
-                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                        }
-                    }
-                },
-                pages = pages,
-                state = state,
-                buttonText = if (pagerState.currentPage == pages.lastIndex) {
-                    stringResource(R.string.get_started)
-                } else {
-                    stringResource(R.string.next)
-                },
+            .padding(vertical = 24.dp)
+    )
+    {
+        AppButton(
+            type = AppButtonType.Secondary,
+            onClick = interactionListener::onSkipClicked,
+            text = stringResource(R.string.skip),
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(end = 16.dp),
+        )
+        HorizontalPager(
+            state = pagerState,
+        ) { index ->
+            TopSection(
+                page = pages[index]
             )
         }
+        TextSection(
+            page = pages[pagerState.currentPage]
+        )
+        BottomSection(
+            onNextClick = {
+                interactionListener.onNextClicked()
+                coroutineScope.launch {
+                    if (pagerState.currentPage < pages.lastIndex) {
+                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                    }
+                }
+            },
+            pages = pages,
+            state = state,
+            buttonText = if (pagerState.currentPage == pages.lastIndex) {
+                stringResource(R.string.get_started)
+            } else {
+                stringResource(R.string.next)
+            },
+        )
+    }
+
+}
+
+@Preview(
+    name = "Phone - Light",
+    device = Devices.PIXEL_4,
+    showSystemUi = true,
+    showBackground = true
+)
+@Preview(
+    name = "Phone - Dark",
+    device = Devices.PIXEL_4,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showSystemUi = true,
+    showBackground = true
+)
+@Preview(
+    name = "Tablet",
+    device = Devices.TABLET,
+    showSystemUi = true,
+    showBackground = true
+)
+@Preview(
+    name = "Foldable",
+    device = Devices.FOLDABLE,
+    showSystemUi = true,
+    showBackground = true
+)
+@Preview(
+    name = "Foldable",
+    device = Devices.PIXEL,
+    showSystemUi = true,
+    showBackground = true
+)
+@Composable
+fun OnBoardingScreenPreview() {
+    San3aTheme {
+        OnBoardingScreenContent(
+            pages = onboardingPages(),
+            state = OnBoardingUIState(
+                currentPage = 2,
+                isCompleted = false,
+                error = null
+            ),
+            interactionListener = object : OnBoardingInteractionListener {
+                override fun onSkipClicked() {}
+                override fun onNextClicked() {}
+                override fun onPageChanged(index: Int) {}
+            }
+        )
     }
 }
