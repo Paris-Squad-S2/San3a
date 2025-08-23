@@ -208,44 +208,42 @@ class CraftsmanHomeViewModel(
 
     }
 
-    private fun handleFinalState() {
-        viewModelScope.launch(IO) {
-            delay(2500)
-            when {
-                screenState.value.isRecentJobsSuccess && screenState.value.isAvailableJobsSuccess -> {
-                    updateState(
-                        screenState.value.copy(
-                            isScreenLoading = false
-                        )
+    private suspend fun handleFinalState() {
+        delay(2500)
+        when {
+            screenState.value.isRecentJobsSuccess && screenState.value.isAvailableJobsSuccess -> {
+                updateState(
+                    screenState.value.copy(
+                        isScreenLoading = false
                     )
-                }
+                )
+            }
 
-                screenState.value.isRecentJobsSuccess.not() && screenState.value.isAvailableJobsSuccess.not() -> {
-                    updateState(
-                        screenState.value.copy(
-                            isScreenLoading = false,
-                            errorMessage = "Error loading recent jobs and available jobs"
-                        )
+            screenState.value.isRecentJobsSuccess.not() && screenState.value.isAvailableJobsSuccess.not() -> {
+                updateState(
+                    screenState.value.copy(
+                        isScreenLoading = false,
+                        errorMessage = "Error loading recent jobs and available jobs"
                     )
-                }
+                )
+            }
 
-                screenState.value.isRecentJobsSuccess.not() -> {
-                    updateState(
-                        screenState.value.copy(
-                            isScreenLoading = false,
-                            errorMessage = "Error loading recent jobs"
-                        )
+            screenState.value.isRecentJobsSuccess.not() -> {
+                updateState(
+                    screenState.value.copy(
+                        isScreenLoading = false,
+                        errorMessage = "Error loading recent jobs"
                     )
-                }
+                )
+            }
 
-                screenState.value.isAvailableJobsSuccess.not() -> {
-                    updateState(
-                        screenState.value.copy(
-                            isScreenLoading = false,
-                            errorMessage = "Error loading available jobs"
-                        )
+            screenState.value.isAvailableJobsSuccess.not() -> {
+                updateState(
+                    screenState.value.copy(
+                        isScreenLoading = false,
+                        errorMessage = "Error loading available jobs"
                     )
-                }
+                )
             }
         }
     }
