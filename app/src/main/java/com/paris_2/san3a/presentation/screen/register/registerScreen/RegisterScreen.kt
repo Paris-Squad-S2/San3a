@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,7 +23,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -45,7 +42,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -73,13 +69,6 @@ fun RegisterScreenContent(
     registerUiState: RegisterUiState,
     registerInteractionListener: RegisterInteractionListener,
 ) {
-    val isKeyboardVisible = WindowInsets.isImeVisible
-
-    val topSectionHeight by animateDpAsState(
-        targetValue = if (isKeyboardVisible) 172.dp else 240.dp,
-        animationSpec = tween(durationMillis = 300),
-        label = "topSectionHeight"
-    )
 
     val logoSize by animateDpAsState(
         targetValue = 64.dp,
@@ -90,141 +79,113 @@ fun RegisterScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Theme.colors.brand.primary)
-            .imePadding()
-            .navigationBarsPadding()
+            .background(Theme.colors.background.card)
     ) {
+        Box(
+            modifier = Modifier
+                .height(340.dp)
+                .fillMaxWidth()
+                .background(Theme.colors.brand.primary)
+        )
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .fillMaxSize()
+                .imePadding()
+                .navigationBarsPadding()
         ) {
             item {
-                TopSection(
-                    height = topSectionHeight,
-                    logoSize = logoSize,
-                    showTitle = true,
-                )
-            }
-
-            item {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)),
-                    color = Theme.colors.background.card
-                ) {
+                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .padding(top = 67.5.dp, bottom = 67.5.dp)
                     ) {
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        PhoneNumberInput(
-                            phoneNumber = registerUiState.phoneNumber,
-                            onPhoneNumberChanged = {
-                                registerInteractionListener.onPhoneNumberChanged(
-                                    it
-                                )
-                            },
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_logo_white_background),
+                            contentDescription = stringResource(R.string.register_background),
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.size(logoSize)
                         )
 
-                        TermsAndConditionsText(
-                            onTermsClick = {
-                                registerInteractionListener.changeBottomSheetType(
-                                    BottomSheetType.Terms
-                                )
-                            },
-                            onPrivacyClick = {
-                                registerInteractionListener.changeBottomSheetType(
-                                    BottomSheetType.Privacy
-                                )
-                            }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = stringResource(R.string.welcome_to_san3a),
+                            color = Theme.colors.background.card,
+                            style = Theme.textStyle.title.large
                         )
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        AppButton(
-                            type = AppButtonType.Primary,
-                            onClick = { registerInteractionListener.onClickContinue() },
-                            state = if (registerUiState.isPhoneValid) AppButtonState.Enable else AppButtonState.Disabled,
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(bottom = 16.dp)
-                            ,
-                            size = AppButtonSize.Large,
-                            text = stringResource(R.string.Continue),
-                        )
-
                     }
                 }
             }
-        }
-        registerUiState.bottomSheetType?.let { type ->
-            when (type) {
-                BottomSheetType.Terms -> {
-                    RegisterBottomSheet(
-                        onCloseClick = { registerInteractionListener.changeBottomSheetType(null) },
-                        headerText = stringResource(R.string.terms_and_conditions_with_icon),
-                        contentText = stringResource(R.string.terms_and_conditions_content),
-                        skipPartiallyExpanded = false
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                        .background(Theme.colors.background.card)
+                        .padding(horizontal = 24.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    PhoneNumberInput(
+                        phoneNumber = registerUiState.phoneNumber,
+                        onPhoneNumberChanged = {
+                            registerInteractionListener.onPhoneNumberChanged(it)
+                        }
                     )
-                }
 
-                BottomSheetType.Privacy -> {
-                    RegisterBottomSheet(
-                        onCloseClick = { registerInteractionListener.changeBottomSheetType(null) },
-                        headerText = stringResource(R.string.privacy_and_policy_with_icon),
-                        contentText = stringResource(R.string.privacy_and_policy_content),
-                        skipPartiallyExpanded = false
+                    TermsAndConditionsText(
+                        onTermsClick = {
+                            registerInteractionListener.changeBottomSheetType(
+                                BottomSheetType.Terms
+                            )
+                        },
+                        onPrivacyClick = {
+                            registerInteractionListener.changeBottomSheetType(
+                                BottomSheetType.Privacy
+                            )
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    AppButton(
+                        type = AppButtonType.Primary,
+                        onClick = { registerInteractionListener.onClickContinue() },
+                        state = if (registerUiState.isPhoneValid) AppButtonState.Enable else AppButtonState.Disabled,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        size = AppButtonSize.Large,
+                        text = stringResource(R.string.Continue)
                     )
                 }
             }
         }
     }
-}
 
-@Composable
-fun TopSection(
-    height: Dp,
-    logoSize: Dp,
-    showTitle: Boolean,
-) {
-    Spacer(modifier = Modifier.height(68.dp))
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(height)
-            .background(Theme.colors.brand.primary),
-        contentAlignment = Alignment.Center
-    ) {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_logo_white_background),
-                    contentDescription = stringResource(R.string.register_background),
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(logoSize)
+    // BottomSheet
+    registerUiState.bottomSheetType?.let { type ->
+        when (type) {
+            BottomSheetType.Terms -> {
+                RegisterBottomSheet(
+                    onCloseClick = { registerInteractionListener.changeBottomSheetType(null) },
+                    headerText = stringResource(R.string.terms_and_conditions_with_icon),
+                    contentText = stringResource(R.string.terms_and_conditions_content),
+                    skipPartiallyExpanded = false
                 )
+            }
 
-                if (showTitle) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = stringResource(R.string.welcome_to_san3a),
-                        color = Theme.colors.background.card,
-                        style = Theme.textStyle.title.large
-                    )
-                }
+            BottomSheetType.Privacy -> {
+                RegisterBottomSheet(
+                    onCloseClick = { registerInteractionListener.changeBottomSheetType(null) },
+                    headerText = stringResource(R.string.privacy_and_policy_with_icon),
+                    contentText = stringResource(R.string.privacy_and_policy_content),
+                    skipPartiallyExpanded = false
+                )
             }
         }
     }
 }
+
 
 @Composable
 fun PhoneNumberInput(
@@ -388,6 +349,19 @@ fun TermsAndConditionsText(
 @Preview(showBackground = false, showSystemUi = true)
 @Composable
 fun RegisterScreenPreview() {
+    RegisterScreenContent(
+        registerUiState = RegisterUiState(),
+        registerInteractionListener = object : RegisterInteractionListener {
+            override fun onPhoneNumberChanged(phone: String) {}
+            override fun onClickContinue() {}
+            override fun changeBottomSheetType(bottomSheetType: BottomSheetType?) {}
+        }
+    )
+}
+
+@Preview(showBackground = false, device = "spec:width=320dp,height=500dp")
+@Composable
+fun RegisterScreenPreview2() {
     RegisterScreenContent(
         registerUiState = RegisterUiState(),
         registerInteractionListener = object : RegisterInteractionListener {
