@@ -20,6 +20,7 @@ data class MoreScreenState(
 
 data class MoreUiState(
     val userUiState: UserUiState = UserUiState(),
+    val editUiState: EditProfileUiState = EditProfileUiState(),
     val notificationsCount: Int = 0,
     val isDarkMode: Boolean = false,
     val versionNumber: String = "",
@@ -40,4 +41,9 @@ data class UserUiState(
     val isCraftsman: Boolean = true,
     val previousImage: Uri? = null,
     val previousText: String = "",
+)
+
+data class EditProfileUiState(
+    val name: String = "",
+    val imageUrl: Uri? = null,
 )
