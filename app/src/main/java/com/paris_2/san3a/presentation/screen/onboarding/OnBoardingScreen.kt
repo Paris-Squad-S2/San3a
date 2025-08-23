@@ -126,14 +126,6 @@ fun OnBoardingScreenContent(
 
 }
 
-
-private val previewInteractionListener = object : OnBoardingInteractionListener {
-    override fun onSkipClicked() {}
-    override fun onNextClicked() {}
-    override fun onPageChanged(index: Int) {}
-}
-
-
 @Preview(
     name = "Phone - Light",
     device = Devices.PIXEL_4,
@@ -175,7 +167,11 @@ fun OnBoardingScreenPreview() {
                 isCompleted = false,
                 error = null
             ),
-            interactionListener = previewInteractionListener
+            interactionListener = object : OnBoardingInteractionListener {
+                override fun onSkipClicked() {}
+                override fun onNextClicked() {}
+                override fun onPageChanged(index: Int) {}
+            }
         )
     }
 }
