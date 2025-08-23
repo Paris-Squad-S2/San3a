@@ -358,5 +358,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="am">AM</string>
     <string name="pm">PM</string>
     <string name="loading">Loading…</string>
+    <string name="update">Update</string>
 
 </resources>

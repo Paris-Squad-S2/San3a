@@ -4,16 +4,16 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
-import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.User
+import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
+import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.domain.usecase.user.CustomizeProfileSettingsUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.user.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
-import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.mapper.toUserUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
@@ -132,7 +132,7 @@ class MoreViewModel(
     private fun onGetDarkModeError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage =  UiText.StringResource(resId =R.string.occrus_error_when_get_dark_mode),
+                errorMessage = UiText.StringResource(resId = R.string.occrus_error_when_get_dark_mode),
                 showSnackBarError = true,
             )
         )
@@ -182,7 +182,7 @@ class MoreViewModel(
         } else {
             updateState(
                 screenState.value.copy(
-                    errorMessage =  UiText.StringResource(resId =R.string.user_information_not_found),
+                    errorMessage = UiText.StringResource(resId = R.string.user_information_not_found),
                     isNoInternet = false,
                     isLoading = false,
                     showSnackBarError = true,
@@ -237,7 +237,7 @@ class MoreViewModel(
     private fun onGetPhoneNumberError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage =  UiText.StringResource(resId =R.string.phone_number_not_found),
+                errorMessage = UiText.StringResource(resId = R.string.phone_number_not_found),
                 showSnackBarError = true,
                 showSnackBarSuccess = false
             )
@@ -246,12 +246,20 @@ class MoreViewModel(
     }
 
     override fun onClickEditProfileBottomSheet() {
+        val currentUser = screenState.value.moreUiState.userUiState
         updateState(
             screenState.value.copy(
-                showEditProfileBottomSheet = !screenState.value.showEditProfileBottomSheet
+                moreUiState = screenState.value.moreUiState.copy(
+                    editUiState = EditProfileUiState(
+                        name = currentUser.name,
+                        imageUrl = currentUser.imageUrl
+                    )
+                ),
+                showEditProfileBottomSheet = true
             )
         )
     }
+
 
     override fun onClickSwitchAccountToCraftsman() {
         switchToCraftsmanAccount()
@@ -370,7 +378,7 @@ class MoreViewModel(
             updateState(
                 screenState.value.copy(
                     isLoadingChangeAccount = false,
-                    errorMessage =  UiText.StringResource(resId =R.string.occur_error_when_save_account_type),
+                    errorMessage = UiText.StringResource(resId = R.string.occur_error_when_save_account_type),
                     showSnackBarError = true,
                     isNoInternet = false,
                     isLoading = false,
@@ -414,7 +422,7 @@ class MoreViewModel(
     private fun onLogoutError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage =  UiText.StringResource(resId =R.string.logout_failed),
+                errorMessage = UiText.StringResource(resId = R.string.logout_failed),
                 isNoInternet = false,
                 isLoading = false,
                 showSnackBarError = true,
@@ -450,7 +458,7 @@ class MoreViewModel(
         updateState(
             screenState.value.copy(
                 moreUiState = screenState.value.moreUiState.copy(
-                    userUiState = screenState.value.moreUiState.userUiState.copy(
+                    editUiState = screenState.value.moreUiState.editUiState.copy(
                         name = name
                     )
                 )
@@ -462,23 +470,8 @@ class MoreViewModel(
         updateState(
             screenState.value.copy(showEditProfileBottomSheet = false)
         )
-        if ((screenState.value.moreUiState.userUiState.name.isNotEmpty() &&
-                    screenState.value.moreUiState.userUiState.name != screenState.value.moreUiState.userUiState.previousText) ||
-            (screenState.value.moreUiState.userUiState.imageUrl != null
-                    )
-        ) {
-            updateState(
-                screenState.value.copy(
-                    moreUiState = screenState.value.moreUiState.copy(
-                        userUiState = screenState.value.moreUiState.userUiState.copy(
-                            previousText = screenState.value.moreUiState.userUiState.name
-                        )
-                    )
-                )
-            )
-            saveUserInformation()
-        }
     }
+
 
     private fun saveUserInformation() {
         updateState(
@@ -489,7 +482,10 @@ class MoreViewModel(
         tryToExecute(
             execute = {
                 Log.d("MoreViewModel", "Enter the edit scope...")
-                Log.d("MoreViewModel", screenState.value.moreUiState.userUiState.imageUrl.toString())
+                Log.d(
+                    "MoreViewModel",
+                    screenState.value.moreUiState.userUiState.imageUrl.toString()
+                )
                 setUpAccountUseCase.savePersonalInfo(
                     phone = screenState.value.moreUiState.userUiState.phoneNumber,
                     fullName = screenState.value.moreUiState.userUiState.name,
@@ -522,7 +518,7 @@ class MoreViewModel(
         } else {
             updateState(
                 screenState.value.copy(
-                    errorMessage =  UiText.StringResource(resId =R.string.occrus_error_when_saving_user_information),
+                    errorMessage = UiText.StringResource(resId = R.string.occrus_error_when_saving_user_information),
                     isLoading = false
                 )
             )
@@ -562,7 +558,7 @@ class MoreViewModel(
     private fun onUpdateAppLanguageError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage =  UiText.StringResource(resId =R.string.occruc_error_when_language_app_updated),
+                errorMessage = UiText.StringResource(resId = R.string.occruc_error_when_language_app_updated),
                 showSnackBarError = true,
                 showSnackBarSuccess = false,
                 isLoading = false,
@@ -576,7 +572,7 @@ class MoreViewModel(
         updateState(
             screenState.value.copy(
                 moreUiState = screenState.value.moreUiState.copy(
-                    userUiState = screenState.value.moreUiState.userUiState.copy(
+                    editUiState = screenState.value.moreUiState.editUiState.copy(
                         imageUrl = uri
                     )
                 )
@@ -628,6 +624,32 @@ class MoreViewModel(
             )
         )
     }
+
+    override fun onUpdateProfileClick() {
+        val edit = screenState.value.moreUiState.editUiState
+        val current = screenState.value.moreUiState.userUiState
+
+        if ((edit.name.isNotEmpty() && edit.name != current.previousText) ||
+            (edit.imageUrl != current.imageUrl)
+        ) {
+            updateState(
+                screenState.value.copy(
+                    moreUiState = screenState.value.moreUiState.copy(
+                        userUiState = current.copy(
+                            name = edit.name,
+                            imageUrl = edit.imageUrl,
+                            previousText = edit.name
+                        )
+                    ),
+                    showEditProfileBottomSheet = false
+                )
+            )
+            saveUserInformation()
+        } else {
+            updateState(screenState.value.copy(showEditProfileBottomSheet = false))
+        }
+    }
+
 
     override fun onDismissSnackBar() {
         updateState(
