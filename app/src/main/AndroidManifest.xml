@@ -28,7 +28,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="fullUser"
             android:theme="@style/Theme.San3a.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
