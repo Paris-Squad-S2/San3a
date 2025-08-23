@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.CraftsManOffer
@@ -24,6 +26,9 @@ import com.paris_2.san3a.presentation.utill.plusNHours
 fun Offers(
     modifier: Modifier = Modifier
 ) {
+    val layoutDirection = LocalLayoutDirection.current
+    val isRtl = layoutDirection == LayoutDirection.Rtl
+
     Box(
         modifier = modifier
             .padding(horizontal = 12.dp)
@@ -35,7 +40,7 @@ fun Offers(
             onSecondaryButtonClick = {},
             onPrimaryButtonClick = {},
             modifier = Modifier
-                .graphicsLayer { rotationZ = 5f }
+                .graphicsLayer { rotationZ = if (isRtl) -5f else 5f }
                 .offset(x = 0.dp, y = (-3.48).dp),
             offerDetails = OfferDetailsUIState(
                 name = stringResource(R.string.ahmed_al_rashid),
@@ -55,7 +60,7 @@ fun Offers(
             onPrimaryButtonClick = {},
             modifier = Modifier
                 .padding(top = 64.dp)
-                .graphicsLayer { rotationZ = -5f }
+                .graphicsLayer { rotationZ = if (isRtl) 5f else -5f }
                 .offset(x = 0.dp, y = (-3.48).dp),
             offerDetails = OfferDetailsUIState(
                 name = stringResource(R.string.muhammed_ali),
@@ -75,7 +80,7 @@ fun Offers(
             onPrimaryButtonClick = {},
             modifier = Modifier
                 .padding(top = 140.dp)
-                .graphicsLayer { rotationZ = 5f }
+                .graphicsLayer { rotationZ = if (isRtl) -5f else 5f }
                 .offset(x = 0.dp, y = (-3.48).dp),
             offerDetails = OfferDetailsUIState(
                 name = stringResource(R.string.ahmed_mosa),
@@ -95,6 +100,7 @@ fun Offers(
 
 @Composable
 @Preview(showBackground = true)
+@Preview(showBackground = true, locale = "ar",)
 fun OffersPreview() {
     Column(modifier = Modifier.fillMaxSize()) {
         Offers()
