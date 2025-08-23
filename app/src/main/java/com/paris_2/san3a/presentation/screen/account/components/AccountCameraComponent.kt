@@ -49,7 +49,7 @@ fun AddWorkPhotosComponent(
     modifier: Modifier = Modifier,
     images: List<Uri>? = null,
     onAddPhotoClick: () -> Unit,
-    onDeletePhotoClick:(url:Uri)->Unit={},
+    onDeletePhotoClick: (url: Uri) -> Unit = {},
 ) {
     if (images == null) {
         Box(
@@ -100,7 +100,8 @@ fun AddWorkPhotosComponent(
                         model = uri,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
                             .size(64.dp)
                     )
 
@@ -114,9 +115,9 @@ fun AddWorkPhotosComponent(
                                 RoundedCornerShape(Theme.radius.small)
                             )
                             .clip(RoundedCornerShape(Theme.radius.small))
-                            .clickable(onClick = {onDeletePhotoClick(uri)}),
+                            .clickable(onClick = { onDeletePhotoClick(uri) }),
                         contentAlignment = Alignment.Center
-                    ){
+                    ) {
                         Icon(
                             modifier = Modifier.size(16.dp),
                             painter = painterResource(R.drawable.ic_x_outline),
@@ -160,8 +161,7 @@ fun AddSinglePhotoCircle(
                 gapLength = 6.dp,
                 shape = CircleShape
             )
-            .clickable { onTap() }
-            .padding(16.dp),
+            .clickable { onTap() },
         contentAlignment = Alignment.Center
     ) {
 
@@ -175,7 +175,10 @@ fun AddSinglePhotoCircle(
                     .clip(CircleShape)
             )
         } else {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                    .padding(16.dp)
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_camera_outline),
                     contentDescription = null,

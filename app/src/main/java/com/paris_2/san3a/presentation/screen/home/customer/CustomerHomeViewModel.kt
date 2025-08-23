@@ -497,7 +497,13 @@ class CustomerHomeViewModel(
             emptyList()
         } else {
             allServices.filter { service ->
-                service.title.contains(searchQuery) || service.description.contains(searchQuery)
+                service.title.contains(
+                    searchQuery,
+                    ignoreCase = true
+                ) || service.description.contains(searchQuery, ignoreCase = true)
+                        || service.suggestions.any { suggestion ->
+                    suggestion.contains(searchQuery, ignoreCase = true)
+                } || service.hint.contains(searchQuery, ignoreCase = true)
             }
         }
         updateState(

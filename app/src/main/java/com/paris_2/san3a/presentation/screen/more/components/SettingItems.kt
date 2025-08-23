@@ -148,7 +148,6 @@ private fun SettingItemsPreview() {
                 }
 
                 override fun onClickVerification() {
-                    TODO("Not yet implemented")
                 }
 
                 override fun onClickMyService() {
@@ -200,6 +199,10 @@ private fun SettingItemsPreview() {
                 }
 
                 override fun onDismissLogoutBottomSheet() {
+                }
+
+                override fun onUpdateProfileClick() {
+
                 }
 
             },

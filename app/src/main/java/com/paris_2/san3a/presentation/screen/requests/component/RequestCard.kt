@@ -36,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
 import com.paris_2.san3a.R
@@ -130,6 +131,7 @@ fun RequestCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CraftsmanSection(
+                    modifier = Modifier.weight(1f),
                     imageUri = requestUi.offer.craftsMan.profileUrl,
                     name = requestUi.offer.craftsMan.name,
                     rating = requestUi.offer.craftsMan.rating,
@@ -186,6 +188,7 @@ private fun CraftsmanSection(
     imageUri: String?,
     name: String?,
     rating: Float?,
+    modifier: Modifier = Modifier,
     isAcceptedOffer: Boolean,
     isVerified: Boolean = false,
     numberOfOffers: Int = 0
@@ -193,7 +196,7 @@ private fun CraftsmanSection(
 
 
     if (imageUri != null && !name.isNullOrEmpty()) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier, verticalAlignment = Alignment.CenterVertically) {
             if (isVerified) {
                 CraftsmanAvatar(
                     painter = rememberAsyncImagePainter(model = imageUri),
@@ -216,7 +219,9 @@ private fun CraftsmanSection(
                 Text(
                     name,
                     style = Theme.textStyle.body.medium.medium,
-                    color = Theme.colors.shade.primary
+                    color = Theme.colors.shade.primary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 rating?.let {
                     Row(

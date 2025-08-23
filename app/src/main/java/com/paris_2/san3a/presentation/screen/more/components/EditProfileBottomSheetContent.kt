@@ -43,7 +43,7 @@ fun EditProfileBottomSheetContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 32.dp)
+            .padding(bottom = 16.dp)
     ) {
         Text(
             text = stringResource(R.string.your_name),
