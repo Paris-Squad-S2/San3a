@@ -201,8 +201,8 @@ private fun CustomerHomeScreenContent(
                         subTitle = stringResource(R.string.where_are_you_from),
                         buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetAddressDetails.isNotEmpty() &&
-                                state.bottomSheetUiState.bottomSheetSelectedGovernmentId != null &&
-                                state.bottomSheetUiState.bottomSheetSelectedCityId != null,
+                                state.bottomSheetUiState.bottomSheetSelectedGovernorate != null &&
+                                state.bottomSheetUiState.bottomSheetSelectedCity != null,
                         step = 3,
                         onButtonClick = { action.nextBottomSheetStep() },
                         onClickBack = { action.previousBottomSheetStep() },
@@ -221,8 +221,8 @@ private fun CustomerHomeScreenContent(
                             onCitiesSelected = {
                                 action.setBottomSheetSelectedCity(it.id)
                             },
-                            government = state.bottomSheetUiState.bottomSheetSelectedGovernmentName,
-                            city = state.bottomSheetUiState.bottomSheetSelectedCityName,
+                            government = state.bottomSheetUiState.bottomSheetSelectedGovernorate?.name.orEmpty(),
+                            city = state.bottomSheetUiState.bottomSheetSelectedCity?.name.orEmpty(),
                             onGetLocationClicked = {
                                 action.showGovernmentSheet(true)
                             },
@@ -319,7 +319,7 @@ private fun CustomerHomeScreenContent(
                                     .padding(end = 4.dp)
                             )
                             Text(
-                                text = "${state.customerUiState.government}, ${state.customerUiState.city}",
+                                text = "${state.customerUiState.governorate?.name.orEmpty()}, ${state.customerUiState.city?.name.orEmpty()}",
                                 style = Theme.textStyle.body.small.medium,
                                 color = Theme.colors.shade.secondary,
                                 maxLines = 1,
