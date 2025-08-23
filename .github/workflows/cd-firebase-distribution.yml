@@ -1,0 +1,49 @@
+name: CD - Build & Distribute to Firebase App Distribution
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+jobs:
+  build-and-distribute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Create google-services.json from secret
+        run: |
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
+
+      - name: Give gradlew permission to execute
+        run: chmod +x ./gradlew
+
+      - name: Compute version for this run
+        run: |
+          echo "VERSION_PREFIX=1.0" >> "$GITHUB_ENV"
+          echo "CI_VERSION_CODE=${{ github.run_number }}" >> "$GITHUB_ENV"
+          echo "CI_VERSION_NAME=1.0.${{ github.run_number }}" >> "$GITHUB_ENV"
+
+
+      - name: Build release singed APK
+        run: ./gradlew app:assembleRelease -PversionName=$CI_VERSION_NAME -PversionCode=$CI_VERSION_CODE
+
+
+      - name: Upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: testers
+
+          file: app/build/outputs/apk/release/app-release.apk
+          debug: false
