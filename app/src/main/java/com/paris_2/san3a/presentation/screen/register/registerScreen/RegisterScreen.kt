@@ -16,9 +16,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
@@ -90,61 +92,72 @@ fun RegisterScreenContent(
             .fillMaxSize()
             .background(Theme.colors.brand.primary)
             .imePadding()
+            .navigationBarsPadding()
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TopSection(
-                height = topSectionHeight,
-                logoSize = logoSize,
-                showTitle = true,
-            )
+            item {
+                TopSection(
+                    height = topSectionHeight,
+                    logoSize = logoSize,
+                    showTitle = true,
+                )
+            }
 
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)),
-                color = Theme.colors.background.card
-            ) {
-                Column(
+            item {
+                Surface(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)),
+                    color = Theme.colors.background.card
                 ) {
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                    PhoneNumberInput(
-                        phoneNumber = registerUiState.phoneNumber,
-                        onPhoneNumberChanged = { registerInteractionListener.onPhoneNumberChanged(it) },
-                    )
+                        PhoneNumberInput(
+                            phoneNumber = registerUiState.phoneNumber,
+                            onPhoneNumberChanged = {
+                                registerInteractionListener.onPhoneNumberChanged(
+                                    it
+                                )
+                            },
+                        )
 
-                    TermsAndConditionsText(
-                        onTermsClick = {
-                            registerInteractionListener.changeBottomSheetType(
-                                BottomSheetType.Terms
-                            )
-                        },
-                        onPrivacyClick = {
-                            registerInteractionListener.changeBottomSheetType(
-                                BottomSheetType.Privacy
-                            )
-                        }
-                    )
+                        TermsAndConditionsText(
+                            onTermsClick = {
+                                registerInteractionListener.changeBottomSheetType(
+                                    BottomSheetType.Terms
+                                )
+                            },
+                            onPrivacyClick = {
+                                registerInteractionListener.changeBottomSheetType(
+                                    BottomSheetType.Privacy
+                                )
+                            }
+                        )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                    AppButton(
-                        type = AppButtonType.Primary,
-                        onClick = { registerInteractionListener.onClickContinue() },
-                        state = if (registerUiState.isPhoneValid) AppButtonState.Enable else AppButtonState.Disabled,
-                        modifier = Modifier.fillMaxWidth(),
-                        size = AppButtonSize.Large,
-                        text = stringResource(R.string.Continue),
-                    )
+                        AppButton(
+                            type = AppButtonType.Primary,
+                            onClick = { registerInteractionListener.onClickContinue() },
+                            state = if (registerUiState.isPhoneValid) AppButtonState.Enable else AppButtonState.Disabled,
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(bottom = 16.dp)
+                            ,
+                            size = AppButtonSize.Large,
+                            text = stringResource(R.string.Continue),
+                        )
 
+                    }
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
@@ -28,7 +30,8 @@ fun AppBar(
     title: String? = null,
     onBackClick: (() -> Unit)? = null,
     showBackGround: Boolean = true,
-    leadingIcon: @Composable (() -> Unit)? = null
+    spaceBetween: Boolean = true,
+    leadingIcon: @Composable (RowScope.() -> Unit)? = null
 ) {
 
     Row(
@@ -49,16 +52,18 @@ fun AppBar(
                 )
             }
         }
-        leadingIcon?.invoke()
+        leadingIcon?.invoke(this)
         if (title != null) {
             Text(
                 text = title,
                 modifier = Modifier.weight(1F),
                 style = Theme.textStyle.title.small,
                 color = Theme.colors.shade.primary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-        } else {
-            Spacer(modifier = Modifier.weight(1f))
+        } else if (spaceBetween) {
+             Spacer(modifier = Modifier.weight(1f))
         }
         actionIcon()
     }
