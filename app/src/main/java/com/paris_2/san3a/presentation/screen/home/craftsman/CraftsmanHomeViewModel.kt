@@ -32,6 +32,11 @@ class CraftsmanHomeViewModel(
     private fun getUserServices() {
         tryToObserve(
             observe = {
+                updateState(
+                    screenState.value.copy(
+                        isScreenLoading = true
+                    )
+                )
                 getUserSelectedServicesUseCase(
                     screenState.value.craftsmanHomeUiState.phoneNumber,
                     isCraftsman = true
@@ -129,64 +134,6 @@ class CraftsmanHomeViewModel(
         )
     }
 
-    fun loadRecentRelatedJobs() {
-        tryToObserve(
-            observe = { getRecentRelatedJobsUseCase(screenState.value.craftsmanHomeUiState.userServices.keys.toList(), screenState.value.craftsmanHomeUiState.phoneNumber) },
-            onEach = { jobs ->
-                jobs?.map { job ->
-                    val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
-                    val city = getLocationInfoUseCase.getCityById(job.cityId)
-                    job.toRequestServiceUiState(
-                        location = listOfNotNull(
-                            governorate?.name,
-                            city?.name
-                        ).joinToString(", "),
-                        imageUrl = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.imageUrl.orEmpty(),
-                        serviceType = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.title.orEmpty()
-                    )
-                }.also { mappedJobs ->
-                    updateState(
-                        screenState.value.copy(
-                            craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                                recentRelatedJobs = mappedJobs?.associate { requestService ->
-                                    requestService.id to requestService
-                                }.orEmpty()
-                            ),
-                            isRecentRelatedJobsLoading = false
-                        )
-                    )
-                    getOffersCountForRecentJobs()
-                }
-            },
-            onError = ::onError
-        )
-    }
-
-    private fun getOffersCountForRecentJobs() {
-        val recentJobs = screenState.value.craftsmanHomeUiState.recentRelatedJobs
-        if (recentJobs.isEmpty()) return
-
-        recentJobs.forEach { id, job ->
-            tryToObserve(
-                observe = { getOffersCountUseCase(id) },
-                onEach = { offersCount ->
-                    val updatedJob = job.copy(offersCount = offersCount ?: 0)
-                    updateState(
-                        screenState.value.copy(
-                            craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                                recentRelatedJobs = screenState.value.craftsmanHomeUiState.recentRelatedJobs.toMutableMap()
-                                    .apply {
-                                        this[id] = updatedJob
-                                    }
-                            )
-                        )
-                    )
-                },
-                onError = ::onError
-            )
-        }
-    }
-
     fun loadAvailableJobs() {
         tryToObserve(
             observe = { getAvailableJobsUseCase(screenState.value.craftsmanHomeUiState.phoneNumber) },
@@ -213,7 +160,6 @@ class CraftsmanHomeViewModel(
                                     requestService.id to requestService
                                 } ?: emptyMap()
                             ),
-                            isAvailableJobsLoading = false
                         )
                     )
                     getOffersCountForAvailableJobs()
@@ -239,7 +185,72 @@ class CraftsmanHomeViewModel(
                                     .apply {
                                         this[id] = updatedJob
                                     }
-                            )
+                            ),
+                            isAvailableJobsSuccess = true
+                        )
+                    )
+                    updateState(
+                        screenState.value.copy(
+                            isScreenLoading = false
+                        )
+                    )
+                },
+
+                onError = ::onError
+            )
+        }
+    }
+
+    fun loadRecentRelatedJobs() {
+        tryToObserve(
+            observe = { getRecentRelatedJobsUseCase(screenState.value.craftsmanHomeUiState.userServices.keys.toList(), screenState.value.craftsmanHomeUiState.phoneNumber) },
+            onEach = { jobs ->
+                jobs?.map { job ->
+                    val governorate = getLocationInfoUseCase.getGovernorateById(job.governorateId)
+                    val city = getLocationInfoUseCase.getCityById(job.cityId)
+                    job.toRequestServiceUiState(
+                        location = listOfNotNull(
+                            governorate?.name,
+                            city?.name
+                        ).joinToString(", "),
+                        imageUrl = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.imageUrl.orEmpty(),
+                        serviceType = screenState.value.craftsmanHomeUiState.userServices[job.serviceId]?.title.orEmpty()
+                    )
+                }.also { mappedJobs ->
+                    updateState(
+                        screenState.value.copy(
+                            craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                                recentRelatedJobs = mappedJobs?.associate { requestService ->
+                                    requestService.id to requestService
+                                }.orEmpty()
+                            ),
+                        )
+                    )
+                    getOffersCountForRecentJobs()
+                }
+            },
+            onError = ::onError
+        )
+    }
+
+    private fun getOffersCountForRecentJobs() {
+        val recentJobs = screenState.value.craftsmanHomeUiState.recentRelatedJobs
+        if (recentJobs.isEmpty()) return
+
+        recentJobs.forEach { id, job ->
+            tryToObserve(
+                observe = { getOffersCountUseCase(id) },
+                onEach = { offersCount ->
+                    val updatedJob = job.copy(offersCount = offersCount ?: 0)
+                    updateState(
+                        screenState.value.copy(
+                            craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                                recentRelatedJobs = screenState.value.craftsmanHomeUiState.recentRelatedJobs.toMutableMap()
+                                    .apply {
+                                        this[id] = updatedJob
+                                    }
+                            ),
+                            isRecentJobsSuccess = true
                         )
                     )
                 },
@@ -247,6 +258,8 @@ class CraftsmanHomeViewModel(
             )
         }
     }
+
+
 
     override fun onNotificationClick() {
         navigate(Destinations.Notification)
@@ -265,8 +278,7 @@ class CraftsmanHomeViewModel(
         updateState(
             screenState.value.copy(
                 errorMessage = null,
-                isAvailableJobsLoading = true,
-                isRecentRelatedJobsLoading = true,
+                isScreenLoading = true
             )
         )
         loadPhoneNumber()
@@ -275,8 +287,7 @@ class CraftsmanHomeViewModel(
     private fun onError(throwable: Throwable) {
         updateState(
             screenState.value.copy(
-                isAvailableJobsLoading = false,
-                isRecentRelatedJobsLoading = false,
+                isScreenLoading = false,
                 errorMessage = throwable.message ?: UNKNOWN_ERROR
             )
         )

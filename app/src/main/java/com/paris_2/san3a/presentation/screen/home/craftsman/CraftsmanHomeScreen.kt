@@ -113,7 +113,7 @@ fun CraftsmanHomeContent(
         },
         content = {
             when {
-                state.isAvailableJobsLoading || state.isRecentRelatedJobsLoading -> {
+                state.isScreenLoading -> {
                     LoadingScreen(
                         modifier = Modifier
                             .fillMaxSize()
@@ -220,8 +220,7 @@ private fun Preview() {
     CraftsmanHomeContent(
 
         state = CraftsmanHomeState(
-            isAvailableJobsLoading = false,
-            isRecentRelatedJobsLoading = false,
+            isScreenLoading = false,
             craftsmanHomeUiState = CraftsmanHomeUiState(
                 currentUserName = "Muhammed",
                 relatedJob = "Plumbing",
