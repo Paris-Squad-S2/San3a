@@ -17,6 +17,7 @@ import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.mapper.toUserUiState
 import com.paris_2.san3a.presentation.navigation.Destinations
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.coroutines.Dispatchers
@@ -455,6 +456,7 @@ class MoreViewModel(
     }
 
     override fun onNameValueChange(name: String) {
+        if (name.isBlank() || name.length > 50) return
         updateState(
             screenState.value.copy(
                 moreUiState = screenState.value.moreUiState.copy(
@@ -488,7 +490,7 @@ class MoreViewModel(
                 )
                 setUpAccountUseCase.savePersonalInfo(
                     phone = screenState.value.moreUiState.userUiState.phoneNumber,
-                    fullName = screenState.value.moreUiState.userUiState.name,
+                    fullName = screenState.value.moreUiState.userUiState.name.trim(),
                     profileUri = screenState.value.moreUiState.userUiState.imageUrl
                 )
             },

@@ -237,6 +237,11 @@ class AccountViewModel(
     }
 
     override fun onCustomerNameChanged(name: String) {
+        if (name.isBlank()) {
+            changeAppButtonStateInProfile(AppButtonState.Disabled)
+            return
+        }
+        if (name.length > 50) return
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
@@ -244,11 +249,7 @@ class AccountViewModel(
                 )
             )
         )
-        if (screenState.value.accountUiState.customerName.isNotBlank()) {
-            changeAppButtonStateInProfile(AppButtonState.Enable)
-        } else {
-            changeAppButtonStateInProfile(AppButtonState.Disabled)
-        }
+        changeAppButtonStateInProfile(AppButtonState.Enable)
     }
 
     override fun onDescriptionChanged(description: String) {
@@ -608,7 +609,7 @@ class AccountViewModel(
     override fun onProfileButtonClicked() {
         tryToExecute(
             execute = {
-                val fullName = screenState.value.accountUiState.customerName
+                val fullName = screenState.value.accountUiState.customerName.trim()
                 val profilePhotoUri =
                     screenState.value.accountUiState.customerProfilePhotoUri
                 if (fullName.isNotBlank()) {
