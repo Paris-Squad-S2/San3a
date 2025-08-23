@@ -20,15 +20,13 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonType
 @Composable
 fun BottomSection(
     onNextClick: () -> Unit,
-    modifier: Modifier = Modifier,
     pages : List<Page>,
     state: OnBoardingUIState,
     buttonText: String = stringResource(R.string.next)
 ) {
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 24.dp)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
