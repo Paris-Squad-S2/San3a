@@ -1,16 +1,13 @@
 package com.paris_2.san3a.presentation.screen.onboarding.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -100,9 +97,7 @@ fun Cards() {
         )
     )
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Theme.colors.background.screen),
+        modifier = Modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         cards.chunked(2).forEachIndexed { index, pair ->
@@ -111,11 +106,11 @@ fun Cards() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(
-                        top = if (index == 0) 0.dp else 16.dp
-                    )
                     .offset(x = if (index % 2 == 0) 16.dp else (-16).dp),
-                horizontalArrangement = if (index % 2 != 0) Arrangement.End else Arrangement.Start
+                horizontalArrangement = if (index % 2 != 0) Arrangement.spacedBy(
+                    12.dp,
+                    Alignment.End
+                ) else Arrangement.spacedBy(12.dp, Alignment.Start)
             ) {
                 OnBoardingCard(
                     title = card1.title,
@@ -126,7 +121,6 @@ fun Cards() {
                     iconBackgroundColor = card1.iconBackgroundColor,
                     modifier = Modifier.weight(1f)
                 )
-                Spacer(modifier = Modifier.width(12.dp))
                 OnBoardingCard(
                     title = card2.title,
                     icon = painterResource(id = card2.iconResId),

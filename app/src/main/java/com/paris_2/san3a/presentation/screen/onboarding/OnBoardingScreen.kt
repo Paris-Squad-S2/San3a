@@ -29,6 +29,7 @@ import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
@@ -77,11 +78,13 @@ fun OnBoardingScreenContent(
     }
 
     Column(
+        verticalArrangement = Arrangement.spacedBy(32.dp),
         modifier = modifier
             .fillMaxWidth()
             .statusBarsPadding()
             .navigationBarsPadding()
             .background(Theme.colors.background.screen)
+            .padding(vertical = 24.dp)
     )
     {
         AppButton(
@@ -90,11 +93,10 @@ fun OnBoardingScreenContent(
             text = stringResource(R.string.skip),
             modifier = Modifier
                 .align(Alignment.End)
-                .padding(top = 24.dp, end = 16.dp, bottom = 32.dp),
+                .padding(end = 16.dp),
         )
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.weight(1f)
         ) { index ->
             TopSection(
                 page = pages[index]

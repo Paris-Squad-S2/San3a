@@ -3,7 +3,6 @@ package com.paris_2.san3a.presentation.screen.onboarding.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -27,7 +26,7 @@ fun Offers(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth()
+            .padding(horizontal = 12.dp)
             .graphicsLayer {
                 clip = false
             },
@@ -37,8 +36,7 @@ fun Offers(
             onPrimaryButtonClick = {},
             modifier = Modifier
                 .graphicsLayer { rotationZ = 5f }
-                .offset(x = 0.dp,y = (-3.48).dp)
-               ,
+                .offset(x = 0.dp, y = (-3.48).dp),
             offerDetails = OfferDetailsUIState(
                 name = stringResource(R.string.ahmed_al_rashid),
                 rate = 4.7f,

@@ -11,16 +11,11 @@ fun TopSection(
     modifier: Modifier = Modifier,
     page: Page,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            page.item()
-        }
+        page.item()
     }
+
 }
