@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -61,24 +62,31 @@ fun EditProfileBottomSheet(
             }
         }
     ) {
-        EditProfileBottomSheetContent(
-            name = name,
-            onNameChange = onNameChange,
-            profilePhotoUri = profileUri,
-            onPickImageClick = onPickImageClick
-        )
+        LazyColumn {
 
-        AppButton(
-            type = AppButtonType.Primary,
-            size = AppButtonSize.Large,
-            text = stringResource(R.string.update),
-            state = if (isChanged) AppButtonState.Enable else AppButtonState.Disabled,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-                .navigationBarsPadding(),
-            onClick = onUpdateProfileClick,
-        )
+            item {
+                EditProfileBottomSheetContent(
+                    name = name,
+                    onNameChange = onNameChange,
+                    profilePhotoUri = profileUri,
+                    onPickImageClick = onPickImageClick
+                )
+            }
+
+            item {
+                AppButton(
+                    type = AppButtonType.Primary,
+                    size = AppButtonSize.Large,
+                    text = stringResource(R.string.update),
+                    state = if (isChanged) AppButtonState.Enable else AppButtonState.Disabled,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                        .navigationBarsPadding(),
+                    onClick = onUpdateProfileClick,
+                )
+            }
+        }
     }
 
 }
