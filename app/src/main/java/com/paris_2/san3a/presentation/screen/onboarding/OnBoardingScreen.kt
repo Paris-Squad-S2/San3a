@@ -2,17 +2,18 @@ package com.paris_2.san3a.presentation.screen.onboarding
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -86,26 +87,26 @@ fun OnBoardingScreenContent(
             .navigationBarsPadding()
             .background(Theme.colors.background.screen)
     ) {
-        LazyColumn(
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            contentPadding = PaddingValues(vertical = 96.dp)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(vertical = 96.dp),
+            verticalArrangement = Arrangement.Bottom,
         ) {
-            item {
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.padding(bottom = 32.dp)
-                ) { index ->
-                    TopSection(
-                        page = pages[index]
-                    )
-                }
-            }
-            item {
-                TextSection(
-                    page = pages[pagerState.currentPage]
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .padding(bottom = 32.dp)
+            ) { index ->
+                TopSection(
+                    page = pages[index]
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
+            TextSection(
+                page = pages[pagerState.currentPage]
+            )
         }
         BottomSection(
             modifier = Modifier
