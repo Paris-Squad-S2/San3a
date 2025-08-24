@@ -51,7 +51,6 @@ class CraftsmanHomeViewModel(
                         )
                     )
                 )
-                loadAvailableJobs()
                 loadRecentRelatedJobs()
             },
             onError = ::onError
@@ -157,6 +156,7 @@ class CraftsmanHomeViewModel(
                     updateState(
                         screenState.value.copy(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                                selectedServiceId = null,
                                 availableJobs = filteredJobs?.associate { requestService ->
                                     requestService.id to requestService
                                 } ?: emptyMap()
@@ -311,22 +311,12 @@ class CraftsmanHomeViewModel(
 
     }
 
-
-
     override fun onNotificationClick() {
         navigate(Destinations.Notification)
     }
 
     override fun onClickAllService() {
-        val allJobs = screenState.value.craftsmanHomeUiState.availableJobs.values
-        updateState(
-            screenState.value.copy(
-                craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
-                    selectedServiceId = null,
-                    availableJobs = allJobs.associateBy { it.id }
-                )
-            )
-        )
+        loadAvailableJobs()
     }
 
     override fun onServiceSelected(serviceId: String) {
