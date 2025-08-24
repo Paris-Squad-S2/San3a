@@ -99,13 +99,13 @@ fun MyJobOfferCard(
                     painter = rememberAsyncImagePainter(jobUiState.offer.craftsMan.profileUrl),
                     isVerified = jobUiState.offer.craftsMan.isVerify,
                     name = jobUiState.offer.craftsMan.name,
-                    postedTime = jobUiState.offer.preferredTime,
+                    postedTime = jobUiState.offer.createdAt,
                     description = jobUiState.offer.messageToCustomer,
                     amount = jobUiState.offer.price.toString(),
                     rate = jobUiState.offer.craftsMan.rating,
                     reviewsNumber = jobUiState.offer.craftsMan.review,
                     status = OfferStatus.PENDING_OFFER,
-                    time = jobUiState.offer.preferredTime,
+                    dateTime = jobUiState.offer.preferredDateTime,
                     stickyFooter = {
                         if (jobUiState.status == RequestStatus.ONGOING) {
                             when (jobUiState.offer.isAccepted) {
