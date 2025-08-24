@@ -331,11 +331,8 @@ class CraftsmanHomeViewModel(
 
     override fun onServiceSelected(serviceId: String) {
         val allJobs = screenState.value.craftsmanHomeUiState.availableJobs.values
-        val filteredJobs = if (serviceId.isNotEmpty()) {
-            allJobs.filter { it.serviceId == serviceId }
-        } else {
-            allJobs
-        }
+        val filteredJobs =  allJobs.filter { it.serviceId == serviceId }
+
         updateState(
             screenState.value.copy(
                 craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
