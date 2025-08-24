@@ -13,7 +13,6 @@ import com.paris_2.san3a.domain.usecase.user.GetUserSelectedServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
