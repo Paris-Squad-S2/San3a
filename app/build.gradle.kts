@@ -106,4 +106,8 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.accompanist.flowlayout)
     implementation(libs.logging.interceptor)
+
+    //Firebase messaging
+    implementation("com.google.firebase:firebase-messaging:24.0.0")
+
 }
