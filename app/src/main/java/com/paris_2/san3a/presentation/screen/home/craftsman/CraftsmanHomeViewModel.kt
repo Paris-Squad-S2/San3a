@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.screen.home.craftsman
 
-import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
@@ -13,9 +12,7 @@ import com.paris_2.san3a.domain.usecase.user.GetUserSelectedServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class CraftsmanHomeViewModel(
     private val getStatsUseCase: GetStatsUseCase,
@@ -318,6 +315,35 @@ class CraftsmanHomeViewModel(
 
     override fun onNotificationClick() {
         navigate(Destinations.Notification)
+    }
+
+    override fun onClickAllService() {
+        val allJobs = screenState.value.craftsmanHomeUiState.availableJobs.values
+        updateState(
+            screenState.value.copy(
+                craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                    selectedServiceId = null,
+                    availableJobs = allJobs.associateBy { it.id }
+                )
+            )
+        )
+    }
+
+    override fun onServiceSelected(serviceId: String) {
+        val allJobs = screenState.value.craftsmanHomeUiState.availableJobs.values
+        val filteredJobs = if (serviceId.isNotEmpty()) {
+            allJobs.filter { it.serviceId == serviceId }
+        } else {
+            allJobs
+        }
+        updateState(
+            screenState.value.copy(
+                craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                    selectedServiceId = serviceId,
+                    availableJobs = filteredJobs.associateBy { it.id }
+                )
+            )
+        )
     }
 
     override fun onJobClick(serviceId: String) {

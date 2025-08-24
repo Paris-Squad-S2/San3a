@@ -31,6 +31,7 @@ import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.StatsContainer
 import com.paris_2.san3a.presentation.screen.home.util.getGreetingMessage
 import com.paris_2.san3a.presentation.shared.components.AppBar
+import com.paris_2.san3a.presentation.shared.components.AppChip
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
@@ -120,6 +121,7 @@ fun CraftsmanHomeContent(
                             .background(Theme.colors.background.screen)
                     )
                 }
+
                 state.errorMessage != null -> {
                     LostConnectionScreen(
                         onRetry = {
@@ -131,6 +133,7 @@ fun CraftsmanHomeContent(
                             .padding(horizontal = 60.dp)
                     )
                 }
+
                 else -> {
                     LazyColumn(
                         modifier = Modifier
@@ -163,7 +166,11 @@ fun CraftsmanHomeContent(
                                     ),
                                     style = Theme.textStyle.title.medium,
                                     color = Theme.colors.shade.primary,
-                                    modifier = Modifier.padding(start = 16.dp, bottom = 16.dp, top = 8.dp)
+                                    modifier = Modifier.padding(
+                                        start = 16.dp,
+                                        bottom = 16.dp,
+                                        top = 8.dp
+                                    )
                                 )
                                 LazyRow(
                                     contentPadding = PaddingValues(horizontal = 16.dp),
@@ -192,6 +199,30 @@ fun CraftsmanHomeContent(
                                     color = Theme.colors.shade.primary,
                                     modifier = Modifier.padding(start = 16.dp, top = 8.dp)
                                 )
+                            }
+
+                            item {
+                                LazyRow(
+                                    contentPadding = PaddingValues(horizontal = 16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    item {
+                                        AppChip(
+                                            label = stringResource(R.string.all),
+                                            onClick = action::onClickAllService,
+                                            hasBorder = true,
+                                            isSelected = state.craftsmanHomeUiState.selectedServiceId == null
+                                        )
+                                    }
+                                    items(state.craftsmanHomeUiState.userServices.values.toList()) {
+                                        AppChip(
+                                            label = it.title,
+                                            onClick = { action.onServiceSelected(it.id) },
+                                            isSelected = state.craftsmanHomeUiState.selectedServiceId == it.id,
+                                            hasBorder = true
+                                        )
+                                    }
+                                }
                             }
                             items(state.craftsmanHomeUiState.availableJobs.values.toList()) {
                                 RequestCardForCraftsMan(
@@ -324,6 +355,8 @@ private fun Preview() {
 
         action = object : CraftsmanInteractionListener {
             override fun onNotificationClick() {}
+            override fun onClickAllService() {}
+            override fun onServiceSelected(serviceId: String) {}
             override fun onJobClick(serviceId: String) {}
             override fun onRetry() {}
         }
