@@ -1,6 +1,8 @@
 package com.paris_2.san3a.presentation.screen.onboarding
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,6 +28,7 @@ fun onboardingPages(): List<Page> {
                 Image(
                     painter = painterResource(id = R.drawable.img_onboarding1),
                     modifier = Modifier
+                        .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     contentScale = ContentScale.Fit,
                     contentDescription = ""
