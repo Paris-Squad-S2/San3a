@@ -31,8 +31,8 @@ open class BaseRepository {
 
     suspend fun <T> safeNetworkCall(
         exception: San3aException,
+        maxAttempts: Int = 1,
         call: suspend () -> T,
-        maxAttempts: Int = 1
     ): T {
         validateNetworkConnection()
         var attempt = 0
