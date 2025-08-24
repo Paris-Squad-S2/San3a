@@ -78,9 +78,9 @@ class CustomerHomeViewModel(
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
-                    bottomSheetSelectedGovernmentName = "",
-                    bottomSheetSelectedCityName = "",
-                    bottomSheetAddressDetails = "",
+                    bottomSheetSelectedGovernorate = screenState.value.customerUiState.governorate,
+                    bottomSheetSelectedCity = screenState.value.customerUiState.city,
+                    bottomSheetAddressDetails = screenState.value.customerUiState.addressDetails,
                     isGovernmentSheetVisible = false,
                 )
             )
@@ -205,10 +205,8 @@ class CustomerHomeViewModel(
             updateState(
                 screenState.value.copy(
                     bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                        bottomSheetSelectedGovernmentName = government.name,
-                        bottomSheetSelectedGovernmentId = government.id,
-                        bottomSheetSelectedCityName = "",
-                        bottomSheetSelectedCityId = null,
+                        bottomSheetSelectedGovernorate = government,
+                        bottomSheetSelectedCity = null,
                     )
                 )
             )
@@ -228,8 +226,7 @@ class CustomerHomeViewModel(
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                    bottomSheetSelectedCityName = city?.name.orEmpty(),
-                    bottomSheetSelectedCityId = city?.id,
+                    bottomSheetSelectedCity = city,
                     isGovernmentSheetVisible = false
                 )
             )
@@ -261,8 +258,8 @@ class CustomerHomeViewModel(
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
-                    bottomSheetSelectedGovernmentName = "",
-                    bottomSheetSelectedCityName = "",
+                    bottomSheetSelectedGovernorate = null,
+                    bottomSheetSelectedCity = null,
                     bottomSheetAddressDetails = "",
                     isGovernmentSheetVisible = false,
                 )
@@ -279,8 +276,8 @@ class CustomerHomeViewModel(
     }
 
     override fun createRequest() {
-        if (screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId == null
-            || screenState.value.bottomSheetUiState.bottomSheetSelectedCityId == null
+        if (screenState.value.bottomSheetUiState.bottomSheetSelectedGovernorate == null
+            || screenState.value.bottomSheetUiState.bottomSheetSelectedCity == null
         ) {
             updateState(
                 screenState.value.copy(
@@ -312,9 +309,9 @@ class CustomerHomeViewModel(
                         id = "",
                         title = screenState.value.bottomSheetUiState.bottomSheetSubtitle,
                         description = screenState.value.bottomSheetUiState.bottomSheetDescription,
-                        governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId
+                        governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernorate?.id
                             ?: 0,
-                        cityId = screenState.value.bottomSheetUiState.bottomSheetSelectedCityId
+                        cityId = screenState.value.bottomSheetUiState.bottomSheetSelectedCity?.id
                             ?: 0,
                         locationDetails = screenState.value.bottomSheetUiState.bottomSheetAddressDetails,
                         image = screenState.value.bottomSheetUiState.bottomSheetImages,
@@ -376,7 +373,7 @@ class CustomerHomeViewModel(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetGovernments = governments,
-                    bottomSheetSelectedGovernmentName = "",
+                    bottomSheetSelectedGovernorate = null,
                     locationBottomSheetType = LocationBottomSheetContentType.GOVERNMENT,
                 ),
             )
@@ -397,7 +394,7 @@ class CustomerHomeViewModel(
                 screenState.value.copy(
                     bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                         bottomSheetCities = cities,
-                        bottomSheetSelectedCityName = "",
+                        bottomSheetSelectedCity = null,
                         locationBottomSheetType = LocationBottomSheetContentType.CITY,
                     ),
                 )
@@ -463,8 +460,9 @@ class CustomerHomeViewModel(
                 customerUiState = screenState.value.customerUiState.copy(
                     id = user.id,
                     currentUserName = user.fullName,
-                    government = governorate?.name.orEmpty(),
-                    city = city?.name.orEmpty(),
+                    governorate = governorate,
+                    city = city,
+                    addressDetails = user.location.addressInDetails,
                 )
             )
         )

@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
@@ -78,28 +77,10 @@ fun CraftsManOffer(
 
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .let {
-                if (addShadow) {
-                    it
-                        .graphicsLayer {
-                            shadowElevation = 0.dp.toPx()
-                            translationY = (-3.48).dp.toPx()
-                        }
-                        .shadow(
-                            elevation = 69.52.dp,
-                            shape = RoundedCornerShape(Theme.radius.extraLarge),
-                            clip = false,
-                            ambientColor = Color.Black.copy(alpha = 0.08f),
-                            spotColor = Color.Black.copy(alpha = 0.08f)
-                        )
-                } else {
-                    it
-                }
-            },
+            .fillMaxWidth(),
         shape = RoundedCornerShape(Theme.radius.extraLarge),
         colors = CardDefaults.cardColors(containerColor = animatedBgColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = if (addShadow) 3.dp else 0.dp)
     ) {
 
         val paddingAcceptedRequest = if (offerDetails.status == OfferStatus.OFFER_ACCEPTED || offerDetails.status == OfferStatus.YOUR_ACCEPTED_OFFER)  2.dp  else 0.dp
