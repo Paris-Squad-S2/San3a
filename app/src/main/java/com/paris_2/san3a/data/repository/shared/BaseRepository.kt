@@ -29,16 +29,27 @@ open class BaseRepository {
         }
     }
 
-    suspend fun <T> safeNetworkCall(exception: San3aException, call: suspend () -> T): T {
+    suspend fun <T> safeNetworkCall(
+        exception: San3aException,
+        maxAttempts: Int = 1,
+        call: suspend () -> T,
+    ): T {
         validateNetworkConnection()
-        return try {
-            call()
-        } catch (e: San3aException) {
-            Log.d("BaseRepository", "safeCall: ${e.message}")
-            throw e
-        } catch (a: Exception) {
-            Log.e("BaseRepository", "safeCall: ${a.message}")
-            throw exception
+        var attempt = 0
+        while (attempt < maxAttempts) {
+            try {
+                return call()
+            } catch (e: San3aException) {
+                Log.d("BaseRepository", "safeNetworkCall attempt $attempt: ${e.message}")
+                throw e
+            } catch (a: Exception) {
+                Log.e("BaseRepository", "safeNetworkCall attempt $attempt: ${a.message}")
+                attempt++
+                if (attempt >= maxAttempts) {
+                    throw exception
+                }
+            }
         }
+        throw exception
     }
 }

@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
-import com.paris_2.san3a.presentation.utill.formatToCurrency
 
 @Composable
 fun StatsContainer(
@@ -65,7 +64,7 @@ fun StatsContainer(
                 contentDescription = stringResource(R.string.earnings),
                 iconTint = Theme.colors.additional.primary.green,
                 label = stringResource(R.string.earnings),
-                value = stringResource(R.string.egp, earnings.toLong().formatToCurrency())
+                value = earnings.toString()+" "+stringResource(R.string.egp)
             )
 
             VerticalDivider(

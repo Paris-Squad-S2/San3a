@@ -333,7 +333,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="jobs_done">Jobs Done</string>
     <string name="earnings">Earnings</string>
     <string name="rating">Rating</string>
-    <string name="egp">%1$s EGP</string>
+    <string name="egp">EGP</string>
     <string name="see_less">See less</string>
     <string name="see_more">See more</string>
     <string name="min_ago">%1$d min ago</string>

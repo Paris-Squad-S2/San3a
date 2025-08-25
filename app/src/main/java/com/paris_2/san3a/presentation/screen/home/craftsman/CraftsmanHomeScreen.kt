@@ -134,7 +134,7 @@ fun CraftsmanHomeContent(
                     )
                 }
 
-                else -> {
+                state.isRecentJobsSuccess && state.isAvailableJobsSuccess -> {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
