@@ -113,9 +113,6 @@ fun CraftsmanHomeContent(
             )
         },
         content = {
-            Log.d("state", state.isScreenLoading.toString())
-            Log.d("state", state.isRecentJobsSuccess.toString())
-            Log.d("state", state.isAvailableJobsSuccess.toString())
             when {
                 state.isScreenLoading -> {
                     LoadingScreen(
