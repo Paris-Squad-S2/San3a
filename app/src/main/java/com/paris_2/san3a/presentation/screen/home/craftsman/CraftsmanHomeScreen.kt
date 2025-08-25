@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.home.craftsman
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -112,6 +113,9 @@ fun CraftsmanHomeContent(
             )
         },
         content = {
+            Log.d("state", state.isScreenLoading.toString())
+            Log.d("state", state.isRecentJobsSuccess.toString())
+            Log.d("state", state.isAvailableJobsSuccess.toString())
             when {
                 state.isScreenLoading -> {
                     LoadingScreen(
@@ -131,7 +135,7 @@ fun CraftsmanHomeContent(
                             .padding(horizontal = 60.dp)
                     )
                 }
-                else -> {
+                state.isRecentJobsSuccess && state.isAvailableJobsSuccess -> {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
