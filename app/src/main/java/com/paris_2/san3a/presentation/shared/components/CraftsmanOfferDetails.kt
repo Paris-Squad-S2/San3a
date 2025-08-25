@@ -140,7 +140,7 @@ fun CraftsmanOfferDetails(
                                     it,
                                 ),
                                 style = Theme.textStyle.body.small.medium,
-                                color = Theme.colors.shade.primary
+                                color = Theme.colors.shade.secondary
                             )
                         }
                     }
@@ -173,6 +173,8 @@ fun CraftsmanOfferDetails(
                 text = amount,
                 color = Theme.colors.shade.secondary,
                 style = Theme.textStyle.body.small.medium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Box(
                 modifier = Modifier
@@ -180,7 +182,6 @@ fun CraftsmanOfferDetails(
                     .size(2.6.dp)
                     .clip(CircleShape)
                     .background(Theme.colors.shade.tertiary)
-
             )
             Icon(
                 modifier = Modifier
@@ -193,7 +194,9 @@ fun CraftsmanOfferDetails(
             Text(
                 text = time,
                 color = Theme.colors.shade.secondary,
-                style = Theme.textStyle.body.small.medium
+                style = Theme.textStyle.body.small.medium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
