@@ -52,6 +52,7 @@ class CraftsmanHomeViewModel(
                     )
                 )
                 loadRecentRelatedJobs()
+                loadAvailableJobs()
             },
             onError = ::onError
         )
@@ -282,7 +283,13 @@ class CraftsmanHomeViewModel(
     }
 
     override fun onClickAllService() {
-        loadAvailableJobs()
+        updateState(
+            screenState.value.copy(
+                craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                    selectedServiceId = null,
+                )
+            )
+        )
     }
 
     override fun onServiceSelected(serviceId: String) {
@@ -293,7 +300,7 @@ class CraftsmanHomeViewModel(
             screenState.value.copy(
                 craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
                     selectedServiceId = serviceId,
-                    availableJobs = filteredJobs.associateBy { it.id }
+                    filteredAvailableJobs = filteredJobs.associateBy { it.id }
                 )
             )
         )

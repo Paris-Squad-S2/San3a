@@ -214,7 +214,7 @@ fun CraftsmanHomeContent(
                                             isSelected = state.craftsmanHomeUiState.selectedServiceId == null
                                         )
                                     }
-                                    items(state.craftsmanHomeUiState.userServices.values.toList()) {
+                                    items( state.craftsmanHomeUiState.userServices.values.toList()) {
                                         AppChip(
                                             label = it.title,
                                             onClick = { action.onServiceSelected(it.id) },
@@ -224,7 +224,7 @@ fun CraftsmanHomeContent(
                                     }
                                 }
                             }
-                            items(state.craftsmanHomeUiState.availableJobs.values.toList()) {
+                            items(if(state.craftsmanHomeUiState.selectedServiceId == null) state.craftsmanHomeUiState.availableJobs.values.toList() else state.craftsmanHomeUiState.filteredAvailableJobs.values.toList()) {
                                 RequestCardForCraftsMan(
                                     title = it.title,
                                     type = it.serviceType,

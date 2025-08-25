@@ -27,6 +27,7 @@ data class CraftsmanHomeUiState(
     val stats: StatsUiState = StatsUiState(),
     val recentRelatedJobs: Map<String, RequestServiceUiState> = emptyMap(),
     val availableJobs: Map<String, RequestServiceUiState> = emptyMap(),
+    val filteredAvailableJobs: Map<String, RequestServiceUiState> = emptyMap()
 )
 
 data class StatsUiState(
