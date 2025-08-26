@@ -59,33 +59,11 @@ fun MessageDetailsScreen(
 ) {
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
-    when {
-        state.errorMessage != null -> {
-            LostConnectionScreen(
-                onRetry = viewModel::onRetryClick,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.screen)
-                    .padding(horizontal = 60.dp)
-            )
-        }
-
-        state.isLoading -> {
-            LoadingScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.screen)
-            )
-        }
-
-        else -> {
-            MessageDetailsContent(
-                state = state,
-                messageInteractionListener = viewModel,
-                viewModel = viewModel,
-            )
-        }
-    }
+    MessageDetailsContent(
+        state = state,
+        messageInteractionListener = viewModel,
+        viewModel = viewModel,
+    )
 
 }
 
@@ -110,7 +88,7 @@ fun MessageDetailsContent(
             topBar = {
                 AppBar(
                     modifier = Modifier,
-                    title = state.chatTitle,
+                    title = state.chatTitle ?: stringResource(R.string.loading),
                     actionIcon = {
                         Icon(
                             modifier = Modifier
@@ -136,80 +114,105 @@ fun MessageDetailsContent(
                 )
             },
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.screen)
-                    .statusBarsPadding(),
-            ) {
-                if (state.groupedMessages.isEmpty()) {
-                    PlaceHolderScreen(
+            when {
+                state.errorMessage != null -> {
+                    LostConnectionScreen(
+                        onRetry = viewModel::onRetryClick,
                         modifier = Modifier
                             .fillMaxSize()
                             .background(Theme.colors.background.screen)
-                            .padding(horizontal = 60.dp),
-                        image = R.drawable.img_message,
-                        title = R.string.no_messages_yet,
-                        description = R.string.once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here,
+                            .padding(horizontal = 60.dp)
                     )
-                } else {
-                    MessageList(
-                        messagesSize = state.messagesSize,
-                        groupedMessages = state.groupedMessages,
-                        sendingMessage = state.sendingMessage,
+                }
+
+                state.isLoading -> {
+                    LoadingScreen(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 16.dp)
-                            .align(Alignment.Center)
-                            .imePadding()
-                            .navigationBarsPadding()
+                            .background(Theme.colors.background.screen)
                     )
                 }
-                MessageTextField(
-                    value = state.textMessage,
-                    onValueChange = viewModel::onMessageChange,
-                    sendButtonState = state.sendButtonState,
-                    imageIcon = painterResource(R.drawable.ic_image),
-                    voiceIcon = painterResource(R.drawable.ic_voice),
-                    sendIcon = painterResource(R.drawable.ic_send),
-                    onImageClick = { imagePickerLauncher.launch(MessagesDetailsViewModel.IMAGE_TYPE) },
-                    onSendClick = viewModel::sendMessage,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .imePadding()
-                )
 
-                DropdownMenu(
-                    shape = RoundedCornerShape(12.dp),
-                    containerColor = Theme.colors.background.card,
-                    modifier = Modifier
-                        .width(120.dp)
-                        .align(Alignment.BottomCenter),
-                    offset = DpOffset(LocalConfiguration.current.screenWidthDp.dp / 1.5f, 50.dp),
-                    expanded = state.showDropMenu,
-                    onDismissRequest = messageInteractionListener::onDismissDropMenu
-                ) {
-                    DropdownMenuItem(
+                else -> {
+                    Box(
                         modifier = Modifier
-                            .padding(start = 4.dp)
-                            .align(Alignment.CenterHorizontally),
-                        text = {
-                            Text(
-                                text = stringResource(R.string.delete_chat),
-                                style = Theme.textStyle.body.medium.medium,
-                                color = Theme.colors.additional.primary.error,
-                                textAlign = TextAlign.Center
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen)
+                            .statusBarsPadding(),
+                    ) {
+                        if (state.groupedMessages.isEmpty()) {
+                            PlaceHolderScreen(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Theme.colors.background.screen)
+                                    .padding(horizontal = 60.dp),
+                                image = R.drawable.img_message,
+                                title = R.string.no_messages_yet,
+                                description = R.string.once_you_start_accepting_or_posting_requests_chats_with_craftsmen_will_appear_here,
                             )
-                        },
-                        onClick = messageInteractionListener::onDropMenuItemClick
-                    )
-                }
-                if (state.showDeleteChatBottomSheet) {
-                    DeleteChatBottomSheet(
-                        onDismissRequest = viewModel::onDismissDeleteBottomSheet,
-                        onDeleteChat = viewModel::onDeleteButtonClick,
-                        buttonState = state.bottomSheetButtonState,
-                    )
+                        } else {
+                            MessageList(
+                                messagesSize = state.messagesSize,
+                                groupedMessages = state.groupedMessages,
+                                sendingMessage = state.sendingMessage,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(horizontal = 16.dp)
+                                    .align(Alignment.Center)
+                                    .imePadding()
+                                    .navigationBarsPadding()
+                            )
+                        }
+                        MessageTextField(
+                            value = state.textMessage,
+                            onValueChange = viewModel::onMessageChange,
+                            sendButtonState = state.sendButtonState,
+                            imageIcon = painterResource(R.drawable.ic_image),
+                            voiceIcon = painterResource(R.drawable.ic_voice),
+                            sendIcon = painterResource(R.drawable.ic_send),
+                            onImageClick = { imagePickerLauncher.launch(MessagesDetailsViewModel.IMAGE_TYPE) },
+                            onSendClick = viewModel::sendMessage,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .imePadding()
+                        )
+
+                        DropdownMenu(
+                            shape = RoundedCornerShape(12.dp),
+                            containerColor = Theme.colors.background.card,
+                            modifier = Modifier
+                                .width(120.dp)
+                                .align(Alignment.BottomCenter),
+                            offset = DpOffset(
+                                LocalConfiguration.current.screenWidthDp.dp / 1.5f,
+                                50.dp
+                            ),
+                            expanded = state.showDropMenu,
+                            onDismissRequest = messageInteractionListener::onDismissDropMenu
+                        ) {
+                            DropdownMenuItem(
+                                modifier = Modifier
+                                    .padding(start = 4.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                text = {
+                                    Text(
+                                        text = stringResource(R.string.delete_chat),
+                                        style = Theme.textStyle.body.medium.medium,
+                                        color = Theme.colors.additional.primary.error,
+                                        textAlign = TextAlign.Center
+                                    )
+                                },
+                                onClick = messageInteractionListener::onDropMenuItemClick
+                            )
+                        }
+                        if (state.showDeleteChatBottomSheet) {
+                            DeleteChatBottomSheet(
+                                onDismissRequest = viewModel::onDismissDeleteBottomSheet,
+                                onDeleteChat = viewModel::onDeleteButtonClick,
+                                buttonState = state.bottomSheetButtonState,
+                            )
+                        }
+                    }
                 }
             }
         }

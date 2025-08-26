@@ -65,8 +65,6 @@ class MessagesViewModel(
                 updateState(
                     screenState.value.copy(
                         chatsMap = chats?.toChatUIMap(screenState.value.currentUserId) ?: emptyMap(),
-                        isLoading = false,
-                        error = null
                     )
                 )
                 getUserChatsInfo(screenState.value.chatsMap)
@@ -91,7 +89,9 @@ class MessagesViewModel(
                                     theOtherUserName = user.fullName,
                                     theOtherProfilePhoto = user.profilePhoto ?: fakeImage,
                                 )
-                            }
+                            },
+                            isLoading = false,
+                            error = null
                         )
                     )
                 },

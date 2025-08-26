@@ -11,7 +11,7 @@ import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.datetime.LocalDateTime
 
 data class MyJobsCraftsmanScreenState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val myOffersCraftsmanUiState: MyOfferCraftsmanUiState = MyOfferCraftsmanUiState(),
     val errorMessage: UiText? = null,
     val isNoInternet: Boolean = false,

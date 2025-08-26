@@ -11,7 +11,7 @@ data class MoreScreenState(
     val errorMessage: UiText? = null,
     val successMessageSnackBar: UiText? = null,
     val isNoInternet: Boolean = false,
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val showSnackBarSuccess: Boolean = false,
     val showSnackBarError: Boolean = false,
     val isLoadingChangeAccount: Boolean = false,
