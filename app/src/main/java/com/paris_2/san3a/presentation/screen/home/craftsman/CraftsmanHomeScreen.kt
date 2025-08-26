@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.home.craftsman
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -31,10 +32,12 @@ import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.presentation.screen.home.craftsman.components.StatsContainer
 import com.paris_2.san3a.presentation.screen.home.util.getGreetingMessage
 import com.paris_2.san3a.presentation.shared.components.AppBar
+import com.paris_2.san3a.presentation.shared.components.AppChip
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.NotificationIcon
+import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
 import com.paris_2.san3a.presentation.shared.components.RequestCardForCraftsMan
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.datetime.LocalDateTime
@@ -120,6 +123,7 @@ fun CraftsmanHomeContent(
                             .background(Theme.colors.background.screen)
                     )
                 }
+
                 state.errorMessage != null -> {
                     LostConnectionScreen(
                         onRetry = {
@@ -131,6 +135,18 @@ fun CraftsmanHomeContent(
                             .padding(horizontal = 60.dp)
                     )
                 }
+
+                state.craftsmanHomeUiState.recentRelatedJobs.isEmpty() -> {
+                    Box(Modifier.fillMaxSize()) {
+                        PlaceHolderScreen(
+                            Modifier.align(Alignment.Center),
+                            image = R.drawable.img_placeholder_lllustration1,
+                            title = R.string.no_available_jobs,
+                            description = R.string.go_to_more_and_select_services_to_see_more_jobs
+                        )
+                    }
+                }
+
                 else -> {
                     LazyColumn(
                         modifier = Modifier
@@ -163,7 +179,11 @@ fun CraftsmanHomeContent(
                                     ),
                                     style = Theme.textStyle.title.medium,
                                     color = Theme.colors.shade.primary,
-                                    modifier = Modifier.padding(start = 16.dp, bottom = 16.dp, top = 8.dp)
+                                    modifier = Modifier.padding(
+                                        start = 16.dp,
+                                        bottom = 16.dp,
+                                        top = 8.dp
+                                    )
                                 )
                                 LazyRow(
                                     contentPadding = PaddingValues(horizontal = 16.dp),
@@ -193,7 +213,31 @@ fun CraftsmanHomeContent(
                                     modifier = Modifier.padding(start = 16.dp, top = 8.dp)
                                 )
                             }
-                            items(state.craftsmanHomeUiState.availableJobs.values.toList()) {
+
+                            item {
+                                LazyRow(
+                                    contentPadding = PaddingValues(horizontal = 16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    item {
+                                        AppChip(
+                                            label = stringResource(R.string.all),
+                                            onClick = action::onClickAllService,
+                                            hasBorder = true,
+                                            isSelected = state.craftsmanHomeUiState.selectedServiceId == null
+                                        )
+                                    }
+                                    items( state.craftsmanHomeUiState.userServices.values.toList()) {
+                                        AppChip(
+                                            label = it.title,
+                                            onClick = { action.onServiceSelected(it.id) },
+                                            isSelected = state.craftsmanHomeUiState.selectedServiceId == it.id,
+                                            hasBorder = true
+                                        )
+                                    }
+                                }
+                            }
+                            items(if(state.craftsmanHomeUiState.selectedServiceId == null) state.craftsmanHomeUiState.availableJobs.values.toList() else state.craftsmanHomeUiState.filteredAvailableJobs.values.toList()) {
                                 RequestCardForCraftsMan(
                                     title = it.title,
                                     type = it.serviceType,
@@ -326,6 +370,8 @@ private fun Preview() {
 
         action = object : CraftsmanInteractionListener {
             override fun onNotificationClick() {}
+            override fun onClickAllService() {}
+            override fun onServiceSelected(serviceId: String) {}
             override fun onJobClick(serviceId: String) {}
             override fun onRetry() {}
         }

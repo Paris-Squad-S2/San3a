@@ -10,7 +10,7 @@ data class MessagesState(
     val chatsMap: Map<String, ChatUI> = emptyMap(),
     val currentUserId: String = "",
     val notificationsCount: Int = 0,
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val error: String? = null,
 )
 

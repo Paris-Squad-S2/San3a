@@ -8,7 +8,7 @@ import com.paris_2.san3a.domain.entity.User
 
 
 data class MyRequestCustomerScreenState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val myRequestCustomerUiState: MyRequestCustomerUiState = MyRequestCustomerUiState(),
     val errorMessage: String? = null,
 )

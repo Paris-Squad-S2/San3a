@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.screen.home.craftsman
 
-import android.util.Log
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
@@ -52,8 +51,8 @@ class CraftsmanHomeViewModel(
                         )
                     )
                 )
-                loadAvailableJobs()
                 loadRecentRelatedJobs()
+                loadAvailableJobs()
             },
             onError = ::onError
         )
@@ -160,6 +159,7 @@ class CraftsmanHomeViewModel(
                     updateState(
                         screenState.value.copy(
                             craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                                selectedServiceId = null,
                                 availableJobs = filteredJobs?.associate { requestService ->
                                     requestService.id to requestService
                                 } ?: emptyMap()
@@ -280,6 +280,30 @@ class CraftsmanHomeViewModel(
 
     override fun onNotificationClick() {
         navigate(Destinations.Notification)
+    }
+
+    override fun onClickAllService() {
+        updateState(
+            screenState.value.copy(
+                craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                    selectedServiceId = null,
+                )
+            )
+        )
+    }
+
+    override fun onServiceSelected(serviceId: String) {
+        val allJobs = screenState.value.craftsmanHomeUiState.availableJobs.values
+        val filteredJobs =  allJobs.filter { it.serviceId == serviceId }
+
+        updateState(
+            screenState.value.copy(
+                craftsmanHomeUiState = screenState.value.craftsmanHomeUiState.copy(
+                    selectedServiceId = serviceId,
+                    filteredAvailableJobs = filteredJobs.associateBy { it.id }
+                )
+            )
+        )
     }
 
     override fun onJobClick(serviceId: String) {

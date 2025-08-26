@@ -8,6 +8,7 @@ import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCount
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.fakeImage
+import kotlinx.coroutines.delay
 
 class MessagesViewModel(
     private val getChatsByUserIdUseCase: GetChatsByUserIdUseCase,
@@ -65,8 +66,6 @@ class MessagesViewModel(
                 updateState(
                     screenState.value.copy(
                         chatsMap = chats?.toChatUIMap(screenState.value.currentUserId) ?: emptyMap(),
-                        isLoading = false,
-                        error = null
                     )
                 )
                 getUserChatsInfo(screenState.value.chatsMap)
@@ -91,7 +90,14 @@ class MessagesViewModel(
                                     theOtherUserName = user.fullName,
                                     theOtherProfilePhoto = user.profilePhoto ?: fakeImage,
                                 )
-                            }
+                            },
+                            error = null
+                        )
+                    )
+                    delay(TIMEOUT)
+                    updateState(
+                        screenState.value.copy(
+                            isLoading = false,
                         )
                     )
                 },
@@ -130,5 +136,9 @@ class MessagesViewModel(
         navigate(
             Destinations.MessageDetails(chatId, screenState.value.currentUserId, otherUserId),
         )
+    }
+
+    private companion object {
+        const val TIMEOUT = 200L
     }
 }

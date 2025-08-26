@@ -359,5 +359,8 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="pm">PM</string>
     <string name="loading">Loading…</string>
     <string name="update">Update</string>
+    <string name="all">All</string>
+    <string name="no_available_jobs">No available jobs at the moment</string>
+    <string name="go_to_more_and_select_services_to_see_more_jobs">Go to the "More" screen and select services you can do to discover more jobs.</string>
 
 </resources>

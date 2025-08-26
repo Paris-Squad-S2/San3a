@@ -9,4 +9,5 @@ interface LocationInteractionListener {
     fun onNavigateBack()
     fun onShowBottomSheet(type: LocationBottomSheetType)
     fun onDismissBottomSheet()
+    fun onDismissSnackBar()
 }

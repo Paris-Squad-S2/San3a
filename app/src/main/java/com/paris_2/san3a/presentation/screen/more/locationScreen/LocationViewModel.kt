@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.more.locationScreen
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.Location
+import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
@@ -36,21 +37,26 @@ class LocationViewModel(
             onSuccess = { result ->
                 updateState(
                     screenState.value.copy(
-                        isLoading = false, locationUiState = screenState.value.locationUiState.copy(
+                        locationUiState = screenState.value.locationUiState.copy(
                             governorates = result
                         )
                     )
                 )
             },
             onError = {
-                updateState(screenState.value.copy(isLoading = false, isNoInternet = true))
+                updateState(
+                    screenState.value.copy(
+                        isLoading = false,
+                        showSnackBarError = true,
+                        errorMessage = UiText.StringResource(R.string.some_error_happened)
+                    )
+                )
+                hideSnackBar()
             },
         )
     }
 
     private fun fetchCities(governorateId: Int) {
-        updateState(screenState.value.copy(isLoading = true))
-
         tryToExecute(
             execute = {
                 getLocationInfoUseCase.getCities(governorateId)
@@ -58,14 +64,21 @@ class LocationViewModel(
             onSuccess = { cities ->
                 updateState(
                     screenState.value.copy(
-                        isLoading = false, locationUiState = screenState.value.locationUiState.copy(
+                        locationUiState = screenState.value.locationUiState.copy(
                             cities = cities
                         )
                     )
                 )
             },
             onError = {
-                updateState(screenState.value.copy(isLoading = false, isNoInternet = true))
+                updateState(
+                    screenState.value.copy(
+                        isLoading = false,
+                        showSnackBarError = true,
+                        errorMessage = UiText.StringResource(R.string.some_error_happened)
+                    )
+                )
+                hideSnackBar()
             },
         )
     }
@@ -76,7 +89,8 @@ class LocationViewModel(
         if (uiState.selectedGovernorateId == null || uiState.selectedCityId == null || uiState.addressInDetails.isBlank()) {
             updateState(
                 screenState.value.copy(
-                    showSnackBarError = true, errorMessage = UiText.StringResource(R.string.please_select_location_and_write_address_in_details)
+                    showSnackBarError = true,
+                    errorMessage = UiText.StringResource(R.string.please_select_location_and_write_address_in_details)
                 )
             )
             hideSnackBar()
@@ -91,38 +105,50 @@ class LocationViewModel(
 
         tryToExecute(
             execute = {
-            val phone = getPhoneNumberUseCase()
-            val location = Location(
-                governmentId = uiState.selectedGovernorateId,
-                cityId = uiState.selectedCityId,
-                addressInDetails = uiState.addressInDetails
-            )
-            setUpAccountUseCase.saveLocation(phone, location)
-        }, onSuccess = {
-            updateState(
-                screenState.value.copy(
-                    showSnackBarSuccess = true,
-                    locationButtonState = AppButtonState.Enable,
-                    successMessageSnackBar = UiText.StringResource(R.string.success_location_saved)
+                val phone = getPhoneNumberUseCase()
+                val location = Location(
+                    governmentId = uiState.selectedGovernorateId,
+                    cityId = uiState.selectedCityId,
+                    addressInDetails = uiState.addressInDetails
                 )
-            )
-            hideSnackBar()
-            navigateUp()
-        }, onError = {
-            updateState(
-                screenState.value.copy(
-                    showSnackBarError = true,
-                    locationButtonState = AppButtonState.Enable,
-                    errorMessage = UiText.StringResource(R.string.some_error_happened)
+                setUpAccountUseCase.saveLocation(phone, location)
+            }, onSuccess = {
+                updateState(
+                    screenState.value.copy(
+                        showSnackBarSuccess = true,
+                        locationButtonState = AppButtonState.Enable,
+                        successMessageSnackBar = UiText.StringResource(R.string.success_location_saved)
+                    )
                 )
-            )
-            hideSnackBar()
-        })
+                hideSnackBar()
+                navigateUp()
+            }, onError = {
+                if (it is NoInternetConnectionException) {
+                    updateState(
+                        screenState.value.copy(
+                            isNoInternet = true,
+                            locationButtonState = AppButtonState.Enable,
+                            isLoading = false
+                        )
+                    )
+                } else {
+                    updateState(
+                        screenState.value.copy(
+                            showSnackBarError = true,
+                            locationButtonState = AppButtonState.Enable,
+                            errorMessage = UiText.StringResource(R.string.some_error_happened)
+                        )
+                    )
+                    hideSnackBar()
+                }
+            }
+        )
     }
 
     override fun onClickRetry() {
-        updateState(screenState.value.copy(isNoInternet = false))
+        updateState(screenState.value.copy(isNoInternet = false, isLoading = true))
         fetchGovernorates()
+        fetchUserLocation()
     }
 
     override fun onNavigateBack() {
@@ -219,35 +245,54 @@ class LocationViewModel(
         )
     }
 
-    private fun fetchUserLocation() {
-        tryToExecute(execute = {
-            val phone = getPhoneNumberUseCase()
-            getUserUseCase(phone)
-        }, onSuccess = { user ->
-            val location = user.location
-            val governorate =
-                getLocationInfoUseCase.getGovernorateById(governorateId = location.governmentId)
-            val city = getLocationInfoUseCase.getCityById(cityId = location.cityId)
-            updateState(
-                screenState.value.copy(
-                    locationUiState = screenState.value.locationUiState.copy(
-                        selectedGovernorateName = governorate?.name.orEmpty(),
-                        selectedGovernorateId = governorate?.id,
-                        selectedCityName = city?.name.orEmpty(),
-                        selectedCityId = city?.id,
-                        addressInDetails = location.addressInDetails,
-                    ),
-                    locationButtonState = if (user.location.addressInDetails.isNotBlank() && governorate != null && city != null) {
-                        AppButtonState.Enable
-                    } else {
-                        AppButtonState.Disabled
-                    },
-                )
+    override fun onDismissSnackBar() {
+        updateState(
+            screenState.value.copy(
+                showSnackBarError = false,
+                showSnackBarSuccess = false,
             )
-            fetchCities(governorate?.id ?: 0)
-        }, onError = {
-            updateState(screenState.value.copy(isNoInternet = true))
-        })
+        )
+    }
+
+    private fun fetchUserLocation() {
+        tryToExecute(
+            execute = {
+                val phone = getPhoneNumberUseCase()
+                getUserUseCase(phone)
+            },
+            onSuccess = { user ->
+                val location = user.location
+                val governorate =
+                    getLocationInfoUseCase.getGovernorateById(governorateId = location.governmentId)
+                val city = getLocationInfoUseCase.getCityById(cityId = location.cityId)
+                updateState(
+                    screenState.value.copy(
+                        locationUiState = screenState.value.locationUiState.copy(
+                            selectedGovernorateName = governorate?.name.orEmpty(),
+                            selectedGovernorateId = governorate?.id,
+                            selectedCityName = city?.name.orEmpty(),
+                            selectedCityId = city?.id,
+                            addressInDetails = location.addressInDetails,
+                        ),
+                        locationButtonState = if (user.location.addressInDetails.isNotBlank() && governorate != null && city != null) {
+                            AppButtonState.Enable
+                        } else {
+                            AppButtonState.Disabled
+                        },
+                        isLoading = false,
+                    )
+                )
+                fetchCities(governorate?.id ?: 0)
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        isLoading = false,
+                        isNoInternet = true
+                    )
+                )
+            }
+        )
     }
 
     private fun hideSnackBar() {
