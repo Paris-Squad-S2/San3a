@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -15,7 +16,7 @@ fun AppScaffold(
     bottomBar: @Composable () -> Unit = { },
     topBar: @Composable () -> Unit = { },
     containerColor: Color = Theme.colors.background.card,
-    content: @Composable () -> Unit,
+    content: @Composable BoxScope.() -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
