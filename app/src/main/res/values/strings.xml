@@ -369,4 +369,6 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="morning">Morning</string>
     <string name="afternoon">Afternoon</string>
     <string name="evening">Evening</string>
+    <string name="no_jobs_for_selected_category">No available jobs for the selected category</string>
+    <string name="try_another_category_to_explore_more_jobs">You can choose another category to explore more jobs</string>
 </resources>

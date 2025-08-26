@@ -116,7 +116,7 @@ fun CraftsmanHomeContent(
         },
         content = {
             when {
-                state.isAvailableJobsLoading || state.isRecentJobsLoading  -> {
+                state.isAvailableJobsLoading || state.isRecentJobsLoading -> {
                     LoadingScreen(
                         modifier = Modifier
                             .fillMaxSize()
@@ -227,7 +227,7 @@ fun CraftsmanHomeContent(
                                             isSelected = state.craftsmanHomeUiState.selectedServiceId == null
                                         )
                                     }
-                                    items( state.craftsmanHomeUiState.userServices.values.toList()) {
+                                    items(state.craftsmanHomeUiState.userServices.values.toList()) {
                                         AppChip(
                                             label = it.title,
                                             onClick = { action.onServiceSelected(it.id) },
@@ -237,17 +237,40 @@ fun CraftsmanHomeContent(
                                     }
                                 }
                             }
-                            items(if(state.craftsmanHomeUiState.selectedServiceId == null) state.craftsmanHomeUiState.availableJobs.values.toList() else state.craftsmanHomeUiState.filteredAvailableJobs.values.toList()) {
-                                RequestCardForCraftsMan(
-                                    title = it.title,
-                                    type = it.serviceType,
-                                    offers = it.offersCount,
-                                    description = it.description,
-                                    location = it.location,
-                                    imageUri = it.imageUrl,
-                                    modifier = Modifier.padding(horizontal = 16.dp),
-                                    onClick = { action.onJobClick(it.id) }
-                                )
+                            if (
+                                if (state.craftsmanHomeUiState.selectedServiceId == null)
+                                    state.craftsmanHomeUiState.availableJobs.isEmpty()
+                                else
+                                    state.craftsmanHomeUiState.filteredAvailableJobs.isEmpty()
+                            ) {
+                                item {
+                                    Box(Modifier.fillMaxWidth()) {
+                                        PlaceHolderScreen(
+                                            Modifier.align(Alignment.Center).padding(horizontal = 30.dp),
+                                            image = R.drawable.img_placeholder_lllustration1,
+                                            title = R.string.no_jobs_for_selected_category,
+                                            description = R.string.try_another_category_to_explore_more_jobs
+                                        )
+                                    }
+                                }
+                            } else {
+                                items(
+                                    if (state.craftsmanHomeUiState.selectedServiceId == null)
+                                        state.craftsmanHomeUiState.availableJobs.values.toList()
+                                    else
+                                        state.craftsmanHomeUiState.filteredAvailableJobs.values.toList()
+                                ) {
+                                    RequestCardForCraftsMan(
+                                        title = it.title,
+                                        type = it.serviceType,
+                                        offers = it.offersCount,
+                                        description = it.description,
+                                        location = it.location,
+                                        imageUri = it.imageUrl,
+                                        modifier = Modifier.padding(horizontal = 16.dp),
+                                        onClick = { action.onJobClick(it.id) }
+                                    )
+                                }
                             }
                         }
                     }
