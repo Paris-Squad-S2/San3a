@@ -27,4 +27,5 @@ interface CustomerHomeInteractionListener {
     fun onMicClick()
     fun onSpeechRecognized(query: String)
     fun onDismissSnackBar()
+    fun onRetry()
 }
