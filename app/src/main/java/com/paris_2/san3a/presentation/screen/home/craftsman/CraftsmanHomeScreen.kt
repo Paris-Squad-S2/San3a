@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.home.craftsman
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.NotificationIcon
+import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
 import com.paris_2.san3a.presentation.shared.components.RequestCardForCraftsMan
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import kotlinx.datetime.LocalDateTime
@@ -132,6 +134,17 @@ fun CraftsmanHomeContent(
                             .background(Theme.colors.background.screen)
                             .padding(horizontal = 60.dp)
                     )
+                }
+
+                state.craftsmanHomeUiState.recentRelatedJobs.isEmpty() -> {
+                    Box(Modifier.fillMaxSize()) {
+                        PlaceHolderScreen(
+                            Modifier.align(Alignment.Center),
+                            image = R.drawable.img_placeholder_lllustration1,
+                            title = R.string.no_available_jobs,
+                            description = R.string.go_to_more_and_select_services_to_see_more_jobs
+                        )
+                    }
                 }
 
                 else -> {
