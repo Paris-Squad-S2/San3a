@@ -405,6 +405,11 @@ class CustomerHomeViewModel(
     private fun loadServices() {
         tryToExecute(
             execute = {
+                updateState(
+                    screenState.value.copy(
+                        isFindWhatYouNeedLoading = true
+                    )
+                )
                 getSortedServicesUseCase(
                     phoneNumber = getPhoneNumberUseCase(),
                     isCraftsman = false
@@ -421,7 +426,8 @@ class CustomerHomeViewModel(
                 screenState.value.copy(
                     customerUiState = screenState.value.customerUiState.copy(
                         services = userServices,
-                    )
+                    ),
+                    isFindWhatYouNeedLoading = false
                 )
             )
         }
@@ -429,13 +435,21 @@ class CustomerHomeViewModel(
 
     private fun loadMostRequestedServices() {
         tryToObserve(
-            observe = getMostRequestedServicesUseCase::invoke,
+            observe = {
+                updateState(
+                    screenState.value.copy(
+                        isRequestLoading = true
+                    )
+                )
+                getMostRequestedServicesUseCase.invoke()
+                      },
             onEach = { mostRequestedServices ->
                 updateState(
                     screenState.value.copy(
                         customerUiState = screenState.value.customerUiState.copy(
                             mostRequestedServices = mostRequestedServices ?: emptyList(),
-                        )
+                        ),
+                        isRequestLoading = false
                     )
                 )
             },
@@ -445,7 +459,14 @@ class CustomerHomeViewModel(
 
     private fun loadUserData() {
         tryToExecute(
-            execute = { getUserUseCase(getPhoneNumberUseCase()) },
+            execute = {
+                updateState(
+                    screenState.value.copy(
+                        isUserDataLoading = true
+                    )
+                )
+                getUserUseCase(getPhoneNumberUseCase())
+                      },
             onSuccess = ::onLoadUserDataSuccess,
             onError = ::onError
         )
@@ -463,7 +484,7 @@ class CustomerHomeViewModel(
                     governorate = governorate,
                     city = city,
                     addressDetails = user.location.addressInDetails,
-                )
+                ),
             )
         )
         getNotificationsCount(user.id)
@@ -476,6 +497,7 @@ class CustomerHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         notificationsCount = count ?: 0,
+                        isUserDataLoading = false
                     )
                 )
             },
@@ -544,6 +566,18 @@ class CustomerHomeViewModel(
         )
     }
 
+    override fun onRetry() {
+        updateState(
+            screenState.value.copy(
+                errorMessage = null,
+                isUserDataLoading = false,
+                isFindWhatYouNeedLoading = false,
+                isRequestLoading = false
+            )
+        )
+        loadUserData()
+    }
+
     private fun hideSnackBar() {
         viewModelScope.launch {
             if (screenState.value.showSnackBarError || screenState.value.showSnackBarSuccess) {
@@ -562,7 +596,9 @@ class CustomerHomeViewModel(
         updateState(
             screenState.value.copy(
                 errorMessage = throwable.message ?: UNKNOWN_ERROR,
-                isLoading = false
+                isUserDataLoading = false,
+                isFindWhatYouNeedLoading = false,
+                isRequestLoading = false
             )
         )
     }

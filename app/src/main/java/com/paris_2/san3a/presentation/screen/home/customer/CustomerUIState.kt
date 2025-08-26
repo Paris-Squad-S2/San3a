@@ -7,8 +7,10 @@ import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSh
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 
 data class CustomerHomeUiState(
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null, //TODO handle localized error messages
+    val isUserDataLoading: Boolean = false,
+    val isRequestLoading: Boolean = false,
+    val isFindWhatYouNeedLoading: Boolean = false,
+    val errorMessage: String? = null,
     val notificationsCount: Int = 0,
     val customerUiState: CustomerUiState = CustomerUiState(),
     val bottomSheetUiState: BottomSheetUiState = BottomSheetUiState(),
