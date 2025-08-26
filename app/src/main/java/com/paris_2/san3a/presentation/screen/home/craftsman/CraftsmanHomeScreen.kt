@@ -113,7 +113,7 @@ fun CraftsmanHomeContent(
         },
         content = {
             when {
-                state.isScreenLoading -> {
+                state.isAvailableJobsLoading || state.isRecentJobsLoading  -> {
                     LoadingScreen(
                         modifier = Modifier
                             .fillMaxSize()
@@ -131,7 +131,7 @@ fun CraftsmanHomeContent(
                             .padding(horizontal = 60.dp)
                     )
                 }
-                state.isRecentJobsSuccess && state.isAvailableJobsSuccess -> {
+                else -> {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
@@ -208,6 +208,7 @@ fun CraftsmanHomeContent(
                         }
                     }
                 }
+
             }
         }
     )
@@ -220,7 +221,8 @@ private fun Preview() {
     CraftsmanHomeContent(
 
         state = CraftsmanHomeState(
-            isScreenLoading = false,
+            isRecentJobsLoading = false,
+            isAvailableJobsLoading = false,
             craftsmanHomeUiState = CraftsmanHomeUiState(
                 currentUserName = "Muhammed",
                 relatedJob = "Plumbing",

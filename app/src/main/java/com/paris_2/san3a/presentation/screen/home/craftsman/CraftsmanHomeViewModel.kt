@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.home.craftsman
 
+import android.util.Log
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
@@ -34,7 +35,8 @@ class CraftsmanHomeViewModel(
             observe = {
                 updateState(
                     screenState.value.copy(
-                        isScreenLoading = true
+                        isRecentJobsLoading = true,
+                        isAvailableJobsLoading = true
                     )
                 )
                 getUserSelectedServicesUseCase(
@@ -59,7 +61,9 @@ class CraftsmanHomeViewModel(
 
     private fun loadPhoneNumber() {
         tryToExecute(
-            execute = { getPhoneNumberUseCase() },
+            execute = {
+                getPhoneNumberUseCase()
+            },
             onSuccess = { phoneNumber ->
                 updateState(
                     screenState.value.copy(
@@ -174,7 +178,7 @@ class CraftsmanHomeViewModel(
         if (availableJobs.isEmpty()) {
             updateState(
                 screenState.value.copy(
-                    isAvailableJobsSuccess = false
+                    isAvailableJobsLoading = false
                 )
             )
             return
@@ -192,10 +196,9 @@ class CraftsmanHomeViewModel(
                                         this[id] = updatedJob
                                     }
                             ),
-                            isAvailableJobsSuccess = true,
-                            isScreenLoading = !(screenState.value.isRecentJobsSuccess&&screenState.value.isAvailableJobsSuccess)
+                            isAvailableJobsLoading = false,
 
-                        )
+                            )
                     )
                 },
 
@@ -247,7 +250,7 @@ class CraftsmanHomeViewModel(
         if (recentJobs.isEmpty()) {
             updateState(
                 screenState.value.copy(
-                    isRecentJobsSuccess = false
+                    isRecentJobsLoading = false
                 )
             )
             return
@@ -265,8 +268,7 @@ class CraftsmanHomeViewModel(
                                         this[id] = updatedJob
                                     }
                             ),
-                            isRecentJobsSuccess = true,
-                            isScreenLoading = !(screenState.value.isRecentJobsSuccess&&screenState.value.isAvailableJobsSuccess)
+                            isRecentJobsLoading = false
                         )
                     )
                 },
@@ -293,7 +295,8 @@ class CraftsmanHomeViewModel(
         updateState(
             screenState.value.copy(
                 errorMessage = null,
-                isScreenLoading = true
+                isRecentJobsLoading = false,
+                isAvailableJobsLoading = false
             )
         )
         loadPhoneNumber()
@@ -302,7 +305,8 @@ class CraftsmanHomeViewModel(
     private fun onError(throwable: Throwable) {
         updateState(
             screenState.value.copy(
-                isScreenLoading = false,
+                isRecentJobsLoading = false,
+                isAvailableJobsLoading = false,
                 errorMessage = throwable.message ?: UNKNOWN_ERROR
             )
         )
