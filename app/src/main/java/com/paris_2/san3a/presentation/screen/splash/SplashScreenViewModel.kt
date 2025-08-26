@@ -10,7 +10,6 @@ import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.LocalAccountType
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.delay
 
 class SplashScreenViewModel(
     private val isOnboardingCompletedUseCase: IsOnboardingCompletedUseCase,
@@ -28,7 +27,8 @@ class SplashScreenViewModel(
             execute = {
                 updateState(
                     newState = screenState.value.copy(
-                        isLoading = true
+                        isLoading = true,
+                        error = null
                     )
                 )
                val phoneNumber = getPhoneNumberUseCase.invoke()
@@ -38,7 +38,6 @@ class SplashScreenViewModel(
                         }
                         setUpAccountUseCase.getUserProgress(phoneNumber)
                     }
-                delay(1000)
                 phoneNumber
             },
             onSuccess = { progress ->
@@ -49,7 +48,8 @@ class SplashScreenViewModel(
                 }
                 updateState(
                     newState = screenState.value.copy(
-                        isLoading = false
+                        isLoading = false,
+                        error = null
                     )
                 )
             },
@@ -126,6 +126,7 @@ class SplashScreenViewModel(
             onSuccess = { isCompleted ->
                 updateState(
                     newState = screenState.value.copy(
+                        error = null,
                         destination = if (isCompleted) {
                             Destinations.RegisterScreen
                         } else {
@@ -143,10 +144,9 @@ class SplashScreenViewModel(
             execute = {
                 updateState(
                     newState = screenState.value.copy(
-                        isLoading = true
+                        isLoading = false
                     )
                 )
-                delay(1000)
                 if (screenState.value.destination != null) {
                     navigate(
                         screenState.value.destination ?: Destinations.OnBoarding,
