@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -51,6 +52,9 @@ import com.paris_2.san3a.presentation.shared.components.ServiceTypeCard
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
+import com.paris_2.san3a.presentation.utill.format
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 @Composable
 fun RequestCard(
@@ -93,7 +97,7 @@ fun RequestCard(
                 ) {
                     IconWithText(
                         icon = ImageVector.vectorResource(R.drawable.ic_calendar_minimalistic_outline),
-                        text = requestUi.date,
+                        text = requestUi.date.format(LocalContext.current),
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp)
@@ -110,7 +114,7 @@ fun RequestCard(
 
                     IconWithText(
                         icon = ImageVector.vectorResource(R.drawable.ic_clock_circle_outline),
-                        text = requestUi.time,
+                        text = requestUi.time.format(LocalContext.current),
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp)
@@ -342,8 +346,8 @@ fun RequestCardNoCraftsmanWithOffersPreview() {
                     requestTitle = "request title",
                     serviceType = "Plumbing",
                     offersCount = 3,
-                    date = "2025-08-04",
-                    time = "10:30 AM",
+                    date = LocalDate(2025, 8, 4),
+                    time = LocalTime(10, 30),
                 ),
                 onActionClick = {},
 
@@ -355,8 +359,8 @@ fun RequestCardNoCraftsmanWithOffersPreview() {
                     requestTitle = "request title",
                     serviceType = "Electrical",
                     offersCount = 3,
-                    date = "2025-08-05",
-                    time = "2:00 PM",
+                    date = LocalDate(2025, 8, 5),
+                    time = LocalTime(14, 0),
                 ),
                 onActionClick = {},
             )
@@ -366,8 +370,8 @@ fun RequestCardNoCraftsmanWithOffersPreview() {
                     requestTitle = "Electrical Work",
                     serviceType = "Electrical",
                     offersCount = 3,
-                    date = "2025-08-06",
-                    time = "9:00 AM",
+                    date = LocalDate(2025, 8, 6),
+                    time = LocalTime(9, 0),
                     status = RequestStatus.COMPLETED,
                 ),
                 onActionClick = {},

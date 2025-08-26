@@ -31,8 +31,7 @@ fun CraftsmanAvatar(
 ) {
 
     Box(
-        modifier = modifier.size(60.dp),
-        contentAlignment = Alignment.Center
+        modifier = modifier.size(56.dp),
     ) {
         Image(
             painter = painter,
@@ -44,14 +43,18 @@ fun CraftsmanAvatar(
         )
 
 
-        AnimatedVisibility(isVerify) {
+        AnimatedVisibility(
+            isVerify,
+            modifier = Modifier.align(Alignment.BottomCenter)
+                .graphicsLayer {
+                    translationY = 16f
+                }
+        ) {
             Box(
-                modifier = Modifier.size(16.dp)
-                    .graphicsLayer {
-                    translationY = 55f
-                },
+                modifier = Modifier
+                    .size(16.dp),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_verified_check_bold),
                     contentDescription = stringResource(R.string.verified_check),
@@ -72,7 +75,6 @@ fun CraftsmanAvatar(
         }
 
 
-
     }
 }
 
@@ -80,7 +82,7 @@ fun CraftsmanAvatar(
 @PreviewMultiDevices
 @Preview
 private fun CraftsmanAvatarPreview() {
-    BasePreview(modifier = Modifier.size(120.dp)) {
+    BasePreview {
         CraftsmanAvatar(painter = painterResource(R.drawable.person_chat), isVerify = true)
 
     }

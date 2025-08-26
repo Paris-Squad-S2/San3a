@@ -5,6 +5,7 @@ import com.paris_2.san3a.R
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
@@ -54,4 +55,29 @@ fun LocalDateTime.format(context: Context): String {
         isTomorrow -> context.getString(R.string.tomorrow_time, hour.toString(), minute, amPm)
         else -> context.getString(R.string.date_time, this.date.toString(), hour.toString(), minute, amPm)
     }
+}
+
+fun LocalDate?.format(context: Context): String {
+    if (this == null) return ""
+    val now = getCurrentDateTime()
+    val isToday = this == now.date
+    val isTomorrow = this == now.date.plusNDays(1)
+    return when {
+        isToday -> context.getString(R.string.today)
+        isTomorrow -> context.getString(R.string.tomorrow)
+        else -> this.toString()
+    }
+}
+
+fun LocalTime?.format(context: Context): String {
+    if (this == null) return ""
+    val hour = (this.hour % 12).let { if (it == 0) 12 else it }
+    val minute = this.minute.toString().padStart(2, '0')
+    val period = when (this.hour) {
+        in 0..5 -> context.getString(R.string.night)
+        in 6..11 -> context.getString(R.string.morning)
+        in 12..17 -> context.getString(R.string.afternoon)
+        else -> context.getString(R.string.evening)
+    }
+    return context.getString(R.string.time_only, hour.toString(), minute, period)
 }
