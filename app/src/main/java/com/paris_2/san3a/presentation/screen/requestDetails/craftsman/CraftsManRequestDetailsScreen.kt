@@ -92,7 +92,7 @@ private fun CraftsManRequestDetailsScreenContent(
                 )
             }
 
-            state.isLoading -> {
+            state.isLoadingRequestDetails || state.isLoadingOffers -> {
                 LoadingScreen(
                     modifier = Modifier
                         .fillMaxSize()
