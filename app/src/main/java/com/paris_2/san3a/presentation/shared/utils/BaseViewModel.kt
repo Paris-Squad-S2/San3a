@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -42,10 +44,8 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
         onSuccess: (suspend (T) -> Unit)? = null,
         onError: (Throwable) -> Unit,
         scope: CoroutineScope = viewModelScope,
-        onRetry: (suspend () -> Unit) ?= {},
-        retryLimit: Int?=null,
         execute: suspend (CoroutineScope) -> T,
-        ): Job {
+    ): Job {
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             onError(throwable)
         }
@@ -56,11 +56,6 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
             } catch (e: Exception) {
                 Log.e("BaseViewModel", "tryToExecute: Error executing operation", e)
                 onError(e)
-            }finally {
-                retryLimit?.let {
-                    for (i in 0..it)
-                        onRetry?.invoke()
-                }
             }
         }
     }
@@ -84,8 +79,11 @@ open class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
                     Log.e("BaseViewModel", "tryToObserve: Error executing operation", it)
                     onError(it)
                 }
-                .also { onEach(null) }
-                .collect { onEach(it) }
+                .onEmpty {
+                    Log.d("BaseViewModel", "tryToObserve: Empty flow")
+                    onEach(null)
+                }
+                .collectLatest { onEach(it) }
         }
     }
 

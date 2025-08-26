@@ -18,10 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -30,8 +27,6 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
-import com.paris_2.san3a.presentation.utill.format
-import com.paris_2.san3a.presentation.utill.getTimeAgo
 import kotlinx.datetime.LocalDateTime
 
 enum class OfferStatus {
@@ -115,13 +110,13 @@ fun CraftsManOffer(
             painter = painter,
             isVerified = offerDetails.isVerify,
             name = offerDetails.name,
-            postedTime = getTimeAgo(offerDetails.postedTime, LocalContext.current),
+            postedTime = offerDetails.postedTime,
             description = offerDetails.description,
             amount = stringResource(R.string.egp, offerDetails.amount),
             rate = offerDetails.rate,
             reviewsNumber = offerDetails.reviewsNumber,
             status = offerDetails.status,
-            time = offerDetails.dateTime?.format(LocalContext.current).orEmpty(),
+            dateTime = offerDetails.dateTime,
             stickyFooter = {
                 if (showActionButtons) {
                     when {
