@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.screen.home.craftsman
 
-import android.util.Log
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
@@ -13,7 +12,6 @@ import com.paris_2.san3a.domain.usecase.user.GetUserSelectedServicesUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
-import kotlinx.coroutines.delay
 
 class CraftsmanHomeViewModel(
     private val getStatsUseCase: GetStatsUseCase,
