@@ -23,13 +23,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
+import com.paris_2.san3a.presentation.utill.format
+import com.paris_2.san3a.presentation.utill.getCurrentDateTime
+import com.paris_2.san3a.presentation.utill.getTimeAgo
+import com.paris_2.san3a.presentation.utill.minusNHours
+import com.paris_2.san3a.presentation.utill.plusNHours
+import kotlinx.datetime.LocalDateTime
 
 @Composable
 fun CraftsmanOfferDetails(
@@ -37,13 +45,13 @@ fun CraftsmanOfferDetails(
     painter: Painter? = null,
     isVerified: Boolean = false,
     name: String?,
-    postedTime: String,
+    postedTime: LocalDateTime?,
     description: String,
     amount: String,
     rate: Float?,
     reviewsNumber: Int?,
     status: OfferStatus = OfferStatus.PENDING_OFFER,
-    time: String,
+    dateTime: LocalDateTime?,
     stickyFooter: @Composable (OfferStatus) -> Unit = {},
 ) {
     Column(
@@ -108,11 +116,14 @@ fun CraftsmanOfferDetails(
                         Text(
                             text = it,
                             color = Theme.colors.shade.primary,
-                            style = Theme.textStyle.body.medium.medium
+                            style = Theme.textStyle.body.medium.medium,
+                            modifier = Modifier.weight(1f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                     Text(
-                        text = postedTime,
+                        text = getTimeAgo(postedTime, LocalContext.current),
                         style = Theme.textStyle.body.small.regular,
                         color = Theme.colors.shade.tertiary
                     )
@@ -136,7 +147,7 @@ fun CraftsmanOfferDetails(
                                     it,
                                 ),
                                 style = Theme.textStyle.body.small.medium,
-                                color = Theme.colors.shade.primary
+                                color = Theme.colors.shade.secondary
                             )
                         }
                     }
@@ -166,9 +177,11 @@ fun CraftsmanOfferDetails(
                     .size(16.dp)
             )
             Text(
-                text = amount,
+                text = amount + " " + stringResource(R.string.egp),
                 color = Theme.colors.shade.secondary,
                 style = Theme.textStyle.body.small.medium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Box(
                 modifier = Modifier
@@ -176,7 +189,6 @@ fun CraftsmanOfferDetails(
                     .size(2.6.dp)
                     .clip(CircleShape)
                     .background(Theme.colors.shade.tertiary)
-
             )
             Icon(
                 modifier = Modifier
@@ -187,9 +199,11 @@ fun CraftsmanOfferDetails(
                 tint = Theme.colors.shade.secondary
             )
             Text(
-                text = time,
+                text = dateTime?.format(LocalContext.current).orEmpty(),
                 color = Theme.colors.shade.secondary,
-                style = Theme.textStyle.body.small.medium
+                style = Theme.textStyle.body.small.medium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
@@ -205,12 +219,12 @@ fun CraftsmanOfferDetailsPreview() {
             CraftsmanOfferDetails(
                 isVerified = true,
                 name = "joe",
-                postedTime = "7 H ago",
+                postedTime = getCurrentDateTime().minusNHours(7),
                 description = "description",
                 amount = "53,000 EGP",
                 rate = 5.0f,
                 reviewsNumber = 100,
-                time = "10:00 AM",
+                dateTime = getCurrentDateTime().plusNHours(5),
 
                 stickyFooter = {
                     if (it == OfferStatus.PENDING_OFFER)

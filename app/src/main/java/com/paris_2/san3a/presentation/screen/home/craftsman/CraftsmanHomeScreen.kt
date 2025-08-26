@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -62,6 +63,7 @@ fun CraftsmanHomeContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Theme.colors.background.card),
+                spaceBetween = false,
                 actionIcon = {
                     NotificationIcon(
                         modifier = Modifier
@@ -74,6 +76,7 @@ fun CraftsmanHomeContent(
                     Column(
                         modifier = Modifier
                             .padding(start = 8.dp)
+                            .weight(1f)
                     ) {
                         Text(
                             text = stringResource(
@@ -82,6 +85,8 @@ fun CraftsmanHomeContent(
                             ),
                             style = Theme.textStyle.title.small,
                             color = Theme.colors.shade.primary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                         Row(
                             modifier = Modifier
@@ -108,7 +113,7 @@ fun CraftsmanHomeContent(
         },
         content = {
             when {
-                state.isAvailableJobsLoading || state.isRecentRelatedJobsLoading -> {
+                state.isAvailableJobsLoading || state.isRecentJobsLoading  -> {
                     LoadingScreen(
                         modifier = Modifier
                             .fillMaxSize()
@@ -203,6 +208,7 @@ fun CraftsmanHomeContent(
                         }
                     }
                 }
+
             }
         }
     )
@@ -215,8 +221,8 @@ private fun Preview() {
     CraftsmanHomeContent(
 
         state = CraftsmanHomeState(
+            isRecentJobsLoading = false,
             isAvailableJobsLoading = false,
-            isRecentRelatedJobsLoading = false,
             craftsmanHomeUiState = CraftsmanHomeUiState(
                 currentUserName = "Muhammed",
                 relatedJob = "Plumbing",

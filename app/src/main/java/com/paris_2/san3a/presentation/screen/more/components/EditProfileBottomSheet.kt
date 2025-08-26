@@ -3,7 +3,9 @@ package com.paris_2.san3a.presentation.screen.more.components
 import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -14,6 +16,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
+import com.paris_2.san3a.presentation.shared.components.AppButton
+import com.paris_2.san3a.presentation.shared.components.AppButtonSize
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
+import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.BottomSheet
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
@@ -25,6 +31,8 @@ fun EditProfileBottomSheet(
     onPickImageClick: () -> Unit,
     isVisible: Boolean,
     onDismissRequest: () -> Unit,
+    onUpdateProfileClick: () -> Unit,
+    isChanged: Boolean
 ) {
     BottomSheet(
         isVisible = isVisible,
@@ -54,12 +62,31 @@ fun EditProfileBottomSheet(
             }
         }
     ) {
-        EditProfileBottomSheetContent(
-            name = name,
-            onNameChange = onNameChange,
-            profilePhotoUri = profileUri,
-            onPickImageClick = onPickImageClick
-        )
+        LazyColumn {
+
+            item {
+                EditProfileBottomSheetContent(
+                    name = name,
+                    onNameChange = onNameChange,
+                    profilePhotoUri = profileUri,
+                    onPickImageClick = onPickImageClick
+                )
+            }
+
+            item {
+                AppButton(
+                    type = AppButtonType.Primary,
+                    size = AppButtonSize.Large,
+                    text = stringResource(R.string.update),
+                    state = if (isChanged) AppButtonState.Enable else AppButtonState.Disabled,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                        .navigationBarsPadding(),
+                    onClick = onUpdateProfileClick,
+                )
+            }
+        }
     }
 
 }

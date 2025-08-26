@@ -86,16 +86,12 @@ class UserRemoteDataSourceImpl(
             fromJson = { _, serviceId -> serviceId },
         ).let { docsFlow ->
             docsFlow.flatMapLatest { docsList ->
-                if (docsList.isNotEmpty()) {
-                    fireStoreService.streamCollection(
-                        path = SERVICES_COLLECTION,
-                        fromJson = ServiceDto::fromJson,
-                    ).map { allServices ->
-                        allServices.filter { service -> docsList.contains(service.id) } +
-                                allServices.filter { service -> !docsList.contains(service.id) }
-                    }
-                } else {
-                    flow { emit(emptyList()) }
+                fireStoreService.streamCollection(
+                    path = SERVICES_COLLECTION,
+                    fromJson = ServiceDto::fromJson,
+                ).map { allServices ->
+                    allServices.filter { service -> docsList.contains(service.id) } +
+                            allServices.filter { service -> !docsList.contains(service.id) }
                 }
             }
         }
