@@ -277,6 +277,23 @@ class UserRemoteDataSourceImpl(
         )
     }
 
+    override suspend fun saveDeviceToken(userId: String, token: String) {
+        fireStoreService.setDoc(
+            path = "$DEVICE_TOKENS_COLLECTION/$userId",
+            data = mapOf(
+                "token" to token,
+                "userId" to userId,
+            ),
+        )
+    }
+
+    override suspend fun getDeviceToken(userId: String): String? {
+        return fireStoreService.getDoc(
+            path = "$DEVICE_TOKENS_COLLECTION/$userId",
+            fromJson = { data, _ -> data["token"]?.toString() ?: "" },
+        )
+    }
+
     private suspend fun updateUserData(phone: String, data: Map<String, Any>) {
         fireStoreService.updateDoc(path = "$USERS_COLLECTION/$phone", data = data)
         Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
@@ -291,5 +308,6 @@ class UserRemoteDataSourceImpl(
         private const val RATINGS_COLLECTION = "ratings"
         private const val EARNINGS_COLLECTION = "earnings"
         private const val JOBS_DONE_COLLECTION = "jobs_done"
+        private const val DEVICE_TOKENS_COLLECTION = "device_tokens"
     }
 }
