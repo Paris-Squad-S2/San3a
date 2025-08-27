@@ -76,7 +76,9 @@ fun LocationContent(
 
         AppTextField(
             value = addressInDetails,
-            onValueChange = onAddressDetailsChange,
+            onValueChange = { newValue ->
+                if (newValue.length <= 50) onAddressDetailsChange(newValue)
+            },
             placeholder = stringResource(R.string.enter_your_location_in_details),
         )
         GovernmentBottomSheet(
