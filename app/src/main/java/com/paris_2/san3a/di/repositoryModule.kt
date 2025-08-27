@@ -26,5 +26,4 @@ val repositoryModule = module {
     singleOf(::NotificationRepositoryImpl) { bind<NotificationRepository>() }
     singleOf(::UserPreferencesRepositoryImpl) { bind<UserPreferencesRepository>() }
     singleOf(::RequestsRepositoryImpl) { bind<RequestsRepository>() }
-
 }

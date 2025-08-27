@@ -1,5 +1,7 @@
 package com.paris_2.san3a.di
 
+import com.paris_2.san3a.data.source.remote.fcm.NotificationApi
+import com.paris_2.san3a.data.source.remote.fcm.NotificationApiImpl
 import com.paris_2.san3a.data.source.remote.user.service.AuthApiServices
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -34,4 +36,5 @@ val networkModule = module {
             }
             .build()
     }
+    single<NotificationApi> { NotificationApiImpl() }
 }

@@ -35,6 +35,7 @@ import com.paris_2.san3a.domain.usecase.messaging.MarkMessagesAsSeenUseCase
 import com.paris_2.san3a.domain.usecase.messaging.SendMessageUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.domain.usecase.notification.MarkNotificationsAsReadUseCase
+import com.paris_2.san3a.domain.usecase.notification.SendNotificationUseCase
 import com.paris_2.san3a.domain.usecase.requests.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.AddOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.CancelRequestUseCase
@@ -48,6 +49,8 @@ import com.paris_2.san3a.domain.usecase.requests.GetRequestDetailsByIdUseCase
 import com.paris_2.san3a.domain.usecase.requests.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
+import com.paris_2.san3a.domain.usecase.user.GenerateDeviceTokenUseCase
+import com.paris_2.san3a.domain.usecase.user.GetDeviceTokenUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserSelectedServicesUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
@@ -102,4 +105,7 @@ val useCaseModule = module {
     factoryOf(::GetCustomerRatingOnCraftsmanUseCase)
     factoryOf(::UpdateEarningsForCraftsmanUseCase)
     factoryOf(::IncrementJobsDoneForCraftsmanUseCase)
+    factoryOf(::GenerateDeviceTokenUseCase)
+    factoryOf(::GetDeviceTokenUseCase)
+    factoryOf(::SendNotificationUseCase)
 }

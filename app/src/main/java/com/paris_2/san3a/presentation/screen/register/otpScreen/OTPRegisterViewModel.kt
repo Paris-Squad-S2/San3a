@@ -10,6 +10,7 @@ import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.usecase.user.AddUserUseCase
+import com.paris_2.san3a.domain.usecase.user.GenerateDeviceTokenUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.user.SavePhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.SendOtpUseCase
@@ -28,6 +29,7 @@ class OTPRegisterViewModel(
     private val setUpAccountUseCase: SetUpAccountUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val addUserUseCase: AddUserUseCase,
+    private val generateDeviceTokenUseCase: GenerateDeviceTokenUseCase,
     saveStateHandle: SavedStateHandle,
 ) : BaseViewModel<OTPRegisterScreenState>(OTPRegisterScreenState()),
     OTPRegisterListenerInteraction {
@@ -154,6 +156,7 @@ class OTPRegisterViewModel(
 
                 if (screenState.value.otpRegisterUiState.otp == screenState.value.otpRegisterUiState.verificationId) {
                     savePhoneNumberUseCase(screenState.value.otpRegisterUiState.phoneNumber)
+                    generateDeviceTokenUseCase()
                     updateState(
                         screenState.value.copy(
                             otpRegisterUiState = screenState.value.otpRegisterUiState.copy(
