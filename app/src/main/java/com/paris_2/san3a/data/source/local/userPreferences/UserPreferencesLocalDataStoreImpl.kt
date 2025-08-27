@@ -50,6 +50,12 @@ class UserPreferencesLocalDataStoreImpl(
         return true
     }
 
+    override suspend fun saveDeviceToken(token: String) {
+        dataStore.setValue(
+            DEVICE_TOKEN , token
+        )
+    }
+
     override fun getLatestSelectedAppLanguage(): Flow<String> =
         dataStore.data.map {
             it[LOCAL_LANGUAGE] ?: ENGLISH
@@ -71,5 +77,6 @@ class UserPreferencesLocalDataStoreImpl(
         private val IS_DARK_THEME = booleanPreferencesKey("Is_Dark_Theme")
         private val LOCAL_LANGUAGE = stringPreferencesKey("LOCAL_LANGUAGE")
         const val ENGLISH = "en"
+        private val DEVICE_TOKEN = stringPreferencesKey("DEVICE_TOKEN")
     }
 }
