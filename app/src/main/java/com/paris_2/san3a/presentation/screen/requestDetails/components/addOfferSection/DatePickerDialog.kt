@@ -1,5 +1,7 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.components.addOfferSection
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -9,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -54,6 +57,7 @@ fun DatePickerDialog(
         ) {
             DatePicker(
                 state = datePickerState,
+                modifier = Modifier.verticalScroll(rememberScrollState()),
                 colors = DatePickerDefaults.colors(
                     containerColor = Theme.colors.background.card,
                     titleContentColor = Theme.colors.shade.primary,

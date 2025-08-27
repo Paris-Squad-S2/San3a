@@ -406,6 +406,12 @@ class MyRequestCustomerViewModel(
     }
 
     override fun onRetryClick() {
+        updateState(
+            screenState.value.copy(
+                errorMessage = null,
+                isLoading = true,
+            )
+        )
         getCustomerPhone()
     }
 

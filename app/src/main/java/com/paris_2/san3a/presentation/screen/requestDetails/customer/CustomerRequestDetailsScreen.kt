@@ -95,7 +95,7 @@ private fun CustomerRequestDetailsScreenContent(
                 )
             }
 
-            state.isLoading -> {
+            state.isLoadingRequestDetails || state.isLoadingOffers -> {
                 LoadingScreen(
                     modifier = Modifier
                         .fillMaxSize()
