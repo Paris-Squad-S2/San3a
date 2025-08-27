@@ -3,9 +3,10 @@ package com.paris_2.san3a.presentation.screen.account.components
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -44,6 +45,7 @@ fun ShowYourWorkContent(
                 style = Theme.textStyle.body.medium.regular,
                 color = Theme.colors.shade.primary
             )
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = stringResource(R.string.optional),
                 style = Theme.textStyle.body.medium.regular,
