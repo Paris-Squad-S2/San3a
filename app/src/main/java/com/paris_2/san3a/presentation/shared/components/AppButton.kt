@@ -221,7 +221,7 @@ private fun getAppContentPadding(
         return when (type) {
             AppButtonType.Primary, AppButtonType.Secondary -> PaddingValues(
                 horizontal = horizontalPadding.value,
-                vertical = animateDpAsState(if (isLarge) 15.dp else 13.dp).value
+                vertical = animateDpAsState(if (isLarge) 15.dp else 10.dp).value
             )
 
             AppButtonType.Tertiary -> PaddingValues(
