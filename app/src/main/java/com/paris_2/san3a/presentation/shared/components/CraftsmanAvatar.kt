@@ -17,6 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
@@ -27,7 +28,8 @@ import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 fun CraftsmanAvatar(
     painter: Painter,
     isVerify: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    verificationIconSize: Dp = 16.dp
 ) {
 
     Box(
@@ -47,19 +49,19 @@ fun CraftsmanAvatar(
             isVerify,
             modifier = Modifier.align(Alignment.BottomCenter)
                 .graphicsLayer {
-                    translationY = 16f
+                    translationY = verificationIconSize.value
                 }
         ) {
             Box(
                 modifier = Modifier
-                    .size(16.dp),
+                    .size(verificationIconSize),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_verified_check_bold),
                     contentDescription = stringResource(R.string.verified_check),
                     modifier = Modifier
-                        .size(16.dp),
+                        .size(verificationIconSize),
                     tint = Theme.colors.additional.primary.success
                 )
 
@@ -67,7 +69,7 @@ fun CraftsmanAvatar(
                     painter = painterResource(R.drawable.ic_check),
                     contentDescription = stringResource(R.string.verified_check),
                     modifier = Modifier
-                        .size(8.dp),
+                        .size(verificationIconSize/2),
                     tint = Color.White
                 )
             }

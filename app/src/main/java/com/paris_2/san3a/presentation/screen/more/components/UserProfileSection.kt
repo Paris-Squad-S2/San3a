@@ -50,7 +50,8 @@ fun UserProfileSection(
 
         CraftsmanAvatar(
             isVerify = isVerify,
-            painter = painter
+            painter = painter,
+            verificationIconSize = 22.dp
         )
 
         Column(
