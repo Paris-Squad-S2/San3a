@@ -44,4 +44,6 @@ interface UserRepository {
     suspend fun sendMessage(phoneNumber: String, message: String): Boolean
     suspend fun savePhoneNumber(phoneNumber: String)
     suspend fun getPhoneNumber(): String
+    suspend fun generateDeviceToken()
+    suspend fun getDeviceToken(userId: String): String
 }

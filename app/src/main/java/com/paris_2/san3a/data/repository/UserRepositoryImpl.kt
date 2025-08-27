@@ -2,6 +2,7 @@ package com.paris_2.san3a.data.repository
 
 import android.net.Uri
 import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 import com.paris_2.san3a.data.mapper.toEntity
 import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.remote.user.dto.OtpMessageDto
@@ -17,6 +18,8 @@ import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.repository.UserRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -25,6 +28,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource,
@@ -249,6 +253,26 @@ class UserRepositoryImpl(
     override suspend fun getPhoneNumber(): String {
         return safeCall(FailException("get phone number error")) {
             userPreferencesLocalDataStore.getPhoneNumber()
+        }
+    }
+
+    override suspend fun generateDeviceToken() {
+        //TODO()
+        safeCall(FailException("generate device token error")) {
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result
+                    CoroutineScope(Dispatchers.IO).launch {
+                        userRemoteDataSource.saveDeviceToken(getPhoneNumber(), token)
+                    }
+                }
+            }
+        }
+    }
+
+    override suspend fun getDeviceToken(userId: String): String {
+        return safeCall(FailException("Failed to get Token")){
+            userRemoteDataSource.getDeviceToken(userId) ?: ""
         }
     }
 
