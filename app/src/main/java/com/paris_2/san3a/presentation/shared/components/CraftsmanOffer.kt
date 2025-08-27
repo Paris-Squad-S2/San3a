@@ -112,7 +112,7 @@ fun CraftsManOffer(
             name = offerDetails.name,
             postedTime = offerDetails.postedTime,
             description = offerDetails.description,
-            amount = stringResource(R.string.egp, offerDetails.amount),
+            amount = offerDetails.amount,
             rate = offerDetails.rate,
             reviewsNumber = offerDetails.reviewsNumber,
             status = offerDetails.status,
