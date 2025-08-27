@@ -31,14 +31,12 @@ class SplashScreenViewModel(
                         error = null
                     )
                 )
-               val phoneNumber = getPhoneNumberUseCase.invoke()
-                    .let { phoneNumber ->
+               getPhoneNumberUseCase().let { phoneNumber ->
                         if (phoneNumber.isBlank()) {
                             handleNewUserDestination()
                         }
                         setUpAccountUseCase.getUserProgress(phoneNumber)
                     }
-                phoneNumber
             },
             onSuccess = { progress ->
                 when (progress) {

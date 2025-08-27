@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter
 data class MessageDetailsUiState(
     val textMessage: String = "",
     val messagesSize: Int = 0,
-    val chatTitle: String = "",
+    val chatTitle: String? = null,
     val profilePhoto: String = "",
     val showDropMenu: Boolean = false,
     val groupedMessages: Map<String, List<MessageUi>> = emptyMap(),

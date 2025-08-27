@@ -76,9 +76,6 @@ private fun MyRequestScreenContent(
             },
         )
         when {
-            state.isLoading -> {
-                LoadingScreen(modifier = Modifier.fillMaxSize())
-            }
 
             state.errorMessage != null -> {
                 PlaceHolderScreen(
@@ -93,6 +90,10 @@ private fun MyRequestScreenContent(
                     title = R.string.oops_no_internet,
                     description = R.string.please_check_your_connection_and_try_again_we_ll_keep_trying_in_the_background
                 )
+            }
+
+            state.isLoading -> {
+                LoadingScreen(modifier = Modifier.fillMaxSize())
             }
 
             else -> {

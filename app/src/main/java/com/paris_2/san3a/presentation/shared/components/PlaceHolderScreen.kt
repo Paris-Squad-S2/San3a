@@ -46,6 +46,7 @@ fun PlaceHolderScreen(
                 text = stringResource(title),
                 style = Theme.textStyle.title.small,
                 modifier = Modifier.padding(bottom = 8.dp),
+                textAlign = TextAlign.Center,
                 color = Theme.colors.shade.primary
             )
         }

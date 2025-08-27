@@ -1,6 +1,7 @@
 package com.paris_2.san3a.presentation.screen.more.locationScreen
 
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -21,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,6 +39,8 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.AppTextField
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
+import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
+import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
@@ -70,101 +74,145 @@ fun LocationScreenContent(
             )
         },
         content = {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.screen)
-                    .verticalScroll(scroll)
-                    .padding(horizontal = 16.dp)
-            ) {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = stringResource(R.string.where_are_you_located),
-                    style = Theme.textStyle.display.xLarge,
-                    color = Theme.colors.shade.primary
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = stringResource(R.string.location_help_text),
-                    style = Theme.textStyle.body.large.regular,
-                    color = Theme.colors.shade.secondary
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(
-                            onClick = {
-                                locationInteractionListener.onShowBottomSheet(
-                                    LocationBottomSheetType.GOVERNORATE
-                                )
-                            },
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        )
-                ) {
-                    AppTextField(
-                        value = listOf(
-                            state.locationUiState.selectedGovernorateName,
-                            state.locationUiState.selectedCityName
-                        )
-                            .filter { it.isNotEmpty() }
-                            .joinToString(separator = ", "),
-                        onValueChange = {},
-                        placeholder = stringResource(R.string.choose_governorate),
-                        readOnly = true,
-                        label = null,
-                        enabled = false,
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_location_pin),
-                                contentDescription = null,
-                                tint = Theme.colors.shade.tertiary
-                            )
-                        },
-                        trailingIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_alt_arrow_down),
-                                contentDescription = null,
-                                tint = Theme.colors.shade.tertiary
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions.Default,
-                        modifier = Modifier.fillMaxWidth()
+            when {
+                state.isLoading -> {
+                    LoadingScreen(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen)
                     )
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                state.isNoInternet -> {
+                    LostConnectionScreen(
+                        onRetry = locationInteractionListener::onClickRetry,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen)
+                            .padding(horizontal = 60.dp)
+                    )
+                }
 
-                AppTextField(
-                    value = state.locationUiState.addressInDetails,
-                    onValueChange = locationInteractionListener::onAddressInDetailsChange,
-                    placeholder = stringResource(R.string.enter_your_location_in_details),
-                    label = null,
-                    keyboardOptions = KeyboardOptions.Default,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                else -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen)
+                            .verticalScroll(scroll)
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                Spacer(modifier = Modifier.weight(1f))
+                        Text(
+                            text = stringResource(R.string.where_are_you_located),
+                            style = Theme.textStyle.display.xLarge,
+                            color = Theme.colors.shade.primary
+                        )
 
-                AppButton(
-                    type = AppButtonType.Primary,
-                    size = AppButtonSize.Large,
-                    text = stringResource(R.string.save),
-                    onClick = locationInteractionListener::onClickSave,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 24.dp),
-                    state = state.locationButtonState,
-                    loadingIcon = {
-                        LoadingScreen(Modifier.size(16.dp), background = Theme.colors.brand.primary)
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = stringResource(R.string.location_help_text),
+                            style = Theme.textStyle.body.large.regular,
+                            color = Theme.colors.shade.secondary
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable(
+                                    onClick = {
+                                        locationInteractionListener.onShowBottomSheet(
+                                            LocationBottomSheetType.GOVERNORATE
+                                        )
+                                    },
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                )
+                        ) {
+                            AppTextField(
+                                value = listOf(
+                                    state.locationUiState.selectedGovernorateName,
+                                    state.locationUiState.selectedCityName
+                                )
+                                    .filter { it.isNotEmpty() }
+                                    .joinToString(separator = ", "),
+                                onValueChange = {},
+                                placeholder = stringResource(R.string.choose_governorate),
+                                readOnly = true,
+                                label = null,
+                                enabled = false,
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_location_pin),
+                                        contentDescription = null,
+                                        tint = Theme.colors.shade.tertiary
+                                    )
+                                },
+                                trailingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_alt_arrow_down),
+                                        contentDescription = null,
+                                        tint = Theme.colors.shade.tertiary
+                                    )
+                                },
+                                keyboardOptions = KeyboardOptions.Default,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        AppTextField(
+                            value = state.locationUiState.addressInDetails,
+                            onValueChange = locationInteractionListener::onAddressInDetailsChange,
+                            placeholder = stringResource(R.string.enter_your_location_in_details),
+                            label = null,
+                            keyboardOptions = KeyboardOptions.Default,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        AppButton(
+                            type = AppButtonType.Primary,
+                            size = AppButtonSize.Large,
+                            text = stringResource(R.string.save),
+                            onClick = locationInteractionListener::onClickSave,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 24.dp),
+                            state = state.locationButtonState,
+                            loadingIcon = {
+                                LoadingScreen(
+                                    Modifier.size(16.dp),
+                                    background = Theme.colors.brand.primary
+                                )
+                            }
+                        )
                     }
-                )
+
+                }
+            }
+
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                AnimatedVisibility(state.showSnackBarError) {
+                    state.errorMessage?.let {
+                        SnackBar(
+                            text = it.asString(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .statusBarsPadding()
+                                .padding(horizontal = 12.dp, vertical = 16.dp)
+                                .align(Alignment.TopCenter),
+                            onClick = locationInteractionListener::onDismissSnackBar
+                        )
+                    }
+                }
             }
         }
     )
@@ -228,6 +276,7 @@ fun LocationScreenPreview() {
                 override fun onNavigateBack() {}
                 override fun onShowBottomSheet(type: LocationBottomSheetType) {}
                 override fun onDismissBottomSheet() {}
+                override fun onDismissSnackBar() {}
             }
         )
     }

@@ -5,10 +5,12 @@ import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 
 data class MyRequestCustomerScreenState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val myRequestCustomerUiState: MyRequestCustomerUiState = MyRequestCustomerUiState(),
     val errorMessage: String? = null,
 )
@@ -26,14 +28,13 @@ data class MyRequestCustomerUiState(
 )
 
 fun RequestService.toRequestServiceUiState(services: Map<String, Service>): MyRequestCustomerUi {
-    val timePattern = "%02d:%02d:%02d"
     return MyRequestCustomerUi(
         id = this.id,
         requestTitle = this.title,
         status = this.requestStatus,
         serviceId = this.serviceId,
-        date = this.time.date.toString(),
-        time = timePattern.format(time.hour, time.minute, time.second),
+        date = this.time.date,
+        time = time.time,
         serviceImage = services[this.serviceId]?.imageUrl.orEmpty(),
     )
 }
@@ -46,8 +47,8 @@ data class MyRequestCustomerUi(
     val id: String = "",
     val requestTitle: String = "",
     val offersCount: Int = 0,
-    val date: String = "",
-    val time: String = "",
+    val date: LocalDate? = null,
+    val time: LocalTime? = null,
     val serviceId: String = "",
     val serviceType: String = "",
     val serviceImage : String = "",

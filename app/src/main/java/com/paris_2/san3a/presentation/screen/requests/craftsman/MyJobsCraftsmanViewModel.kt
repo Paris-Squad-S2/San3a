@@ -68,9 +68,7 @@ class MyJobsCraftsmanViewModel(
         updateState(
             screenState.value.copy(
                 isNoInternet = false,
-                errorMessage = null,
                 showSnackBarError = false,
-                isLoading = false,
                 myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
                     craftsManId = phoneNumber,
                 )
@@ -148,8 +146,6 @@ class MyJobsCraftsmanViewModel(
             onSuccess = { mappedResult ->
                 updateState(
                     MyJobsCraftsmanScreenState(
-                        isLoading = false,
-                        errorMessage = null,
                         showSnackBarError = false,
                         myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
                             ongoing = mappedResult.filter { it.status == RequestStatus.ONGOING }
@@ -164,7 +160,12 @@ class MyJobsCraftsmanViewModel(
                 getOffersForRequests()
             },
             onError = {
-
+                updateState(
+                    screenState.value.copy(
+                        isLoading = false,
+                    )
+                )
+                Log.e("MyJobsCraftsmanViewModel", "Error mapping requests: ${it.message}")
             }
         )
     }
@@ -261,9 +262,16 @@ class MyJobsCraftsmanViewModel(
 
     }
 
-    private fun onUpdateRequestOfferEach(offer: Offer?, requestId: String, listType: ListType) {
+    private suspend fun onUpdateRequestOfferEach(offer: Offer?, requestId: String, listType: ListType) {
         if (offer == null) {
+            delay(TIMEOUT)
+            updateState(
+                screenState.value.copy(
+                    isLoading = false,
+                )
+            )
             Log.d("MyOfferCraftsmanViewModel", "No offer found for request $requestId")
+            return
         }
 
         val updatedRequests = when (listType) {
@@ -303,13 +311,11 @@ class MyJobsCraftsmanViewModel(
                 )
             )
         }
-        offer?.let {
-            getCraftsManDetails(
-                requestId = requestId,
-                craftsManId = it.craftsmanId,
-                listType = listType
-            )
-        }
+        getCraftsManDetails(
+            requestId = requestId,
+            craftsManId = offer.craftsmanId,
+            listType = listType
+        )
 
     }
 
@@ -381,7 +387,8 @@ class MyJobsCraftsmanViewModel(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
                         ongoing = updatedRequests,
-                    )
+                    ),
+                    isLoading = false,
                 )
             )
 
@@ -389,7 +396,8 @@ class MyJobsCraftsmanViewModel(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
                         completed = updatedRequests,
-                    )
+                    ),
+                    isLoading = false,
                 )
             )
 
@@ -397,7 +405,8 @@ class MyJobsCraftsmanViewModel(
                 screenState.value.copy(
                     myOffersCraftsmanUiState = screenState.value.myOffersCraftsmanUiState.copy(
                         canceled = updatedRequests,
-                    )
+                    ),
+                    isLoading = false,
                 )
             )
         }
@@ -637,5 +646,9 @@ class MyJobsCraftsmanViewModel(
                 updateState(screenState.value.copy(showSnackBarError = false))
             }
         }
+    }
+
+    private companion object {
+        const val TIMEOUT = 600L
     }
 }

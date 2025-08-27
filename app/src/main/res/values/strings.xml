@@ -359,5 +359,16 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="pm">PM</string>
     <string name="loading">Loading…</string>
     <string name="update">Update</string>
-
+    <string name="all">All</string>
+    <string name="no_available_jobs">No available jobs at the moment</string>
+    <string name="go_to_more_and_select_services_to_see_more_jobs">Go to the "More" screen and select services you can do to discover more jobs.</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="time_only">%1$s:%2$s %3$s</string>
+    <string name="night">Night</string>
+    <string name="morning">Morning</string>
+    <string name="afternoon">Afternoon</string>
+    <string name="evening">Evening</string>
+    <string name="no_jobs_for_selected_category">No available jobs for the selected category</string>
+    <string name="try_another_category_to_explore_more_jobs">You can choose another category to explore more jobs</string>
 </resources>

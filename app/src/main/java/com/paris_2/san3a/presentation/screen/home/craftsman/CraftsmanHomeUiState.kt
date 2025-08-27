@@ -22,9 +22,11 @@ data class CraftsmanHomeUiState(
     val userServices: Map<String, Service> = emptyMap(),
     val relatedJob: String = "",
     val location: String = "",
+    val selectedServiceId: String? = null,
     val stats: StatsUiState = StatsUiState(),
     val recentRelatedJobs: Map<String, RequestServiceUiState> = emptyMap(),
     val availableJobs: Map<String, RequestServiceUiState> = emptyMap(),
+    val filteredAvailableJobs: Map<String, RequestServiceUiState> = emptyMap()
 )
 
 data class StatsUiState(
@@ -67,6 +69,7 @@ data class RequestServiceUiState(
     val title: String,
     val imageUrl: String,
     val serviceType: String,
+    val isSelectedServiceType: Boolean = false,
     val description: String,
     val location: String,
     val locationDetails: String,
