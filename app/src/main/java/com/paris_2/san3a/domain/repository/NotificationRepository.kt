@@ -9,4 +9,5 @@ interface NotificationRepository {
     suspend fun addNotification(userId: String, notification: NotificationToSend): String
     suspend fun markNotificationsAsRead(userId: String)
     fun getUnreadNotificationsCount(userId: String): Flow<Int>
+    suspend fun sendNotification(token: String, title: String, description: String)
 }

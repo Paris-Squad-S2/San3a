@@ -4,6 +4,7 @@ import com.paris_2.san3a.data.mapper.toDomain
 import com.paris_2.san3a.data.mapper.toFirestoreDto
 import com.paris_2.san3a.data.repository.shared.BaseRepository
 import com.paris_2.san3a.data.source.local.userPreferences.UserPreferencesLocalDataStore
+import com.paris_2.san3a.data.source.remote.fcm.NotificationApi
 import com.paris_2.san3a.data.source.remote.notification.NotificationRemoteDataSource
 import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.entity.Notification
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.map
 class NotificationRepositoryImpl(
     private val notificationRemoteDataSource: NotificationRemoteDataSource,
     private val userPreferencesLocalDataStore: UserPreferencesLocalDataStore,
+    private val notificationApi: NotificationApi
 ) : NotificationRepository, BaseRepository() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -47,5 +49,15 @@ class NotificationRepositoryImpl(
         return notificationRemoteDataSource.getUnreadNotificationsCount(userId).catch {
             throw FailException("Failed to get unread notifications count: ${it.message}")
         }
+    }
+
+
+
+    override suspend fun sendNotification(
+        token: String,
+        title: String,
+        description: String
+    ) {
+        notificationApi.sendNotification(token, title, description)
     }
 }
