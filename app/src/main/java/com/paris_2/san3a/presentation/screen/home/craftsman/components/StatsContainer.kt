@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.utill.format
 
 @Composable
 fun StatsContainer(
@@ -80,7 +81,7 @@ fun StatsContainer(
                 contentDescription = stringResource(R.string.rating),
                 iconTint = Theme.colors.additional.primary.yellow,
                 label = stringResource(R.string.rating),
-                value = rating.toString()
+                value = rating.format()
             )
         }
     }
