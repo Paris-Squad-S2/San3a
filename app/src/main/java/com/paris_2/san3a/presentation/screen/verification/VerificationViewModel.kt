@@ -1,11 +1,12 @@
 package com.paris_2.san3a.presentation.screen.verification
 
 import android.net.Uri
-import androidx.annotation.StringRes
+import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.user.SetUpAccountUseCase
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 
 data class VerificationScreenState(
     val verificationUiState: VerificationUiState = VerificationUiState(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val successMessageSnackBar: UiText? = null,
     val errorMessage: UiText? = null,
     val showSnackBarSuccess: Boolean = false,
@@ -34,6 +35,7 @@ data class VerificationUiState(
 class VerificationViewModel(
     private val setUpAccountUseCase: SetUpAccountUseCase,
     private val getPhoneNumberUseCase: GetPhoneNumberUseCase,
+    private val getUserUseCase: GetUserUseCase
 ) : BaseViewModel<VerificationScreenState>(VerificationScreenState()),
     VerificationInteractionListener {
 
@@ -52,20 +54,58 @@ class VerificationViewModel(
     private fun onGetPhoneNumberSuccess(phoneNumber: String) {
         updateState(
             screenState.value.copy(
-                isLoading = false,
-                isNoInternet = false,
-                errorMessage = null,
                 verificationUiState = screenState.value.verificationUiState.copy(
                     phoneNumber = phoneNumber
                 )
             )
+        )
+        getCurrentUser()
+    }
+
+    private fun getCurrentUser() {
+        tryToExecute(
+            execute = { getUserUseCase(screenState.value.verificationUiState.phoneNumber) },
+            onSuccess = { user ->
+                updateState(
+                    screenState.value.copy(
+                        verificationUiState = screenState.value.verificationUiState.copy(
+                            frontOfNationalIdUri = if (user.nationalIdFrontImage.isNotBlank()) user.nationalIdFrontImage.toUri() else null,
+                            backOfNationalIdUri = if (user.nationalIdBackImage.isNotBlank()) user.nationalIdBackImage.toUri() else null
+                        ),
+                        isLoading = false,
+                    )
+                )
+            },
+            onError = {
+                if (it is NoInternetConnectionException) {
+                    updateState(
+                        screenState.value.copy(
+                            isNoInternet = true,
+                            isLoading = false,
+                            showSnackBarError = false,
+                            showSnackBarSuccess = false,
+                            successMessageSnackBar = null
+                        )
+                    )
+                } else {
+                    updateState(
+                        screenState.value.copy(
+                            isLoading = false,
+                            errorMessage = UiText.StringResource(R.string.user_information_not_found),
+                            showSnackBarError = true,
+                            showSnackBarSuccess = false
+                        )
+                    )
+                    hideSnackBar()
+                }
+            }
         )
     }
 
     private fun onGetPhoneNumberError(th: Throwable) {
         updateState(
             screenState.value.copy(
-                errorMessage = UiText.StringResource( R.string.phone_number_not_found),
+                errorMessage = UiText.StringResource(R.string.phone_number_not_found),
                 isLoading = false,
                 isNoInternet = false,
                 showSnackBarError = true,
@@ -94,7 +134,7 @@ class VerificationViewModel(
                 successMessageSnackBar = null
             )
         )
-        uploadNationalIdImages()
+        getPhoneNumber()
     }
 
     private fun uploadNationalIdImages() {
@@ -157,7 +197,7 @@ class VerificationViewModel(
         } else {
             updateState(
                 screenState.value.copy(
-                    errorMessage =UiText.StringResource( R.string.national_id_images_uploaded_failed),
+                    errorMessage = UiText.StringResource(R.string.national_id_images_uploaded_failed),
                     isNoInternet = false,
                     isLoading = false,
                     showSnackBarError = true,

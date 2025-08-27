@@ -20,6 +20,7 @@ import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.roundFloat
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 
 class MyRequestCustomerViewModel(
@@ -261,6 +262,12 @@ class MyRequestCustomerViewModel(
         onEach = { offer ->
             if (offer == null) {
                 Log.d("MyOfferCraftsmanViewModel", "No offer found for request $requestId")
+                delay(TIMEOUT)
+                updateState(
+                    screenState.value.copy(
+                        isLoading = false,
+                    )
+                )
                 return@tryToObserve
             }
 
@@ -297,6 +304,13 @@ class MyRequestCustomerViewModel(
                 requestId = requestId,
                 craftsManId = offer.craftsmanId,
                 listType = listType
+            )
+
+            delay(TIMEOUT)
+            updateState(
+                screenState.value.copy(
+                    isLoading = false,
+                )
             )
 
         },
@@ -392,6 +406,12 @@ class MyRequestCustomerViewModel(
     }
 
     override fun onRetryClick() {
+        updateState(
+            screenState.value.copy(
+                errorMessage = null,
+                isLoading = true,
+            )
+        )
         getCustomerPhone()
     }
 
@@ -524,5 +544,9 @@ class MyRequestCustomerViewModel(
                 )
             }
         )
+    }
+
+    private companion object {
+        const val TIMEOUT = 600L
     }
 }

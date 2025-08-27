@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation.shared.components
 
-import android.content.Context
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -19,11 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -32,10 +27,6 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
-import com.paris_2.san3a.presentation.utill.format
-import com.paris_2.san3a.presentation.utill.getCurrentDateTime
-import com.paris_2.san3a.presentation.utill.getTimeAgo
-import com.paris_2.san3a.presentation.utill.plusNDays
 import kotlinx.datetime.LocalDateTime
 
 enum class OfferStatus {
@@ -81,28 +72,10 @@ fun CraftsManOffer(
 
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .let {
-                if (addShadow) {
-                    it
-                        .graphicsLayer {
-                            shadowElevation = 0.dp.toPx()
-                            translationY = (-3.48).dp.toPx()
-                        }
-                        .shadow(
-                            elevation = 69.52.dp,
-                            shape = RoundedCornerShape(Theme.radius.extraLarge),
-                            clip = false,
-                            ambientColor = Color.Black.copy(alpha = 0.08f),
-                            spotColor = Color.Black.copy(alpha = 0.08f)
-                        )
-                } else {
-                    it
-                }
-            },
+            .fillMaxWidth(),
         shape = RoundedCornerShape(Theme.radius.extraLarge),
         colors = CardDefaults.cardColors(containerColor = animatedBgColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = if (addShadow) 3.dp else 0.dp)
     ) {
 
         val paddingAcceptedRequest = if (offerDetails.status == OfferStatus.OFFER_ACCEPTED || offerDetails.status == OfferStatus.YOUR_ACCEPTED_OFFER)  2.dp  else 0.dp
@@ -137,13 +110,13 @@ fun CraftsManOffer(
             painter = painter,
             isVerified = offerDetails.isVerify,
             name = offerDetails.name,
-            postedTime = getTimeAgo(offerDetails.postedTime, LocalContext.current),
+            postedTime = offerDetails.postedTime,
             description = offerDetails.description,
             amount = stringResource(R.string.egp, offerDetails.amount),
             rate = offerDetails.rate,
             reviewsNumber = offerDetails.reviewsNumber,
             status = offerDetails.status,
-            time = offerDetails.dateTime?.format(LocalContext.current).orEmpty(),
+            dateTime = offerDetails.dateTime,
             stickyFooter = {
                 if (showActionButtons) {
                     when {

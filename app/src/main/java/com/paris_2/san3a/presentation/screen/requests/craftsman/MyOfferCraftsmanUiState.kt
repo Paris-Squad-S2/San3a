@@ -8,9 +8,10 @@ import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.presentation.shared.utils.UiText
+import kotlinx.datetime.LocalDateTime
 
 data class MyJobsCraftsmanScreenState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val myOffersCraftsmanUiState: MyOfferCraftsmanUiState = MyOfferCraftsmanUiState(),
     val errorMessage: UiText? = null,
     val isNoInternet: Boolean = false,
@@ -62,8 +63,8 @@ data class OfferUiState(
     val id: String,
     val price: Double,
     val craftsmanId: String,
-    val preferredDate: String,
-    val preferredTime: String,
+    val preferredDateTime: LocalDateTime,
+    val createdAt: LocalDateTime,
     val messageToCustomer: String,
     val isAccepted: Boolean,
     val craftsMan: CraftsManUiState
@@ -75,8 +76,8 @@ fun Offer?.toUiState(): OfferUiState? {
             id = it.id,
             price = it.price,
             craftsmanId = it.craftsmanId,
-            preferredDate = it.preferredDate.toString(),
-            preferredTime = it.preferredTime.toString(),
+            preferredDateTime = LocalDateTime(it.preferredDate, it.preferredTime),
+            createdAt = it.createdAt,
             messageToCustomer = it.messageToCustomer,
             isAccepted = it.isAccepted,
             craftsMan = CraftsManUiState()

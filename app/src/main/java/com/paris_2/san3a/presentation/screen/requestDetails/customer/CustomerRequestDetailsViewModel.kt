@@ -54,8 +54,6 @@ class CustomerRequestDetailsViewModel(
                 val city = getLocationInfoUseCase.getCityById(request.cityId)
                 updateState(
                     screenState.value.copy(
-                        isLoading = false,
-                        error = null,
                         uiState = screenState.value.uiState.copy(
                             request = request.toRequestServiceUIState(
                                 location =
@@ -90,7 +88,8 @@ class CustomerRequestDetailsViewModel(
                                 serviceType = service?.title ?: "Unknown Service",
                                 serviceImageUri = service?.imageUrl.orEmpty(),
                             ),
-                        )
+                        ),
+                        isLoadingRequestDetails = false,
                     )
                 )
             },
@@ -110,8 +109,6 @@ class CustomerRequestDetailsViewModel(
             onEach = { offers ->
                 updateState(
                     screenState.value.copy(
-                        isLoading = false,
-                        error = null,
                         uiState = screenState.value.uiState.copy(
                             offers = offers?.sortedByDescending { it.isAccepted }
                                 ?.toOfferUiStateMap()
@@ -134,6 +131,14 @@ class CustomerRequestDetailsViewModel(
     private fun loadCraftsMenInfo() {
         tryToExecute(
             execute = { scope ->
+                screenState.value.uiState.offers.ifEmpty {
+                    updateState(
+                        screenState.value.copy(
+                            isLoadingOffers = false,
+                        )
+                    )
+                    return@tryToExecute
+                }
                 screenState.value.uiState.offers.forEach { offer ->
                     val craftsmanId = offer.value.craftsmanId
                     val userDeferred = scope.async { getUserUseCase(craftsmanId) }
@@ -150,7 +155,8 @@ class CustomerRequestDetailsViewModel(
                                         .apply {
                                             this[offer.key] = offerUiState
                                         },
-                                )
+                                ),
+                                isLoadingOffers = false,
                             )
                         )
                     }
@@ -176,7 +182,8 @@ class CustomerRequestDetailsViewModel(
     override fun onRetryClick() {
         updateState(
             screenState.value.copy(
-                isLoading = true,
+                isLoadingRequestDetails = true,
+                isLoadingOffers = true,
                 error = null
             )
         )

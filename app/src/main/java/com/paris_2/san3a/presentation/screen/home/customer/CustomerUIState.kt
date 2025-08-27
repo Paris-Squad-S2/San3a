@@ -7,8 +7,10 @@ import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSh
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 
 data class CustomerHomeUiState(
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null, //TODO handle localized error messages
+    val isUserDataLoading: Boolean = false,
+    val isRequestLoading: Boolean = false,
+    val isFindWhatYouNeedLoading: Boolean = false,
+    val errorMessage: String? = null,
     val notificationsCount: Int = 0,
     val customerUiState: CustomerUiState = CustomerUiState(),
     val bottomSheetUiState: BottomSheetUiState = BottomSheetUiState(),
@@ -22,8 +24,9 @@ data class CustomerUiState(
     val id: String = "",
     val currentLanguage: String = "en",
     val currentUserName: String = "",
-    val government: String = "",
-    val city: String = "",
+    val governorate: Governorate? = null,
+    val city: City? = null,
+    val addressDetails: String = "",
     val mostRequestedServices: List<Service> = emptyList(),
     val services: List<Service> = emptyList(),
     val searchQuery: String = "",
@@ -40,10 +43,8 @@ data class BottomSheetUiState(
     val bottomSheetSelectedSuggestion: String? = null,
     val bottomSheetGovernments: List<Governorate> = emptyList(),
     val bottomSheetCities: List<City> = emptyList(),
-    val bottomSheetSelectedGovernmentName: String = "",
-    val bottomSheetSelectedGovernmentId: Int? = null,
-    val bottomSheetSelectedCityName: String = "",
-    val bottomSheetSelectedCityId: Int? = null,
+    val bottomSheetSelectedGovernorate: Governorate? = null,
+    val bottomSheetSelectedCity: City? = null,
     val bottomSheetAddressDetails: String = "",
     val isGovernmentSheetVisible: Boolean = false,
     val locationBottomSheetType: LocationBottomSheetContentType = LocationBottomSheetContentType.GOVERNMENT

@@ -5,7 +5,8 @@ import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.RequestSer
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 
 data class CustomerRequestDetailsScreenState(
-    val isLoading: Boolean = false,
+    val isLoadingRequestDetails: Boolean = true,
+    val isLoadingOffers: Boolean = true,
     val error: String? = null,
     val uiState: CustomerRequestDetailsUiState = CustomerRequestDetailsUiState(),
 )

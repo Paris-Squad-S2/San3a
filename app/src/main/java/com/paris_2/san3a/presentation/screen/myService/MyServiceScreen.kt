@@ -2,11 +2,10 @@ package com.paris_2.san3a.presentation.screen.myService
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,6 +28,7 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
+import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
@@ -65,81 +65,103 @@ fun MyServiceScreenContent(
             )
         },
         content = {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.screen)
-                    .verticalScroll(scrollState)
-                    .padding(bottom = 96.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.what_do_you_usually_need_help_with),
-                    style = Theme.textStyle.display.xLarge,
-                    color = Theme.colors.shade.primary,
-                    modifier = Modifier.padding(16.dp)
-                )
+            when {
+                myServiceScreenState.isLoading -> {
+                    LoadingScreen(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen)
+                    )
+                }
 
-                Text(
-                    text = stringResource(R.string.this_helps_us_personalize_your_experience_you_can_change_it_anytime),
-                    style = Theme.textStyle.body.large.regular,
-                    color = Theme.colors.shade.secondary,
-                    modifier = Modifier
-                        .padding(bottom = 24.dp)
-                        .padding(horizontal = 16.dp)
-                )
+                myServiceScreenState.isNoInternet -> {
+                    LostConnectionScreen(
+                        onRetry = myServiceInteractionListener::onClickRetry,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen)
+                            .padding(horizontal = 60.dp)
+                    )
+                }
 
-                ServicesContent(
-                    services = myServiceScreenState.myServiceUiState,
-                    onChipClick = myServiceInteractionListener::onClickService,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 32.dp)
-                        .height(434.dp)
-                )
-            }
-            Box(modifier = Modifier.fillMaxSize()) {
-                AppButton(
-                    text = stringResource(R.string.save),
-                    onClick = myServiceInteractionListener::onClickSave,
-                    size = AppButtonSize.Large,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 16.dp),
-                    state = myServiceScreenState.serviceButtonState,
-                    type = AppButtonType.Primary,
-                    loadingIcon = {
-                            LoadingScreen(Modifier.size(20.dp), background = Theme.colors.brand.primary)
+                else -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen)
+                            .verticalScroll(scrollState)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.what_do_you_usually_need_help_with),
+                            style = Theme.textStyle.display.xLarge,
+                            color = Theme.colors.shade.primary,
+                            modifier = Modifier.padding(16.dp)
+                        )
 
-                    }
-                )
+                        Text(
+                            text = stringResource(R.string.this_helps_us_personalize_your_experience_you_can_change_it_anytime),
+                            style = Theme.textStyle.body.large.regular,
+                            color = Theme.colors.shade.secondary,
+                            modifier = Modifier
+                                .padding(bottom = 24.dp)
+                                .padding(horizontal = 16.dp)
+                        )
 
-                AnimatedVisibility(myServiceScreenState.showSnackBarError) {
-                    myServiceScreenState.errorMessage?.let {
-                        SnackBar(
+                        ServicesContent(
+                            services = myServiceScreenState.myServiceUiState,
+                            onChipClick = myServiceInteractionListener::onClickService,
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 32.dp)
+                                .fillMaxHeight()
+                                .weight(1f)
+                        )
+
+                        AppButton(
+                            text = stringResource(R.string.save),
+                            onClick = myServiceInteractionListener::onClickSave,
+                            size = AppButtonSize.Large,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .statusBarsPadding()
-                                .padding(horizontal = 12.dp, vertical = 16.dp)
-                                .align(Alignment.TopCenter),
-                            text = it.asString(),
-                            onClick = myServiceInteractionListener::onDismissSnack,
+                                .padding(horizontal = 16.dp, vertical = 16.dp),
+                            state = myServiceScreenState.serviceButtonState,
+                            type = AppButtonType.Primary,
+                            loadingIcon = {
+                                LoadingScreen(
+                                    Modifier.size(20.dp),
+                                    background = Theme.colors.brand.primary
+                                )
+
+                            }
                         )
                     }
                 }
+            }
+            AnimatedVisibility(myServiceScreenState.showSnackBarError) {
+                myServiceScreenState.errorMessage?.let {
+                    SnackBar(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding()
+                            .padding(horizontal = 12.dp, vertical = 16.dp)
+                            .align(Alignment.TopCenter),
+                        text = it.asString(),
+                        onClick = myServiceInteractionListener::onDismissSnack,
+                    )
+                }
+            }
 
-                AnimatedVisibility(myServiceScreenState.showSnackBarSuccess) {
-                    myServiceScreenState.successMessageSnackBar?.let {
-                        SnackBar(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .statusBarsPadding()
-                                .padding(horizontal = 12.dp, vertical = 16.dp)
-                                .align(Alignment.TopCenter),
-                            text = it.asString(),
-                            onClick = myServiceInteractionListener::onDismissSnack,
-                        )
-                    }
+            AnimatedVisibility(myServiceScreenState.showSnackBarSuccess) {
+                myServiceScreenState.successMessageSnackBar?.let {
+                    SnackBar(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding()
+                            .padding(horizontal = 12.dp, vertical = 16.dp)
+                            .align(Alignment.TopCenter),
+                        text = it.asString(),
+                        onClick = myServiceInteractionListener::onDismissSnack,
+                    )
                 }
             }
         }
@@ -155,8 +177,8 @@ private fun MyServiceScreenContentPreview() {
             override fun onBackClick() {}
             override fun onClickSave() {}
             override fun onClickRetry() {}
-            override fun onClickService(service: String) {}
-            override fun onDismissSnack() { }
+            override fun onClickService(serviceId: String) {}
+            override fun onDismissSnack() {}
         },
     )
 }

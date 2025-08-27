@@ -4,22 +4,22 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.entity.NotificationToSend
-import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
-import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.services.GetServiceByIdUseCase
-import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.user.IncrementJobsDoneForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.user.UpdateEarningsForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.messaging.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.requests.AddOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.CancelRequestUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetRequestDetailsByIdUseCase
 import com.paris_2.san3a.domain.usecase.requests.MarkRequestAsDoneUseCase
-import com.paris_2.san3a.presentation.utill.fakeImage
+import com.paris_2.san3a.domain.usecase.services.GetServiceByIdUseCase
+import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
+import com.paris_2.san3a.domain.usecase.user.IncrementJobsDoneForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.UpdateEarningsForCraftsmanUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.utill.fakeImage
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.LocalDate
@@ -69,7 +69,6 @@ class CraftsmanRequestDetailsViewModel(
                                     ).joinToString(", ")
                             ),
                         ),
-                        isLoading = false,
                         error = null,
                     )
                 )
@@ -97,7 +96,8 @@ class CraftsmanRequestDetailsViewModel(
                                 serviceType = service?.title ?: "Unknown Service",
                                 serviceImageUri = service?.imageUrl.orEmpty(),
                             )
-                        )
+                        ),
+                        isLoadingRequestDetails = false,
                     )
                 )
             },
@@ -140,6 +140,15 @@ class CraftsmanRequestDetailsViewModel(
     private fun loadCraftsMenInfo() {
         tryToExecute(
             execute = { scope ->
+                screenState.value.uiState.offers.ifEmpty {
+                    updateState(
+                        screenState.value.copy(
+                            isLoadingOffers = false,
+                        )
+                    )
+                    return@tryToExecute
+                }
+
                 screenState.value.uiState.offers.forEach { offer ->
                     val craftsmanId = offer.value.craftsmanId
                     val userDeferred = scope.async { getUserUseCase(craftsmanId) }
@@ -156,7 +165,8 @@ class CraftsmanRequestDetailsViewModel(
                                         .apply {
                                             this[offer.key] = offerUiState
                                         }
-                                )
+                                ),
+                                isLoadingOffers = false,
                             )
                         )
                     }
@@ -353,8 +363,9 @@ class CraftsmanRequestDetailsViewModel(
             )
         }
     }
+
     private fun isInputPriceValid(price: String): Boolean {
-        return price.all{ it.isDigit()} && price.length<=7
+        return price.all { it.isDigit() } && price.length <= 7
     }
 
     override fun onDateChanged(date: LocalDate) {
@@ -421,6 +432,13 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onRetryClick() {
+        updateState(
+            screenState.value.copy(
+                isLoadingRequestDetails = true,
+                isLoadingOffers = true,
+                error = null,
+            )
+        )
         loadRequestDetails(requestId)
         loadOffers(requestId)
     }

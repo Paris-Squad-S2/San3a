@@ -78,9 +78,9 @@ class CustomerHomeViewModel(
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
-                    bottomSheetSelectedGovernmentName = "",
-                    bottomSheetSelectedCityName = "",
-                    bottomSheetAddressDetails = "",
+                    bottomSheetSelectedGovernorate = screenState.value.customerUiState.governorate,
+                    bottomSheetSelectedCity = screenState.value.customerUiState.city,
+                    bottomSheetAddressDetails = screenState.value.customerUiState.addressDetails,
                     isGovernmentSheetVisible = false,
                 )
             )
@@ -205,10 +205,8 @@ class CustomerHomeViewModel(
             updateState(
                 screenState.value.copy(
                     bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                        bottomSheetSelectedGovernmentName = government.name,
-                        bottomSheetSelectedGovernmentId = government.id,
-                        bottomSheetSelectedCityName = "",
-                        bottomSheetSelectedCityId = null,
+                        bottomSheetSelectedGovernorate = government,
+                        bottomSheetSelectedCity = null,
                     )
                 )
             )
@@ -228,8 +226,7 @@ class CustomerHomeViewModel(
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
-                    bottomSheetSelectedCityName = city?.name.orEmpty(),
-                    bottomSheetSelectedCityId = city?.id,
+                    bottomSheetSelectedCity = city,
                     isGovernmentSheetVisible = false
                 )
             )
@@ -261,8 +258,8 @@ class CustomerHomeViewModel(
                     bottomSheetDescription = "",
                     bottomSheetImages = emptyList(),
                     bottomSheetSelectedSuggestion = null,
-                    bottomSheetSelectedGovernmentName = "",
-                    bottomSheetSelectedCityName = "",
+                    bottomSheetSelectedGovernorate = null,
+                    bottomSheetSelectedCity = null,
                     bottomSheetAddressDetails = "",
                     isGovernmentSheetVisible = false,
                 )
@@ -279,8 +276,8 @@ class CustomerHomeViewModel(
     }
 
     override fun createRequest() {
-        if (screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId == null
-            || screenState.value.bottomSheetUiState.bottomSheetSelectedCityId == null
+        if (screenState.value.bottomSheetUiState.bottomSheetSelectedGovernorate == null
+            || screenState.value.bottomSheetUiState.bottomSheetSelectedCity == null
         ) {
             updateState(
                 screenState.value.copy(
@@ -312,9 +309,9 @@ class CustomerHomeViewModel(
                         id = "",
                         title = screenState.value.bottomSheetUiState.bottomSheetSubtitle,
                         description = screenState.value.bottomSheetUiState.bottomSheetDescription,
-                        governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernmentId
+                        governorateId = screenState.value.bottomSheetUiState.bottomSheetSelectedGovernorate?.id
                             ?: 0,
-                        cityId = screenState.value.bottomSheetUiState.bottomSheetSelectedCityId
+                        cityId = screenState.value.bottomSheetUiState.bottomSheetSelectedCity?.id
                             ?: 0,
                         locationDetails = screenState.value.bottomSheetUiState.bottomSheetAddressDetails,
                         image = screenState.value.bottomSheetUiState.bottomSheetImages,
@@ -376,7 +373,7 @@ class CustomerHomeViewModel(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                     bottomSheetGovernments = governments,
-                    bottomSheetSelectedGovernmentName = "",
+                    bottomSheetSelectedGovernorate = null,
                     locationBottomSheetType = LocationBottomSheetContentType.GOVERNMENT,
                 ),
             )
@@ -397,7 +394,7 @@ class CustomerHomeViewModel(
                 screenState.value.copy(
                     bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
                         bottomSheetCities = cities,
-                        bottomSheetSelectedCityName = "",
+                        bottomSheetSelectedCity = null,
                         locationBottomSheetType = LocationBottomSheetContentType.CITY,
                     ),
                 )
@@ -408,6 +405,11 @@ class CustomerHomeViewModel(
     private fun loadServices() {
         tryToExecute(
             execute = {
+                updateState(
+                    screenState.value.copy(
+                        isFindWhatYouNeedLoading = true
+                    )
+                )
                 getSortedServicesUseCase(
                     phoneNumber = getPhoneNumberUseCase(),
                     isCraftsman = false
@@ -424,7 +426,8 @@ class CustomerHomeViewModel(
                 screenState.value.copy(
                     customerUiState = screenState.value.customerUiState.copy(
                         services = userServices,
-                    )
+                    ),
+                    isFindWhatYouNeedLoading = false
                 )
             )
         }
@@ -432,13 +435,21 @@ class CustomerHomeViewModel(
 
     private fun loadMostRequestedServices() {
         tryToObserve(
-            observe = getMostRequestedServicesUseCase::invoke,
+            observe = {
+                updateState(
+                    screenState.value.copy(
+                        isRequestLoading = true
+                    )
+                )
+                getMostRequestedServicesUseCase.invoke()
+                      },
             onEach = { mostRequestedServices ->
                 updateState(
                     screenState.value.copy(
                         customerUiState = screenState.value.customerUiState.copy(
                             mostRequestedServices = mostRequestedServices ?: emptyList(),
-                        )
+                        ),
+                        isRequestLoading = false
                     )
                 )
             },
@@ -448,7 +459,14 @@ class CustomerHomeViewModel(
 
     private fun loadUserData() {
         tryToExecute(
-            execute = { getUserUseCase(getPhoneNumberUseCase()) },
+            execute = {
+                updateState(
+                    screenState.value.copy(
+                        isUserDataLoading = true
+                    )
+                )
+                getUserUseCase(getPhoneNumberUseCase())
+                      },
             onSuccess = ::onLoadUserDataSuccess,
             onError = ::onError
         )
@@ -463,9 +481,10 @@ class CustomerHomeViewModel(
                 customerUiState = screenState.value.customerUiState.copy(
                     id = user.id,
                     currentUserName = user.fullName,
-                    government = governorate?.name.orEmpty(),
-                    city = city?.name.orEmpty(),
-                )
+                    governorate = governorate,
+                    city = city,
+                    addressDetails = user.location.addressInDetails,
+                ),
             )
         )
         getNotificationsCount(user.id)
@@ -478,6 +497,7 @@ class CustomerHomeViewModel(
                 updateState(
                     screenState.value.copy(
                         notificationsCount = count ?: 0,
+                        isUserDataLoading = false
                     )
                 )
             },
@@ -546,6 +566,18 @@ class CustomerHomeViewModel(
         )
     }
 
+    override fun onRetry() {
+        updateState(
+            screenState.value.copy(
+                errorMessage = null,
+                isUserDataLoading = false,
+                isFindWhatYouNeedLoading = false,
+                isRequestLoading = false
+            )
+        )
+        loadUserData()
+    }
+
     private fun hideSnackBar() {
         viewModelScope.launch {
             if (screenState.value.showSnackBarError || screenState.value.showSnackBarSuccess) {
@@ -564,7 +596,9 @@ class CustomerHomeViewModel(
         updateState(
             screenState.value.copy(
                 errorMessage = throwable.message ?: UNKNOWN_ERROR,
-                isLoading = false
+                isUserDataLoading = false,
+                isFindWhatYouNeedLoading = false,
+                isRequestLoading = false
             )
         )
     }

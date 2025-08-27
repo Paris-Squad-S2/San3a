@@ -13,7 +13,8 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 
 data class CraftsmanRequestDetailsScreenState(
-    val isLoading: Boolean = false,
+    val isLoadingRequestDetails: Boolean = true,
+    val isLoadingOffers: Boolean = true,
     val error: String? = null,
     val uiState: CraftsmanRequestDetailsUiState = CraftsmanRequestDetailsUiState(),
 )

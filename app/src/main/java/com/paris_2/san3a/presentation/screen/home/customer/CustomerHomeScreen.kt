@@ -49,6 +49,8 @@ import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.BottomSheet
 import com.paris_2.san3a.presentation.shared.components.CategoryItem
+import com.paris_2.san3a.presentation.shared.components.LoadingScreen
+import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.NotificationIcon
 import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
 import com.paris_2.san3a.presentation.shared.components.RequestDescriptionContent
@@ -201,8 +203,8 @@ private fun CustomerHomeScreenContent(
                         subTitle = stringResource(R.string.where_are_you_from),
                         buttonTitle = stringResource(R.string.next),
                         buttonIsActive = state.bottomSheetUiState.bottomSheetAddressDetails.isNotEmpty() &&
-                                state.bottomSheetUiState.bottomSheetSelectedGovernmentId != null &&
-                                state.bottomSheetUiState.bottomSheetSelectedCityId != null,
+                                state.bottomSheetUiState.bottomSheetSelectedGovernorate != null &&
+                                state.bottomSheetUiState.bottomSheetSelectedCity != null,
                         step = 3,
                         onButtonClick = { action.nextBottomSheetStep() },
                         onClickBack = { action.previousBottomSheetStep() },
@@ -221,8 +223,8 @@ private fun CustomerHomeScreenContent(
                             onCitiesSelected = {
                                 action.setBottomSheetSelectedCity(it.id)
                             },
-                            government = state.bottomSheetUiState.bottomSheetSelectedGovernmentName,
-                            city = state.bottomSheetUiState.bottomSheetSelectedCityName,
+                            government = state.bottomSheetUiState.bottomSheetSelectedGovernorate?.name.orEmpty(),
+                            city = state.bottomSheetUiState.bottomSheetSelectedCity?.name.orEmpty(),
                             onGetLocationClicked = {
                                 action.showGovernmentSheet(true)
                             },
@@ -295,7 +297,8 @@ private fun CustomerHomeScreenContent(
                         modifier = Modifier
                             .padding(start = 16.dp, end = 8.dp)
                             .weight(1f),
-                    ) {
+                    )
+                    {
                         Text(
                             text = stringResource(
                                 getCurrentDateTime().getGreetingMessage(),
@@ -319,7 +322,7 @@ private fun CustomerHomeScreenContent(
                                     .padding(end = 4.dp)
                             )
                             Text(
-                                text = "${state.customerUiState.government}, ${state.customerUiState.city}",
+                                text = "${state.customerUiState.governorate?.name.orEmpty()}, ${state.customerUiState.city?.name.orEmpty()}",
                                 style = Theme.textStyle.body.small.medium,
                                 color = Theme.colors.shade.secondary,
                                 maxLines = 1,
@@ -331,89 +334,116 @@ private fun CustomerHomeScreenContent(
             )
         },
         content = {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.colors.background.screen),
-                horizontalAlignment = CenterHorizontally,
-            ) {
-                item {
-                    SearchBar(
-                        value = state.customerUiState.searchQuery,
-                        onValueChange = action::onSearch,
-                        hint = stringResource(R.string.search),
-                        onMicClick = {
-                            if (ContextCompat.checkSelfPermission(
-                                    context,
-                                    Manifest.permission.RECORD_AUDIO
-                                ) == PackageManager.PERMISSION_GRANTED
-                            ) {
-                                action.onMicClick()
-                            } else {
-                                permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
-                            }
-                        },
+            when {
+                state.isRequestLoading || state.isUserDataLoading || state.isFindWhatYouNeedLoading -> LoadingScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Theme.colors.background.screen)
+                )
+
+                state.errorMessage != null -> {
+                    LostConnectionScreen(
+                        onRetry = action::onRetry,
                         modifier = Modifier
-                            .padding(top = 16.dp, bottom = 24.dp)
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen)
+                            .padding(horizontal = 60.dp)
                     )
                 }
-                if (state.customerUiState.mostRequestedServices.isNotEmpty() &&
-                    state.customerUiState.searchQuery.isEmpty()
-                ) {
-                    item {
-                        MostRequestedServices(
-                            services = state.customerUiState.mostRequestedServices,
-                            onServiceClick = action::onServiceClick,
-                        )
+
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Theme.colors.background.screen),
+                        horizontalAlignment = CenterHorizontally,
+                    ) {
+                        item {
+                            SearchBar(
+                                value = state.customerUiState.searchQuery,
+                                onValueChange = action::onSearch,
+                                hint = stringResource(R.string.search),
+                                onMicClick = {
+                                    if (ContextCompat.checkSelfPermission(
+                                            context,
+                                            Manifest.permission.RECORD_AUDIO
+                                        ) == PackageManager.PERMISSION_GRANTED
+                                    ) {
+                                        action.onMicClick()
+                                    } else {
+                                        permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                                    }
+                                },
+                                modifier = Modifier
+                                    .padding(top = 16.dp, bottom = 24.dp)
+                            )
+                        }
+                        if (state.customerUiState.mostRequestedServices.isNotEmpty() &&
+                            state.customerUiState.searchQuery.isEmpty()
+                        ) {
+                            item {
+                                MostRequestedServices(
+                                    services = state.customerUiState.mostRequestedServices,
+                                    onServiceClick = action::onServiceClick,
+                                )
+                            }
+                        }
+                        if (state.customerUiState.searchQuery.isNotEmpty() && servicesToDisplay.isEmpty()) {
+                            item {
+                                PlaceHolderScreen(
+                                    image = R.drawable.img_no_search_result,
+                                    title = R.string.no_results_found,
+                                    description = R.string.try_a_different_keyword_or_check_your_spelling_some_services_may_be_listed_under_other_names,
+                                    modifier = Modifier
+                                        .padding(top = 24.dp)
+                                        .padding(horizontal = 16.dp)
+                                )
+                            }
+                        } else {
+                            item {
+                                Text(
+                                    text = stringResource(R.string.find_what_you_need),
+                                    style = Theme.textStyle.title.small,
+                                    color = Theme.colors.shade.primary,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 16.dp, bottom = 16.dp, top = 16.dp)
+                                )
+                            }
+                            items(servicesToDisplay) { service ->
+                                CategoryItem(
+                                    title = service.title,
+                                    description = service.description,
+                                    serviceImageUrl = service.imageUrl,
+                                    isLarge = false,
+                                    modifier = Modifier
+                                        .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
+                                    onclick = { action.onServiceClick(service) }
+                                )
+                            }
+                        }
+                        if (state.customerUiState.searchQuery.isEmpty()) {
+                            item {
+                                AdCard(
+                                    title = stringResource(R.string.got_a_skill_start_earning),
+                                    caption = stringResource(R.string.create_your_craftsman_account_and_get_job_requests),
+                                    buttonTitle = stringResource(R.string.become_a_craftsman),
+                                    onClick = action::onBecomeCraftsmanClick,
+                                    modifier = Modifier
+                                        .padding(
+                                            top = 12.dp,
+                                            bottom = 16.dp,
+                                            start = 16.dp,
+                                            end = 16.dp
+                                        )
+                                )
+                            }
+                        }
                     }
                 }
-                if (state.customerUiState.searchQuery.isNotEmpty() && servicesToDisplay.isEmpty()) {
-                    item {
-                        PlaceHolderScreen(
-                            image = R.drawable.img_no_search_result,
-                            title = R.string.no_results_found,
-                            description = R.string.try_a_different_keyword_or_check_your_spelling_some_services_may_be_listed_under_other_names,
-                            modifier = Modifier
-                                .padding(top = 24.dp)
-                                .padding(horizontal = 16.dp)
-                        )
-                    }
-                } else {
-                    item {
-                        Text(
-                            text = stringResource(R.string.find_what_you_need),
-                            style = Theme.textStyle.title.small,
-                            color = Theme.colors.shade.primary,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, bottom = 16.dp, top = 16.dp)
-                        )
-                    }
-                    items(servicesToDisplay) { service ->
-                        CategoryItem(
-                            title = service.title,
-                            description = service.description,
-                            serviceImageUrl = service.imageUrl,
-                            isLarge = false,
-                            modifier = Modifier
-                                .padding(bottom = 12.dp, start = 16.dp, end = 16.dp),
-                            onclick = { action.onServiceClick(service) }
-                        )
-                    }
-                }
-                if (state.customerUiState.searchQuery.isEmpty()) {
-                    item {
-                        AdCard(
-                            title = stringResource(R.string.got_a_skill_start_earning),
-                            caption = stringResource(R.string.create_your_craftsman_account_and_get_job_requests),
-                            buttonTitle = stringResource(R.string.become_a_craftsman),
-                            onClick = action::onBecomeCraftsmanClick,
-                            modifier = Modifier
-                                .padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
-                        )
-                    }
-                }
+
             }
+
         }
     )
 

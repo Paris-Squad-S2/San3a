@@ -6,7 +6,7 @@ import com.paris_2.san3a.presentation.shared.utils.UiText
 
 data class MyServiceScreenState(
     val myServiceUiState: List<ServiceUiState> = emptyList(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val successMessageSnackBar: UiText? = null,
     val errorMessage: UiText? = null,
     val showSnackBarSuccess: Boolean = false,

@@ -12,6 +12,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlin.time.ExperimentalTime
 
@@ -83,14 +84,18 @@ class MessagesRemoteDataSourceImp(
         )
 
         val countsFlow = chats.flatMapLatest { chatList ->
-            combine(
-                chatList.map { chat ->
-                    getUnreadMessageCountForUserByChatId(
-                        chatId = chat.id,
-                        userId = userId
-                    ).map { count -> chat.id to count }
-                }
-            ) { pairs -> pairs.toMap() }
+            if (chatList.isEmpty()) {
+                flowOf(emptyMap())
+            } else {
+                combine(
+                    chatList.map { chat ->
+                        getUnreadMessageCountForUserByChatId(
+                            chatId = chat.id,
+                            userId = userId
+                        ).map { count -> chat.id to count }
+                    }
+                ) { pairs -> pairs.toMap() }
+            }
         }
 
         return combine(chats, countsFlow) { chatList, countsMap ->

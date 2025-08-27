@@ -54,6 +54,7 @@ class MyServiceViewModel(
                         myServiceUiState = screenState.value.myServiceUiState.map { service ->
                             service.copy(isSelected = serviceUiStates.any { service.id == it.id })
                         },
+                        isLoading = false,
                     )
                 )
 
@@ -197,6 +198,7 @@ class MyServiceViewModel(
                 successMessageSnackBar = null
             )
         )
+        getAllServices()
     }
 
     override fun onClickService(serviceId: String) {
