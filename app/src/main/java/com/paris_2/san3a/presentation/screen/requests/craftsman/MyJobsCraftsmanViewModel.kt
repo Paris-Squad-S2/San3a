@@ -17,9 +17,11 @@ import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messaging.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
+import com.paris_2.san3a.domain.usecase.notification.SendNotificationUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftManOfferOnRequestUseCase
 import com.paris_2.san3a.domain.usecase.requests.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCraftsManRequestsUseCase
+import com.paris_2.san3a.domain.usecase.user.GetDeviceTokenUseCase
 import com.paris_2.san3a.domain.usecase.user.IncrementJobsDoneForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.user.UpdateEarningsForCraftsmanUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
@@ -40,6 +42,8 @@ class MyJobsCraftsmanViewModel(
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
+    private val sendNotificationUseCase: SendNotificationUseCase,
+    private val getDeviceTokenUseCase: GetDeviceTokenUseCase,
     private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val getCraftManOfferOnRequestUseCase: GetCraftManOfferOnRequestUseCase,
     private val createChatUseCase: CreateChatUseCase,
@@ -527,6 +531,12 @@ class MyJobsCraftsmanViewModel(
                             "ar" to "تم الانتهاء من طلبك '${requestTitle}'"
                         ),
                     )
+                )
+
+                sendNotificationUseCase(
+                    token = getDeviceTokenUseCase(customerId),
+                    title = "Request Completed",
+                    description = "Your request ${requestTitle} has been marked as done."
                 )
             },
             onError = ::onAddNotificationError

@@ -7,12 +7,14 @@ import com.paris_2.san3a.domain.entity.NotificationToSend
 import com.paris_2.san3a.domain.usecase.location.GetLocationInfoUseCase
 import com.paris_2.san3a.domain.usecase.messaging.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
+import com.paris_2.san3a.domain.usecase.notification.SendNotificationUseCase
 import com.paris_2.san3a.domain.usecase.requests.AddOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.CancelRequestUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetRequestDetailsByIdUseCase
 import com.paris_2.san3a.domain.usecase.requests.MarkRequestAsDoneUseCase
 import com.paris_2.san3a.domain.usecase.services.GetServiceByIdUseCase
+import com.paris_2.san3a.domain.usecase.user.GetDeviceTokenUseCase
 import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.user.IncrementJobsDoneForCraftsmanUseCase
@@ -32,6 +34,8 @@ class CraftsmanRequestDetailsViewModel(
     private val cancelRequestUseCase: CancelRequestUseCase,
     private val getRatingForCraftsmanUseCase: GetRatingForCraftsmanUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
+    private val sendNotificationUseCase: SendNotificationUseCase,
+    private val getDeviceTokenUseCase: GetDeviceTokenUseCase,
     private val markRequestAsDoneUseCase: MarkRequestAsDoneUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getServiceByIdUseCase: GetServiceByIdUseCase,
@@ -246,6 +250,11 @@ class CraftsmanRequestDetailsViewModel(
                             "ar" to "لقد استلمت عرضًا جديدًا لطلبك '${screenState.value.uiState.request.title}'"
                         ),
                     )
+                )
+                sendNotificationUseCase(
+                    token = getDeviceTokenUseCase(screenState.value.uiState.request.userId),
+                    title = "New Offer Received",
+                    description = "You have received a new offer for your request ${screenState.value.uiState.request.title}"
                 )
             },
             onError = {

@@ -10,10 +10,12 @@ import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.services.GetServiceByIdUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messaging.CreateChatUseCase
+import com.paris_2.san3a.domain.usecase.notification.SendNotificationUseCase
 import com.paris_2.san3a.domain.usecase.requests.AcceptOfferUseCase
 import com.paris_2.san3a.domain.usecase.requests.DeleteRequestByIdUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetOffersUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetRequestDetailsByIdUseCase
+import com.paris_2.san3a.domain.usecase.user.GetDeviceTokenUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toOfferUiStateMap
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.toRequestOfferUiState
@@ -28,6 +30,8 @@ class CustomerRequestDetailsViewModel(
     private val getOffersUseCase: GetOffersUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
+    private val sendNotificationUseCase: SendNotificationUseCase,
+    private val getDeviceTokenUseCase: GetDeviceTokenUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getLocationInfoUseCase: GetLocationInfoUseCase,
     private val getServiceByIdUseCase: GetServiceByIdUseCase,
@@ -229,6 +233,11 @@ class CustomerRequestDetailsViewModel(
                             "ar" to "تم قبول عرضك للطلب '${screenState.value.uiState.request.title}'"
                         ),
                     )
+                )
+                sendNotificationUseCase(
+                    token = getDeviceTokenUseCase(screenState.value.uiState.request.userId),
+                    title = "New Offer Received",
+                    description = "Your offer for request '${screenState.value.uiState.request.title}' has been accepted."
                 )
             },
             onError = {

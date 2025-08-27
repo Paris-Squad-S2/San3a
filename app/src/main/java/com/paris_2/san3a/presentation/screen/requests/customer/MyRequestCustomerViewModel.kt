@@ -12,9 +12,11 @@ import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messaging.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
+import com.paris_2.san3a.domain.usecase.notification.SendNotificationUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetAcceptedOfferOnRequestUseCaseUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetOffersCountUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
+import com.paris_2.san3a.domain.usecase.user.GetDeviceTokenUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.roundFloat
@@ -33,6 +35,8 @@ class MyRequestCustomerViewModel(
     private val getCustomerRatingOnCraftsmanUseCase: GetCustomerRatingOnCraftsmanUseCase,
     private val addRatingForCraftsmanUseCase: AddRatingForCraftsmanUseCase,
     private val addNotificationUseCase: AddNotificationUseCase,
+    private val sendNotificationUseCase: SendNotificationUseCase,
+    private val getDeviceTokenUseCase: GetDeviceTokenUseCase,
     private val getUnReadNotificationsCountUseCase: GetUnReadNotificationsCountUseCase,
     private val createChatUseCase: CreateChatUseCase,
     private val getAllServicesUseCase: GetAllServicesUseCase,
@@ -525,6 +529,11 @@ class MyRequestCustomerViewModel(
                             "ar" to "لقد تم تقييمك بـ ${screenState.value.myRequestCustomerUiState.rating.roundFloat()} من قبل عميل."
                         ),
                     )
+                )
+                sendNotificationUseCase(
+                    token = getDeviceTokenUseCase(screenState.value.myRequestCustomerUiState.customerPhone),
+                    title = "You got a new Rating",
+                    description = "You have been rated by ${screenState.value.myRequestCustomerUiState.rating}"
                 )
                 updateState(
                     screenState.value.copy(
