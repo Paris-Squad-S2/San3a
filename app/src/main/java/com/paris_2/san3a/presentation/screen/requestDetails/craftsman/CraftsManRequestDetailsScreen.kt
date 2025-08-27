@@ -186,7 +186,7 @@ fun CraftsmanRequestDetailsContent(
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
                         CraftsManOffer(
-                            addShadow = true,
+                            addShadow = false,
                             showActionButtons = state.yourOffer == state.acceptedOffer && state.request.requestStatus == RequestStatus.ONGOING,
                             offerDetails = state.acceptedOffer.toOfferDetailsUIState(
                                 offerAccepted = true
@@ -225,7 +225,7 @@ fun CraftsmanRequestDetailsContent(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         .animateItem(),
-                    addShadow = true,
+                    addShadow = false,
                     showActionButtons = state.request.requestStatus == RequestStatus.ONGOING,
                     offerDetails = state.yourOffer.toOfferDetailsUIState(
                         offerAccepted = state.yourOffer.isAccepted,
@@ -275,7 +275,7 @@ fun CraftsmanRequestDetailsContent(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         .animateItem(),
-                    addShadow = true,
+                    addShadow = false,
                     showActionButtons = false,
                     offerDetails = offer.toOfferDetailsUIState(),
                     painter = rememberAsyncImagePainter(model = offer.craftsmanImageUrl),
