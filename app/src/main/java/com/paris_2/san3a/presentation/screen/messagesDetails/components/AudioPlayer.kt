@@ -1,7 +1,7 @@
 package com.paris_2.san3a.presentation.screen.messagesDetails.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,7 +54,7 @@ fun AudioPlayer(
                 tint = Theme.colors.shade.secondary,
                 modifier = Modifier
                     .size(20.dp)
-                    .clickable(onClick = onPlayClick)
+                    .myClickable(onClick = onPlayClick)
             )
         }
         if (recordWave.isNotEmpty()) {
@@ -74,7 +74,7 @@ fun AudioPlayer(
                 modifier = Modifier
                     .size(20.dp)
                     .graphicsLayer(rotationZ = 180f)
-                    .clickable(onClick = onPlayClick)
+                    .myClickable(onClick = onPlayClick)
             )
         }
     }

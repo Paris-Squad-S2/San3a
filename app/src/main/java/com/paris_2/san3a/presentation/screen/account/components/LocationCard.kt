@@ -1,6 +1,6 @@
 package com.paris_2.san3a.presentation.screen.account.components
 
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -30,7 +30,7 @@ fun LocationCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .clickable(
+            .myClickable(
                 onClick = onClick,
                 interactionSource = remember { MutableInteractionSource() }, indication = null
             ),

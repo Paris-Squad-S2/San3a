@@ -3,7 +3,7 @@ package com.paris_2.san3a.presentation.screen.messagesDetails
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -92,7 +92,7 @@ fun MessageDetailsContent(
                     actionIcon = {
                         Icon(
                             modifier = Modifier
-                                .clickable(onClick = messageInteractionListener::onDropMenuClick)
+                                .myClickable(onClick = messageInteractionListener::onDropMenuClick)
                                 .padding(end = 8.dp),
                             painter = painterResource(R.drawable.ic_menu_dots_outline),
                             contentDescription = null,

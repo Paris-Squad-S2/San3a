@@ -3,7 +3,7 @@ package com.paris_2.san3a.presentation.screen.more.components
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,7 +38,7 @@ fun SettingItems(
         AnimatedContent(isCraftsman) {
             if (it) {
                 SettingItem(
-                    modifier = Modifier.clickable(
+                    modifier = Modifier.myClickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = moreInteractionListener::onClickSwitchAccountToCustomer
@@ -51,7 +51,7 @@ fun SettingItems(
 
             } else {
                 SettingItem(
-                    modifier = Modifier.clickable(
+                    modifier = Modifier.myClickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = moreInteractionListener::onClickSwitchAccountToCraftsman
@@ -74,7 +74,7 @@ fun SettingItems(
         )
         SettingHorizontalDivider()
         SettingItem(
-            modifier = Modifier.clickable(
+            modifier = Modifier.myClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = moreInteractionListener::onClickLanguage
@@ -85,7 +85,7 @@ fun SettingItems(
         )
         SettingHorizontalDivider()
         SettingItem(
-            modifier = Modifier.clickable(
+            modifier = Modifier.myClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = moreInteractionListener::onClickLocation
@@ -96,7 +96,7 @@ fun SettingItems(
         )
         SettingHorizontalDivider()
         SettingItem(
-            modifier = Modifier.clickable(
+            modifier = Modifier.myClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = moreInteractionListener::onClickMyService
@@ -110,7 +110,7 @@ fun SettingItems(
 
                 SettingHorizontalDivider()
                 SettingItem(
-                    modifier = Modifier.clickable(
+                    modifier = Modifier.myClickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = moreInteractionListener::onClickVerification

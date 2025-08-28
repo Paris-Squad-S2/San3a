@@ -2,7 +2,7 @@ package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -55,7 +55,7 @@ fun AddPhotos(
                     tint = Theme.colors.shade.secondary,
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .clickable { onClickAdd() }
+                        .myClickable { onClickAdd() }
                 )
             }
         }
@@ -89,7 +89,7 @@ fun PhotoHolder(
                 tint = Theme.colors.shade.primary,
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .clickable { onClickDelete() }
+                    .myClickable { onClickDelete() }
             )
         }
     }

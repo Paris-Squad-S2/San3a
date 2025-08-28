@@ -3,7 +3,7 @@ package com.paris_2.san3a.presentation.screen.account.components
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -64,7 +64,7 @@ fun AddWorkPhotosComponent(
                     gapLength = 6.dp,
                     shape = RoundedCornerShape(Theme.radius.large)
                 )
-                .clickable { onAddPhotoClick() }
+                .myClickable { onAddPhotoClick() }
                 .padding(24.dp)
         ) {
             Column(
@@ -115,7 +115,7 @@ fun AddWorkPhotosComponent(
                                 RoundedCornerShape(Theme.radius.small)
                             )
                             .clip(RoundedCornerShape(Theme.radius.small))
-                            .clickable(onClick = { onDeletePhotoClick(uri) }),
+                            .myClickable(onClick = { onDeletePhotoClick(uri) }),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -133,7 +133,7 @@ fun AddWorkPhotosComponent(
                         .size(64.dp)
                         .clip(RoundedCornerShape(Theme.radius.large))
                         .background(Theme.colors.background.bottomSheet)
-                        .clickable { onAddPhotoClick() },
+                        .myClickable { onAddPhotoClick() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "Add More", tint = Color.Gray)
@@ -161,7 +161,7 @@ fun AddSinglePhotoCircle(
                 gapLength = 6.dp,
                 shape = CircleShape
             )
-            .clickable { onTap() },
+            .myClickable { onTap() },
         contentAlignment = Alignment.Center
     ) {
 
@@ -218,7 +218,7 @@ fun AddSingleDocumentPhoto(
                 gapLength = 6.dp,
                 shape = RoundedCornerShape(Theme.radius.large)
             )
-            .clickable { onAddPhotoClick() }
+            .myClickable { onAddPhotoClick() }
     ) {
         if (imageUri == null) {
             Column(

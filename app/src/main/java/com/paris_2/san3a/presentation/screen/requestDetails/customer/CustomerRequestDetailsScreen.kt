@@ -2,7 +2,7 @@ package com.paris_2.san3a.presentation.screen.requestDetails.customer
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -73,7 +73,7 @@ private fun CustomerRequestDetailsScreenContent(
                         Icon(
                             modifier = Modifier
                                 .padding(end = 8.dp)
-                                .clickable(onClick = interactionListener::onClickActonDots),
+                                .myClickable(onClick = interactionListener::onClickActonDots),
                             painter = painterResource(R.drawable.ic_menu_dots_outline),
                             contentDescription = null,
                             tint = Theme.colors.shade.primary
