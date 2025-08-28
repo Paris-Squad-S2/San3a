@@ -2,7 +2,7 @@ package com.paris_2.san3a.presentation.screen.more.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -82,7 +82,7 @@ fun SettingItem(
                             tint = Theme.colors.shade.primary,
                             modifier = Modifier
                                 .size(20.dp)
-                                .clickable(
+                                .myClickable(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null,
                                     onClick = { onClickItem() }

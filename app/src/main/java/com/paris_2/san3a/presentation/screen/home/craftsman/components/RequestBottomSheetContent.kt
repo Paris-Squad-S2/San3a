@@ -2,7 +2,7 @@ package com.paris_2.san3a.presentation.screen.home.craftsman.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -116,7 +116,7 @@ fun RequestBottomSheetContent(
                             .background(
                                 Theme.colors.background.bottomSheetCard
                             )
-                            .clickable { onClickBack() }
+                            .myClickable { onClickBack() }
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_alt_arrow_left_outline),
@@ -135,7 +135,7 @@ fun RequestBottomSheetContent(
                         .background(
                             if (buttonIsActive) Theme.colors.button.primary else Theme.colors.button.disabled
                         )
-                        .clickable(enabled = buttonIsActive, onClick = onButtonClick)
+                        .myClickable(enabled = buttonIsActive, onClick = onButtonClick)
                 ) {
                     Row(
                         modifier = Modifier.align(Alignment.Center),
@@ -174,7 +174,7 @@ fun RequestBottomSheetContent(
                 .align(Alignment.TopEnd)
                 .padding(end = 16.dp)
                 .size(40.dp)
-                .clickable { onExitClick() },
+                .myClickable { onExitClick() },
             contentAlignment = Alignment.Center,
         ) {
             Icon(

@@ -241,7 +241,7 @@ class AccountViewModel(
             changeAppButtonStateInProfile(AppButtonState.Disabled)
             return
         }
-        if (name.length > 50) return
+        if (name.length > 30) return
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(

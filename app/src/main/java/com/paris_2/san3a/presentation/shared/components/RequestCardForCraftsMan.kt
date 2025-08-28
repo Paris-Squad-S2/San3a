@@ -1,7 +1,7 @@
 package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,7 +51,7 @@ fun RequestCardForCraftsMan(
             )
             .clip(RoundedCornerShape(defaultSan3aRadius.extraExtraLarge))
             .background(Theme.colors.background.card)
-            .clickable { onClick() }
+            .myClickable { onClick() }
             .padding(16.dp),
         verticalArrangement = Arrangement.Center
     )

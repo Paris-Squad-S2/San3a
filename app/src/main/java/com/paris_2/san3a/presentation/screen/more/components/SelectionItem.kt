@@ -1,7 +1,7 @@
 package com.paris_2.san3a.presentation.screen.more.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,7 +34,7 @@ fun SelectionItem(
             .padding(vertical = 6.dp)
             .clip(shape)
             .background(Theme.colors.background.bottomSheetCard)
-            .clickable { onClick() }
+            .myClickable { onClick() }
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

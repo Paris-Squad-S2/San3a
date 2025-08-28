@@ -172,6 +172,13 @@ class MyRequestCustomerViewModel(
                         ),
                     )
                 )
+                if (result.isNullOrEmpty()) {
+                    updateState(
+                        screenState.value.copy(
+                            isLoading = false,
+                        )
+                    )
+                }
                 getOffersForRequests()
                 getUserServices()
                 getOffersCountForRequests(ListType.ONGOING)

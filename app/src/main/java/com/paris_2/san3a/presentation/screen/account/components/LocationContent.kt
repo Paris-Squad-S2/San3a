@@ -1,6 +1,6 @@
 package com.paris_2.san3a.presentation.screen.account.components
 
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -64,7 +64,7 @@ fun LocationContent(
                 )
             },
             enabled = false,
-            modifier = Modifier.clickable(
+            modifier = Modifier.myClickable(
                 onClick = {
                     onGetLocationClicked()
                 },

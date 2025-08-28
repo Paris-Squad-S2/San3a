@@ -68,6 +68,13 @@ class MessagesViewModel(
                         chatsMap = chats?.toChatUIMap(screenState.value.currentUserId) ?: emptyMap(),
                     )
                 )
+                if (chats.isNullOrEmpty()) {
+                    updateState(
+                        screenState.value.copy(
+                            isLoading = false,
+                        )
+                    )
+                }
                 getUserChatsInfo(screenState.value.chatsMap)
             },
             onError = { exception ->

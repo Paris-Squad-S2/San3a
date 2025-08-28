@@ -2,7 +2,7 @@ package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,7 +42,7 @@ fun AddPhotosContent(
             .height(96.dp)
             .clip(RoundedCornerShape(Theme.radius.large))
             .background(Theme.colors.background.bottomSheet)
-            .clickable { onClick() }
+            .myClickable { onClick() }
     ){
         Canvas(modifier = Modifier
             .matchParentSize()

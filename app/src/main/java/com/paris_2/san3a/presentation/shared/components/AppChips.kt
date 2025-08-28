@@ -5,7 +5,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -65,7 +65,7 @@ fun AppChip(
             .then(hasBackgroundColorBox)
             .clip(CircleShape)
             .then(border)
-            .clickable(indication = null, interactionSource = null) { onClick() }
+            .myClickable(indication = null, interactionSource = null) { onClick() }
     ) {
         painter?.let {
             Icon(
