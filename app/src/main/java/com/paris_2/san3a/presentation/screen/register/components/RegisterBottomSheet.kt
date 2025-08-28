@@ -2,6 +2,7 @@ package com.paris_2.san3a.presentation.screen.register.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -74,7 +75,8 @@ fun RegisterBottomSheet(
             modifier = Modifier
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             item {
                 if (isErrorMessage) {

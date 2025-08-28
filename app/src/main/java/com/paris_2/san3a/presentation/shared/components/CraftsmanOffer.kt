@@ -72,7 +72,14 @@ fun CraftsManOffer(
 
     Card(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .run { 
+                if (!addShadow) {
+                    clip(RoundedCornerShape(Theme.radius.extraLarge))
+                } else {
+                    this
+                }
+            },
         shape = RoundedCornerShape(Theme.radius.extraLarge),
         colors = CardDefaults.cardColors(containerColor = animatedBgColor),
         elevation = CardDefaults.cardElevation(defaultElevation = if (addShadow) 3.dp else 0.dp)
@@ -112,7 +119,7 @@ fun CraftsManOffer(
             name = offerDetails.name,
             postedTime = offerDetails.postedTime,
             description = offerDetails.description,
-            amount = stringResource(R.string.egp, offerDetails.amount),
+            amount = offerDetails.amount,
             rate = offerDetails.rate,
             reviewsNumber = offerDetails.reviewsNumber,
             status = offerDetails.status,
