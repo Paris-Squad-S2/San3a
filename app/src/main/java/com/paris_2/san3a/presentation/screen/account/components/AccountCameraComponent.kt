@@ -51,7 +51,7 @@ fun AddWorkPhotosComponent(
     onAddPhotoClick: () -> Unit,
     onDeletePhotoClick: (url: Uri) -> Unit = {},
 ) {
-    if (images == null) {
+    if (images == null || images.isEmpty()) {
         Box(
             modifier = modifier
                 .height(96.dp)
