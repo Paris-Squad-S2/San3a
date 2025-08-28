@@ -172,7 +172,7 @@ class MyRequestCustomerViewModel(
                         ),
                     )
                 )
-                result?.ifEmpty {
+                if (result.isNullOrEmpty()) {
                     updateState(
                         screenState.value.copy(
                             isLoading = false,

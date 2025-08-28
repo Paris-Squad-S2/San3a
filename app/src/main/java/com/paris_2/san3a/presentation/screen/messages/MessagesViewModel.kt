@@ -68,7 +68,7 @@ class MessagesViewModel(
                         chatsMap = chats?.toChatUIMap(screenState.value.currentUserId) ?: emptyMap(),
                     )
                 )
-                chats?.ifEmpty {
+                if (chats.isNullOrEmpty()) {
                     updateState(
                         screenState.value.copy(
                             isLoading = false,
