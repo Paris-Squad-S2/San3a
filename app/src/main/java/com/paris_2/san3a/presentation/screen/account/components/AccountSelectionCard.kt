@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -68,7 +69,7 @@ fun AccountSelectionCard(
         Image(
             painter = userImage,
             contentDescription = stringResource(R.string.user_image),
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(12.dp).height(132.dp)
         )
         Text(
             text = title,
