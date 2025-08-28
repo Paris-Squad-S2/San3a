@@ -174,16 +174,23 @@ fun AddSinglePhotoCircle(
                     .fillMaxSize()
                     .clip(CircleShape)
             )
-        } else {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_camera_outline),
-                    contentDescription = null,
-                    tint = Theme.colors.shade.secondary
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape)
+                    .background(Color.Black.copy(alpha = 0.3f))
+            )
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_camera_outline),
+                contentDescription = null,
+                tint = if (imageUri == null) Theme.colors.shade.secondary else Theme.colors.button.onPrimary
+            )
+            if (imageUri == null) {
                 Text(
                     stringResource(R.string.tap_here),
                     color = Theme.colors.shade.secondary,
