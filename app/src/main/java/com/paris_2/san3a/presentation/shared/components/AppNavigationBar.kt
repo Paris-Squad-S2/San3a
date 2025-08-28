@@ -8,7 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -86,7 +86,7 @@ private fun RowScope.AppNavBarItem(
     Box(
         modifier = Modifier
             .weight(1f)
-            .clickable(
+            .myClickable(
                 enabled = !isSelected,
                 onClick = onItemClick,
                 indication = null,

@@ -8,6 +8,7 @@ import androidx.navigation.toRoute
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
+import com.paris_2.san3a.domain.exceptions.InvalidNumberException
 import com.paris_2.san3a.domain.exceptions.NoInternetConnectionException
 import com.paris_2.san3a.domain.usecase.user.AddUserUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
@@ -84,20 +85,42 @@ class OTPRegisterViewModel(
     }
 
     private fun onSendOtpToPhoneNumberError(exception: Throwable) {
-        if (exception is NoInternetConnectionException) {
-            updateState(
-                screenState.value.copy(isNoInternet = true)
-            )
-        } else {
-            updateState(
-                screenState.value.copy(
-                    isLoading = false,
-                    showBottomSheet = true,
-                    otpRegisterUiState = screenState.value
-                        .otpRegisterUiState
-                        .copy(loadingVerifyButton = false)
+        when (exception) {
+            is NoInternetConnectionException -> {
+                updateState(
+                    screenState.value.copy(isNoInternet = true)
                 )
-            )
+            }
+
+            is InvalidNumberException -> {
+                updateState(
+                    screenState.value.copy(
+                        isLoading = false,
+                        showBottomSheet = true,
+                        bottomSheetDrawable = R.drawable.img_placeholder_lllustration1,
+                        bottomSheetErrorMessage = UiText.StringResource(R.string.invalid_phone_number),
+                        bottomSheetErrorMessageDesc = UiText.StringResource(R.string.please_enter_a_valid_phone_number),
+                        otpRegisterUiState = screenState.value
+                            .otpRegisterUiState
+                            .copy(loadingVerifyButton = false)
+                    )
+                )
+            }
+
+            else -> {
+                updateState(
+                    screenState.value.copy(
+                        isLoading = false,
+                        showBottomSheet = true,
+                        bottomSheetDrawable = R.drawable.img_placeholder_lllustration,
+                        bottomSheetErrorMessage = UiText.StringResource(R.string.oops_something_broke),
+                        bottomSheetErrorMessageDesc = UiText.StringResource(R.string.Our_team_is_working_on_a_fix__Please_try_again_later_),
+                        otpRegisterUiState = screenState.value
+                            .otpRegisterUiState
+                            .copy(loadingVerifyButton = false)
+                    )
+                )
+            }
         }
     }
 
@@ -193,9 +216,11 @@ class OTPRegisterViewModel(
                     screenState.value.copy(
                         showBottomSheet = true,
                         errorMessage = null,
+                        bottomSheetDrawable = R.drawable.img_placeholder_lllustration,
+                        bottomSheetErrorMessage = UiText.StringResource(R.string.oops_something_broke),
+                        bottomSheetErrorMessageDesc = UiText.StringResource(R.string.Our_team_is_working_on_a_fix__Please_try_again_later_),
                         showSnackBarError = false,
                         isLoading = false
-
                     )
                 )
             }
@@ -251,7 +276,10 @@ class OTPRegisterViewModel(
             onError = { errorMessage ->
                 updateState(
                     screenState.value.copy(
-                        showBottomSheet = true
+                        showBottomSheet = true,
+                        bottomSheetDrawable = R.drawable.img_placeholder_lllustration,
+                        bottomSheetErrorMessage = UiText.StringResource(R.string.oops_something_broke),
+                        bottomSheetErrorMessageDesc = UiText.StringResource(R.string.Our_team_is_working_on_a_fix__Please_try_again_later_),
                     )
                 )
             }

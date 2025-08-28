@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
@@ -36,7 +37,9 @@ fun RequestInfoIconTextRow(
         Text(
             text = text,
             style = Theme.textStyle.body.small.regular,
-            color = color
+            color = color,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

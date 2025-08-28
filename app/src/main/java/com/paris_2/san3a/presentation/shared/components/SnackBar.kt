@@ -1,7 +1,7 @@
 package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,7 +37,7 @@ fun SnackBar(
                 clip = true,
             )
             .background(Theme.colors.background.card)
-            .clickable(onClick = onClick)
+            .myClickable(onClick = onClick)
             .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

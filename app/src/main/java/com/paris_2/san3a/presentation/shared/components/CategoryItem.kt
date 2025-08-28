@@ -1,7 +1,7 @@
 package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -67,7 +67,7 @@ fun CategoryItemLarge(
             .widthIn(max = 250.dp)
             .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
             .background(Theme.colors.background.card)
-            .clickable { onclick() }
+            .myClickable { onclick() }
     ){
         Column(
             modifier = Modifier
@@ -114,7 +114,7 @@ fun CategoryItemSmall(
             .height(72.dp)
             .clip(RoundedCornerShape(Theme.radius.tripleXLarge))
             .background(Theme.colors.background.card)
-            .clickable { onclick() }
+            .myClickable { onclick() }
     ){
         Row(
             modifier = Modifier

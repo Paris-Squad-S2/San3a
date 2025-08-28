@@ -5,7 +5,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -33,14 +33,16 @@ fun AppChip(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     hasBorder: Boolean = false,
+    borderColor: Color = if (isSelected) Theme.colors.brand.secondary else Color.Unspecified,
     unSelectedColor: Color = Color.Unspecified,
     selectedColor: Color = Color.Unspecified,
     hasBackgroundColor: Boolean = false,
+    textColor:Color = if (hasBackgroundColor) Theme.colors.background.card else Theme.colors.brand.primary,
     painter: Painter? = null,
     iconContentDescription: String? = null
 ) {
-    val borderColor =
-        animateColorAsState(if (isSelected) Theme.colors.brand.secondary else Color.Unspecified)
+    val animatedBorderColor =
+        animateColorAsState(borderColor)
     val borderWidth = animateDpAsState(if (isSelected) 1.dp else 0.dp)
 
     val backgroundColor =
@@ -48,7 +50,7 @@ fun AppChip(
 
     val border = if (hasBorder) Modifier.border(
         width = borderWidth.value,
-        color = borderColor.value,
+        color = animatedBorderColor.value,
         shape = CircleShape
     ) else Modifier
 
@@ -63,7 +65,7 @@ fun AppChip(
             .then(hasBackgroundColorBox)
             .clip(CircleShape)
             .then(border)
-            .clickable(indication = null, interactionSource = null) { onClick() }
+            .myClickable(indication = null, interactionSource = null) { onClick() }
     ) {
         painter?.let {
             Icon(
@@ -78,7 +80,7 @@ fun AppChip(
         TextChips(
             label,
             isSelected,
-            hasBackgroundColor,
+            textColor
         )
     }
 }
@@ -87,12 +89,12 @@ fun AppChip(
 private fun TextChips(
     label: String,
     isSelected: Boolean,
-    hasBackgroundColor: Boolean,
+    textColor: Color,
     modifier: Modifier = Modifier
 ) {
 
-    val textColor =
-        animateColorAsState(if (hasBackgroundColor) Theme.colors.background.card else Theme.colors.brand.primary)
+    val animatedTextColor =
+        animateColorAsState(textColor)
 
     AnimatedContent(isSelected) {
         if (it) {
@@ -101,7 +103,7 @@ private fun TextChips(
                     .padding(horizontal =16.dp),
                 text = label,
                 style = Theme.textStyle.label.medium.medium,
-                color = textColor.value
+                color = animatedTextColor.value
             )
         } else {
             Text(
@@ -125,7 +127,7 @@ private fun AppChipPreview() {
             label = "Label",
             isSelected = true,
             hasBorder = true,
-            hasBackgroundColor = false
+            hasBackgroundColor = true
         )
     }
 }
@@ -154,6 +156,7 @@ private fun AppChipUnSelectedPreview() {
             label = "Label",
             isSelected = false,
             hasBorder = true,
+            borderColor = Theme.colors.shade.quaternary,
             hasBackgroundColor = false
         )
     }

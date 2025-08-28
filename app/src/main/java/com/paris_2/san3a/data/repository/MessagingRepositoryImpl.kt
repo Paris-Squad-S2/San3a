@@ -59,8 +59,7 @@ class MessagingRepositoryImpl(
         val images = messageContent.uris.mapIndexed { index, stringUri ->
             createImageDto(stringUri, receiverId, chatId, index)
         }
-        storageRemoteDataSource.saveImages(images)
-        return storageRemoteDataSource.getImagesByPaths(images)
+        return storageRemoteDataSource.saveImages(images)
     }
 
     private fun createImageDto(

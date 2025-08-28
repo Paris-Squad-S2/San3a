@@ -3,7 +3,7 @@ package com.paris_2.san3a.presentation.screen.messagesDetails.components
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -84,7 +84,7 @@ fun MessageTextField(
                         contentDescription = stringResource(R.string.add_images),
                         modifier = Modifier
                             .padding(end = 19.dp)
-                            .clickable(onClick = onImageClick)
+                            .myClickable(onClick = onImageClick)
                     )
 
                 } else {
@@ -102,7 +102,7 @@ fun MessageTextField(
                         contentDescription = stringResource(R.string.send_icon),
                         modifier = Modifier
                             .padding(start = 19.dp, end = 19.dp, bottom = 15.dp)
-                            .clickable(onClick = onSendClick, enabled = sendButtonState == AppButtonState.Enable)
+                            .myClickable(onClick = onSendClick, enabled = sendButtonState == AppButtonState.Enable)
                             .align(Alignment.Bottom)
                     )
 

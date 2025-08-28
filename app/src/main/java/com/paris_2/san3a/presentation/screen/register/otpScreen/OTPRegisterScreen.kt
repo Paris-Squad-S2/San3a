@@ -59,7 +59,7 @@ private fun OTPRegisterScreenContent(
     Box(
         Modifier
             .fillMaxSize()
-            .background(Theme.colors.background.screen)
+            .background(Theme.colors.background.card)
             .navigationBarsPadding()
             .statusBarsPadding()
             .imePadding()
@@ -144,6 +144,9 @@ private fun OTPRegisterScreenContent(
             RegisterBottomSheet(
                 isErrorMessage = true,
                 skipPartiallyExpanded = true,
+                errorDrawable = otpRegisterScreenState.bottomSheetDrawable,
+                errorMessage = otpRegisterScreenState.bottomSheetErrorMessage,
+                errorMessageDesc = otpRegisterScreenState.bottomSheetErrorMessageDesc,
                 onCloseClick = {
                     otpRegisterListenerInteraction.onHideBottomSheet()
                     otpRegisterListenerInteraction.onClickBackButton()
@@ -238,7 +241,7 @@ private fun VerificationCodeContent(
                 AppButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 12.dp),
+                        .padding(top = 12.dp, bottom = 16.dp),
                     type = AppButtonType.Secondary,
                     size = AppButtonSize.Large,
                     onClick = { onClickResendCode() },
@@ -249,7 +252,7 @@ private fun VerificationCodeContent(
                 AppButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 12.dp),
+                        .padding(top = 12.dp, bottom = 16.dp),
                     type = AppButtonType.Secondary,
                     size = AppButtonSize.Large,
                     state = AppButtonState.Disabled,

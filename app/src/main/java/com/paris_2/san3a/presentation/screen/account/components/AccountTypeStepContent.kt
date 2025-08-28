@@ -6,11 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.account.UserType
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
+import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 
 @Composable
 fun AccountTypeContent(
@@ -40,7 +40,7 @@ fun AccountTypeContent(
     }
 }
 
-@Preview
+@PreviewMultiDevices
 @Composable
 private fun StepOneContentPreview() {
     San3aTheme {

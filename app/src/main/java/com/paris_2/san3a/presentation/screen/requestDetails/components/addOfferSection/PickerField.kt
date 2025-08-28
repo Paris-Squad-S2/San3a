@@ -1,6 +1,6 @@
 package com.paris_2.san3a.presentation.screen.requestDetails.components.addOfferSection
 
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,7 +48,7 @@ fun PickerField(
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .clickable(
+                .myClickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
                     onClick = onClick
