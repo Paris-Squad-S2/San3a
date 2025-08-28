@@ -129,16 +129,13 @@ class RequestsRepositoryImpl(
 
     override suspend fun requestService(requestedService: RequestService) {
         safeNetworkCall(FailException("requestService")) {
-            val imageUris = requestedService.image
-            val imageUrls = when (imageUris.isNotEmpty()) {
-                true -> {
-                    val images = imageUris.toImageDto(requestedService.title)
-                    firebaseStorageRemoteDataSource.saveImages(images)
-                    firebaseStorageRemoteDataSource.getImagesByPaths(images)
-                }
-                false -> emptyList()
+            val imageUris = if (requestedService.image.isNotEmpty()) {
+                val images = requestedService.image.toImageDto(requestedService.title)
+                firebaseStorageRemoteDataSource.saveImages(images)
+            } else {
+                emptyList()
             }
-            requestRemoteDataSource.requestService(requestedService.toDto(imageUrls))
+            requestRemoteDataSource.requestService(requestedService.toDto(imageUris))
         }
     }
 

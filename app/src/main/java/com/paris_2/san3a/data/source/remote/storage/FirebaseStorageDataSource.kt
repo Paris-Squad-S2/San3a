@@ -13,19 +13,20 @@ import kotlinx.coroutines.tasks.await
 class FirebaseStorageDataSource(
     private val fireStorage: FirebaseStorage,
 ) : StorageRemoteDataSource {
-    override suspend fun saveImages(images: List<ImageDto>) {
-        coroutineScope {
-            try {
-                val storageRef = fireStorage.reference
-                images.ifEmpty { throw InvalidPathException(images.map { it.path }.toOneString()) }
-                    .filter { image -> isFirebaseStorageUri(image.uri).not() }
-                    .map { image ->
-                        val imageRef = storageRef.child(image.path)
-                        async { imageRef.putFile(image.uri).await() }
-                    }.awaitAll()
-            } catch (e: Exception) {
-                throw handleStorageException(images.map { it.path }, e, StorageOperationType.SAVE)
-            }
+    override suspend fun saveImages(images: List<ImageDto>) = coroutineScope {
+        try {
+            val storageRef = fireStorage.reference
+            images.ifEmpty { throw InvalidPathException(images.map { it.path }.toOneString()) }
+                .filter { image -> isFirebaseStorageUri(image.uri).not() }
+                .map { image ->
+                    val imageRef = storageRef.child(image.path)
+                    async {
+                        imageRef.putFile(image.uri).await()
+                        imageRef.downloadUrl.await().toString()
+                    }
+                }.awaitAll()
+        } catch (e: Exception) {
+            throw handleStorageException(images.map { it.path }, e, StorageOperationType.SAVE)
         }
     }
 
@@ -64,8 +65,7 @@ class FirebaseStorageDataSource(
     ): List<String> {
         val errorCode = if (e is StorageException) e.errorCode else null
         if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND || errorCode == StorageException.ERROR_BUCKET_NOT_FOUND) {
-            saveImages(images)
-            return getImagesByPaths(images)
+            return saveImages(images)
         } else {
             throw handleStorageException(images.map { it.path }, e, StorageOperationType.GET)
         }
