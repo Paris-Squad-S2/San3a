@@ -82,8 +82,8 @@ fun CraftsManOffer(
                         elevation = 5.dp,
                         clip = false,
                         shape = RoundedCornerShape(Theme.radius.extraLarge),
-                        ambientColor = Color.Black.copy(alpha = 0.4f),
-                        spotColor = Color.Black.copy(alpha = 0.4f)
+                        ambientColor = Color.Black.copy(alpha = 0.6f),
+                        spotColor = Color.Black.copy(alpha = 0.6f)
                     )
                 }
             }
