@@ -1,10 +1,12 @@
 package com.paris_2.san3a.data.source.remote.storage
 
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.paris_2.san3a.data.service.firestore.PermissionDeniedException
 import com.paris_2.san3a.data.source.remote.storage.dto.ImageDto
+import com.paris_2.san3a.data.utils.compressImage
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -12,6 +14,7 @@ import kotlinx.coroutines.tasks.await
 
 class FirebaseStorageDataSource(
     private val fireStorage: FirebaseStorage,
+    private val appContext: android.content.Context
 ) : StorageRemoteDataSource {
     override suspend fun saveImages(images: List<ImageDto>) = coroutineScope {
         try {
@@ -21,7 +24,8 @@ class FirebaseStorageDataSource(
                 .map { image ->
                     val imageRef = storageRef.child(image.path)
                     async {
-                        imageRef.putFile(image.uri).await()
+                        val byteArray = image.uri.compressImage(appContext, quality = 20)
+                        imageRef.putBytes(byteArray).await()
                         imageRef.downloadUrl.await().toString()
                     }
                 }.awaitAll()
