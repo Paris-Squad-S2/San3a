@@ -341,6 +341,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="min_ago">%1$d min ago</string>
     <string name="just_now">Just now</string>
     <string name="h_ago">%1$d h ago</string>
+    <string name="d_ago">%1$d d ago</string>
     <string name="choose_city">Choose City</string>
     <string name="choose_government">Choose Government</string>
     <string name="confirm_logout">Confirm Logout</string>

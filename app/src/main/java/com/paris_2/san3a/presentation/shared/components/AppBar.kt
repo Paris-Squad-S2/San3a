@@ -1,13 +1,14 @@
 package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -34,38 +35,45 @@ fun AppBar(
     leadingIcon: @Composable (RowScope.() -> Unit)? = null
 ) {
 
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = 56.dp)
-            .background(color = if (showBackGround) Theme.colors.background.card else Color.Unspecified)
-            .padding(8.dp),
+    Column {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .heightIn(min = 56.dp)
+                .background(color = if (showBackGround) Theme.colors.background.card else Color.Unspecified)
+                .padding(8.dp),
 
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (onBackClick != null) {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_arrow_left_outline),
-                    contentDescription = null,
-                    tint = Theme.colors.button.onSecondary
-                )
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (onBackClick != null) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_arrow_left_outline),
+                        contentDescription = null,
+                        tint = Theme.colors.button.onSecondary
+                    )
+                }
             }
+            leadingIcon?.invoke(this)
+            if (title != null) {
+                Text(
+                    text = title,
+                    modifier = Modifier.weight(1F),
+                    style = Theme.textStyle.title.small,
+                    color = Theme.colors.shade.primary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            } else if (spaceBetween) {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            actionIcon()
         }
-        leadingIcon?.invoke(this)
-        if (title != null) {
-            Text(
-                text = title,
-                modifier = Modifier.weight(1F),
-                style = Theme.textStyle.title.small,
-                color = Theme.colors.shade.primary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        } else if (spaceBetween) {
-             Spacer(modifier = Modifier.weight(1f))
-        }
-        actionIcon()
+
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = Theme.colors.stroke.primary
+        )
     }
 
 }
