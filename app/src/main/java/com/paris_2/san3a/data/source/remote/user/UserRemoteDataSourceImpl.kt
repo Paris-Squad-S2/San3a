@@ -41,7 +41,7 @@ class UserRemoteDataSourceImpl(
 
     private fun handleOtpResponse(response: retrofit2.Response<OtpDto>): OtpDto {
         return if (response.isSuccessful) {
-            response.body() ?: OtpDto(null, null, null)
+            response.body() ?: OtpDto()
         } else {
             throw mapOtpException(response.code())
         }
