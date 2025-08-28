@@ -67,7 +67,7 @@ fun LogoutBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 32.dp, start = 16.dp, end = 16.dp),
+                .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
@@ -121,9 +121,6 @@ fun LogoutBottomSheet(
                 onClick = onCancel,
                 enablePrimaryBackgroundColor = Theme.colors.background.bottomSheetCard
             )
-            Spacer(modifier = Modifier.height(16.dp))
-
-
         }
     }
 }
