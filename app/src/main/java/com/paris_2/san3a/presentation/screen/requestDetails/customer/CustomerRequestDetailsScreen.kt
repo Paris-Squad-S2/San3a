@@ -168,7 +168,7 @@ fun CustomerRequestDetailsContent(
                         modifier = Modifier
                             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                             .animateItem(),
-                        addShadow = true,
+                        addShadow = false,
                         showActionButtons = state.offers.any { it.value.isAccepted }.not(),
                         offerDetails = offer.toOfferDetailsUIState(offer.isAccepted),
                         painter = rememberAsyncImagePainter(offer.craftsmanImageUrl),
