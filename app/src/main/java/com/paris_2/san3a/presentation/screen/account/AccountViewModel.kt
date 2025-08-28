@@ -239,6 +239,13 @@ class AccountViewModel(
     override fun onCustomerNameChanged(name: String) {
         if (name.isBlank()) {
             changeAppButtonStateInProfile(AppButtonState.Disabled)
+            updateState(
+                screenState.value.copy(
+                    accountUiState = screenState.value.accountUiState.copy(
+                        customerName = "",
+                    )
+                )
+            )
             return
         }
         if (name.length > 30) return

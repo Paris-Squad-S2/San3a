@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -101,8 +102,8 @@ fun AccountScreenContent(
             .background(Theme.colors.background.screen)
             .statusBarsPadding()
             .navigationBarsPadding()
-            .imePadding()
             .padding(horizontal = 16.dp, vertical = 16.dp)
+            .imePadding()
             .verticalScroll(rememberScrollState())
     ) {
         Row(
