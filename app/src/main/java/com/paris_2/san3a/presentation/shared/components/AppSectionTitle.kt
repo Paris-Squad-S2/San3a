@@ -33,8 +33,7 @@ fun AppSectionTitle(
 ) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .height(20.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(

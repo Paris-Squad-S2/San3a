@@ -83,14 +83,14 @@ fun RequestInfoSection(
             color = Theme.colors.brand.primary
         )
 
-        RequestInfoIconTextRow(
-            painter = painterResource(id = R.drawable.ic_image),
-            text = stringResource(R.string.attached_images),
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
-        )
 
 
         if (request.images.isNotEmpty()) {
+            RequestInfoIconTextRow(
+                painter = painterResource(id = R.drawable.ic_image),
+                text = stringResource(R.string.attached_images),
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
+            )
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth(),

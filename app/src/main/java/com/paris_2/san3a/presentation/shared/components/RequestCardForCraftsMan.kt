@@ -61,8 +61,8 @@ fun RequestCardForCraftsMan(
         ) {
             AsyncImage(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(Theme.radius.extraLarge))
-                    .size(48.dp),
+                    .clip(RoundedCornerShape(Theme.radius.full))
+                    .size(52.dp),
                 model = imageUri,
                 contentDescription = null
             )

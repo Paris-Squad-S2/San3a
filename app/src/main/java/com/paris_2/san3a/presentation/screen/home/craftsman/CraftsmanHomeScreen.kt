@@ -228,6 +228,7 @@ fun CraftsmanHomeContent(
                                             selectedColor = Theme.colors.brand.tertiary,
                                             textColor = if(state.craftsmanHomeUiState.selectedServiceId == null) Theme.colors.brand.primary else Theme.colors.shade.secondary,
                                             borderColor = if (state.craftsmanHomeUiState.selectedServiceId == null) Theme.colors.brand.secondary else Theme.colors.shade.quaternary,
+                                            borderWidth = if (state.craftsmanHomeUiState.selectedServiceId == null) 1.dp else 1.5.dp,
                                             hasBackgroundColor = true
                                         )
                                     }
@@ -238,7 +239,9 @@ fun CraftsmanHomeContent(
                                             isSelected = state.craftsmanHomeUiState.selectedServiceId == it.id,
                                             hasBorder = true,
                                             textColor = if(state.craftsmanHomeUiState.selectedServiceId == it.id) Theme.colors.brand.primary else Theme.colors.shade.secondary,
-                                            borderColor = if (state.craftsmanHomeUiState.selectedServiceId == it.id) Theme.colors.brand.secondary else Theme.colors.shade.quaternary
+                                            borderColor = if (state.craftsmanHomeUiState.selectedServiceId == it.id) Theme.colors.brand.secondary else Theme.colors.shade.quaternary,
+                                            borderWidth = if (state.craftsmanHomeUiState.selectedServiceId == it.id) 1.dp else 1.5.dp,
+                                            hasBackgroundColor = true
                                         )
                                     }
                                 }

@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
@@ -34,6 +35,7 @@ fun AppChip(
     isSelected: Boolean = false,
     hasBorder: Boolean = false,
     borderColor: Color = if (isSelected) Theme.colors.brand.secondary else Color.Unspecified,
+    borderWidth: Dp = if (isSelected) 1.dp else 0.dp,
     unSelectedColor: Color = Color.Unspecified,
     selectedColor: Color = Color.Unspecified,
     hasBackgroundColor: Boolean = false,
@@ -43,13 +45,13 @@ fun AppChip(
 ) {
     val animatedBorderColor =
         animateColorAsState(borderColor)
-    val borderWidth = animateDpAsState(if (isSelected) 1.dp else 0.dp)
+    val animatedBorderWidth = animateDpAsState(borderWidth)
 
     val backgroundColor =
         animateColorAsState(if (isSelected) selectedColor else unSelectedColor).value
 
     val border = if (hasBorder) Modifier.border(
-        width = borderWidth.value,
+        width = animatedBorderWidth.value,
         color = animatedBorderColor.value,
         shape = CircleShape
     ) else Modifier
