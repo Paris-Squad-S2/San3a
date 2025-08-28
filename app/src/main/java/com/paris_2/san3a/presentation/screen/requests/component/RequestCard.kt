@@ -240,7 +240,7 @@ private fun CraftsmanSection(
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
-                            "$it",
+                            it.format(),
                             style = Theme.textStyle.body.small.medium,
                             color = Theme.colors.shade.secondary
                         )

@@ -26,6 +26,7 @@ import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.components.CraftsmanAvatar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
+import com.paris_2.san3a.presentation.utill.format
 
 @Composable
 fun UserProfileSection(
@@ -50,7 +51,8 @@ fun UserProfileSection(
 
         CraftsmanAvatar(
             isVerify = isVerify,
-            painter = painter
+            painter = painter,
+            verificationIconSize = 22.dp
         )
 
         Column(
@@ -77,7 +79,7 @@ fun UserProfileSection(
                             modifier = Modifier.size(12.dp)
                         )
                         Text(
-                            text = "$rating ",
+                            text = "${rating.format()} ",
                             style = Theme.textStyle.body.small.medium,
                             color = Theme.colors.shade.secondary
                         )
