@@ -23,6 +23,7 @@ import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSh
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.getCurrentDateTime
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -275,6 +276,7 @@ class CustomerHomeViewModel(
         onSearch(query)
     }
 
+    var sendRequestJob: Job? = null
     override fun createRequest() {
         if (screenState.value.bottomSheetUiState.bottomSheetSelectedGovernorate == null
             || screenState.value.bottomSheetUiState.bottomSheetSelectedCity == null
@@ -301,7 +303,7 @@ class CustomerHomeViewModel(
             return
         }
 
-        tryToExecute(
+        sendRequestJob = tryToExecute(
             execute = {
                 updateState(screenState.value.copy(buttonSheetState = AppButtonState.Loading))
                 requestServicesUseCase(
@@ -327,7 +329,7 @@ class CustomerHomeViewModel(
             onSuccess = {
                 updateState(
                     screenState.value.copy(
-                        bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
+                        bottomSheetUiState = BottomSheetUiState(
                             bottomSheetState = false
                         ),
                         buttonSheetState = AppButtonState.Enable,
@@ -343,7 +345,6 @@ class CustomerHomeViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message ?: UNKNOWN_ERROR,
                         buttonSheetState = AppButtonState.Enable,
                         showSnackBarError = true
                     )
@@ -546,6 +547,7 @@ class CustomerHomeViewModel(
     }
 
     override fun onDismissBottomSheet() {
+        sendRequestJob?.cancel()
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(

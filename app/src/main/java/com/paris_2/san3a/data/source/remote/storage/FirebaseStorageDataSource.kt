@@ -23,7 +23,7 @@ class FirebaseStorageDataSource(
                 .map { image ->
                     val imageRef = storageRef.child(image.path)
                     async {
-                        val byteArray = image.uri.compressImage(appContext, quality = 20)
+                        val byteArray = image.uri.compressImage(appContext, quality = 15)
                         imageRef.putBytes(byteArray).await()
                         imageRef.downloadUrl.await().toString()
                     }
