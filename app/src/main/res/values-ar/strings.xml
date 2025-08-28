@@ -118,6 +118,8 @@
     <string name="enter_your_location">أدخل موقعك</string>
     <string name="some_error_happened">حدث خطأ ما</string>
     <string name="no_internet_connection">الانترنت غير متوفر</string>
+    <string name="invalid_phone_number">رقم الهاتف غير صالح</string>
+    <string name="please_enter_a_valid_phone_number">يرجى إدخال رقم هاتف صالح</string>
     <string name="empty" />
     <string name="privacy_and_policy">سياسة الخصوصية</string>
     <string name="terms_and_conditions">الشروط والأحكام</string>

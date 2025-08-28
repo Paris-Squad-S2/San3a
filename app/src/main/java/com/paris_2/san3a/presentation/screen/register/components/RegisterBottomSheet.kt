@@ -27,6 +27,7 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
 import com.paris_2.san3a.presentation.shared.components.BottomSheet
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.shared.utils.UiText
 
 
 enum class BottomSheetType {
@@ -43,6 +44,9 @@ fun RegisterBottomSheet(
     skipPartiallyExpanded: Boolean = false,
     contentText: String = "",
     isErrorMessage: Boolean = false,
+    errorDrawable: Int = R.drawable.img_placeholder_lllustration,
+    errorMessage: UiText = UiText.StringResource(R.string.oops_something_broke),
+    errorMessageDesc: UiText = UiText.StringResource(R.string.Our_team_is_working_on_a_fix__Please_try_again_later_),
 ) {
     BottomSheet(
         onDismissRequest = onCloseClick,
@@ -81,19 +85,19 @@ fun RegisterBottomSheet(
             item {
                 if (isErrorMessage) {
                     Image(
-                        painter = painterResource(R.drawable.img_placeholder_lllustration),
+                        painter = painterResource(errorDrawable),
                         contentDescription = null,
                         modifier = Modifier.size(120.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = stringResource(R.string.oops_something_broke),
+                        text = errorMessage.asString(),
                         style = Theme.textStyle.title.small,
                         color = Theme.colors.shade.primary
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = stringResource(R.string.Our_team_is_working_on_a_fix__Please_try_again_later_),
+                        text = errorMessageDesc.asString(),
                         style = Theme.textStyle.body.medium.regular,
                         color = Theme.colors.shade.secondary,
                         modifier = Modifier.padding(bottom = 24.dp)
