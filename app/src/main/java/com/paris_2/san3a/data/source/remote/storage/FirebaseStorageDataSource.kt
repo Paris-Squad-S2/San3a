@@ -1,7 +1,6 @@
 package com.paris_2.san3a.data.source.remote.storage
 
 import android.net.Uri
-import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.paris_2.san3a.data.service.firestore.PermissionDeniedException
