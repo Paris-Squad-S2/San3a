@@ -144,6 +144,9 @@ private fun OTPRegisterScreenContent(
             RegisterBottomSheet(
                 isErrorMessage = true,
                 skipPartiallyExpanded = true,
+                errorDrawable = otpRegisterScreenState.bottomSheetDrawable,
+                errorMessage = otpRegisterScreenState.bottomSheetErrorMessage,
+                errorMessageDesc = otpRegisterScreenState.bottomSheetErrorMessageDesc,
                 onCloseClick = {
                     otpRegisterListenerInteraction.onHideBottomSheet()
                     otpRegisterListenerInteraction.onClickBackButton()

@@ -124,6 +124,8 @@
     <string name="no_internet_connection">no internet connection</string>
     <string name="oops_something_broke">Oops, Something Broke</string>
     <string name="Our_team_is_working_on_a_fix._Please_try_again_later.">Our team is working on a fix. Please try again later.</string>
+    <string name="invalid_phone_number">Invalid phone number</string>
+    <string name="please_enter_a_valid_phone_number">Please enter a valid phone number</string>
     <string name="empty" />
     <string name="privacy_and_policy">Privacy Policy</string>
     <string name="terms_and_conditions">Terms and Conditions</string>

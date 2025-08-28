@@ -2,7 +2,7 @@ package com.paris_2.san3a.presentation.screen.requests.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
@@ -304,7 +304,7 @@ private fun CraftsmanSection(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .padding(top = 8.dp)
-                            .clickable {}
+                            .myClickable {}
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_clipboard_outline),

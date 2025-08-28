@@ -1,6 +1,6 @@
 package com.paris_2.san3a.presentation.screen.more.components
 
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -18,7 +18,7 @@ fun LogoutItem(
     onClickItem: () -> Unit
 ) {
     SettingItem(
-        modifier = modifier.clickable(
+        modifier = modifier.myClickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null,
             onClick = {onClickItem()}

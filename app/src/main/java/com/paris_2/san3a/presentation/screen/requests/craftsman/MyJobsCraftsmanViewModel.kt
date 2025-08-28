@@ -157,6 +157,13 @@ class MyJobsCraftsmanViewModel(
                         )
                     )
                 )
+                mappedResult.ifEmpty {
+                    updateState(
+                        screenState.value.copy(
+                            isLoading = false,
+                        )
+                    )
+                }
                 getOffersForRequests()
             },
             onError = {

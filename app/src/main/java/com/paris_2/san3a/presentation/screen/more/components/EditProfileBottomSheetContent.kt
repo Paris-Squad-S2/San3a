@@ -2,7 +2,7 @@ package com.paris_2.san3a.presentation.screen.more.components
 
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -74,7 +74,7 @@ fun EditProfileBottomSheetContent(
         Box(
             modifier = Modifier
                 .size(96.dp)
-                .clickable(
+                .myClickable(
                     onClick = onPickImageClick,
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }

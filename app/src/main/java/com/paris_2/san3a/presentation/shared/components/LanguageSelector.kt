@@ -3,7 +3,7 @@ package com.paris_2.san3a.presentation.shared.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,7 +37,7 @@ fun LanguageOption(
         Theme.colors.background.bottomSheetCard
     }
 
-    val clickableModifier = Modifier.clickable(
+    val myClickableModifier = Modifier.myClickable(
         onClick = onClick,
         indication = null,
         interactionSource = remember { MutableInteractionSource() }
@@ -55,7 +55,7 @@ fun LanguageOption(
             .clip(RoundedCornerShape(Theme.radius.large))
             .then(borderModifier)
             .background(color = backgroundColor, shape = RoundedCornerShape(Theme.radius.large))
-            .then(clickableModifier)
+            .then(myClickableModifier)
             .padding(16.dp),
         contentAlignment = Alignment.Center
     )

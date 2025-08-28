@@ -14,6 +14,9 @@ import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.User
+import com.paris_2.san3a.domain.exceptions.FailException
+import com.paris_2.san3a.domain.exceptions.InvalidNumberException
+import com.paris_2.san3a.domain.exceptions.ServerException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -28,7 +31,27 @@ class UserRemoteDataSourceImpl(
 ) : UserRemoteDataSource {
 
     override suspend fun sendOtpMessage(message: OtpMessageDto): OtpDto {
-        return authApiServices.sendOtpMessage(message)
+        return try {
+            val response = authApiServices.sendOtpMessage(message)
+            handleOtpResponse(response)
+        } catch (e: retrofit2.HttpException) {
+            throw mapOtpException(e.code())
+        }
+    }
+
+    private fun handleOtpResponse(response: retrofit2.Response<OtpDto>): OtpDto {
+        return if (response.isSuccessful) {
+            response.body() ?: OtpDto()
+        } else {
+            throw mapOtpException(response.code())
+        }
+    }
+
+    private fun mapOtpException(code: Int): Exception {
+        return when (code) {
+            400 -> InvalidNumberException()
+            else -> ServerException()
+        }
     }
 
     override suspend fun addUser(phone: String) {

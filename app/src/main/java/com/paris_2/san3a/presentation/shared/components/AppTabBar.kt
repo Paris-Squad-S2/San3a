@@ -4,7 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -70,7 +70,7 @@ fun AppTabBar(
                         shape = RoundedCornerShape(topStart = Theme.radius.full, topEnd = Theme.radius.full)
                     )
                     .indication(interactionSource = interactionSource, indication = null)
-                    .clickable(
+                    .myClickable(
                         interactionSource = interactionSource,
                         indication = null
                     ) { onTabSelected(index) }

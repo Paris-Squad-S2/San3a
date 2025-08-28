@@ -3,7 +3,7 @@ package com.paris_2.san3a.presentation.screen.more.locationScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -122,7 +122,7 @@ fun LocationScreenContent(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable(
+                                .myClickable(
                                     onClick = {
                                         locationInteractionListener.onShowBottomSheet(
                                             LocationBottomSheetType.GOVERNORATE
