@@ -5,35 +5,42 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.paris_2.san3a.data.service.firestore.PermissionDeniedException
 import com.paris_2.san3a.data.source.remote.storage.dto.ImageDto
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
 class FirebaseStorageDataSource(
     private val fireStorage: FirebaseStorage,
 ) : StorageRemoteDataSource {
     override suspend fun saveImages(images: List<ImageDto>) {
-        try {
-            images.ifEmpty { throw InvalidPathException(images.map { it.path }.toOneString()) }
-                .filter { image -> isFirebaseStorageUri(image.uri).not() }
-                .forEach { image ->
-                    val storageRef = fireStorage.reference
-                    val imageRef = storageRef.child(image.path)
-                    imageRef.putFile(image.uri).await()
-                }
-        } catch (e: Exception) {
-            throw handleStorageException(images.map { it.path }, e, StorageOperationType.SAVE)
+        coroutineScope {
+            try {
+                val storageRef = fireStorage.reference
+                images.ifEmpty { throw InvalidPathException(images.map { it.path }.toOneString()) }
+                    .filter { image -> isFirebaseStorageUri(image.uri).not() }
+                    .map { image ->
+                        val imageRef = storageRef.child(image.path)
+                        async { imageRef.putFile(image.uri).await() }
+                    }.awaitAll()
+            } catch (e: Exception) {
+                throw handleStorageException(images.map { it.path }, e, StorageOperationType.SAVE)
+            }
         }
     }
 
     private fun isFirebaseStorageUri(uri: Uri): Boolean =
         runCatching { fireStorage.getReferenceFromUrl(uri.toString()) }.isSuccess
 
-    override suspend fun getImagesByPaths(images: List<ImageDto>): List<String> {
-        return try {
+    override suspend fun getImagesByPaths(images: List<ImageDto>): List<String> = coroutineScope {
+        try {
             images.ifEmpty { throw InvalidPathException(images.map { it.path }.toOneString()) }
                 .map { image ->
-                    val url = fireStorage.reference.child(image.path).downloadUrl
-                    url.await().toString()
-                }
+                    async {
+                        fireStorage.reference.child(image.path).downloadUrl
+                        .await().toString()
+                    }
+                }.awaitAll()
         } catch (e: Exception) {
             reSaveImages(images, e)
         }
