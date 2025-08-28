@@ -49,7 +49,7 @@ fun Offers(
                 postedTime = getCurrentDateTime().minusNHours(5),
             ),
             painter = painterResource(id = R.drawable.img_avatar1),
-            addShadow = true,
+            addShadow = false,
             forCraftsMan = false,
         )
         CraftsManOffer(
@@ -71,7 +71,7 @@ fun Offers(
                 postedTime = getCurrentDateTime().minusNHours(7),
             ),
             painter = painterResource(id = R.drawable.img_avatar2),
-            addShadow = true,
+            addShadow = false,
             forCraftsMan = false,
         )
         CraftsManOffer(
@@ -93,7 +93,7 @@ fun Offers(
                 postedTime = getCurrentDateTime().minusNHours(2),
             ),
             painter = painterResource(id = R.drawable.img_avatar3),
-            addShadow = true,
+            addShadow = false,
             forCraftsMan = false,
         )
     }
