@@ -196,21 +196,25 @@ class UserRepositoryImpl(
     override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) =
         coroutineScope {
             safeNetworkCall(FailException("Failed to upload national ID images")) {
-                val (frontUrl, backUrl) = listOfNotNull(
-                    frontUri?.let { uri ->
-                        async {
-                            val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
-                            storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri))).firstOrNull()
+                if (frontUri!=null || backUri!=null) {
+                    val (frontUrl, backUrl) = listOfNotNull(
+                        frontUri?.let { uri ->
+                            async {
+                                val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
+                                storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
+                                    .firstOrNull()
+                            }
+                        },
+                        backUri?.let { uri ->
+                            async {
+                                val path = "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME"
+                                storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
+                                    .firstOrNull()
+                            }
                         }
-                    },
-                    backUri?.let { uri ->
-                        async {
-                            val path = "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME"
-                            storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri))).firstOrNull()
-                        }
-                    }
-                ).awaitAll()
-                userRemoteDataSource.updateNationalIdImages(phone, frontUrl, backUrl)
+                    ).awaitAll()
+                    userRemoteDataSource.updateNationalIdImages(phone, frontUrl, backUrl)
+                }
             }
         }
 
