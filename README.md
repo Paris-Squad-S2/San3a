@@ -85,7 +85,7 @@ The app makes it easy to find, book, and chat with trusted service providers in 
 | Dina Othman        | [@DinaOthman21](https://github.com/DinaOthman21)     |
 | Ahmed Salah        | [@itsahmedsalah](https://github.com/itsahmedsalah)    |
 | Mohammed Al-Akkad  | [@mohammed-akkad](https://github.com/mohammed-akkad)   |
-| Asmaa karam  | [@Asmaa7071]([https://github.com/mohammed-akkad](https://github.com/Asmaa7071))   |
+| Asmaa karam  | [@Asmaa7071](https://github.com/Asmaa7071)   |
 
 # 📜 License
 
