@@ -66,6 +66,7 @@ private fun MyRequestScreenContent(
     ) {
         AppBar(
             title = stringResource(R.string.my_requests),
+            hasDivider = false,
             actionIcon = {
                 NotificationIcon(
                     modifier = Modifier
