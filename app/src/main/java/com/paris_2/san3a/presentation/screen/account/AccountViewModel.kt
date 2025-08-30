@@ -271,7 +271,7 @@ class AccountViewModel(
     }
 
     override fun onDescriptionChanged(description: String) {
-        if (description.length > 150) return
+        if (description.length > WORK_DESCRIPTION_MAX_LENGTH) return
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
@@ -910,5 +910,9 @@ class AccountViewModel(
                 )
             )
         )
+    }
+
+    private companion object {
+        private const val WORK_DESCRIPTION_MAX_LENGTH = 150
     }
 }
