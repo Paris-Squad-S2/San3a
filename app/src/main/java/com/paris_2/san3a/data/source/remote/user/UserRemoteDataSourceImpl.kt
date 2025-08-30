@@ -237,6 +237,8 @@ class UserRemoteDataSourceImpl(
         val data = mapOf(
             "rating" to rating,
             "offerId" to offerId,
+            "userId" to userId,
+            "timestamp" to System.currentTimeMillis()
         )
         fireStoreService.setDoc(
             path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION/$userId-$offerId",

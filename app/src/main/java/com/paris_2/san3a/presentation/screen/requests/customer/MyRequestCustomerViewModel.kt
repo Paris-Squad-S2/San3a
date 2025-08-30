@@ -372,7 +372,7 @@ class MyRequestCustomerViewModel(
                             offer = request.offer.copy(
                                 craftsMan = craftsMan.toCraftsManUiState(
                                     rating = rating,
-                                    isRated = ratingOnCraftsMan != null
+                                    craftsManRatingForOffer = ratingOnCraftsMan
                                 )
                             )
                         )

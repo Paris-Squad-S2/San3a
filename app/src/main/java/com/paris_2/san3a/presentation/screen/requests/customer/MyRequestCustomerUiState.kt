@@ -55,16 +55,15 @@ data class MyRequestCustomerUi(
     val serviceImage : String = "",
     val status: RequestStatus = RequestStatus.ONGOING,
     val offer: OfferUiState = OfferUiState(),
-    val craftsMan: CraftsManUiState = CraftsManUiState(),
 )
 
-fun User.toCraftsManUiState(rating: Float, isRated: Boolean) : CraftsManUiState {
+fun User.toCraftsManUiState(rating: Float, craftsManRatingForOffer: Float?) : CraftsManUiState {
     return CraftsManUiState(
         profileUrl = this.profilePhoto,
         name = this.fullName,
         review = 150,
         rating = rating,
-        isRated = isRated,
+        craftsManRatingForOffer = craftsManRatingForOffer,
         phoneNumber = this.id,
         isVerify = this.nationalIdBackImage.isNotBlank() && this.nationalIdFrontImage.isNotBlank(),
     )
@@ -75,7 +74,7 @@ data class CraftsManUiState(
     val name: String = "",
     val review: Int = 0,
     val rating: Float = 0.0f,
-    val isRated: Boolean = false,
+    val craftsManRatingForOffer: Float? = null,
     val phoneNumber: String = "",
     val isVerify: Boolean = false,
 )

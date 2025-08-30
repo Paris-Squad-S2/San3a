@@ -7,10 +7,13 @@ import androidx.compose.ui.res.vectorResource
 import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.presentation.screen.requests.customer.MyRequestCustomerUi
+import com.paris_2.san3a.presentation.shared.components.AppButtonState
+import com.paris_2.san3a.presentation.utill.format
 
 data class ButtonConfig(
     val text: String? = null,
-    val icon: ImageVector? = null
+    val icon: ImageVector? = null,
+    val buttonState: AppButtonState = AppButtonState.Enable
 )
 
 @Composable
@@ -31,8 +34,12 @@ fun getButtonConfig(requestUi: MyRequestCustomerUi): ButtonConfig {
         }
 
         RequestStatus.COMPLETED -> {
-            if (requestUi.craftsMan.isRated) {
-                ButtonConfig()
+            if (requestUi.offer.craftsMan.craftsManRatingForOffer != null) {
+                ButtonConfig(
+                    text = requestUi.offer.craftsMan.craftsManRatingForOffer.format(),
+                    icon = ImageVector.vectorResource(R.drawable.ic_star),
+                    buttonState = AppButtonState.Disabled
+                )
             }
             else {
                 ButtonConfig(
