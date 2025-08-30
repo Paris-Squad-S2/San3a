@@ -9,8 +9,8 @@ import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.presentation.screen.requests.customer.MyRequestCustomerUi
 
 data class ButtonConfig(
-    val text: String?,
-    val icon: ImageVector?
+    val text: String? = null,
+    val icon: ImageVector? = null
 )
 
 @Composable
@@ -31,17 +31,19 @@ fun getButtonConfig(requestUi: MyRequestCustomerUi): ButtonConfig {
         }
 
         RequestStatus.COMPLETED -> {
-            ButtonConfig(
-                text = stringResource(R.string.rate),
-                icon = ImageVector.vectorResource(R.drawable.ic_star_outline)
-            )
+            if (requestUi.craftsMan.isRated) {
+                ButtonConfig()
+            }
+            else {
+                ButtonConfig(
+                    text = stringResource(R.string.rate),
+                    icon = ImageVector.vectorResource(R.drawable.ic_star_outline)
+                )
+            }
         }
 
         RequestStatus.CANCELLED -> {
-            ButtonConfig(
-                text = null,
-                icon = null
-            )
+            ButtonConfig()
         }
     }
 }

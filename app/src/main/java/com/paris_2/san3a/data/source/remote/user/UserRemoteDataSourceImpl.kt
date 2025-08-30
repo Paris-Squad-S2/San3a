@@ -2,19 +2,18 @@ package com.paris_2.san3a.data.source.remote.user
 
 import android.util.Log
 import com.google.firebase.firestore.FieldPath
-import com.paris_2.san3a.data.source.remote.user.service.AuthApiServices
-import com.paris_2.san3a.data.source.remote.user.dto.OtpMessageDto
 import com.paris_2.san3a.data.service.firestore.FireStoreService
 import com.paris_2.san3a.data.service.firestore.SetOperation
 import com.paris_2.san3a.data.service.firestore.WriteOperation
 import com.paris_2.san3a.data.source.remote.service.dto.ServiceDto
 import com.paris_2.san3a.data.source.remote.user.dto.OtpDto
+import com.paris_2.san3a.data.source.remote.user.dto.OtpMessageDto
+import com.paris_2.san3a.data.source.remote.user.service.AuthApiServices
 import com.paris_2.san3a.data.utils.roundFloat
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
 import com.paris_2.san3a.domain.entity.User
-import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.exceptions.InvalidNumberException
 import com.paris_2.san3a.domain.exceptions.ServerException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -121,7 +120,10 @@ class UserRemoteDataSourceImpl(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getUserSelectedServices(phone: String, isCraftsman: Boolean): Flow<List<ServiceDto>> {
+    override fun getUserSelectedServices(
+        phone: String,
+        isCraftsman: Boolean
+    ): Flow<List<ServiceDto>> {
         val path = if (isCraftsman) {
             "$USERS_COLLECTION/$phone/$OFFERED_SERVICES_COLLECTION"
         } else {
@@ -158,7 +160,11 @@ class UserRemoteDataSourceImpl(
         updateUserData(phone, data)
     }
 
-    override suspend fun updatePersonalInfo(phone: String, fullName: String, profilePhoto: String?) {
+    override suspend fun updatePersonalInfo(
+        phone: String,
+        fullName: String,
+        profilePhoto: String?
+    ) {
         val data = mutableMapOf<String, Any>(
             "fullName" to fullName,
         )
@@ -168,7 +174,11 @@ class UserRemoteDataSourceImpl(
         updateUserData(phone, data)
     }
 
-    override suspend fun updateWorkShowcase(phone: String, workMedia: List<String>?, workDescription: String) {
+    override suspend fun updateWorkShowcase(
+        phone: String,
+        workMedia: List<String>?,
+        workDescription: String
+    ) {
         val data = mutableMapOf<String, Any>(
             "workDescription" to workDescription,
         )
@@ -176,7 +186,11 @@ class UserRemoteDataSourceImpl(
         updateUserData(phone, data)
     }
 
-    override suspend fun updateNationalIdImages(phone: String, frontUrl: String?, backUrl: String?) {
+    override suspend fun updateNationalIdImages(
+        phone: String,
+        frontUrl: String?,
+        backUrl: String?
+    ) {
         val data = mutableMapOf<String, Any>().apply {
             frontUrl?.let { this["nationalIdFrontImage"] = it }
             backUrl?.let { this["nationalIdBackImage"] = it }
@@ -217,43 +231,45 @@ class UserRemoteDataSourceImpl(
     override suspend fun addRatingForCraftsman(
         userId: String,
         craftsmanId: String,
-        rating: Float
+        offerId: String,
+        rating: Float,
     ) {
         val data = mapOf(
-            "rating" to rating
+            "rating" to rating,
+            "offerId" to offerId,
         )
         fireStoreService.setDoc(
-            path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION/$userId",
+            path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION/$userId-$offerId",
             data = data
         )
-        Log.d("AccountSetup", "Rating added successfully for craftsman $craftsmanId by user $userId")
+        Log.d(
+            "AccountSetup",
+            "Rating added successfully for craftsman $craftsmanId by user $userId"
+        )
     }
 
     override fun getRatingForCraftsman(craftsmanId: String): Flow<Float> {
         return fireStoreService.streamCollection(
             path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION",
             fromJson = { data, _ -> (data["rating"] as? Number)?.toFloat() }
-        ).filterNotNull().let { ratingsFlow ->
-            flow {
-                val ratings = ratingsFlow.firstOrNull() ?: emptyList()
-                val avg = if (ratings.isNotEmpty()) {
-                    ratings.mapNotNull {it}
-                        .average()
-                        .toFloat()
-                        .roundFloat()
-                } else 0f
-                emit(avg)
-            }
+        ).filterNotNull().map { ratings ->
+            if (ratings.isNotEmpty()) {
+                ratings.mapNotNull { it }
+                    .average()
+                    .toFloat()
+                    .roundFloat()
+            } else 0f
         }
     }
 
 
-    override suspend fun getCustomerRatingOnCraftsman(
+    override fun getCustomerRatingOnCraftsman(
         craftsmanId: String,
-        userId: String
-    ): Float? {
-        return fireStoreService.getDoc(
-            path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION/$userId",
+        offerId: String,
+        userId: String,
+    ): Flow<Float?> {
+        return fireStoreService.streamDoc(
+            path = "$USERS_COLLECTION/$craftsmanId/$RATINGS_COLLECTION/$userId-$offerId",
             fromJson = { data, _ -> (data["rating"] as? Number)?.toFloat()?.roundFloat() }
         )
     }
@@ -271,7 +287,10 @@ class UserRemoteDataSourceImpl(
             path = "$USERS_COLLECTION/$craftsmanId/$EARNINGS_COLLECTION/$userId-$requestId",
             data = data
         )
-        Log.d("AccountSetup", "Earnings updated successfully for craftsman $craftsmanId for request $requestId by user $userId")
+        Log.d(
+            "AccountSetup",
+            "Earnings updated successfully for craftsman $craftsmanId for request $requestId by user $userId"
+        )
     }
 
     override fun getEarningsForCraftsman(craftsmanId: String): Flow<Double> {
@@ -286,12 +305,19 @@ class UserRemoteDataSourceImpl(
         }
     }
 
-    override suspend fun incrementJobsDoneForCraftsman(craftsmanId: String, requestId: String, userId: String) {
+    override suspend fun incrementJobsDoneForCraftsman(
+        craftsmanId: String,
+        requestId: String,
+        userId: String
+    ) {
         fireStoreService.setDoc(
             path = "$USERS_COLLECTION/$craftsmanId/$JOBS_DONE_COLLECTION/$requestId",
             data = mapOf("userId" to userId)
         )
-        Log.d("AccountSetup", "Job done incremented successfully for craftsman $craftsmanId for request $requestId by user $userId")
+        Log.d(
+            "AccountSetup",
+            "Job done incremented successfully for craftsman $craftsmanId for request $requestId by user $userId"
+        )
     }
 
     override fun getJobsDoneForCraftsman(craftsmanId: String): Flow<Int> {
@@ -302,7 +328,10 @@ class UserRemoteDataSourceImpl(
 
     private suspend fun updateUserData(phone: String, data: Map<String, Any>) {
         fireStoreService.updateDoc(path = "$USERS_COLLECTION/$phone", data = data)
-        Log.d("AccountSetup", "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data")
+        Log.d(
+            "AccountSetup",
+            "Account type saved successfully at $USERS_COLLECTION/$phone with data: $data"
+        )
     }
 
 

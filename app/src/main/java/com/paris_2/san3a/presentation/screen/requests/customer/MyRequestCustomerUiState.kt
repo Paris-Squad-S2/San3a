@@ -24,7 +24,8 @@ data class MyRequestCustomerUiState(
     val canceled: Map<String, MyRequestCustomerUi> = emptyMap(),
     val services: Map<String, Service> = emptyMap(),
     val rating: Float = 0.0f,
-    val craftsmanToRate: String = ""
+    val craftsmanToRate: String = "",
+    val offerToRate: String = "",
 )
 
 fun RequestService.toRequestServiceUiState(services: Map<String, Service>): MyRequestCustomerUi {
@@ -57,12 +58,13 @@ data class MyRequestCustomerUi(
     val craftsMan: CraftsManUiState = CraftsManUiState(),
 )
 
-fun User.toCraftsManUiState(rating: Float) : CraftsManUiState {
+fun User.toCraftsManUiState(rating: Float, isRated: Boolean) : CraftsManUiState {
     return CraftsManUiState(
         profileUrl = this.profilePhoto,
         name = this.fullName,
         review = 150,
         rating = rating,
+        isRated = isRated,
         phoneNumber = this.id,
         isVerify = this.nationalIdBackImage.isNotBlank() && this.nationalIdFrontImage.isNotBlank(),
     )
@@ -73,6 +75,7 @@ data class CraftsManUiState(
     val name: String = "",
     val review: Int = 0,
     val rating: Float = 0.0f,
+    val isRated: Boolean = false,
     val phoneNumber: String = "",
     val isVerify: Boolean = false,
 )
