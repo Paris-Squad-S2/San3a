@@ -95,7 +95,6 @@ class MessagesDetailsViewModel(
                         chatTitle = screenState.value.chatTitle,
                         isLoading = false,
                         sendingTextMessage = null,
-                        sendingImageMessage = null,
                     )
                 )
                 markMessagesAsSeen()
@@ -185,6 +184,13 @@ class MessagesDetailsViewModel(
                         sendMessageUseCase(message)
                     }
                 }
+            },
+            onSuccess = {
+                updateState(
+                    screenState.value.copy(
+                        sendingImageMessage = null
+                    )
+                )
             },
             onError = {
                 updateState(
