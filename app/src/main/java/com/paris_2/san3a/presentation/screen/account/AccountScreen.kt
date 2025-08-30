@@ -173,8 +173,7 @@ fun AccountScreenContent(
                 )
             }
 
-            3 -> when (uiState.accountUiState.userType) {
-                UserType.CUSTOMER -> {
+            3 -> {
                     LocationContent(
                         modifier = Modifier.padding(vertical = 32.dp).fillMaxWidth(),
                         onGetLocationClicked = interactionListener::onGovernmentBottomSheetVisibilityToggled,
@@ -195,7 +194,9 @@ fun AccountScreenContent(
                         textButton = textButton,
                         state = uiState.accountUiState.accountButtonState.locationButtonState
                     )
-                }
+            }
+
+            4 -> when (uiState.accountUiState.userType) {
                 UserType.CRAFTSMAN -> {
                     ShowYourWorkContent(
                         modifier = Modifier.padding(vertical = 32.dp),
@@ -214,7 +215,7 @@ fun AccountScreenContent(
                 else -> {}
             }
 
-            4 -> when (uiState.accountUiState.userType) {
+            5 -> when (uiState.accountUiState.userType) {
                 UserType.CRAFTSMAN -> {
                     VerifyIdentityContent(
                         modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),

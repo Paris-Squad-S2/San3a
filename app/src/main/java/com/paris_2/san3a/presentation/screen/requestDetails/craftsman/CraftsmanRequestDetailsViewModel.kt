@@ -393,6 +393,7 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onMessageChanged(message: String) {
+        if (message.length > 100) return
         val updatedOffer = screenState.value.uiState.offerToAdd.copy(messageToCustomer = message)
         updateState(
             screenState.value.copy(

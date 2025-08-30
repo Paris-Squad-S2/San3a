@@ -45,7 +45,7 @@ class AccountViewModel(
 
     private val stepsCount: Int
         get() = when (screenState.value.accountUiState.userType) {
-            UserType.CRAFTSMAN -> 5
+            UserType.CRAFTSMAN -> 6
             UserType.CUSTOMER -> 4
             else -> 4
         }
@@ -100,7 +100,7 @@ class AccountViewModel(
         )
     }
 
-    private var getUserSelectedServicesJob : Job? = null
+    private var getUserSelectedServicesJob: Job? = null
 
     private fun getUserSelectedServices() {
         getUserSelectedServicesJob?.cancel()
@@ -159,7 +159,7 @@ class AccountViewModel(
                     accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
                         userTypeButtonState = if (user.accountType.name.isNotBlank()) AppButtonState.Enable else AppButtonState.Disabled,
                         profileButtonState = if (user.fullName.isNotBlank()) AppButtonState.Enable else AppButtonState.Disabled,
-                        locationButtonState = if (user.location.governmentId == 0) AppButtonState.Enable else AppButtonState.Disabled,
+                        locationButtonState = if (user.location.governmentId == 0) AppButtonState.Disabled else AppButtonState.Enable,
                         verifyIdentityButtonState = if (user.nationalIdBackImage.isNotBlank() && user.nationalIdFrontImage.isNotEmpty()) AppButtonState.Enable else AppButtonState.Disabled,
                     )
                 )
@@ -174,9 +174,10 @@ class AccountViewModel(
             AccountSetupStep.ACCOUNT_TYPE -> 0
             AccountSetupStep.SERVICES -> 1
             AccountSetupStep.PERSONAL_INFO -> 2
-            AccountSetupStep.LOCATION, AccountSetupStep.WORK_SHOWCASE -> 3
-            AccountSetupStep.UPLOAD_NATIONAL_ID -> 4
-            AccountSetupStep.COMPLETED -> 5
+            AccountSetupStep.LOCATION -> 3
+            AccountSetupStep.WORK_SHOWCASE -> 4
+            AccountSetupStep.UPLOAD_NATIONAL_ID -> 5
+            AccountSetupStep.COMPLETED -> 6
         }
     }
 
@@ -191,7 +192,10 @@ class AccountViewModel(
 
     private suspend fun onGetAllServicesSuccess(services: Flow<List<Service>>) {
         services.collect {
-            Log.d("AccountViewModel", "onGetAllServicesSuccess: ${it.map { service -> service.title }}")
+            Log.d(
+                "AccountViewModel",
+                "onGetAllServicesSuccess: ${it.map { service -> service.title }}"
+            )
             val serviceUiStates = mapServiceToUiState(it)
             updateState(
                 screenState.value.copy(
@@ -267,7 +271,7 @@ class AccountViewModel(
     }
 
     override fun onDescriptionChanged(description: String) {
-        if (description.length > 200) return
+        if (description.length > 150) return
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
@@ -384,13 +388,10 @@ class AccountViewModel(
             }
 
             2 -> UiText.StringResource(R.string.personalize_your_profile)
-            3 -> when (screenState.value.accountUiState.userType) {
-                UserType.CUSTOMER -> UiText.StringResource(R.string.where_are_you_located)
-                UserType.CRAFTSMAN -> UiText.StringResource(R.string.show_us_your_work)
-                else -> UiText.DynamicString("")
-            }
+            3 -> UiText.StringResource(R.string.where_are_you_located)
 
-            4 -> UiText.StringResource(R.string.verify_your_identity_optional)
+            4 -> UiText.StringResource(R.string.show_us_your_work)
+            5 -> UiText.StringResource(R.string.verify_your_identity_optional)
             else -> UiText.DynamicString("")
         }
     }
@@ -405,13 +406,10 @@ class AccountViewModel(
             }
 
             2 -> UiText.StringResource(R.string.use_to_personalize_experience_skip)
-            3 -> when (screenState.value.accountUiState.userType) {
-                UserType.CUSTOMER -> UiText.StringResource(R.string.location_improves_accuracy_update_later)
-                UserType.CRAFTSMAN -> UiText.StringResource(R.string.add_photos_or_video_build_trust)
-                else -> UiText.DynamicString("")
-            }
+            3 -> UiText.StringResource(R.string.location_improves_accuracy_update_later)
 
-            4 -> UiText.StringResource(R.string.upload_id_build_trust_get_jobs)
+            4 -> UiText.StringResource(R.string.add_photos_or_video_build_trust)
+            5 -> UiText.StringResource(R.string.upload_id_build_trust_get_jobs)
             else -> UiText.DynamicString("")
         }
     }
@@ -636,20 +634,10 @@ class AccountViewModel(
 
             },
             onSuccess = {
-                if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
-                    if (!screenState.value.accountUiState.workImagesUris.isNullOrEmpty()) {
-                        changeAppButtonStateInWorkShowCase(AppButtonState.Enable)
-                    }
-                    setUpAccountUseCase.updateUserProgress(
-                        phone = screenState.value.accountUiState.phoneNumber,
-                        step = AccountSetupStep.WORK_SHOWCASE
-                    )
-                } else {
-                    setUpAccountUseCase.updateUserProgress(
-                        phone = screenState.value.accountUiState.phoneNumber,
-                        step = AccountSetupStep.LOCATION
-                    )
-                }
+                setUpAccountUseCase.updateUserProgress(
+                    phone = screenState.value.accountUiState.phoneNumber,
+                    step = AccountSetupStep.LOCATION
+                )
                 incrementCurrentScreen()
             },
             onError = {
@@ -685,19 +673,38 @@ class AccountViewModel(
                 )
             },
             onSuccess = {
-                setUpAccountUseCase.updateUserProgress(
-                    phone = screenState.value.accountUiState.phoneNumber,
-                    step = AccountSetupStep.COMPLETED
-                )
-                navigate(
-                    Destinations.CustomerGraph,
-                    navOptions = NavOptions.Builder()
-                        .setPopUpTo(
-                            Destinations.Account(accountSetupStep),
-                            inclusive = true
-                        ).build()
-                )
+                if (screenState.value.accountUiState.userType == UserType.CRAFTSMAN) {
+                    if (!screenState.value.accountUiState.workImagesUris.isNullOrEmpty()) {
+                        changeAppButtonStateInWorkShowCase(AppButtonState.Enable)
+                    }
+                    setUpAccountUseCase.updateUserProgress(
+                        phone = screenState.value.accountUiState.phoneNumber,
+                        step = AccountSetupStep.WORK_SHOWCASE
+                    )
+                } else {
+                    setUpAccountUseCase.updateUserProgress(
+                        phone = screenState.value.accountUiState.phoneNumber,
+                        step = AccountSetupStep.COMPLETED
+                    )
+                    navigate(
+                        Destinations.CustomerGraph,
+                        navOptions = NavOptions.Builder()
+                            .setPopUpTo(
+                                Destinations.Account(accountSetupStep),
+                                inclusive = true
+                            ).build()
+                    )
+                }
                 incrementCurrentScreen()
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                                locationButtonState = AppButtonState.Enable
+                            )
+                        )
+                    )
+                )
             },
             onError = {
                 updateState(
@@ -730,6 +737,15 @@ class AccountViewModel(
                     step = AccountSetupStep.UPLOAD_NATIONAL_ID
                 )
                 incrementCurrentScreen()
+                updateState(
+                    screenState.value.copy(
+                        accountUiState = screenState.value.accountUiState.copy(
+                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                                workShowCaseButtonState = AppButtonState.Enable
+                            )
+                        )
+                    )
+                )
             },
             onError = {
                 updateState(

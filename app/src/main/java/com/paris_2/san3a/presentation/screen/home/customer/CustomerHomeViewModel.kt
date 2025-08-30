@@ -139,6 +139,7 @@ class CustomerHomeViewModel(
     }
 
     override fun setBottomSheetDescription(description: String) {
+        if (description.length > 100) return
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
