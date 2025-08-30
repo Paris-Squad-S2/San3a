@@ -762,6 +762,41 @@ class AccountViewModel(
         )
     }
 
+    override fun onClickVerifyLater() {
+        tryToExecute(
+            execute = {
+                changeAppButtonStateInVerifyLater(AppButtonState.Loading)
+                setUpAccountUseCase.updateUserProgress(
+                    phone = screenState.value.accountUiState.phoneNumber,
+                    step = AccountSetupStep.COMPLETED
+                )
+            },
+            onSuccess = {
+                changeAppButtonStateInVerifyLater(AppButtonState.Enable)
+                navigate(
+                    Destinations.CraftManGraph,
+                    navOptions = NavOptions.Builder()
+                        .setPopUpTo(
+                            Destinations.Account(accountSetupStep),
+                            inclusive = true
+                        ).build()
+                )
+            },
+            onError = {
+                updateState(
+                    screenState.value.copy(
+                        errorMassage = it.message.orEmpty(),
+                        accountUiState = screenState.value.accountUiState.copy(
+                            accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                                verifyLaterButtonState = AppButtonState.Enable
+                            )
+                        )
+                    )
+                )
+            },
+        )
+    }
+
     override fun onVerifyIdentityButtonClicked() {
         tryToExecute(
             execute = {
@@ -770,14 +805,6 @@ class AccountViewModel(
                     phone = screenState.value.accountUiState.phoneNumber,
                     screenState.value.accountUiState.frontOfNationalIdUri,
                     screenState.value.accountUiState.backOfNationalIdUri
-                )
-                navigate(
-                    Destinations.CraftManGraph,
-                    navOptions = NavOptions.Builder()
-                        .setPopUpTo(
-                            Destinations.Account(accountSetupStep),
-                            inclusive = true
-                        ).build()
                 )
             },
             onSuccess = {
@@ -855,6 +882,18 @@ class AccountViewModel(
                 accountUiState = screenState.value.accountUiState.copy(
                     accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
                         verifyIdentityButtonState = appButtonState
+                    )
+                )
+            )
+        )
+    }
+
+    private fun changeAppButtonStateInVerifyLater(appButtonState: AppButtonState) {
+        updateState(
+            screenState.value.copy(
+                accountUiState = screenState.value.accountUiState.copy(
+                    accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                        verifyLaterButtonState = appButtonState
                     )
                 )
             )

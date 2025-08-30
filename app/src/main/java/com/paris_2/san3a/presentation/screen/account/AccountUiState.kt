@@ -39,6 +39,7 @@ data class AccountButtonState(
     val profileButtonState: AppButtonState = AppButtonState.Disabled,
     val locationButtonState: AppButtonState = AppButtonState.Disabled,
     val workShowCaseButtonState: AppButtonState = AppButtonState.Disabled,
+    val verifyLaterButtonState: AppButtonState = AppButtonState.Enable,
     val verifyIdentityButtonState: AppButtonState = AppButtonState.Disabled,
 )
 

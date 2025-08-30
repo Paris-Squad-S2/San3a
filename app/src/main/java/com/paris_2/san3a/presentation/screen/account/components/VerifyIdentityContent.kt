@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import com.paris_2.san3a.presentation.shared.components.AppButton
 import com.paris_2.san3a.presentation.shared.components.AppButtonSize
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.components.AppButtonType
+import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 
@@ -27,7 +29,8 @@ fun VerifyIdentityContent(
     onBackOfNationalIdUploadClick: () -> Unit,
     frontOfNationalIdUri: Uri? = null,
     backOfNationalIdUri: Uri? = null,
-    onVerifyLaterClick: () -> Unit
+    onVerifyLaterClick: () -> Unit,
+    verifyButtonState: AppButtonState
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -66,8 +69,14 @@ fun VerifyIdentityContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp),
-            state = AppButtonState.Enable,
+            state = verifyButtonState,
             type = AppButtonType.Secondary,
+            loadingIcon = {
+                LoadingScreen(
+                    modifier = Modifier.size(25.dp),
+                    background = Theme.colors.button.secondary
+                )
+            }
         )
     }
 }
@@ -77,12 +86,10 @@ fun VerifyIdentityContent(
 private fun VerifyIdentityContentPreview() {
     San3aTheme {
         VerifyIdentityContent(
-            modifier = Modifier,
             onFrontOfNationalIdUploadClick = {},
             onBackOfNationalIdUploadClick = {},
-            frontOfNationalIdUri = null,
-            backOfNationalIdUri = null,
-            onVerifyLaterClick = {}
+            onVerifyLaterClick = {},
+            verifyButtonState = AppButtonState.Enable
         )
     }
 }
