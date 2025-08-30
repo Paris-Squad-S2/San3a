@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -80,33 +82,35 @@ fun OnBoardingScreenContent(
         interactionListener.onPageChanged(pagerState.currentPage)
     }
 
-    Box (
+    Box(
         modifier = modifier
             .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding()
             .background(Theme.colors.background.screen)
     ) {
-        Column(
+        HorizontalPager(
+            state = pagerState,
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(vertical = 96.dp),
-            verticalArrangement = Arrangement.Bottom,
-        ) {
-            HorizontalPager(
-                state = pagerState,
+                .fillMaxSize(),
+        ) { index ->
+            Column(
                 modifier = Modifier
-                    .padding(bottom = 32.dp)
-            ) { index ->
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(vertical = 96.dp),
+                verticalArrangement = Arrangement.Bottom
+            ) {
                 TopSection(
+                    page = pages[index],
+                    modifier = Modifier
+                        .padding(bottom = 32.dp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                TextSection(
                     page = pages[index]
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
-            TextSection(
-                page = pages[pagerState.currentPage]
-            )
         }
         BottomSection(
             modifier = Modifier
@@ -134,8 +138,14 @@ fun OnBoardingScreenContent(
             onClick = interactionListener::onSkipClicked,
             text = stringResource(R.string.skip),
             modifier = Modifier
+                .padding(end = 16.dp, top = 24.dp)
                 .align(Alignment.TopEnd)
-                .padding(end = 16.dp, top = 24.dp),
+                .shadow(
+                    elevation = 4.dp,
+                    shape = RoundedCornerShape(Theme.radius.full),
+                    ambientColor = Theme.colors.shade.secondary,
+                    spotColor = Theme.colors.shade.secondary,
+                ),
         )
     }
 
