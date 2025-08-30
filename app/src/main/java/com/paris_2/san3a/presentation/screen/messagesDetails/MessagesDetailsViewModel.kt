@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.messagesDetails
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
@@ -15,6 +16,8 @@ import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.utill.fakeImage
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MessagesDetailsViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
@@ -152,9 +155,12 @@ class MessagesDetailsViewModel(
                     screenState.value.copy(
                         errorMessage = it.message,
                         sendButtonState = AppButtonState.Enable,
-                        showSnackBar = true
+                        showSnackBar = true,
+                        sendingTextMessage = null,
+                        messagesSize = (screenState.value.messagesSize - 1).coerceAtLeast(0)
                     )
                 )
+                hideSnackBar()
             }
         )
     }
@@ -197,10 +203,28 @@ class MessagesDetailsViewModel(
                 updateState(
                     screenState.value.copy(
                         errorMessage = it.message,
+                        showSnackBar = true,
+                        sendingImageMessage = null,
+                        messagesSize = (screenState.value.messagesSize - 1).coerceAtLeast(0)
                     )
                 )
+                hideSnackBar()
             },
         )
+    }
+
+    private fun hideSnackBar() {
+        viewModelScope.launch {
+            if (screenState.value.showSnackBar) {
+                delay(3000)
+                updateState(
+                    screenState.value.copy(
+                        showSnackBar = false,
+                        errorMessage = null
+                    )
+                )
+            }
+        }
     }
 
 
