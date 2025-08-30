@@ -88,6 +88,7 @@ class RequestRemoteDataSourceImpl(
             fromJson = RequestServiceDto::fromJson,
             queryBuilder = { query ->
                 query.whereEqualTo("userId", userId)
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
             }
         )
     }
@@ -117,6 +118,7 @@ class RequestRemoteDataSourceImpl(
             fromJson = OfferDto::fromJson,
             queryBuilder = { query ->
                 query.whereEqualTo("craftsmanId", userId)
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
             }
         ).flatMapLatest { offers ->
             val requestIds = offers.map { it.requestId }

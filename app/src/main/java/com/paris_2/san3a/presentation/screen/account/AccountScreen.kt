@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.presentation.screen.account.components.AccountAppButton
 import com.paris_2.san3a.presentation.screen.account.components.AccountProgressIndicator
 import com.paris_2.san3a.presentation.screen.account.components.AccountTypeContent
@@ -41,7 +42,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
     val currentScreen by viewModel.currentScreen
-    val uiState by viewModel.screenState.collectAsState()
+    val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     val profileImagePickerLauncher = rememberSingleImagePickerLauncher(
@@ -175,7 +176,7 @@ fun AccountScreenContent(
             3 -> when (uiState.accountUiState.userType) {
                 UserType.CUSTOMER -> {
                     LocationContent(
-                        modifier = Modifier.padding(vertical = 32.dp).fillMaxWidth().height(200.dp),
+                        modifier = Modifier.padding(vertical = 32.dp).fillMaxWidth(),
                         onGetLocationClicked = interactionListener::onGovernmentBottomSheetVisibilityToggled,
                         isGovernmentSheetShowed = uiState.accountUiState.isGovernmentBottomSheetShowed,
                         onGovernmentDismissRequest = interactionListener::onGovernmentBottomSheetDismissed,

@@ -27,6 +27,7 @@ import com.paris_2.san3a.presentation.screen.account.components.LocationBottomSh
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
 import com.paris_2.san3a.presentation.shared.utils.UiText
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 class AccountViewModel(
@@ -57,7 +58,6 @@ class AccountViewModel(
     init {
         getPhoneNumber()
         getGovernments()
-        getAllServices()
     }
 
 
@@ -78,7 +78,7 @@ class AccountViewModel(
             )
         )
         loadUserAndGoToLastStep()
-        getUserSelectedServices()
+        getAllServices()
         getWorkMedia()
     }
 
@@ -100,8 +100,11 @@ class AccountViewModel(
         )
     }
 
+    private var getUserSelectedServicesJob : Job? = null
+
     private fun getUserSelectedServices() {
-        tryToObserve(
+        getUserSelectedServicesJob?.cancel()
+        getUserSelectedServicesJob = tryToObserve(
             observe = {
                 getUserSelectedServicesUseCase(
                     phoneNumber = screenState.value.accountUiState.phoneNumber,
@@ -114,16 +117,17 @@ class AccountViewModel(
     }
 
     private fun onGetUserSelectedServicesEach(services: List<Service>?) {
-        val serviceUiStates = mapServiceToUiState(services ?: emptyList())
+        Log.d("AccountViewModel", "userType: ${screenState.value.accountUiState.userType}")
+        Log.d("AccountViewModel", "onGetUserSelectedServicesEach: ${services?.map { it.title }}")
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
                     serviceUiState = screenState.value.accountUiState.serviceUiState.map { service ->
-                        service.copy(isSelected = serviceUiStates.any { service.id == it.id })
+                        service.copy(isSelected = services.orEmpty().any { service.id == it.id })
                     },
                     accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                        serviceButtonState = if (serviceUiStates.isNotEmpty()) AppButtonState.Enable
-                        else AppButtonState.Disabled
+                        serviceButtonState = if (services.isNullOrEmpty()) AppButtonState.Disabled
+                        else AppButtonState.Enable
                     )
                 )
             )
@@ -161,6 +165,7 @@ class AccountViewModel(
                 )
             )
         )
+        if (screenState.value.accountUiState.serviceUiState.isNotEmpty()) getUserSelectedServices()
         getAccountSetupStep()
     }
 
@@ -186,6 +191,7 @@ class AccountViewModel(
 
     private suspend fun onGetAllServicesSuccess(services: Flow<List<Service>>) {
         services.collect {
+            Log.d("AccountViewModel", "onGetAllServicesSuccess: ${it.map { service -> service.title }}")
             val serviceUiStates = mapServiceToUiState(it)
             updateState(
                 screenState.value.copy(
@@ -196,6 +202,7 @@ class AccountViewModel(
                     errorMassage = null
                 )
             )
+            if (screenState.value.accountUiState.userType != null) getUserSelectedServices()
         }
     }
 
@@ -260,6 +267,7 @@ class AccountViewModel(
     }
 
     override fun onDescriptionChanged(description: String) {
+        if (description.length > 200) return
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
@@ -544,9 +552,6 @@ class AccountViewModel(
                 updateState(
                     screenState.value.copy(
                         accountUiState = screenState.value.accountUiState.copy(
-                            serviceUiState = screenState.value.accountUiState.serviceUiState.map { service ->
-                                service.copy(isSelected = false)
-                            },
                             accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
                                 userTypeButtonState = AppButtonState.Enable
                             )
