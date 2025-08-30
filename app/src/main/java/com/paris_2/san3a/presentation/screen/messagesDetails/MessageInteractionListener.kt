@@ -8,4 +8,5 @@ interface MessageInteractionListener {
     fun onDeleteButtonClick()
     fun onDismissDeleteBottomSheet()
     fun onRetryClick()
+    fun onDismissSnackBar()
 }

@@ -151,7 +151,8 @@ class MessagesDetailsViewModel(
                 updateState(
                     screenState.value.copy(
                         errorMessage = it.message,
-                        sendButtonState = AppButtonState.Enable
+                        sendButtonState = AppButtonState.Enable,
+                        showSnackBar = true
                     )
                 )
             }
@@ -195,7 +196,7 @@ class MessagesDetailsViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message
+                        errorMessage = it.message,
                     )
                 )
             },
@@ -272,6 +273,15 @@ class MessagesDetailsViewModel(
 
     override fun onRetryClick() {
         loadMessages(chatId)
+    }
+
+    override fun onDismissSnackBar() {
+        updateState(
+            screenState.value.copy(
+                showSnackBar = false,
+                errorMessage = null
+            )
+        )
     }
 
     companion object {

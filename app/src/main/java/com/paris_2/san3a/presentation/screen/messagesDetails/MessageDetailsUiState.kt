@@ -23,6 +23,7 @@ data class MessageDetailsUiState(
     val isLoading: Boolean = false,
     val sendingTextMessage : MessageUi? = null,
     val sendingImageMessage : MessageUi? = null,
+    val showSnackBar: Boolean = false,
 )
 
 data class MessageUi(
