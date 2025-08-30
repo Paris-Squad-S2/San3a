@@ -52,7 +52,9 @@ fun SearchBar(
             )
             .clip(RoundedCornerShape(Theme.radius.large))
             .background(Theme.colors.background.card),
-        textStyle = Theme.textStyle.body.medium.regular,
+        textStyle = Theme.textStyle.body.medium.regular.copy(
+            color = Theme.colors.shade.primary
+        ),
         decorationBox = { innerTextField ->
             Box(
                 modifier = Modifier

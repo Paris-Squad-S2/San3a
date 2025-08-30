@@ -42,15 +42,17 @@ interface UserRemoteDataSource {
     suspend fun addRatingForCraftsman(
         userId: String,
         craftsmanId: String,
-        rating: Float
+        offerId: String,
+        rating: Float,
     )
 
     fun getRatingForCraftsman(craftsmanId: String): Flow<Float>
 
-    suspend fun getCustomerRatingOnCraftsman(
+    fun getCustomerRatingOnCraftsman(
         craftsmanId: String,
-        userId: String
-    ): Float?
+        offerId: String,
+        userId: String,
+    ): Flow<Float?>
 
     suspend fun updateEarningsForCraftsman(
         craftsmanId: String,

@@ -19,7 +19,6 @@ import com.paris_2.san3a.domain.exceptions.FailException
 import com.paris_2.san3a.domain.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -145,10 +144,16 @@ class UserRepositoryImpl(
     override suspend fun addRatingForCraftsman(
         userId: String,
         craftsmanId: String,
-        rating: Float
+        offerId: String,
+        rating: Float,
     ) {
         safeNetworkCall(FailException("Failed to add rating for craftsman")) {
-            userRemoteDataSource.addRatingForCraftsman(userId, craftsmanId, rating)
+            userRemoteDataSource.addRatingForCraftsman(
+                userId = userId,
+                craftsmanId = craftsmanId,
+                offerId = offerId,
+                rating = rating
+            )
         }
     }
 
@@ -158,13 +163,18 @@ class UserRepositoryImpl(
             .catch { throw FailException("Failed to get rating for craftsman: $craftsmanId") }
     }
 
-    override suspend fun getCustomerRatingOnCraftsman(
+    override fun getCustomerRatingOnCraftsman(
         craftsmanId: String,
-        userId: String
-    ): Float? {
-        return safeNetworkCall(FailException("Failed to get customer rating on craftsman")) {
-            userRemoteDataSource.getCustomerRatingOnCraftsman(craftsmanId, userId)
-        }
+        offerId: String,
+        userId: String,
+    ): Flow<Float?> {
+        validateNetworkConnection()
+        return userRemoteDataSource.getCustomerRatingOnCraftsman(
+                craftsmanId = craftsmanId,
+                offerId = offerId,
+                userId = userId
+            )
+            .catch { throw FailException("Failed to get customer rating on craftsman: $craftsmanId for user: $userId") }
     }
 
     override suspend fun updateEarningsForCraftsman(
@@ -196,25 +206,21 @@ class UserRepositoryImpl(
     override suspend fun uploadNationalIdImages(phone: String, frontUri: Uri?, backUri: Uri?) =
         coroutineScope {
             safeNetworkCall(FailException("Failed to upload national ID images")) {
-                if (frontUri!=null || backUri!=null) {
-                    val (frontUrl, backUrl) = listOfNotNull(
-                        frontUri?.let { uri ->
-                            async {
-                                val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
-                                storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
-                                    .firstOrNull()
-                            }
-                        },
-                        backUri?.let { uri ->
-                            async {
-                                val path = "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME"
-                                storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
-                                    .firstOrNull()
-                            }
-                        }
-                    ).awaitAll()
-                    userRemoteDataSource.updateNationalIdImages(phone, frontUrl, backUrl)
+                val frontDeferred = frontUri?.let { uri ->
+                    async {
+                        val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
+                        storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri))).firstOrNull()
+                    }
                 }
+                val backDeferred = backUri?.let { uri ->
+                    async {
+                        val path = "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME"
+                        storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri))).firstOrNull()
+                    }
+                }
+                val frontUrl = frontDeferred?.await()
+                val backUrl = backDeferred?.await()
+                userRemoteDataSource.updateNationalIdImages(phone, frontUrl, backUrl)
             }
         }
 

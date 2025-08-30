@@ -1,5 +1,8 @@
 package com.paris_2.san3a.data.source.local.userPreferences
 
+import android.content.Context
+import android.content.res.Configuration
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -13,6 +16,7 @@ import kotlinx.coroutines.flow.mapLatest
 
 class UserPreferencesLocalDataStoreImpl(
     private val dataStore: DataStore<Preferences>,
+    private val context: Context
 ): UserPreferencesLocalDataStore {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -41,8 +45,12 @@ class UserPreferencesLocalDataStoreImpl(
 
     override fun isDarkThemeEnabled(): Flow<Boolean> {
         return dataStore.data.map {
-            it[IS_DARK_THEME] ?: false
+            it[IS_DARK_THEME] ?: isSystemInDarkTheme()
         }
+    }
+
+    private fun isSystemInDarkTheme(): Boolean {
+        return (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
     }
 
     override suspend fun updateAppLanguage(newLanguage: String): Boolean {

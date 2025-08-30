@@ -66,6 +66,7 @@ private fun MyRequestScreenContent(
     ) {
         AppBar(
             title = stringResource(R.string.my_requests),
+            hasDivider = false,
             actionIcon = {
                 NotificationIcon(
                     modifier = Modifier
@@ -194,7 +195,7 @@ private fun RequestList(
                     if (request.status == RequestStatus.ONGOING && request.offer.craftsMan.phoneNumber.isBlank()) {
                         interactionListener.onRequestClick(request.id)
                     } else if (request.status == RequestStatus.COMPLETED) {
-                        interactionListener.onRatingClick(craftsmanId = request.offer.craftsMan.phoneNumber)
+                        interactionListener.onRatingClick(craftsmanId = request.offer.craftsMan.phoneNumber, request.offer.id)
                     } else if (request.status == RequestStatus.ONGOING) {
                         interactionListener.onClickChat(request.offer.craftsMan.phoneNumber)
                     } else {
@@ -227,7 +228,7 @@ fun MyRequestScreenPreview() {
 
                 override fun onRetryClick() {}
                 override fun onClickChat(phoneNumber: String) {}
-                override fun onRatingClick(craftsmanId: String) {}
+                override fun onRatingClick(craftsmanId: String, offerId: String) {}
                 override fun onRatingDismiss() {}
 
                 override fun onRatingChange(rating: Float) {}
