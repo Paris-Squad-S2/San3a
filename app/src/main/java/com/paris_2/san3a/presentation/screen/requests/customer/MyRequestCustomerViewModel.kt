@@ -379,7 +379,7 @@ class MyRequestCustomerViewModel(
                     } ?: return@collect
 
                     Log.d(
-                        "MyOfferCraftsmanViewModel",
+                        "MyRequestCustomerViewModel",
                         "Updated request with craftsman $requestId: ${updatedRequests[requestId]?.offer?.craftsMan}"
                     )
 
