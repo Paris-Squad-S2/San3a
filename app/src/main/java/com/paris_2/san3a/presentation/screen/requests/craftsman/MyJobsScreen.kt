@@ -62,6 +62,7 @@ private fun MyRequestScreenContent(
                     .background(Theme.colors.background.card)
                     .padding(start = 8.dp),
                 title = stringResource(R.string.my_jobs),
+                hasDivider = false,
                 actionIcon = {
                     NotificationIcon(
                         modifier = Modifier.padding(end = 8.dp),

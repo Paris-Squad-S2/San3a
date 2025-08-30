@@ -20,7 +20,7 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
         return try {
             val snapshot = firestore.document(path).get().await()
             if (!snapshot.exists()) {
-                throw DocumentNotFoundException(path)
+                return null
             }
             val data = snapshot.data
             if (data == null) null else fromJson(data, snapshot.id)
@@ -84,15 +84,15 @@ class FireStoreServiceImpl(private val firestore: FirebaseFirestore) : FireStore
 
     override fun <T> streamDoc(
         path: String,
-        fromJson: (Map<String, Any>) -> T
+        fromJson: (Map<String, Any>, String) -> T
     ): Flow<T?> = firestore.document(path)
         .snapshots()
         .map { snapshot ->
             if (!snapshot.exists()) {
-                throw DocumentNotFoundException(path)
+                return@map null
             }
             val data = snapshot.data
-            if (data == null) null else fromJson(data)
+            if (data == null) null else fromJson(data, snapshot.id)
         }
         .catch { e ->
             when (e) {

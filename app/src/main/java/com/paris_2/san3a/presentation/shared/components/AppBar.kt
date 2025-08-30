@@ -32,6 +32,7 @@ fun AppBar(
     onBackClick: (() -> Unit)? = null,
     showBackGround: Boolean = true,
     spaceBetween: Boolean = true,
+    hasDivider: Boolean = true,
     leadingIcon: @Composable (RowScope.() -> Unit)? = null
 ) {
 
@@ -70,12 +71,13 @@ fun AppBar(
             actionIcon()
         }
 
-        HorizontalDivider(
-            thickness = 1.dp,
-            color = Theme.colors.stroke.primary
-        )
+        if (hasDivider) {
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = Theme.colors.stroke.primary
+            )
+        }
     }
-
 }
 
 @PreviewLightDark
