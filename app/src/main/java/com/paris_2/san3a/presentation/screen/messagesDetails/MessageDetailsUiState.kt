@@ -21,7 +21,8 @@ data class MessageDetailsUiState(
     val sendButtonState: AppButtonState = AppButtonState.Enable,
     val errorMessage: String? = null,
     val isLoading: Boolean = false,
-    val sendingMessage : MessageUi? = null,
+    val sendingTextMessage : MessageUi? = null,
+    val sendingImageMessage : MessageUi? = null,
 )
 
 data class MessageUi(

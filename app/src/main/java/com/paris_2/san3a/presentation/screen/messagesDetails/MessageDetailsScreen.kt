@@ -4,22 +4,15 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import com.paris_2.san3a.presentation.utill.myClickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
@@ -27,7 +20,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.messagesDetails.components.DeleteChatBottomSheet
-import com.paris_2.san3a.presentation.screen.messagesDetails.components.Message
+import com.paris_2.san3a.presentation.screen.messagesDetails.components.MessageList
 import com.paris_2.san3a.presentation.screen.messagesDetails.components.MessageTextField
 import com.paris_2.san3a.presentation.shared.components.AppBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
@@ -154,7 +146,8 @@ fun MessageDetailsContent(
                             MessageList(
                                 messagesSize = state.messagesSize,
                                 groupedMessages = state.groupedMessages,
-                                sendingMessage = state.sendingMessage,
+                                sendingTextMessage = state.sendingTextMessage,
+                                sendingImageMessage = state.sendingImageMessage,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(horizontal = 16.dp)
@@ -219,79 +212,3 @@ fun MessageDetailsContent(
     }
 }
 
-@Composable
-fun MessageList(
-    messagesSize: Int,
-    groupedMessages: Map<String, List<MessageUi>>,
-    modifier: Modifier,
-    sendingMessage: MessageUi?,
-) {
-    val listState = rememberLazyListState(messagesSize)
-
-    LaunchedEffect(messagesSize) {
-        if (messagesSize > 0) {
-            listState.scrollToItem(messagesSize - 1)
-        }
-    }
-
-    LazyColumn(
-        state = listState,
-        modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(bottom = 80.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        groupedMessages.forEach { (date, messagesForDate) ->
-            stickyHeader {
-                Text(
-                    text = date,
-                    style = Theme.textStyle.body.medium.regular,
-                    color = Theme.colors.shade.tertiary,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(top = 10.dp, bottom = 8.dp)
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                )
-            }
-
-            items(messagesForDate) { item ->
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Message(
-                        images = item.images,
-                        modifier = Modifier
-                            .align(if (item.isReceived) Alignment.CenterStart else Alignment.CenterEnd)
-                            .animateItem(),
-                        text = item.text,
-                        isReceived = item.isReceived,
-                        isSeen = item.isSeen,
-                        time = item.time,
-                        profileImageUrl = if (item.isReceived) item.anotherUserImage else null,
-                    )
-                }
-                Spacer(modifier = Modifier.width(10.dp))
-            }
-        }
-        sendingMessage?.let { message ->
-            item {
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Message(
-                        images = message.images,
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .animateItem(),
-                        text = message.text,
-                        isReceived = message.isReceived,
-                        isSeen = null,
-                        time = message.time,
-                        profileImageUrl = null,
-                    )
-                }
-                Spacer(modifier = Modifier.width(10.dp))
-            }
-        }
-    }
-}
