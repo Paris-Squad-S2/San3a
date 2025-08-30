@@ -48,7 +48,7 @@
     <string name="resend_code">Resend Code</string>
     <string name="otp_code_is_incorrect">OTP code is incorrect</string>
     <string name="occurred_an_error_for_sending_otp">occurred an error for sending otp</string>
-    <string name="enter_your_phone_number_to_continue">Enter your phone number to continue</string>
+    <string name="enter_your_phone_number_to_continue">Enter your whatsapp phone number to continue</string>
     <string name="or">Or</string>
     <string name="by_continuing_you_agree_on_our">"By continuing, you agree on our "</string>
     <string name="privacy_policy">PrivacTermsy Policy</string>
