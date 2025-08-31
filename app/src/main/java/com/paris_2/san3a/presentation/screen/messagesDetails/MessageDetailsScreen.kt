@@ -210,17 +210,15 @@ fun MessageDetailsContent(
                         }
 
                         this@Column.AnimatedVisibility(state.showSnackBar) {
-                            state.errorMessage?.let { uiText ->
-                                SnackBar(
-                                    text = uiText,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .statusBarsPadding()
-                                        .padding(horizontal = 12.dp, vertical = 16.dp)
-                                        .align(Alignment.TopCenter),
-                                    onClick = messageInteractionListener::onDismissSnackBar,
-                                )
-                            }
+                            SnackBar(
+                                text = stringResource(R.string.some_error_happened),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .statusBarsPadding()
+                                    .padding(horizontal = 12.dp, vertical = 16.dp)
+                                    .align(Alignment.TopCenter),
+                                onClick = messageInteractionListener::onDismissSnackBar,
+                            )
                         }
                     }
                 }
