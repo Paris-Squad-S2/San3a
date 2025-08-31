@@ -4,9 +4,8 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.HttpClient
 
-class NotificationApiImpl: NotificationApi {
+class NotificationApiImpl : NotificationApi {
     private val client = HttpClient(CIO)
 
     override suspend fun sendNotification(
@@ -25,7 +24,8 @@ class NotificationApiImpl: NotificationApi {
             )
         }
     }
+
     companion object {
-        private const val URL = "http://10.0.2.2:3000/send"
+        private const val URL = "https://push-notifications-backend.vercel.app/api/send"
     }
 }
