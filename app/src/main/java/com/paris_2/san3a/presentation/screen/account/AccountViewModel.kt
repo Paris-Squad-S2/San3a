@@ -143,14 +143,13 @@ class AccountViewModel(
     }
 
     private suspend fun onLoadUserAndGoToLastStepSuccess(user: User) {
+        val governorate = getLocationInfoUseCase.getGovernorateById(user.location.governmentId)
+        val city = getLocationInfoUseCase.getCityById(user.location.cityId)
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
                     userType = UserType.valueOf(user.accountType.name),
-                    locationUiState = user.location.toUiState(
-                        getLocationInfoUseCase.getGovernorateById(user.location.governmentId),
-                        getLocationInfoUseCase.getCityById(user.location.cityId)
-                    ),
+                    locationUiState = user.location.toUiState(governorate, city),
                     customerName = user.fullName,
                     customerProfilePhotoUri = if (!user.profilePhoto.isNullOrBlank()) user.profilePhoto.toUri() else null,
                     frontOfNationalIdUri = if (user.nationalIdFrontImage.isNotBlank()) user.nationalIdFrontImage.toUri() else null,
