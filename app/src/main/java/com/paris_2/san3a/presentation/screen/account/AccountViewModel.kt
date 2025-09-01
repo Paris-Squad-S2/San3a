@@ -211,18 +211,17 @@ class AccountViewModel(
     }
 
     override fun onToggleServiceClicked(serviceId: String) {
-        val updatedServices = screenState.value.accountUiState.serviceUiState.map {
-            if (it.id == serviceId) {
-                changeAppButtonStateInService(AppButtonState.Enable)
-                it.copy(isSelected = !it.isSelected)
-            } else {
-                it
-            }
-        }
         updateState(
             screenState.value.copy(
                 accountUiState = screenState.value.accountUiState.copy(
-                    serviceUiState = updatedServices,
+                    serviceUiState = screenState.value.accountUiState.serviceUiState.map {
+                        if (it.id == serviceId) {
+                            changeAppButtonStateInService(AppButtonState.Enable)
+                            it.copy(isSelected = !it.isSelected)
+                        } else {
+                            it
+                        }
+                    },
                 )
             )
         )
@@ -236,15 +235,16 @@ class AccountViewModel(
 
     override fun onUserTypeSelected(type: UserType) {
         Log.d("AccountSetup", "onUserTypeSelected: ${type.name}")
-        val updatedUiState = screenState.value.copy(
-            accountUiState = screenState.value.accountUiState.copy(
-                userType = type,
-                accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
-                    userTypeButtonState = AppButtonState.Enable
+            updateState(
+                screenState.value.copy(
+                    accountUiState = screenState.value.accountUiState.copy(
+                        userType = type,
+                        accountButtonState = screenState.value.accountUiState.accountButtonState.copy(
+                            userTypeButtonState = AppButtonState.Enable
+                        )
+                    )
                 )
             )
-        )
-        updateState(updatedUiState)
     }
 
     override fun onCustomerNameChanged(name: String) {
