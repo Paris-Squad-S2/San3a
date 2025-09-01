@@ -456,7 +456,7 @@ class MoreViewModel(
     }
 
     override fun onNameValueChange(name: String) {
-        if (name.isBlank() || name.length > 50) return
+        if (name.isBlank() || name.length > 30) return
         updateState(
             screenState.value.copy(
                 moreUiState = screenState.value.moreUiState.copy(

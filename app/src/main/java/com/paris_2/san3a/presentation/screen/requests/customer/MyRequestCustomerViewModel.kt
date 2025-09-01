@@ -3,18 +3,19 @@ package com.paris_2.san3a.presentation.screen.requests.customer
 import android.util.Log
 import com.paris_2.san3a.domain.entity.NotificationToSend
 import com.paris_2.san3a.domain.entity.RequestStatus
-import com.paris_2.san3a.domain.usecase.user.AddRatingForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
-import com.paris_2.san3a.domain.usecase.user.GetCustomerRatingOnCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
-import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
-import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messaging.CreateChatUseCase
 import com.paris_2.san3a.domain.usecase.notification.AddNotificationUseCase
 import com.paris_2.san3a.domain.usecase.notification.GetUnReadNotificationsCountUseCase
 import com.paris_2.san3a.domain.usecase.notification.SendNotificationUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetAcceptedOfferOnRequestUseCaseUseCase
+import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetOffersCountUseCase
+import com.paris_2.san3a.domain.usecase.services.GetAllServicesUseCase
+import com.paris_2.san3a.domain.usecase.user.AddRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.GetCustomerRatingOnCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
+import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import com.paris_2.san3a.domain.usecase.user.GetDeviceTokenUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
@@ -24,6 +25,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 
 class MyRequestCustomerViewModel(
     private val getCustomerRequestsUseCase: GetCustomerRequestsUseCase,
@@ -176,6 +178,13 @@ class MyRequestCustomerViewModel(
                         ),
                     )
                 )
+                if (result.isNullOrEmpty()) {
+                    updateState(
+                        screenState.value.copy(
+                            isLoading = false,
+                        )
+                    )
+                }
                 getOffersForRequests()
                 getUserServices()
                 getOffersCountForRequests(ListType.ONGOING)
@@ -339,51 +348,66 @@ class MyRequestCustomerViewModel(
         tryToExecute(
             execute = { scope ->
                 val craftsManDeferred = scope.async { getUserUseCase(craftsManId) }
-                val ratingDeferred =
-                    scope.async { getRatingForCraftsmanUseCase(craftsManId).first() }
+                val ratingFlow = getRatingForCraftsmanUseCase(craftsManId)
+                val ratingOnFlow = getCustomerRatingOnCraftsmanUseCase(
+                        craftsmanId = craftsManId,
+                        userId = screenState.value.myRequestCustomerUiState.customerPhone,
+                        offerId = screenState.value.myRequestCustomerUiState.ongoing[requestId]?.offer?.id
+                            ?: screenState.value.myRequestCustomerUiState.completed[requestId]?.offer?.id
+                            ?: screenState.value.myRequestCustomerUiState.canceled[requestId]?.offer?.id
+                            ?: ""
+                    )
 
-                craftsManDeferred.await() to ratingDeferred.await()
+                Triple(craftsManDeferred.await() , ratingFlow, ratingOnFlow)
             },
-            onSuccess = { (craftsMan, rating) ->
-                Log.d("MyOfferCraftsmanViewModel", "Fetched craftsman details: $craftsMan")
-                val updatedRequests = when (listType) {
-                    ListType.ONGOING -> screenState.value.myRequestCustomerUiState.ongoing.toMutableMap()
-                    ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.completed.toMutableMap()
-                    ListType.CANCELED -> screenState.value.myRequestCustomerUiState.canceled.toMutableMap()
-                }
+            onSuccess = { (craftsMan, ratingFlow, ratingOnCraftsManFlow) ->
 
-                updatedRequests[requestId]?.let { request ->
-                    updatedRequests[requestId] = request.copy(
-                        offer = request.offer.copy(
-                            craftsMan = craftsMan.toCraftsManUiState(rating)
-                        )
-                    )
-                } ?: return@tryToExecute
+                ratingFlow.collect { rating ->
+                    val ratingOnCraftsMan = ratingOnCraftsManFlow.firstOrNull()
+                    Log.d("MyOfferCraftsmanViewModel", "Fetched craftsman details: $craftsMan")
+                    Log.d("MyOfferCraftsmanViewModel", "Fetched ratingOnCraftsMan: requestId= $requestId, $ratingOnCraftsMan")
+                    val updatedRequests = when (listType) {
+                        ListType.ONGOING -> screenState.value.myRequestCustomerUiState.ongoing.toMutableMap()
+                        ListType.COMPLETED -> screenState.value.myRequestCustomerUiState.completed.toMutableMap()
+                        ListType.CANCELED -> screenState.value.myRequestCustomerUiState.canceled.toMutableMap()
+                    }
 
-                when (listType) {
-                    ListType.ONGOING -> updateState(
-                        screenState.value.copy(
-                            myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                                ongoing = updatedRequests,
-                            ),
+                    updatedRequests[requestId]?.let { request ->
+                        updatedRequests[requestId] = request.copy(
+                            offer = request.offer.copy(
+                                craftsMan = craftsMan.toCraftsManUiState(
+                                    rating = rating,
+                                    craftsManRatingForOffer = ratingOnCraftsMan
+                                )
+                            )
                         )
-                    )
+                    } ?: return@collect
 
-                    ListType.COMPLETED -> updateState(
-                        screenState.value.copy(
-                            myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                                completed = updatedRequests,
-                            ),
+                    when (listType) {
+                        ListType.ONGOING -> updateState(
+                            screenState.value.copy(
+                                myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                                    ongoing = updatedRequests,
+                                ),
+                            )
                         )
-                    )
 
-                    ListType.CANCELED -> updateState(
-                        screenState.value.copy(
-                            myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
-                                canceled = updatedRequests,
-                            ),
+                        ListType.COMPLETED -> updateState(
+                            screenState.value.copy(
+                                myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                                    completed = updatedRequests,
+                                ),
+                            )
                         )
-                    )
+
+                        ListType.CANCELED -> updateState(
+                            screenState.value.copy(
+                                myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
+                                    canceled = updatedRequests,
+                                ),
+                            )
+                        )
+                    }
                 }
             },
             onError = {
@@ -448,24 +472,26 @@ class MyRequestCustomerViewModel(
         )
     }
 
-    override fun onRatingClick(craftsmanId: String) {
+    override fun onRatingClick(craftsmanId: String, offerId: String) {
         updateState(
             screenState.value.copy(
                 myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
                     isRatingVisible = true,
                     craftsmanToRate = craftsmanId,
+                    offerToRate = offerId,
                     rating = 0f
                 )
             )
         )
-        tryToExecute(
-            execute = {
+        tryToObserve(
+            observe = {
                 getCustomerRatingOnCraftsmanUseCase(
                     craftsmanId = craftsmanId,
+                    offerId = offerId,
                     userId = screenState.value.myRequestCustomerUiState.customerPhone
                 )
             },
-            onSuccess = { rating ->
+            onEach = { rating ->
                 rating?.let {
                     updateState(
                         screenState.value.copy(
@@ -490,6 +516,8 @@ class MyRequestCustomerViewModel(
             screenState.value.copy(
                 myRequestCustomerUiState = screenState.value.myRequestCustomerUiState.copy(
                     isRatingVisible = false,
+                    craftsmanToRate = "",
+                    offerToRate = "",
                     rating = 0f
                 )
             )
@@ -513,6 +541,7 @@ class MyRequestCustomerViewModel(
                 addRatingForCraftsmanUseCase(
                     userId = screenState.value.myRequestCustomerUiState.customerPhone,
                     craftsmanId = screenState.value.myRequestCustomerUiState.craftsmanToRate,
+                    offerId = screenState.value.myRequestCustomerUiState.offerToRate,
                     rating = screenState.value.myRequestCustomerUiState.rating
                 )
             },

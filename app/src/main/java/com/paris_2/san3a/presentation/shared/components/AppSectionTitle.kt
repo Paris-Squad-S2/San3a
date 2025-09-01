@@ -2,7 +2,7 @@ package com.paris_2.san3a.presentation.shared.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,8 +33,7 @@ fun AppSectionTitle(
 ) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .height(20.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -49,7 +48,7 @@ fun AppSectionTitle(
                 style = Theme.textStyle.body.medium.medium,
                 color = Theme.colors.brand.primary,
                 modifier = Modifier
-                    .clickable(
+                    .myClickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
                         onClick = onClickShowMore

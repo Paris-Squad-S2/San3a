@@ -26,7 +26,7 @@ class MessagesRemoteDataSourceImp(
             fromJson = MessageDto::fromJson,
             queryBuilder = { query ->
                 query
-                    .orderBy("timestamp", Query.Direction.ASCENDING)
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
             }
         )
     }

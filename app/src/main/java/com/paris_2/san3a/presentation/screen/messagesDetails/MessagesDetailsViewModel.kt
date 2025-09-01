@@ -6,11 +6,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
-import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.domain.usecase.messaging.DeleteChatByIdUseCase
 import com.paris_2.san3a.domain.usecase.messaging.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.messaging.MarkMessagesAsSeenUseCase
 import com.paris_2.san3a.domain.usecase.messaging.SendMessageUseCase
+import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
@@ -82,10 +82,11 @@ class MessagesDetailsViewModel(
             },
             onEach = { messages ->
                 val messageUis =
-                    messages?.map { it.toMessageUi(screenState.value.profilePhoto, currentUserId) } ?: emptyList()
+                    messages?.map { it.toMessageUi(screenState.value.profilePhoto, currentUserId) }
+                        ?: emptyList()
                 val groupedMessages = messageUis
                     .groupBy { it.date }
-                    .toSortedMap(compareBy { it })
+                    .toSortedMap(compareByDescending { it })
 
                 updateState(
                     screenState.value.copy(
@@ -93,7 +94,7 @@ class MessagesDetailsViewModel(
                         groupedMessages = groupedMessages,
                         chatTitle = screenState.value.chatTitle,
                         isLoading = false,
-                        sendingMessage = null,
+                        sendingTextMessage = null,
                     )
                 )
                 markMessagesAsSeen()
@@ -128,7 +129,7 @@ class MessagesDetailsViewModel(
                             screenState.value.copy(
                                 sendButtonState = AppButtonState.Disabled,
                                 textMessage = "",
-                                sendingMessage = message.toMessageUi(
+                                sendingTextMessage = message.toMessageUi(
                                     imageUserUrl = "",
                                     currentUserId = currentUserId
                                 ),
@@ -162,18 +163,34 @@ class MessagesDetailsViewModel(
         tryToExecute(
             execute = {
                 if (uris.isNotEmpty()) {
-                    sendMessageUseCase(
-                        Message(
-                            senderId = currentUserId,
-                            receiverId = otherUserId,
-                            chatId = chatId,
-                            messageContent = MessageContent.Image(
-                                uris = uris.map { it.toString() }
-                            ),
-                            seen = false
+                    Message(
+                        senderId = currentUserId,
+                        receiverId = otherUserId,
+                        chatId = chatId,
+                        messageContent = MessageContent.Image(
+                            uris = uris.map { it.toString() }
+                        ),
+                        seen = false
+                    ).let { message ->
+                        updateState(
+                            screenState.value.copy(
+                                messagesSize = screenState.value.messagesSize + 1,
+                                sendingImageMessage = message.toMessageUi(
+                                    imageUserUrl = "",
+                                    currentUserId = currentUserId
+                                ),
+                            )
                         )
-                    )
+                        sendMessageUseCase(message)
+                    }
                 }
+            },
+            onSuccess = {
+                updateState(
+                    screenState.value.copy(
+                        sendingImageMessage = null
+                    )
+                )
             },
             onError = {
                 updateState(

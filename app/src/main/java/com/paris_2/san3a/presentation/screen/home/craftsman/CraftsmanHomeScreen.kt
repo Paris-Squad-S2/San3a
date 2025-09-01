@@ -93,7 +93,7 @@ fun CraftsmanHomeContent(
                         )
                         Row(
                             modifier = Modifier
-                                .padding(top = 8.dp),
+                                .padding(top = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
@@ -224,7 +224,12 @@ fun CraftsmanHomeContent(
                                             label = stringResource(R.string.all),
                                             onClick = action::onClickAllService,
                                             hasBorder = true,
-                                            isSelected = state.craftsmanHomeUiState.selectedServiceId == null
+                                            isSelected = state.craftsmanHomeUiState.selectedServiceId == null,
+                                            selectedColor = Theme.colors.brand.tertiary,
+                                            textColor = if(state.craftsmanHomeUiState.selectedServiceId == null) Theme.colors.brand.primary else Theme.colors.shade.secondary,
+                                            borderColor = if (state.craftsmanHomeUiState.selectedServiceId == null) Theme.colors.brand.secondary else Theme.colors.shade.quaternary,
+                                            borderWidth = if (state.craftsmanHomeUiState.selectedServiceId == null) 1.dp else 1.5.dp,
+                                            hasBackgroundColor = true
                                         )
                                     }
                                     items(state.craftsmanHomeUiState.userServices.values.toList()) {
@@ -232,7 +237,11 @@ fun CraftsmanHomeContent(
                                             label = it.title,
                                             onClick = { action.onServiceSelected(it.id) },
                                             isSelected = state.craftsmanHomeUiState.selectedServiceId == it.id,
-                                            hasBorder = true
+                                            hasBorder = true,
+                                            textColor = if(state.craftsmanHomeUiState.selectedServiceId == it.id) Theme.colors.brand.primary else Theme.colors.shade.secondary,
+                                            borderColor = if (state.craftsmanHomeUiState.selectedServiceId == it.id) Theme.colors.brand.secondary else Theme.colors.shade.quaternary,
+                                            borderWidth = if (state.craftsmanHomeUiState.selectedServiceId == it.id) 1.dp else 1.5.dp,
+                                            hasBackgroundColor = true
                                         )
                                     }
                                 }

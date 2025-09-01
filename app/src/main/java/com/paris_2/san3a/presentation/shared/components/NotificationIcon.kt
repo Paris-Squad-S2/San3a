@@ -1,7 +1,7 @@
 package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -29,7 +29,7 @@ fun NotificationIcon(
     Box(modifier) {
         Icon(
             modifier = Modifier
-                .clickable(
+                .myClickable(
                     onClick = onNotificationClick,
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null

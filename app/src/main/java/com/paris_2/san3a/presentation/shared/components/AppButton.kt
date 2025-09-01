@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
@@ -89,7 +91,17 @@ fun AppButton(
     val buttonContentColor = getContentColor(state, type)
 
     Surface(
-        modifier = modifier,
+        modifier = modifier.height(
+            if( type == AppButtonType.Tertiary ){
+                Dp.Unspecified
+            }
+            else if (size == AppButtonSize.Large) {
+                48.dp
+            }
+            else {
+                40.dp
+            }
+        ),
         shape = CircleShape,
         color = Theme.colors.background.screen,
         contentColor = buttonContentColor,
@@ -106,7 +118,7 @@ fun AppButton(
         ) {
             if (icon != null && iconPosition == IconPosition.Start && !isLoading) {
                 Icon(
-                    modifier = modifier.size(20.dp),
+                    modifier = Modifier.size(20.dp),
                     imageVector = icon,
                     contentDescription = null,
                     tint = buttonContentColor,
@@ -221,7 +233,7 @@ private fun getAppContentPadding(
         return when (type) {
             AppButtonType.Primary, AppButtonType.Secondary -> PaddingValues(
                 horizontal = horizontalPadding.value,
-                vertical = animateDpAsState(if (isLarge) 15.dp else 13.dp).value
+                vertical = animateDpAsState(if (isLarge) 15.dp else 10.dp).value
             )
 
             AppButtonType.Tertiary -> PaddingValues(

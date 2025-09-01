@@ -13,10 +13,14 @@ fun getTimeAgo(dateTime: LocalDateTime?, context: Context): String {
     val now = getCurrentDateTime()
     if (dateTime == null) return ""
     val duration = now.toInstant(timeZone) - dateTime.toInstant(timeZone)
+    val minutes = duration.inWholeMinutes
     val hours = duration.inWholeHours
+    val days = duration.inWholeDays
+
     return when {
-        duration.inWholeMinutes == 0L -> context.getString(R.string.just_now)
+        days > 0L -> context.getString(R.string.d_ago, days)
+        minutes == 0L -> context.getString(R.string.just_now)
         hours > 0L -> context.getString(R.string.h_ago, hours)
-        else -> context.getString(R.string.min_ago, duration.inWholeMinutes)
+        else -> context.getString(R.string.min_ago, minutes)
     }
 }

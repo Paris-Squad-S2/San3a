@@ -29,10 +29,7 @@ fun Offers(
 
     Box(
         modifier = modifier
-            .padding(horizontal = 12.dp)
-            .graphicsLayer {
-                clip = false
-            },
+            .padding(start = 12.dp, end = 12.dp, top = 12.dp),
     ) {
         CraftsManOffer(
             onSecondaryButtonClick = {},

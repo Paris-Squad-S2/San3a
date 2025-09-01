@@ -18,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -72,10 +74,22 @@ fun CraftsManOffer(
 
     Card(
         modifier = modifier
+            .run {
+                if (!addShadow) {
+                    this
+                } else {
+                    shadow(
+                        elevation = 5.dp,
+                        clip = false,
+                        shape = RoundedCornerShape(Theme.radius.extraLarge),
+                        ambientColor = Color.Black.copy(alpha = 0.6f),
+                        spotColor = Color.Black.copy(alpha = 0.6f)
+                    )
+                }
+            }
             .fillMaxWidth(),
         shape = RoundedCornerShape(Theme.radius.extraLarge),
         colors = CardDefaults.cardColors(containerColor = animatedBgColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = if (addShadow) 3.dp else 0.dp)
     ) {
 
         val paddingAcceptedRequest = if (offerDetails.status == OfferStatus.OFFER_ACCEPTED || offerDetails.status == OfferStatus.YOUR_ACCEPTED_OFFER)  2.dp  else 0.dp
@@ -112,7 +126,7 @@ fun CraftsManOffer(
             name = offerDetails.name,
             postedTime = offerDetails.postedTime,
             description = offerDetails.description,
-            amount = stringResource(R.string.egp, offerDetails.amount),
+            amount = offerDetails.amount,
             rate = offerDetails.rate,
             reviewsNumber = offerDetails.reviewsNumber,
             status = offerDetails.status,

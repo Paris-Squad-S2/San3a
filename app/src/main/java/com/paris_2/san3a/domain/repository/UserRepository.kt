@@ -4,7 +4,6 @@ import android.net.Uri
 import com.paris_2.san3a.domain.entity.AccountSetupStep
 import com.paris_2.san3a.domain.entity.AccountType
 import com.paris_2.san3a.domain.entity.Location
-import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.Stats
 import com.paris_2.san3a.domain.entity.User
@@ -25,9 +24,14 @@ interface UserRepository {
     suspend fun getUser(phone: String): User
     suspend fun getWorkMedia(phone: String): List<String>
     fun getStats(userId: String): Flow<Stats>
-    suspend fun addRatingForCraftsman(userId: String, craftsmanId: String, rating: Float)
+    suspend fun addRatingForCraftsman(
+        userId: String,
+        craftsmanId: String,
+        offerId: String,
+        rating: Float,
+    )
     fun getRatingForCraftsman(craftsmanId: String): Flow<Float>
-    suspend fun getCustomerRatingOnCraftsman(craftsmanId: String, userId: String): Float?
+    fun getCustomerRatingOnCraftsman(craftsmanId: String, offerId: String, userId: String): Flow<Float?>
     suspend fun updateEarningsForCraftsman(
         craftsmanId: String,
         userId: String,

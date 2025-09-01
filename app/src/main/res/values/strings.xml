@@ -124,6 +124,8 @@
     <string name="no_internet_connection">no internet connection</string>
     <string name="oops_something_broke">Oops, Something Broke</string>
     <string name="Our_team_is_working_on_a_fix._Please_try_again_later.">Our team is working on a fix. Please try again later.</string>
+    <string name="invalid_phone_number">Invalid phone number</string>
+    <string name="please_enter_a_valid_phone_number">Please enter a valid phone number</string>
     <string name="empty" />
     <string name="privacy_and_policy">Privacy Policy</string>
     <string name="terms_and_conditions">Terms and Conditions</string>
@@ -339,6 +341,7 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="min_ago">%1$d min ago</string>
     <string name="just_now">Just now</string>
     <string name="h_ago">%1$d h ago</string>
+    <string name="d_ago">%1$d d ago</string>
     <string name="choose_city">Choose City</string>
     <string name="choose_government">Choose Government</string>
     <string name="confirm_logout">Confirm Logout</string>

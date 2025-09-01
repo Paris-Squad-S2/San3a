@@ -2,7 +2,7 @@ package com.paris_2.san3a.presentation.shared.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,7 +52,9 @@ fun SearchBar(
             )
             .clip(RoundedCornerShape(Theme.radius.large))
             .background(Theme.colors.background.card),
-        textStyle = Theme.textStyle.body.medium.regular,
+        textStyle = Theme.textStyle.body.medium.regular.copy(
+            color = Theme.colors.shade.primary
+        ),
         decorationBox = { innerTextField ->
             Box(
                 modifier = Modifier
@@ -85,7 +87,7 @@ fun SearchBar(
                         tint = Theme.colors.shade.tertiary,
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .clickable { onValueChange("") }
+                            .myClickable { onValueChange("") }
                     )
                 } else {
                     Icon(
@@ -94,7 +96,7 @@ fun SearchBar(
                         tint = Theme.colors.shade.primary,
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .clickable { onMicClick() }
+                            .myClickable { onMicClick() }
                     )
                 }
             }

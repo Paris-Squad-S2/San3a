@@ -17,7 +17,7 @@ interface FireStoreService {
 
     fun <T> streamDoc(
         path: String,
-        fromJson: (Map<String, Any>) -> T
+        fromJson: (Map<String, Any>, String) -> T
     ): Flow<T?>
 
     suspend fun addToCollection(

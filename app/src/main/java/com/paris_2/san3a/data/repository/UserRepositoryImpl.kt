@@ -97,8 +97,7 @@ class UserRepositoryImpl(
             val profileUrl = profileUri?.let { uri ->
                 val path = "$PROFILE_IMAGE_PATH/$phone.jpg"
                 Log.d("UserRepositoryImpl", "savePersonalInfo: $path")
-                storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
-                storageRemoteDataSource.getImagesByPaths(listOf(ImageDto(path, uri))).firstOrNull()
+                storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri))).firstOrNull()
             }
             userRemoteDataSource.updatePersonalInfo(phone, fullName, profileUrl)
         }
@@ -114,7 +113,6 @@ class UserRepositoryImpl(
                 ImageDto("$WORK_SHOWCASE_PATH/$phone/media_$index.jpg", uri)
             }?.let { imageDtos ->
                 storageRemoteDataSource.saveImages(imageDtos)
-                storageRemoteDataSource.getImagesByPaths(imageDtos)
             }
             userRemoteDataSource.updateWorkShowcase(phone, mediaUrls, workDescription)
         }
@@ -150,10 +148,16 @@ class UserRepositoryImpl(
     override suspend fun addRatingForCraftsman(
         userId: String,
         craftsmanId: String,
-        rating: Float
+        offerId: String,
+        rating: Float,
     ) {
         safeNetworkCall(FailException("Failed to add rating for craftsman")) {
-            userRemoteDataSource.addRatingForCraftsman(userId, craftsmanId, rating)
+            userRemoteDataSource.addRatingForCraftsman(
+                userId = userId,
+                craftsmanId = craftsmanId,
+                offerId = offerId,
+                rating = rating
+            )
         }
     }
 
@@ -163,13 +167,18 @@ class UserRepositoryImpl(
             .catch { throw FailException("Failed to get rating for craftsman: $craftsmanId") }
     }
 
-    override suspend fun getCustomerRatingOnCraftsman(
+    override fun getCustomerRatingOnCraftsman(
         craftsmanId: String,
-        userId: String
-    ): Float? {
-        return safeNetworkCall(FailException("Failed to get customer rating on craftsman")) {
-            userRemoteDataSource.getCustomerRatingOnCraftsman(craftsmanId, userId)
-        }
+        offerId: String,
+        userId: String,
+    ): Flow<Float?> {
+        validateNetworkConnection()
+        return userRemoteDataSource.getCustomerRatingOnCraftsman(
+                craftsmanId = craftsmanId,
+                offerId = offerId,
+                userId = userId
+            )
+            .catch { throw FailException("Failed to get customer rating on craftsman: $craftsmanId for user: $userId") }
     }
 
     override suspend fun updateEarningsForCraftsman(
@@ -204,17 +213,13 @@ class UserRepositoryImpl(
                 val frontDeferred = frontUri?.let { uri ->
                     async {
                         val path = "$NATIONAL_ID_PATH/$phone/$FRONT_IMAGE_NAME"
-                        storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
-                        storageRemoteDataSource.getImagesByPaths(listOf(ImageDto(path, uri)))
-                            .firstOrNull()
+                        storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri))).firstOrNull()
                     }
                 }
                 val backDeferred = backUri?.let { uri ->
                     async {
                         val path = "$NATIONAL_ID_PATH/$phone/$BACK_IMAGE_NAME"
-                        storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri)))
-                        storageRemoteDataSource.getImagesByPaths(listOf(ImageDto(path, uri)))
-                            .firstOrNull()
+                        storageRemoteDataSource.saveImages(listOf(ImageDto(path, uri))).firstOrNull()
                     }
                 }
                 val frontUrl = frontDeferred?.await()

@@ -8,10 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -98,6 +102,8 @@ fun AccountScreenContent(
             .statusBarsPadding()
             .navigationBarsPadding()
             .padding(horizontal = 16.dp, vertical = 16.dp)
+            .imePadding()
+            .verticalScroll(rememberScrollState())
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -169,7 +175,7 @@ fun AccountScreenContent(
             3 -> when (uiState.accountUiState.userType) {
                 UserType.CUSTOMER -> {
                     LocationContent(
-                        modifier = Modifier.padding(vertical = 32.dp),
+                        modifier = Modifier.padding(vertical = 32.dp).fillMaxWidth().height(200.dp),
                         onGetLocationClicked = interactionListener::onGovernmentBottomSheetVisibilityToggled,
                         isGovernmentSheetShowed = uiState.accountUiState.isGovernmentBottomSheetShowed,
                         onGovernmentDismissRequest = interactionListener::onGovernmentBottomSheetDismissed,
