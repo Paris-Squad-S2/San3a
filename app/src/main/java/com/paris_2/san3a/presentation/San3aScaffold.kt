@@ -39,6 +39,7 @@ import com.paris_2.san3a.presentation.shared.components.AppNavigationBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.shared.language.LocalAppLanguage
 import com.vanniktech.locale.Language
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -66,8 +67,22 @@ fun San3aScaffold(
     mainViewModel: MainViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
-    val language = mainViewModel.getLastSelectedAppLanguage().collectAsStateWithLifecycle("en")
-    val configuration = if (language.value == "en") {
+    
+    // Create a local language state for immediate updates
+    val appLanguageState = remember { mutableStateOf("en") }
+    
+    // Observe the persisted language and sync with local state
+    val persistedLanguage = mainViewModel.getLastSelectedAppLanguage().collectAsStateWithLifecycle("en")
+    
+    // Sync persisted language with local state
+    LaunchedEffect(persistedLanguage.value) {
+        appLanguageState.value = persistedLanguage.value
+    }
+    
+    // Use the local language state for immediate updates
+    val currentLanguage = appLanguageState.value
+    
+    val configuration = if (currentLanguage == "en") {
         val language = Language.ENGLISH
         context.updateLocale(language)
     } else {
@@ -75,7 +90,7 @@ fun San3aScaffold(
         context.updateLocale(language)
     }
 
-    val localDirection = if (language.value == "en")
+    val localDirection = if (currentLanguage == "en")
         LayoutDirection.Ltr else LayoutDirection.Rtl
 
     val uiState = mainViewModel.screenState.collectAsStateWithLifecycle()
@@ -116,7 +131,8 @@ fun San3aScaffold(
 
     CompositionLocalProvider(
         LocalLayoutDirection provides localDirection,
-        LocalConfiguration provides configuration
+        LocalConfiguration provides configuration,
+        LocalAppLanguage provides appLanguageState
     ) {
         San3aTheme(isDarkTheme = uiState.value.isDark) {
             AppScaffold(

@@ -48,6 +48,7 @@ import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.NotificationIcon
 import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.shared.language.rememberAppLanguage
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
 import com.paris_2.san3a.presentation.utill.getVersionName
@@ -59,6 +60,7 @@ fun MoreScreen(
 ) {
     val uiState = moreViewModel.screenState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val appLanguageState = rememberAppLanguage()
 
     val profileImagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
@@ -73,7 +75,13 @@ fun MoreScreen(
     MoreScreenContent(
         moreScreenState = uiState.value,
         moreInteractionListener = moreViewModel,
-        onPickImageClick = { profileImagePickerLauncher.launch(arrayOf("image/*")) }
+        onPickImageClick = { profileImagePickerLauncher.launch(arrayOf("image/*")) },
+        onLanguageSelected = { language ->
+            // Update the composition local immediately
+            appLanguageState.value = language
+            // Also call the ViewModel to persist the change
+            moreViewModel.onLanguageSelected(language)
+        }
     )
 }
 
@@ -82,6 +90,7 @@ private fun MoreScreenContent(
     moreScreenState: MoreScreenState,
     moreInteractionListener: MoreInteractionListener,
     onPickImageClick: () -> Unit,
+    onLanguageSelected: (String) -> Unit = {},
 ) {
     val scroll = rememberScrollState()
     AppScaffold(
@@ -214,7 +223,7 @@ private fun MoreScreenContent(
                                 isVisible = moreScreenState.showLanguageBottomSheet,
                                 onDismissRequest = moreInteractionListener::onCloseSelectedLanguageBottomSheet,
                                 selectedLanguage = moreScreenState.moreUiState.selectedLanguage,
-                                onLanguageSelected = moreInteractionListener::onLanguageSelected,
+                                onLanguageSelected = onLanguageSelected,
                             )
                         }
                     }
@@ -290,6 +299,6 @@ fun MoreScreenContentPreview() {
             override fun onClickLogoutArrow() {}
             override fun onDismissLogoutBottomSheet() {}
             override fun onUpdateProfileClick() {}
-        }, onPickImageClick = {})
+        }, onPickImageClick = {}, onLanguageSelected = {})
     }
 }
