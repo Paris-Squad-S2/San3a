@@ -3,6 +3,7 @@ package com.paris_2.san3a.presentation.screen.messagesDetails
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
+import com.paris_2.san3a.presentation.shared.utils.UiText
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.number
@@ -19,10 +20,11 @@ data class MessageDetailsUiState(
     val showDeleteChatBottomSheet: Boolean = false,
     val bottomSheetButtonState: AppButtonState = AppButtonState.Enable,
     val sendButtonState: AppButtonState = AppButtonState.Enable,
-    val errorMessage: String? = null,
+    val errorMessage: UiText? = null,
     val isLoading: Boolean = false,
     val sendingTextMessage : MessageUi? = null,
     val sendingImageMessage : MessageUi? = null,
+    val showSnackBar: Boolean = false,
 )
 
 data class MessageUi(

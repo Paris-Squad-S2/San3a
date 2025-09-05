@@ -48,7 +48,7 @@
     <string name="resend_code">Resend Code</string>
     <string name="otp_code_is_incorrect">OTP code is incorrect</string>
     <string name="occurred_an_error_for_sending_otp">occurred an error for sending otp</string>
-    <string name="enter_your_phone_number_to_continue">Enter your phone number to continue</string>
+    <string name="enter_your_phone_number_to_continue">Enter your whatsapp phone number to continue</string>
     <string name="or">Or</string>
     <string name="by_continuing_you_agree_on_our">"By continuing, you agree on our "</string>
     <string name="privacy_policy">PrivacTermsy Policy</string>
@@ -374,4 +374,5 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="evening">Evening</string>
     <string name="no_jobs_for_selected_category">No available jobs for the selected category</string>
     <string name="try_another_category_to_explore_more_jobs">You can choose another category to explore more jobs</string>
+    <string name="occur_error_while_using_messages_screen">occur error while using messages screen</string>
 </resources>
