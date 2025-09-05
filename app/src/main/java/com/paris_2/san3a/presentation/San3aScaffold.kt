@@ -2,7 +2,7 @@ package com.paris_2.san3a.presentation
 
 import android.content.Context
 import android.content.res.Configuration
-import android.os.LocaleList
+import android.view.ContextThemeWrapper
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -45,19 +45,9 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import com.vanniktech.locale.Locale
+import com.vanniktech.locale.toJavaLocale
 
 val LocalAccountType = mutableStateOf(AccountType.CUSTOMER)
-
-fun Context.updatedConfiguration(language: Language): Configuration {
-
-    val locale = Locale(language, language.defaultCountry)
-
-    val tag = locale.language.code
-
-    return Configuration(resources.configuration).apply {
-        setLocale(LocaleList.forLanguageTags(tag)[0])
-    }
-}
 
 @Composable
 fun San3aScaffold(
@@ -70,6 +60,12 @@ fun San3aScaffold(
         context.updatedConfiguration(Language.ENGLISH)
     } else {
         context.updatedConfiguration(Language.ARABIC)
+    }
+
+    val localizedContext = remember(language.value) {
+        ContextThemeWrapper(context, context.theme).apply {
+            applyOverrideConfiguration(configuration)
+        }
     }
 
     val localDirection = if (language.value == "en")
@@ -113,7 +109,8 @@ fun San3aScaffold(
 
     CompositionLocalProvider(
         LocalLayoutDirection provides localDirection,
-        LocalConfiguration provides configuration
+        LocalConfiguration provides configuration,
+        LocalContext provides localizedContext
     ) {
         San3aTheme(isDarkTheme = uiState.value.isDark) {
             AppScaffold(
@@ -159,6 +156,13 @@ fun San3aScaffold(
                 }
             )
         }
+    }
+}
+
+fun Context.updatedConfiguration(language: Language): Configuration {
+    val locale = Locale(language, language.defaultCountry)
+    return Configuration(resources.configuration).apply {
+        setLocale(locale.toJavaLocale())
     }
 }
 
