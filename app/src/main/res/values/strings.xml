@@ -374,4 +374,5 @@ We may revise this policy from time to time. You will be notified of significant
     <string name="evening">Evening</string>
     <string name="no_jobs_for_selected_category">No available jobs for the selected category</string>
     <string name="try_another_category_to_explore_more_jobs">You can choose another category to explore more jobs</string>
+    <string name="occur_error_while_using_messages_screen">occur error while using messages screen</string>
 </resources>
