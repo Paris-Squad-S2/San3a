@@ -7,8 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.paris_2.san3a.presentation.San3aScaffold
-import com.paris_2.san3a.presentation.utill.InstallSavedAppLanguage
-
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         enableEdgeToEdge()
         setContent {
-            InstallSavedAppLanguage(this)
+//            InstallSavedAppLanguage(this)
             San3aScaffold()
         }
     }
