@@ -203,7 +203,8 @@ fun PhoneNumberInput(
         Text(
             text = stringResource(R.string.enter_your_phone_number_to_continue),
             style = Theme.textStyle.title.medium,
-            color = Theme.colors.shade.primary
+            color = Theme.colors.shade.primary,
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(16.dp))
 
