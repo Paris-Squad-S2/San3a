@@ -44,16 +44,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import com.vanniktech.locale.Locale as VLocale
+import com.vanniktech.locale.Locale
 
 val LocalAccountType = mutableStateOf(AccountType.CUSTOMER)
 
+fun Context.updatedConfiguration(language: Language): Configuration {
 
-fun Context.updateLocale(language: Language): Configuration {
+    val locale = Locale(language, language.defaultCountry)
 
-    val vLocale = VLocale(language, language.defaultCountry)
-
-    val tag = vLocale.language.code
+    val tag = locale.language.code
 
     return Configuration(resources.configuration).apply {
         setLocale(LocaleList.forLanguageTags(tag)[0])
@@ -68,11 +67,9 @@ fun San3aScaffold(
     val context = LocalContext.current
     val language = mainViewModel.getLastSelectedAppLanguage().collectAsStateWithLifecycle("en")
     val configuration = if (language.value == "en") {
-        val language = Language.ENGLISH
-        context.updateLocale(language)
+        context.updatedConfiguration(Language.ENGLISH)
     } else {
-        val language = Language.ARABIC
-        context.updateLocale(language)
+        context.updatedConfiguration(Language.ARABIC)
     }
 
     val localDirection = if (language.value == "en")
