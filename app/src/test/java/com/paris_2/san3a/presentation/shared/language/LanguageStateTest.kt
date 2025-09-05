@@ -41,6 +41,46 @@ class LanguageStateTest {
         composeTestRule.waitForIdle()
         assertEquals("ar", currentLanguage)
     }
+    
+    @Test
+    fun testLanguageStateDefaultValue() {
+        var currentLanguage = ""
+        
+        composeTestRule.setContent {
+            // Test without providing explicit value - should use default
+            TestLanguageComponent {
+                currentLanguage = it
+            }
+        }
+        
+        composeTestRule.waitForIdle()
+        assertEquals("en", currentLanguage) // Should default to English
+    }
+    
+    @Test
+    fun testMultipleLanguageChanges() {
+        val languageState = mutableStateOf("en")
+        var currentLanguage = ""
+
+        composeTestRule.setContent {
+            CompositionLocalProvider(LocalAppLanguage provides languageState) {
+                TestLanguageComponent {
+                    currentLanguage = it
+                }
+            }
+        }
+
+        // Test multiple language switches
+        val languages = listOf("en", "ar", "en", "ar")
+        
+        languages.forEach { language ->
+            composeTestRule.runOnUiThread {
+                languageState.value = language
+            }
+            composeTestRule.waitForIdle()
+            assertEquals(language, currentLanguage)
+        }
+    }
 }
 
 @Composable
