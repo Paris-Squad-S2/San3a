@@ -114,7 +114,7 @@ fun OnBoardingScreenContent(
         }
         BottomSection(
             modifier = Modifier
-                .background(Theme.colors.background.screen.copy(alpha = 0.5f))
+                .background(Theme.colors.background.screen.copy(alpha = 0.6f))
                 .align(Alignment.BottomCenter)
                 .padding(vertical = 24.dp),
             onNextClick = {

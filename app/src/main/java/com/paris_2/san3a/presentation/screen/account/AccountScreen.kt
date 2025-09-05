@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -18,12 +17,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paris_2.san3a.presentation.screen.account.components.AccountAppButton
 import com.paris_2.san3a.presentation.screen.account.components.AccountProgressIndicator
 import com.paris_2.san3a.presentation.screen.account.components.AccountTypeContent
@@ -41,7 +40,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AccountScreen(viewModel: AccountViewModel = koinViewModel()) {
     val currentScreen by viewModel.currentScreen
-    val uiState by viewModel.screenState.collectAsState()
+    val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     val profileImagePickerLauncher = rememberSingleImagePickerLauncher(
@@ -172,10 +171,9 @@ fun AccountScreenContent(
                 )
             }
 
-            3 -> when (uiState.accountUiState.userType) {
-                UserType.CUSTOMER -> {
+            3 -> {
                     LocationContent(
-                        modifier = Modifier.padding(vertical = 32.dp).fillMaxWidth().height(200.dp),
+                        modifier = Modifier.padding(vertical = 32.dp).fillMaxWidth(),
                         onGetLocationClicked = interactionListener::onGovernmentBottomSheetVisibilityToggled,
                         isGovernmentSheetShowed = uiState.accountUiState.isGovernmentBottomSheetShowed,
                         onGovernmentDismissRequest = interactionListener::onGovernmentBottomSheetDismissed,
@@ -194,7 +192,9 @@ fun AccountScreenContent(
                         textButton = textButton,
                         state = uiState.accountUiState.accountButtonState.locationButtonState
                     )
-                }
+            }
+
+            4 -> when (uiState.accountUiState.userType) {
                 UserType.CRAFTSMAN -> {
                     ShowYourWorkContent(
                         modifier = Modifier.padding(vertical = 32.dp),
@@ -213,7 +213,7 @@ fun AccountScreenContent(
                 else -> {}
             }
 
-            4 -> when (uiState.accountUiState.userType) {
+            5 -> when (uiState.accountUiState.userType) {
                 UserType.CRAFTSMAN -> {
                     VerifyIdentityContent(
                         modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
@@ -221,7 +221,8 @@ fun AccountScreenContent(
                         onBackOfNationalIdUploadClick = onBackNationalIdClick,
                         frontOfNationalIdUri = uiState.accountUiState.frontOfNationalIdUri,
                         backOfNationalIdUri = uiState.accountUiState.backOfNationalIdUri,
-                        onVerifyLaterClick = interactionListener::onVerifyIdentityButtonClicked
+                        onVerifyLaterClick = interactionListener::onClickVerifyLater,
+                        verifyButtonState = uiState.accountUiState.accountButtonState.verifyLaterButtonState
                     )
                     AccountAppButton(
                         onClickButton = interactionListener::onVerifyIdentityButtonClicked,

@@ -393,6 +393,7 @@ class CraftsmanRequestDetailsViewModel(
     }
 
     override fun onMessageChanged(message: String) {
+        if (message.length > MESSAGE_TO_CUSTOMER_MAX_LENGTH) return
         val updatedOffer = screenState.value.uiState.offerToAdd.copy(messageToCustomer = message)
         updateState(
             screenState.value.copy(
@@ -521,5 +522,9 @@ class CraftsmanRequestDetailsViewModel(
                 && offer.preferredDate != null
                 && offer.preferredTime != null
                 && offer.messageToCustomer.isNotBlank()
+    }
+
+    private companion object {
+        private const val MESSAGE_TO_CUSTOMER_MAX_LENGTH = 100
     }
 }

@@ -20,6 +20,7 @@ interface AccountInteractionListener {
     fun onProfileButtonClicked()
     fun onLocationButtonClicked()
     fun onShowWorkButtonClicked()
+    fun onClickVerifyLater()
     fun onVerifyIdentityButtonClicked()
     fun onDeleteWorkImageClicked(uri: Uri)
 }
