@@ -1,6 +1,5 @@
 package com.paris_2.san3a.presentation
 
-import android.content.Context
 import android.content.res.Configuration
 import android.view.ContextThemeWrapper
 import androidx.activity.ComponentActivity
@@ -40,12 +39,12 @@ import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.vanniktech.locale.Language
+import com.vanniktech.locale.Locale
+import com.vanniktech.locale.toJavaLocale
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import com.vanniktech.locale.Locale
-import com.vanniktech.locale.toJavaLocale
 
 val LocalAccountType = mutableStateOf(AccountType.CUSTOMER)
 
@@ -57,9 +56,9 @@ fun San3aScaffold(
     val context = LocalContext.current
     val language = mainViewModel.getLastSelectedAppLanguage().collectAsStateWithLifecycle("en")
     val configuration = if (language.value == "en") {
-        context.updatedConfiguration(Language.ENGLISH)
+        updatedConfiguration(Language.ENGLISH)
     } else {
-        context.updatedConfiguration(Language.ARABIC)
+        updatedConfiguration(Language.ARABIC)
     }
 
     val localizedContext = remember(language.value) {
@@ -159,9 +158,10 @@ fun San3aScaffold(
     }
 }
 
-fun Context.updatedConfiguration(language: Language): Configuration {
+@Composable
+fun updatedConfiguration(language: Language): Configuration {
     val locale = Locale(language, language.defaultCountry)
-    return Configuration(resources.configuration).apply {
+    return Configuration(LocalConfiguration.current).apply {
         setLocale(locale.toJavaLocale())
     }
 }
