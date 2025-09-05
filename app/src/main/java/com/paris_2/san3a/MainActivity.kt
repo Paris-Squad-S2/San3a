@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         enableEdgeToEdge()
         setContent {
-//            InstallSavedAppLanguage(this)
             San3aScaffold()
         }
     }
