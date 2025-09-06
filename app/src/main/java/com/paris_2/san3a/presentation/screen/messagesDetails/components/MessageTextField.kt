@@ -3,13 +3,13 @@ package com.paris_2.san3a.presentation.screen.messagesDetails.components
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
@@ -27,6 +27,7 @@ import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.shared.utils.PreviewMultiDevices
+import com.paris_2.san3a.presentation.utill.myClickable
 
 @Composable
 fun MessageTextField(
@@ -39,7 +40,9 @@ fun MessageTextField(
     onImageClick: () -> Unit,
     onSendClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onVoiceClick: () -> Unit = {},
+    voiceDuration: Float,
+    voiceWave: List<Float>,
+    onVoiceClick: () -> Unit,
 ) {
 
     val paddingText = animateDpAsState(
@@ -67,7 +70,27 @@ fun MessageTextField(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(vertical = paddingText.value)
             ) {
-                if (value.isEmpty()) {
+                if (voiceDuration > 0f) {
+                    VoiceRecordItem(
+                        duration = voiceDuration,
+                        wave = voiceWave,
+                        modifier = Modifier
+                            .weight(3f)
+                            .padding(start = 16.dp)
+                    )
+                    Icon(
+                        painter = sendIcon,
+                        tint = Theme.colors.brand.primary,
+                        contentDescription = stringResource(R.string.send_icon),
+                        modifier = Modifier
+                            .padding(start = 19.dp, end = 19.dp)
+                            .myClickable(
+                                onClick = onSendClick,
+                                enabled = sendButtonState == AppButtonState.Enable
+                            )
+                            .align(Alignment.CenterVertically)
+                    )
+                } else if (value.isEmpty()) {
 
                     Text(
                         text = stringResource(R.string.write_a_message),
@@ -87,6 +110,15 @@ fun MessageTextField(
                             .myClickable(onClick = onImageClick)
                     )
 
+                    Icon(
+                        painter = voiceIcon,
+                        tint = Theme.colors.shade.secondary,
+                        contentDescription = stringResource(R.string.voice_icon),
+                        modifier = Modifier
+                            .padding(end = 19.dp)
+                            .myClickable(onClick = onVoiceClick)
+                    )
+
                 } else {
                     Box(
                         modifier = Modifier
@@ -102,7 +134,10 @@ fun MessageTextField(
                         contentDescription = stringResource(R.string.send_icon),
                         modifier = Modifier
                             .padding(start = 19.dp, end = 19.dp, bottom = 15.dp)
-                            .myClickable(onClick = onSendClick, enabled = sendButtonState == AppButtonState.Enable)
+                            .myClickable(
+                                onClick = onSendClick,
+                                enabled = sendButtonState == AppButtonState.Enable
+                            )
                             .align(Alignment.Bottom)
                     )
 
@@ -112,6 +147,51 @@ fun MessageTextField(
         cursorBrush = SolidColor(Theme.colors.shade.primary),
         textStyle = Theme.textStyle.body.medium.regular.copy(color = Theme.colors.shade.primary),
     )
+}
+
+@Composable
+fun VoiceRecordItem(duration: Float, wave: List<Float>, modifier: Modifier) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+    ) {
+        val animatedColor = if ((duration % 1f) > 0.5f) {
+            Theme.colors.additional.primary.red
+        } else {
+            Theme.colors.shade.secondary
+        }
+
+        Box(
+            modifier = Modifier
+                .size(10.dp)
+                .background(
+                    color = animatedColor,
+                    shape = RoundedCornerShape(50)
+                )
+        )
+        val totalSeconds = duration.toInt()
+        val hours = totalSeconds / 3600
+        val minutes = (totalSeconds % 3600) / 60
+        val seconds = totalSeconds % 60
+        val timeText = if (hours > 0)
+            String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        else
+            String.format("%02d:%02d", minutes, seconds)
+        Text(
+            text = timeText,
+            style = Theme.textStyle.body.medium.regular,
+            color = Theme.colors.shade.primary,
+            modifier = Modifier.padding(start = 8.dp)
+        )
+        AudioWave(
+            recordWave = wave,
+            listenRatio = 1f,
+            isReceived = true,
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .weight(1f)
+        )
+    }
 }
 
 @PreviewMultiDevices
@@ -128,7 +208,10 @@ private fun MessageTextFieldPreview() {
             onSendClick = {},
             modifier = Modifier
                 .fillMaxWidth(),
-            sendButtonState = AppButtonState.Enable
+            sendButtonState = AppButtonState.Enable,
+            voiceDuration = 0f,
+            voiceWave = emptyList(),
+            onVoiceClick = {}
         )
     }
 }
@@ -147,7 +230,32 @@ private fun MessageTextFieldPreview1() {
             onSendClick = {},
             modifier = Modifier
                 .fillMaxWidth(),
-            sendButtonState = AppButtonState.Enable
+            sendButtonState = AppButtonState.Enable,
+            voiceDuration = 0f,
+            voiceWave = emptyList(),
+            onVoiceClick = {}
+        )
+    }
+}
+
+@PreviewMultiDevices
+@Composable
+private fun MessageTextFieldPreview2() {
+    San3aTheme {
+        MessageTextField(
+            value = "",
+            onValueChange = {},
+            imageIcon = painterResource(R.drawable.ic_image),
+            voiceIcon = painterResource(R.drawable.ic_voice),
+            sendIcon = painterResource(R.drawable.ic_send),
+            onImageClick = {},
+            onSendClick = {},
+            modifier = Modifier
+                .fillMaxWidth(),
+            voiceDuration = 60.5f,
+            voiceWave = listOf(0.3f, 0.5f, 0.2f, 0.7f, 0.4f, 0.6f, 0.3f, 0.5f, 0.2f, 0.7f),
+            sendButtonState = AppButtonState.Enable,
+            onVoiceClick = {}
         )
     }
 }

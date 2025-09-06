@@ -1,5 +1,6 @@
 package com.paris_2.san3a.presentation.screen.messagesDetails
 
+import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -23,11 +24,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -72,6 +76,18 @@ fun MessageDetailsContent(
         ActivityResultContracts.GetMultipleContents()
     ) { uris ->
         viewModel.saveImages(uris)
+    }
+
+    val context = LocalContext.current
+
+    val audioPermissionGranted = remember { mutableStateOf(false) }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        audioPermissionGranted.value = granted
+        if (granted) {
+            viewModel.startRecordingWithContext(context)
+        }
     }
 
     Column(
@@ -151,6 +167,7 @@ fun MessageDetailsContent(
                                 groupedMessages = state.groupedMessages,
                                 sendingTextMessage = state.sendingTextMessage,
                                 sendingImageMessage = state.sendingImageMessage,
+                                sendingVoiceMessage = state.sendingVoiceMessage,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(horizontal = 16.dp)
@@ -165,9 +182,21 @@ fun MessageDetailsContent(
                             sendButtonState = state.sendButtonState,
                             imageIcon = painterResource(R.drawable.ic_image),
                             voiceIcon = painterResource(R.drawable.ic_voice),
+                            voiceDuration = state.voiceDuration,
+                            voiceWave = state.voiceWave.takeLast(30),
                             sendIcon = painterResource(R.drawable.ic_send),
                             onImageClick = { imagePickerLauncher.launch(MessagesDetailsViewModel.IMAGE_TYPE) },
                             onSendClick = viewModel::sendMessage,
+                            onVoiceClick = {
+                                if (androidx.core.content.ContextCompat.checkSelfPermission(
+                                        context, Manifest.permission.RECORD_AUDIO
+                                    ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    viewModel.startRecordingWithContext(context)
+                                } else {
+                                    permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                                }
+                            },
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .imePadding()
@@ -228,4 +257,3 @@ fun MessageDetailsContent(
         }
     }
 }
-

@@ -54,12 +54,14 @@ fun MessageBubble(
         if (images.isNotEmpty()) {
             ImagesGrid(images)
         }
-        MessageMeta(
-            time = time,
-            isSeen = isSeen,
-            isReceived = isReceived,
-            modifier = Modifier.align(Alignment.End)
-        )
+        if (text.isNullOrBlank().not() || images.isNotEmpty()) {
+            MessageMeta(
+                time = time,
+                isSeen = isSeen,
+                isReceived = isReceived,
+                modifier = Modifier.align(Alignment.End)
+            )
+        }
     }
 }
 
@@ -144,6 +146,20 @@ fun MessageBubblePreview_Sent() {
     San3aTheme {
         MessageBubble(
             text = "Short message example.",
+            time = "12:46 PM",
+            isReceived = false,
+            isSeen = true,
+            images = emptyList()
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MessageBubblePreview2() {
+    San3aTheme {
+        MessageBubble(
+            text = null,
             time = "12:46 PM",
             isReceived = false,
             isSeen = true,
