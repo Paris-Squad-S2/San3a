@@ -1,44 +1,46 @@
 package com.paris_2.san3a.data.service.fcm
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.paris_2.san3a.R
-import com.paris_2.san3a.data.source.local.userPreferences.UserPreferencesLocalDataStore
-import com.paris_2.san3a.data.source.remote.user.UserRemoteDataSource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @SuppressLint("MissingFirebaseInstanceTokenRefresh")
-class San3aFirebaseMessagingService(): FirebaseMessagingService() {
-
-//    override fun onNewToken(token: String) {
-//        super.onNewToken(token)
-//        Log.d("FCM", "Token: $token")
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val userId = userPreferencesLocalDataStore.getPhoneNumber()
-//            if (!userId.isNullOrBlank()) {
-//                userRemoteDataSource.saveDeviceToken(userId, token)
-//            } else {
-//                Log.w("FCM", "No userId found, token not saved")
-//            }
-//        }
-//
-//    }
+class San3aFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        val title = remoteMessage.notification?.title ?: "San3a"
-        val body = remoteMessage.notification?.body ?: "New message received"
+        val title = remoteMessage.data["title"] ?: "San3a"
+        val body = remoteMessage.data["body"] ?: "New message received"
 
-        showNotification(title, body)
+        if (!isAppInForeground()) {
+            Log.d("NotificationTest", "App in background, receive notification")
+            showNotification(title, body)
+        } else {
+            Log.d("NotificationTest", "App in foreground, ignoring notification")
+        }
+    }
+
+    private fun isAppInForeground(): Boolean {
+        val activityManager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val appProcesses = activityManager.runningAppProcesses ?: return false
+        val packageName = packageName
+        for (appProcess in appProcesses) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
+                appProcess.processName == packageName
+            ) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun showNotification(title: String, message: String) {
@@ -55,11 +57,10 @@ class San3aFirebaseMessagingService(): FirebaseMessagingService() {
             )
             notificationManager.createNotificationChannel(channel)
         }
-
         val notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle(title)
             .setContentText(message)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_logo)
             .setAutoCancel(true)
             .build()
 
