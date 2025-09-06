@@ -203,7 +203,8 @@ fun PhoneNumberInput(
         Text(
             text = stringResource(R.string.enter_your_phone_number_to_continue),
             style = Theme.textStyle.title.medium,
-            color = Theme.colors.shade.primary
+            color = Theme.colors.shade.primary,
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -225,10 +226,9 @@ fun PhoneNumberInput(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(start = 8.dp)
                             .background(Theme.colors.background.card)
                     ) {
-                        Spacer(modifier = Modifier.width(10.dp))
+                        Spacer(modifier = Modifier.width(2.dp))
                         Image(
                             painter = painterResource(R.drawable.ic_eg_flag),
                             contentDescription = "Egypt Flag",
@@ -246,11 +246,9 @@ fun PhoneNumberInput(
                                 .width(1.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-
                         Text(
                             text = dialCode,
                             color = Theme.colors.shade.primary,
-                            modifier = Modifier.padding(end = 4.dp)
                         )
                     }
                 }

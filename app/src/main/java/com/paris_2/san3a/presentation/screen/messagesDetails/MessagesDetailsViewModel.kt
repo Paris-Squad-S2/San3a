@@ -3,7 +3,9 @@ package com.paris_2.san3a.presentation.screen.messagesDetails
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.paris_2.san3a.R
 import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
 import com.paris_2.san3a.domain.usecase.messaging.DeleteChatByIdUseCase
@@ -14,7 +16,10 @@ import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel
+import com.paris_2.san3a.presentation.shared.utils.UiText
 import com.paris_2.san3a.presentation.utill.fakeImage
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MessagesDetailsViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
@@ -102,7 +107,7 @@ class MessagesDetailsViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message,
+                        errorMessage = UiText.StringResource(R.string.occur_error_while_using_messages_screen),
                         isLoading = false
                     )
                 )
@@ -150,10 +155,14 @@ class MessagesDetailsViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message,
-                        sendButtonState = AppButtonState.Enable
+                        errorMessage = UiText.StringResource(R.string.occur_error_while_using_messages_screen),
+                        sendButtonState = AppButtonState.Enable,
+                        showSnackBar = true,
+                        sendingTextMessage = null,
+                        messagesSize = (screenState.value.messagesSize - 1).coerceAtLeast(0)
                     )
                 )
+                hideSnackBar()
             }
         )
     }
@@ -195,11 +204,29 @@ class MessagesDetailsViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message
+                        errorMessage = UiText.StringResource(R.string.occur_error_while_using_messages_screen),
+                        showSnackBar = true,
+                        sendingImageMessage = null,
+                        messagesSize = (screenState.value.messagesSize - 1).coerceAtLeast(0)
                     )
                 )
+                hideSnackBar()
             },
         )
+    }
+
+    private fun hideSnackBar() {
+        viewModelScope.launch {
+            if (screenState.value.showSnackBar) {
+                delay(3000)
+                updateState(
+                    screenState.value.copy(
+                        showSnackBar = false,
+                        errorMessage = null
+                    )
+                )
+            }
+        }
     }
 
 
@@ -255,7 +282,7 @@ class MessagesDetailsViewModel(
             onError = {
                 updateState(
                     screenState.value.copy(
-                        errorMessage = it.message
+                        errorMessage = UiText.StringResource(R.string.occur_error_while_using_messages_screen)
                     )
                 )
             },
@@ -272,6 +299,15 @@ class MessagesDetailsViewModel(
 
     override fun onRetryClick() {
         loadMessages(chatId)
+    }
+
+    override fun onDismissSnackBar() {
+        updateState(
+            screenState.value.copy(
+                showSnackBar = false,
+                errorMessage = null
+            )
+        )
     }
 
     companion object {

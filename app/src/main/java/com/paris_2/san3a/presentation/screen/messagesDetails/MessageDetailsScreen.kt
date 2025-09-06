@@ -2,11 +2,13 @@ package com.paris_2.san3a.presentation.screen.messagesDetails
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import com.paris_2.san3a.presentation.utill.myClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -42,6 +44,7 @@ import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.components.LoadingScreen
 import com.paris_2.san3a.presentation.shared.components.LostConnectionScreen
 import com.paris_2.san3a.presentation.shared.components.PlaceHolderScreen
+import com.paris_2.san3a.presentation.shared.components.SnackBar
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -107,7 +110,7 @@ fun MessageDetailsContent(
             },
         ) {
             when {
-                state.errorMessage != null -> {
+                state.errorMessage != null && state.showSnackBar.not() -> {
                     LostConnectionScreen(
                         onRetry = viewModel::onRetryClick,
                         modifier = Modifier
@@ -204,6 +207,20 @@ fun MessageDetailsContent(
                                 onDeleteChat = viewModel::onDeleteButtonClick,
                                 buttonState = state.bottomSheetButtonState,
                             )
+                        }
+
+                        this@Column.AnimatedVisibility(state.showSnackBar) {
+                            state.errorMessage?.let {
+                                SnackBar(
+                                    text = it.asString(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .statusBarsPadding()
+                                        .padding(horizontal = 12.dp, vertical = 16.dp)
+                                        .align(Alignment.TopCenter),
+                                    onClick = messageInteractionListener::onDismissSnackBar,
+                                )
+                            }
                         }
                     }
                 }

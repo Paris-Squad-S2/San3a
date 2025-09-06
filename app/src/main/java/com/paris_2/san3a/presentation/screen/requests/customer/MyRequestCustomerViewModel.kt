@@ -383,6 +383,11 @@ class MyRequestCustomerViewModel(
                         )
                     } ?: return@collect
 
+                    Log.d(
+                        "MyRequestCustomerViewModel",
+                        "Updated request with craftsman $requestId: ${updatedRequests[requestId]?.offer?.craftsMan}"
+                    )
+
                     when (listType) {
                         ListType.ONGOING -> updateState(
                             screenState.value.copy(

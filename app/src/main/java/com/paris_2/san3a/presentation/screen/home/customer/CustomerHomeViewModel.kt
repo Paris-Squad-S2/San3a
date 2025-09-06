@@ -139,6 +139,7 @@ class CustomerHomeViewModel(
     }
 
     override fun setBottomSheetDescription(description: String) {
+        if (description.length > DESCRIPTION_MAX_LENGTH) return
         updateState(
             screenState.value.copy(
                 bottomSheetUiState = screenState.value.bottomSheetUiState.copy(
@@ -608,5 +609,6 @@ class CustomerHomeViewModel(
     private companion object {
         const val UNKNOWN_ERROR = "Unknown Error"
         const val DEFAULT_LANGUAGE = "en"
+        const val DESCRIPTION_MAX_LENGTH = 100
     }
 }

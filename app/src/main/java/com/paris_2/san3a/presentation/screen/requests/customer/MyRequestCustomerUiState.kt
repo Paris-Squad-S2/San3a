@@ -5,6 +5,7 @@ import com.paris_2.san3a.domain.entity.RequestService
 import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
+import com.paris_2.san3a.presentation.utill.fakeImage
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
@@ -59,7 +60,7 @@ data class MyRequestCustomerUi(
 
 fun User.toCraftsManUiState(rating: Float, craftsManRatingForOffer: Float?) : CraftsManUiState {
     return CraftsManUiState(
-        profileUrl = this.profilePhoto,
+        profileUrl = this.profilePhoto ?: fakeImage,
         name = this.fullName,
         review = 150,
         rating = rating,

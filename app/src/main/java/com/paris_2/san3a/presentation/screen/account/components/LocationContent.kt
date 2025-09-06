@@ -40,10 +40,7 @@ fun LocationContent(
     locationBottomSheetContentType: LocationBottomSheetContentType
 ) {
 
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-    ) {
+    Column(modifier = modifier) {
 
         AppTextField(
             value = if (government.isEmpty()) stringResource(R.string.enter_your_location)

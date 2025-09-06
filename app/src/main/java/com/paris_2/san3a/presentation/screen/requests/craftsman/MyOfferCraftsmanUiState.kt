@@ -8,6 +8,7 @@ import com.paris_2.san3a.domain.entity.RequestStatus
 import com.paris_2.san3a.domain.entity.Service
 import com.paris_2.san3a.domain.entity.User
 import com.paris_2.san3a.presentation.shared.utils.UiText
+import com.paris_2.san3a.presentation.utill.fakeImage
 import kotlinx.datetime.LocalDateTime
 
 data class MyJobsCraftsmanScreenState(
@@ -87,7 +88,7 @@ fun Offer?.toUiState(): OfferUiState? {
 
 fun User.toCraftsManUiState(rating: Float): CraftsManUiState {
     return CraftsManUiState(
-        profileUrl = this.profilePhoto?.toUri(),
+        profileUrl = this.profilePhoto?.toUri() ?: fakeImage.toUri(),
         name = this.fullName,
         review = 150,
         rating = rating,

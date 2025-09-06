@@ -67,7 +67,8 @@ fun RegisterBottomSheet(
                     IconButton(onClick = onCloseClick) {
                         Icon(
                             painter = painterResource(R.drawable.ic_close),
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Theme.colors.shade.secondary
                         )
                     }
                 }
