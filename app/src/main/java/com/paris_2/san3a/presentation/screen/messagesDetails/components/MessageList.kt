@@ -27,6 +27,7 @@ fun MessageList(
     modifier: Modifier,
     sendingTextMessage: MessageUi?,
     sendingImageMessage: MessageUi?,
+    sendingVoiceMessage: MessageUi?
 ) {
     val listState = rememberLazyListState(0)
 
@@ -52,6 +53,28 @@ fun MessageList(
                             .align(Alignment.CenterEnd)
                             .animateItem(),
                         text = message.text,
+                        isReceived = message.isReceived,
+                        isSeen = null,
+                        time = message.time,
+                        profileImageUrl = null,
+                    )
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+            }
+        }
+
+        sendingVoiceMessage?.let { message ->
+            item {
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Message(
+                        images = message.images,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .animateItem(),
+                        voiceUri = message.voiceUrl,
+                        recordWave = message.voiceWaveform,
                         isReceived = message.isReceived,
                         isSeen = null,
                         time = message.time,
@@ -96,6 +119,8 @@ fun MessageList(
                         text = item.text,
                         isReceived = item.isReceived,
                         isSeen = item.isSeen,
+                        recordWave = item.voiceWaveform,
+                        voiceUri = item.voiceUrl,
                         time = item.time,
                         profileImageUrl = if (item.isReceived) item.anotherUserImage else null,
                     )

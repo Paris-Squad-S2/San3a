@@ -8,7 +8,7 @@ import com.paris_2.san3a.domain.entity.Message
 import com.paris_2.san3a.domain.entity.MessageContent
 
 
-fun List<ChatDto>.toChatList(): List<Chat>  = this.map { it.toChat() }
+fun List<ChatDto>.toChatList(): List<Chat> = this.map { it.toChat() }
 
 fun ChatDto.toChat(): Chat {
     return Chat(
@@ -28,7 +28,13 @@ fun MessageDto.toMessage(): Message {
         senderId = this.senderId,
         receiverId = this.receiverId,
         chatId = this.chatId,
-        messageContent = handleMessageContent(this.text, this.imageUrls),
+        messageContent = handleMessageContent(
+            this.text,
+            this.imageUrls,
+            this.voiceUrl,
+            this.voiceDuration,
+            this.voiceWaveform
+        ),
         seen = this.seen
     )
 }
@@ -36,34 +42,44 @@ fun MessageDto.toMessage(): Message {
 fun handleMessageContent(
     text: String?,
     imageUrls: List<String>?,
+    voiceUrl: String? = null,
+    voiceDuration: Int? = null,
+    voiceWaveform: List<Float>? = null,
 ): MessageContent {
     return if (text != null) {
         MessageContent.Text(text)
     } else if (imageUrls != null) {
         val imageUris = imageUrls.map { it.toUri().toString() }
         MessageContent.Image(imageUris)
+    } else if (voiceUrl != null) {
+        MessageContent.Audio(
+            url = voiceUrl.toUri(),
+            duration = voiceDuration ?: 0,
+            waves = voiceWaveform ?: emptyList()
+        )
     } else {
         MessageContent.Text("")
     }
 }
 
-fun Message.toMessageDto(urls: List<String>? = null): MessageDto {
+fun Message.toMessageDto(
+    text: String? = null,
+    imagesUris: List<String>? = null,
+    voiceUrl: String? = null,
+    voiceDuration: Int? = null,
+    voiceWaveform: List<Float>? = null,
+): MessageDto {
     return MessageDto(
         id = id,
-        text = getMessageContentText(messageContent),
+        text = text,
         chatId = chatId,
         senderId = senderId,
         receiverId = receiverId,
-        imageUrls = urls,
+        imageUrls = imagesUris,
+        voiceUrl = voiceUrl,
+        voiceDuration = voiceDuration,
+        voiceWaveform = voiceWaveform,
         dateTime = time,
         seen = seen
     )
-}
-
-fun getMessageContentText(messageContent: MessageContent): String? {
-    return when (messageContent) {
-        is MessageContent.Audio -> null
-        is MessageContent.Image -> null
-        is MessageContent.Text -> messageContent.content
-    }
 }
