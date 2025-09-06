@@ -12,6 +12,8 @@ import com.paris_2.san3a.domain.usecase.messaging.DeleteChatByIdUseCase
 import com.paris_2.san3a.domain.usecase.messaging.GetMessagesByChatIdUseCase
 import com.paris_2.san3a.domain.usecase.messaging.MarkMessagesAsSeenUseCase
 import com.paris_2.san3a.domain.usecase.messaging.SendMessageUseCase
+import com.paris_2.san3a.domain.usecase.notification.SendNotificationUseCase
+import com.paris_2.san3a.domain.usecase.user.GetDeviceTokenUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.components.AppButtonState
@@ -27,6 +29,8 @@ class MessagesDetailsViewModel(
     private val deleteChatByIdUseCase: DeleteChatByIdUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val markMessagesAsSeenUseCase: MarkMessagesAsSeenUseCase,
+    private val sendNotificationUseCase: SendNotificationUseCase,
+    private val getDeviceTokenUseCase: GetDeviceTokenUseCase,
     savedStateHandle: SavedStateHandle,
 ) : MessageInteractionListener, BaseViewModel<MessageDetailsUiState>(
     MessageDetailsUiState()
@@ -142,6 +146,11 @@ class MessagesDetailsViewModel(
                             )
                         )
                         sendMessageUseCase(message)
+                        sendNotificationUseCase(
+                            token = getDeviceTokenUseCase(otherUserId),
+                            title = "new message",
+                            description = "new message from ${screenState.value.chatTitle} $currentUserId"
+                        )
                     }
                 }
             },
@@ -191,6 +200,11 @@ class MessagesDetailsViewModel(
                             )
                         )
                         sendMessageUseCase(message)
+                        sendNotificationUseCase(
+                            token = getDeviceTokenUseCase(otherUserId),
+                            title = "new message",
+                            description = "new message from ${screenState.value.chatTitle} $currentUserId"
+                        )
                     }
                 }
             },

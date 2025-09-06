@@ -16,7 +16,6 @@ import com.paris_2.san3a.domain.usecase.user.GetCustomerRatingOnCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.user.GetPhoneNumberUseCase
 import com.paris_2.san3a.domain.usecase.user.GetRatingForCraftsmanUseCase
 import com.paris_2.san3a.domain.usecase.user.GetUserUseCase
-import com.paris_2.san3a.domain.usecase.requests.GetCustomerRequestsUseCase
 import com.paris_2.san3a.domain.usecase.user.GetDeviceTokenUseCase
 import com.paris_2.san3a.presentation.navigation.Destinations
 import com.paris_2.san3a.presentation.shared.utils.BaseViewModel

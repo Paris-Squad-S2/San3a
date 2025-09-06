@@ -251,6 +251,7 @@ class CraftsmanRequestDetailsViewModel(
                         ),
                     )
                 )
+                Log.d("NotificationTest", "token: ${getDeviceTokenUseCase(screenState.value.uiState.request.userId)}")
                 sendNotificationUseCase(
                     token = getDeviceTokenUseCase(screenState.value.uiState.request.userId),
                     title = "New Offer Received",
@@ -346,6 +347,12 @@ class CraftsmanRequestDetailsViewModel(
                             "ar" to "تم الانتهاء من طلبك '${screenState.value.uiState.request.title}'"
                         ),
                     )
+                )
+                Log.d("NotificationTest", "token: ${getDeviceTokenUseCase(screenState.value.uiState.request.userId)}")
+                sendNotificationUseCase(
+                    token = getDeviceTokenUseCase(screenState.value.uiState.request.userId),
+                    title = "New Offer Received",
+                    description = "You have received a new offer for your request ${screenState.value.uiState.request.title}"
                 )
                 navigateUp()
             },

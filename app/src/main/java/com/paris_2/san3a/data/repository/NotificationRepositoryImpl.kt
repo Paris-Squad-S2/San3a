@@ -1,5 +1,6 @@
 package com.paris_2.san3a.data.repository
 
+import android.util.Log
 import com.paris_2.san3a.data.mapper.toDomain
 import com.paris_2.san3a.data.mapper.toFirestoreDto
 import com.paris_2.san3a.data.repository.shared.BaseRepository
@@ -58,6 +59,7 @@ class NotificationRepositoryImpl(
         title: String,
         description: String
     ) {
+        Log.d("NotificationTest", "repo sendNotification")
         notificationApi.sendNotification(token, title, description)
     }
 }
