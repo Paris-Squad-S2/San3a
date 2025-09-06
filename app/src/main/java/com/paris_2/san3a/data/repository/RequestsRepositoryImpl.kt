@@ -123,7 +123,7 @@ class RequestsRepositoryImpl(
     override fun getRecentRelatedJobs(relatedJobsIds: List<String>, userId: String): Flow<List<RequestService>> {
         validateNetworkConnection()
         return requestRemoteDataSource.getRecentRelatedJobs(relatedJobsIds, userId)
-            .map { list -> list.map { it.toEntity() } }
+            .map { list -> list.map { it.toEntity() }.filter { it.selectedCraftsmanId.isNullOrBlank() } }
             .catch { throw FailException("Failed to get recent related jobs: $relatedJobsIds") }
     }
 
@@ -151,7 +151,7 @@ class RequestsRepositoryImpl(
     override fun getAvailableJobs(userId: String): Flow<List<RequestService>> {
         validateNetworkConnection()
         return requestRemoteDataSource.getAvailableJobs(userId)
-            .map { dto -> dto.map { it.toEntity() } }
+            .map { dto -> dto.map { it.toEntity() }.filter { it.selectedCraftsmanId.isNullOrBlank() } }
             .catch { throw FailException("getAvailableJobs failed: ${it.message ?: "Unknown error"}") }
     }
 }
