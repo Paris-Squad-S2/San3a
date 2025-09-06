@@ -76,7 +76,6 @@ fun AudioPlayer(
             if (player != null && player.isPlaying && player.duration > 0) {
                 listenRatio = player.currentPosition.toFloat() / player.duration
             }
-            Log.d("AudioPlayer", "listenRatio: $listenRatio")
             kotlinx.coroutines.delay(100L)
         }
     }

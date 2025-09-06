@@ -393,7 +393,7 @@ class MessagesDetailsViewModel(
             while (isRecording) {
                 delay(100)
                 val amp = mediaRecorder?.maxAmplitude ?: 0
-                val normalized = (amp / 8191.5f).coerceIn(0.1f, 1f)
+                val normalized = (amp / MAX_AMPLITUDE_DIVISOR).coerceIn(0.1f, 1f)
                 wave.add(normalized)
                 duration += 0.1f
                 updateState(
@@ -481,6 +481,7 @@ class MessagesDetailsViewModel(
     companion object {
         const val IMAGE_TYPE = "image/*"
         const val FAKE_USER_NAME = "Unknown User"
+        private const val MAX_AMPLITUDE_DIVISOR = 8191.5f
     }
 
 }

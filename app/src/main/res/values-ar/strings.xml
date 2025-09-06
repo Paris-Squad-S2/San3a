@@ -19,7 +19,7 @@
     <string name="profile_image">صورة الملف الشخصي</string>
     <string name="seen_icon">أيقونة تم رؤيتها</string>
     <string name="play_icon">أيقونة تشغيل</string>
-    <string name="pause_icon">أيقونة الايقاف</string>
+    <string name="pause_icon">أيقونة الإيقاف</string>
     <string name="no_audio_wave_available">لا توجد موجة صوتية متاحة</string>
     <string name="tap_to_add_photos">اضغط لإضافة صورة</string>
     <string name="e_g_kitchen_sink_is_leaking">على سبيل المثال، حوض المطبخ يسرب</string>
