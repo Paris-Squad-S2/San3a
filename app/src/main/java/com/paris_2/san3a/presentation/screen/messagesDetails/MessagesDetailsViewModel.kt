@@ -148,8 +148,8 @@ class MessagesDetailsViewModel(
                         sendMessageUseCase(message)
                         sendNotificationUseCase(
                             token = getDeviceTokenUseCase(otherUserId),
-                            title = "new message",
-                            description = "new message from ${screenState.value.chatTitle} $currentUserId"
+                            title = "New message",
+                            description = "New message from ${screenState.value.chatTitle} $currentUserId"
                         )
                     }
                 }
@@ -202,8 +202,8 @@ class MessagesDetailsViewModel(
                         sendMessageUseCase(message)
                         sendNotificationUseCase(
                             token = getDeviceTokenUseCase(otherUserId),
-                            title = "new message",
-                            description = "new message from ${screenState.value.chatTitle} $currentUserId"
+                            title = "New message",
+                            description = "New message from ${screenState.value.chatTitle} $currentUserId"
                         )
                     }
                 }
