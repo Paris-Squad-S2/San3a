@@ -2,9 +2,11 @@ package com.paris_2.san3a.data.service.fcm
 
 import android.annotation.SuppressLint
 import android.app.ActivityManager
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.graphics.BitmapFactory
+import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -48,19 +50,33 @@ class San3aFirebaseMessagingService : FirebaseMessagingService() {
         val notificationId = System.currentTimeMillis().toInt()
 
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelName = "San3a Notifications"
+
+            val attributes = android.media.AudioAttributes.Builder()
+                .setUsage(android.media.AudioAttributes.USAGE_NOTIFICATION)
+                .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+
             val channel = NotificationChannel(
                 channelId,
-                "San3a Notifications",
+                channelName,
                 NotificationManager.IMPORTANCE_HIGH
-            )
+            ).apply {
+                enableLights(true)
+                enableVibration(true)
+                setSound(soundUri, attributes)
+            }
             notificationManager.createNotificationChannel(channel)
         }
+
         val notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle(title)
             .setContentText(message)
             .setSmallIcon(R.drawable.ic_logo)
+            .setSound(soundUri)
             .setAutoCancel(true)
             .build()
 
