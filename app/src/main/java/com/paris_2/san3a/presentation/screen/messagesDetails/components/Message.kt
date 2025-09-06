@@ -2,7 +2,9 @@ package com.paris_2.san3a.presentation.screen.messagesDetails.components
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,25 +26,36 @@ fun Message(
     voiceUri: Uri? = null,
     recordWave: List<Float> = emptyList(),
 ) {
-    Row(
+    Column (
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.Bottom,
-    ) {
-        if (isReceived) {
-            ProfileImage(profileImageUrl)
+    ){
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            if (isReceived) {
+                ProfileImage(profileImageUrl)
+            }
+            MessageContent(
+                text = text,
+                time = time,
+                isReceived = isReceived,
+                isSeen = isSeen,
+                images = images,
+                voiceUri = voiceUri,
+                recordWave = recordWave,
+            )
+            if (!isReceived) {
+                ProfileImage(profileImageUrl)
+            }
         }
-        MessageContent(
-            text = text,
-            time = time,
-            isReceived = isReceived,
-            isSeen = isSeen,
-            images = images,
-            voiceUri = voiceUri,
-            recordWave = recordWave,
-        )
-        if (!isReceived) {
-            ProfileImage(profileImageUrl)
+        if (voiceUri != null) {
+            MessageMeta(
+                time = time,
+                isSeen = isSeen,
+                isReceived = isReceived,
+                modifier = Modifier.align(Alignment.End).padding(top = 4.dp)
+            )
         }
     }
 }
@@ -108,7 +121,28 @@ fun MessagePreview2() {
                     "https://www.facebook.com/photo/?fbid=709359247644755&set=a.102154745031878"
                 ),
                 voiceUri = Uri.EMPTY,
-                recordWave = listOf(0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f,0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f),
+                recordWave = listOf(
+                    0.3f,
+                    0.2f,
+                    0.3f,
+                    0.7f,
+                    0.5f,
+                    0.1f,
+                    0.7f,
+                    0.4f,
+                    0.9f,
+                    1.0f,
+                    0.3f,
+                    0.2f,
+                    0.3f,
+                    0.7f,
+                    0.5f,
+                    0.1f,
+                    0.7f,
+                    0.4f,
+                    0.9f,
+                    1.0f
+                ),
                 isSeen = true,
             )
         }
@@ -157,7 +191,28 @@ fun MessagePreview5() {
             Message(
                 profileImageUrl = "https://www.facebook.com/photo/?fbid=709359247644755&set=a.102154745031878",
                 voiceUri = Uri.EMPTY,
-                recordWave = listOf(0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f,0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f),
+                recordWave = listOf(
+                    0.3f,
+                    0.2f,
+                    0.3f,
+                    0.7f,
+                    0.5f,
+                    0.1f,
+                    0.7f,
+                    0.4f,
+                    0.9f,
+                    1.0f,
+                    0.3f,
+                    0.2f,
+                    0.3f,
+                    0.7f,
+                    0.5f,
+                    0.1f,
+                    0.7f,
+                    0.4f,
+                    0.9f,
+                    1.0f
+                ),
             )
         }
     }

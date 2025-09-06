@@ -59,7 +59,9 @@ fun MessageBubble(
                 time = time,
                 isSeen = isSeen,
                 isReceived = isReceived,
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(bottom = 12.dp)
             )
         }
     }

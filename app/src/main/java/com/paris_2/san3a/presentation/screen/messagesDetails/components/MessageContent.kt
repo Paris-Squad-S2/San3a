@@ -38,12 +38,6 @@ fun MessageContent(
                 recordWave = recordWave,
                 isReceived = isReceived
             )
-            MessageMeta(
-                time = time,
-                isSeen = isSeen,
-                isReceived = isReceived,
-                modifier = Modifier.align(Alignment.End)
-            )
         }
     }
 }
