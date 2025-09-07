@@ -4,6 +4,7 @@ import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.paris_2.san3a.data.service.firestore.PermissionDeniedException
+import com.paris_2.san3a.data.source.remote.storage.dto.AudioDto
 import com.paris_2.san3a.data.source.remote.storage.dto.ImageDto
 import com.paris_2.san3a.data.utils.compressImage
 import kotlinx.coroutines.async
@@ -59,6 +60,26 @@ class FirebaseStorageDataSource(
                 }
         } catch (e: Exception) {
             throw handleStorageException(images.map { it.path }, e, StorageOperationType.DELETE)
+        }
+    }
+
+    override suspend fun saveVoiceFiles(voiceFiles: List<AudioDto>) = coroutineScope {
+        try {
+            val storageRef = fireStorage.reference
+            voiceFiles.ifEmpty { throw InvalidPathException(voiceFiles.map { it.path }.toOneString()) }
+                .filter { audio -> isFirebaseStorageUri(audio.uri).not() }
+                .map { audio ->
+                    val audioRef = storageRef.child(audio.path)
+                    async {
+                        val inputStream = appContext.contentResolver.openInputStream(audio.uri)
+                        val byteArray = inputStream?.readBytes() ?: throw Exception("Could not read audio file")
+                        inputStream.close()
+                        audioRef.putBytes(byteArray).await()
+                        audioRef.downloadUrl.await().toString()
+                    }
+                }.awaitAll()
+        } catch (e: Exception) {
+            throw handleStorageException(voiceFiles.map { it.path }, e, StorageOperationType.SAVE)
         }
     }
 

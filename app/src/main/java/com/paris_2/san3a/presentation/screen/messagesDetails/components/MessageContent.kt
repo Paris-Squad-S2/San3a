@@ -1,8 +1,10 @@
 package com.paris_2.san3a.presentation.screen.messagesDetails.components
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.paris_2.san3a.presentation.shared.utils.BasePreview
@@ -15,9 +17,8 @@ fun MessageContent(
     isReceived: Boolean,
     isSeen: Boolean?,
     images: List<String>,
-    onPlayClick: (() -> Unit)?,
+    voiceUri: Uri?,
     recordWave: List<Float>,
-    listenRatio: Float,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -31,11 +32,10 @@ fun MessageContent(
             isSeen = isSeen,
             images = images
         )
-        if (onPlayClick != null) {
+        if (voiceUri != null) {
             AudioPlayer(
-                onPlayClick = onPlayClick,
+                voiceUri = voiceUri,
                 recordWave = recordWave,
-                listenRatio = listenRatio,
                 isReceived = isReceived
             )
         }
@@ -52,9 +52,25 @@ fun MessageContentPreview() {
             isReceived = true,
             isSeen = true,
             images = listOf("https://example.com/image1.jpg", "https://example.com/image2.jpg"),
-            onPlayClick = null,
+            voiceUri = null,
             recordWave = emptyList(),
-            listenRatio = 0f,
+            modifier = Modifier
+        )
+    }
+}
+
+@PreviewMultiDevices
+@Composable
+fun MessageContentPreview2() {
+    BasePreview {
+        MessageContent(
+            text = null,
+            time = "12:34 PM",
+            isReceived = true,
+            isSeen = true,
+            images = listOf(),
+            voiceUri = Uri.EMPTY,
+            recordWave = emptyList(),
             modifier = Modifier
         )
     }

@@ -20,17 +20,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import com.paris_2.san3a.R
 import com.paris_2.san3a.presentation.screen.requestDetails.craftsman.RequestServiceUIState
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
 import com.paris_2.san3a.presentation.utill.getTimeAgo
+import com.paris_2.san3a.presentation.utill.myClickable
 
 @Composable
 fun RequestInfoSection(
     modifier: Modifier = Modifier,
     request: RequestServiceUIState,
 ) {
+    val context = LocalContext.current
     Column {
         Row(
             modifier = modifier
@@ -106,7 +109,15 @@ fun RequestInfoSection(
                             .padding(bottom = 24.dp)
                             .size(120.dp)
                             .clip(androidx.compose.foundation.shape.RoundedCornerShape(Theme.radius.extraLarge))
-                            .background(Theme.colors.background.card),
+                            .background(Theme.colors.background.card)
+                            .myClickable {
+                                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                                    setDataAndType(image.toUri(), "image/*")
+                                    addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                }
+                                context.startActivity(intent)
+                            }
+                        ,
                         contentScale = ContentScale.Crop,
                     )
                 }
