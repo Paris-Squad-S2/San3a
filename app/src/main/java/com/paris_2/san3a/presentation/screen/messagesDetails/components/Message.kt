@@ -1,7 +1,10 @@
 package com.paris_2.san3a.presentation.screen.messagesDetails.components
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,30 +23,39 @@ fun Message(
     isReceived: Boolean = true,
     isSeen: Boolean? = false,
     images: List<String> = emptyList(),
-    onPlayClick: (() -> Unit)? = null,
+    voiceUri: Uri? = null,
     recordWave: List<Float> = emptyList(),
-    listenRatio: Float = 0f,
 ) {
-    Row(
+    Column (
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.Bottom,
-    ) {
-        if (isReceived) {
-            ProfileImage(profileImageUrl)
+    ){
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            if (isReceived) {
+                ProfileImage(profileImageUrl)
+            }
+            MessageContent(
+                text = text,
+                time = time,
+                isReceived = isReceived,
+                isSeen = isSeen,
+                images = images,
+                voiceUri = voiceUri,
+                recordWave = recordWave,
+            )
+            if (!isReceived) {
+                ProfileImage(profileImageUrl)
+            }
         }
-        MessageContent(
-            text = text,
-            time = time,
-            isReceived = isReceived,
-            isSeen = isSeen,
-            images = images,
-            onPlayClick = onPlayClick,
-            recordWave = recordWave,
-            listenRatio = listenRatio,
-        )
-        if (!isReceived) {
-            ProfileImage(profileImageUrl)
+        if (voiceUri != null) {
+            MessageMeta(
+                time = time,
+                isSeen = isSeen,
+                isReceived = isReceived,
+                modifier = Modifier.align(Alignment.End).padding(top = 4.dp)
+            )
         }
     }
 }
@@ -64,7 +76,7 @@ fun MessagePreview() {
                     "https://www.facebook.com/photo/?fbid=709359247644755&set=a.102154745031878"
                 ),
                 isSeen = true,
-                onPlayClick = { /* Handle play click */ },
+                voiceUri = Uri.EMPTY,
                 recordWave = listOf(
                     0.3f,
                     0.2f,
@@ -87,7 +99,6 @@ fun MessagePreview() {
                     0.9f,
                     1.0f
                 ),
-                listenRatio = 0.5f,
             )
         }
     }
@@ -109,9 +120,29 @@ fun MessagePreview2() {
                     "https://www.facebook.com/photo/?fbid=709359247644755&set=a.102154745031878",
                     "https://www.facebook.com/photo/?fbid=709359247644755&set=a.102154745031878"
                 ),
-                onPlayClick = { /* Handle play click */ },
-                recordWave = listOf(0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f,0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f),
-                listenRatio = 0.5f,
+                voiceUri = Uri.EMPTY,
+                recordWave = listOf(
+                    0.3f,
+                    0.2f,
+                    0.3f,
+                    0.7f,
+                    0.5f,
+                    0.1f,
+                    0.7f,
+                    0.4f,
+                    0.9f,
+                    1.0f,
+                    0.3f,
+                    0.2f,
+                    0.3f,
+                    0.7f,
+                    0.5f,
+                    0.1f,
+                    0.7f,
+                    0.4f,
+                    0.9f,
+                    1.0f
+                ),
                 isSeen = true,
             )
         }
@@ -159,9 +190,29 @@ fun MessagePreview5() {
         Surface(color = Color.Red) {
             Message(
                 profileImageUrl = "https://www.facebook.com/photo/?fbid=709359247644755&set=a.102154745031878",
-                onPlayClick = { /* Handle play click */ },
-                recordWave = listOf(0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f,0.3f, 0.2f, 0.3f, 0.7f, 0.5f, 0.1f, 0.7f, 0.4f, 0.9f, 1.0f),
-                listenRatio = 0.5f,
+                voiceUri = Uri.EMPTY,
+                recordWave = listOf(
+                    0.3f,
+                    0.2f,
+                    0.3f,
+                    0.7f,
+                    0.5f,
+                    0.1f,
+                    0.7f,
+                    0.4f,
+                    0.9f,
+                    1.0f,
+                    0.3f,
+                    0.2f,
+                    0.3f,
+                    0.7f,
+                    0.5f,
+                    0.1f,
+                    0.7f,
+                    0.4f,
+                    0.9f,
+                    1.0f
+                ),
             )
         }
     }

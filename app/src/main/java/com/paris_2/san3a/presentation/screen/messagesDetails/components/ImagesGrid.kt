@@ -13,12 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.paris_2.san3a.presentation.utill.myClickable
+import androidx.core.net.toUri
 
 @Composable
 fun ImagesGrid(images: List<String>, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
     FlowRow(
         modifier = modifier.padding(12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -32,6 +36,13 @@ fun ImagesGrid(images: List<String>, modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .size(124.dp)
                     .clip(RoundedCornerShape(Theme.radius.large))
+                    .myClickable {
+                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                            setDataAndType(imageUrl.toUri(), "image/*")
+                            addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        }
+                        context.startActivity(intent)
+                    }
             )
         }
     }
