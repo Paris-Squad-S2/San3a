@@ -323,17 +323,53 @@ class MessagesDetailsViewModel(
                 fileName
             )
             audioFilePath = file.absolutePath
-            mediaRecorder = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                MediaRecorder(context)
-            } else {
-                MediaRecorder()
-            }.apply {
-                setAudioSource(MediaRecorder.AudioSource.MIC)
-                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-                setOutputFile(audioFilePath)
-                prepare()
-                start()
+            mediaRecorder =
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    MediaRecorder(context)
+                } else {
+                    MediaRecorder()
+                }.apply {
+                    setAudioSource(MediaRecorder.AudioSource.MIC)
+                    setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                    setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                    setOutputFile(audioFilePath)
+                }
+            try {
+                mediaRecorder?.prepare()
+            } catch (e: Exception) {
+                Log.e(
+                    "MessagesDetailsViewModel",
+                    "MediaRecorder prepare() failed: ${e.message}",
+                    e
+                )
+                isRecording = false
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = UiText.StringResource(
+                            R.string.occur_error_while_using_messages_screen
+                        ),
+                        showSnackBar = true
+                    )
+                )
+                return
+            }
+            try {
+                mediaRecorder?.start()
+            } catch (e: IllegalStateException) {
+                Log.e(
+                    "MessagesDetailsViewModel",
+                    "MediaRecorder start() illegal state: ${e.message}",
+                    e
+                )
+                isRecording = false
+                updateState(
+                    screenState.value.copy(
+                        errorMessage = UiText.StringResource(
+                            R.string.occur_error_while_using_messages_screen
+                        ), showSnackBar = true
+                    )
+                )
+                return
             }
             isRecording = true
             updateState(
