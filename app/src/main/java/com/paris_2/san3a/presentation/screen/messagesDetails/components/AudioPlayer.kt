@@ -55,12 +55,20 @@ fun AudioPlayer(
     fun playAudio(context: Context, uri: Uri) {
         mediaPlayer?.release()
         mediaPlayer = MediaPlayer.create(context, uri)
-        mediaPlayer?.setOnCompletionListener {
+        if (mediaPlayer != null) {
+            mediaPlayer?.setOnCompletionListener {
+                isPlaying = false
+                listenRatio = 1f
+            }
+            mediaPlayer?.start()
+            isPlaying = true
+        } else {
+            Log.e(
+                "AudioPlayer",
+                "Failed to create MediaPlayer: invalid or unsupported audio source"
+            )
             isPlaying = false
-            listenRatio = 1f
         }
-        mediaPlayer?.start()
-        isPlaying = true
     }
 
     fun stopAudio() {
@@ -109,7 +117,7 @@ fun AudioPlayer(
                 tint = Theme.colors.shade.secondary,
                 modifier = Modifier
                     .size(20.dp)
-                    .myClickable{
+                    .myClickable {
                         if (isPlaying) {
                             stopAudio()
                         } else {
