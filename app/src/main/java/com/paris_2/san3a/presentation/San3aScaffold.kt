@@ -1,7 +1,6 @@
 package com.paris_2.san3a.presentation
 
 import android.content.res.Configuration
-import android.view.ContextThemeWrapper
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +47,7 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 val LocalAccountType = mutableStateOf(AccountType.CUSTOMER)
+val LocalLanguage = compositionLocalOf { "en" }
 
 @Composable
 fun San3aScaffold(
@@ -54,21 +55,14 @@ fun San3aScaffold(
     mainViewModel: MainViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
-    val language = mainViewModel.getLastSelectedAppLanguage().collectAsStateWithLifecycle("en")
-    val configuration = if (language.value == "en") {
-        updatedConfiguration(Language.ENGLISH)
-    } else {
-        updatedConfiguration(Language.ARABIC)
-    }
+    val language by mainViewModel.getLastSelectedAppLanguage().collectAsStateWithLifecycle("en")
 
-    val localizedContext = remember(language.value) {
-        ContextThemeWrapper(context, context.theme).apply {
-            applyOverrideConfiguration(configuration)
-        }
-    }
+    val configuration =
+        updatedConfiguration(language = if (language == "en") Language.ENGLISH else Language.ARABIC)
 
-    val localDirection = if (language.value == "en")
-        LayoutDirection.Ltr else LayoutDirection.Rtl
+    context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
+
+    val localDirection = if (language == "en") LayoutDirection.Ltr else LayoutDirection.Rtl
 
     val uiState = mainViewModel.screenState.collectAsStateWithLifecycle()
     val navController = rememberNavController()
@@ -108,8 +102,7 @@ fun San3aScaffold(
 
     CompositionLocalProvider(
         LocalLayoutDirection provides localDirection,
-        LocalConfiguration provides configuration,
-        LocalContext provides localizedContext
+        LocalLanguage provides language
     ) {
         San3aTheme(isDarkTheme = uiState.value.isDark) {
             AppScaffold(
