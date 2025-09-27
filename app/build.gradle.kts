@@ -106,4 +106,8 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.accompanist.flowlayout)
     implementation(libs.logging.interceptor)
+
+    // Locale
+    implementation("com.vanniktech:multiplatform-locale:0.9.0")
+
 }

@@ -218,7 +218,7 @@ class CustomerRequestDetailsViewModel(
             },
             onSuccess = {
                 addNotificationUseCase(
-                    screenState.value.uiState.request.userId,
+                    craftsmanId,
                     NotificationToSend(
                         title = mapOf(
                             "en" to "New Offer Accepted",

@@ -1,12 +1,15 @@
 package com.paris_2.san3a.presentation
 
+import android.content.res.Configuration
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,9 +17,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -32,23 +38,37 @@ import com.paris_2.san3a.presentation.shared.components.AppNavigationBar
 import com.paris_2.san3a.presentation.shared.components.AppScaffold
 import com.paris_2.san3a.presentation.shared.designSystem.theme.San3aTheme
 import com.paris_2.san3a.presentation.shared.designSystem.theme.Theme
+import com.vanniktech.locale.Language
+import com.vanniktech.locale.Locale
+import com.vanniktech.locale.toJavaLocale
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 val LocalAccountType = mutableStateOf(AccountType.CUSTOMER)
+val LocalLanguage = compositionLocalOf { "en" }
 
 @Composable
 fun San3aScaffold(
     navigator: Navigator = koinInject(),
     mainViewModel: MainViewModel = koinViewModel()
 ) {
+    val context = LocalContext.current
+    val language by mainViewModel.getLastSelectedAppLanguage().collectAsStateWithLifecycle("en")
+
+    val configuration =
+        updatedConfiguration(language = if (language == "en") Language.ENGLISH else Language.ARABIC)
+
+    context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
+
+    val localDirection = if (language == "en") LayoutDirection.Ltr else LayoutDirection.Rtl
+
     val uiState = mainViewModel.screenState.collectAsStateWithLifecycle()
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
 
-    val context = LocalContext.current
+
     val view = LocalView.current
     val activity = context as? ComponentActivity
 
@@ -78,52 +98,64 @@ fun San3aScaffold(
             }
         }
     }
-
     val scope = rememberCoroutineScope()
 
-
-    San3aTheme(isDarkTheme = uiState.value.isDark) {
-        AppScaffold(
-            modifier = Modifier
-                .fillMaxSize(),
-            containerColor = Theme.colors.background.card,
-            content = { San3aNavGraph(navController = navController) },
-            bottomBar = {
-                var showNavBar by remember { mutableStateOf(false) }
-                LaunchedEffect(isVisible) {
-                    if (isVisible) {
-                        delay(500)
-                        showNavBar = true
-                    } else {
-                        showNavBar = false
+    CompositionLocalProvider(
+        LocalLayoutDirection provides localDirection,
+        LocalLanguage provides language
+    ) {
+        San3aTheme(isDarkTheme = uiState.value.isDark) {
+            AppScaffold(
+                modifier = Modifier
+                    .fillMaxSize(),
+                containerColor = Theme.colors.background.card,
+                content = { San3aNavGraph(navController = navController) },
+                bottomBar = {
+                    var showNavBar by remember { mutableStateOf(false) }
+                    LaunchedEffect(isVisible) {
+                        if (isVisible) {
+                            delay(500)
+                            showNavBar = true
+                        } else {
+                            showNavBar = false
+                        }
                     }
-                }
-                AnimatedVisibility(
-                    visible = showNavBar,
-                    enter = slideInVertically(initialOffsetY = { it }),
-                    exit = slideOutVertically(targetOffsetY = { it }),
-                ) {
-                    if (showNavBar) {
-                        AppNavigationBar(
-                            destinations = AppNavBarItem.destinations(LocalAccountType.value),
-                            selectedItem = AppNavBarItem.destinations(LocalAccountType.value).getOrNull(selectedDestinationIndex),
-                            onItemClick = { destination ->
-                                scope.launch {
-                                    navigator.navigate(
-                                        destination,
-                                        navOptions = NavOptions.Builder()
-                                            .setPopUpTo(
-                                                0,
-                                                inclusive = true
-                                            ).build()
-                                    )
+                    AnimatedVisibility(
+                        visible = showNavBar,
+                        enter = slideInVertically(initialOffsetY = { it }),
+                        exit = slideOutVertically(targetOffsetY = { it }),
+                    ) {
+                        if (showNavBar) {
+                            AppNavigationBar(
+                                destinations = AppNavBarItem.destinations(LocalAccountType.value),
+                                selectedItem = AppNavBarItem.destinations(LocalAccountType.value)
+                                    .getOrNull(selectedDestinationIndex),
+                                onItemClick = { destination ->
+                                    scope.launch {
+                                        navigator.navigate(
+                                            destination,
+                                            navOptions = NavOptions.Builder()
+                                                .setPopUpTo(
+                                                    0,
+                                                    inclusive = true
+                                                ).build()
+                                        )
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
-            }
-        )
+            )
+        }
+    }
+}
+
+@Composable
+fun updatedConfiguration(language: Language): Configuration {
+    val locale = Locale(language, language.defaultCountry)
+    return Configuration(LocalConfiguration.current).apply {
+        setLocale(locale.toJavaLocale())
     }
 }
 
